@@ -29,7 +29,7 @@ date_seq <- function(interval){
 
 test_errors_data <- date_seq('day')
 
-test_that('test_errors_data only works on right data types',{
+test_that('get_interval only works on right data types',{
   expect_error(as.integer(test_errors_data) %>% get_interval)
   expect_error(as.numeric(test_errors_data) %>% get_interval)
   expect_error(as.character(test_errors_data) %>% get_interval)
@@ -39,9 +39,7 @@ test_that('test_errors_data only works on right data types',{
   expect_error(as.POSIXlt(test_errors_data) %>% get_interval, NA)
 })
 
-
-
-test_that('test_errors_data gives the correct output',{
+test_that('get_interval gives the correct output',{
   expect_equal(date_seq('year') %>% get_interval, 'year')
   expect_equal(date_seq('month') %>% get_interval, 'month')
   expect_equal(date_seq('day') %>% get_interval, 'day')
@@ -51,3 +49,25 @@ test_that('test_errors_data gives the correct output',{
 })
 
 
+
+context('Test the get_date_variable function')
+
+test_get_date_variable_data <-
+  data.frame(x = date_seq('month'),
+             y1 = runif(6),
+             y2 = letters[1:6],
+             y3 = factor(letters[7:12]),
+             stringsAsFactors = FALSE)
+test_get_date_variable_data2 <- copy(test_get_date_variable_data)
+test_get_date_variable_data2$x2 <- date_seq('month')
+
+test_that('get_date_variable only works on the right data types', {
+  expect_error(get_date_variables(test_get_date_variable_data %>% as.matrix))
+  expect_error(get_date_variables(test_get_date_variable_data$x))
+})
+
+test_that('get_date_variable gives the correct output', {
+  expect_equal(get_date_variables(test_get_date_variable_data), 'x')
+  expect_equal(get_date_variables(test_get_date_variable_data2), c('x', 'x2'))
+  expect_equal(get_date_variables(mtcars), character())
+})

@@ -41,3 +41,36 @@ get_interval <- function(x) {
 }
 
 
+#' Look for variables that are of class \code{Date} of \code{POSIXt}
+#'
+#' This function is used within \code{pad_date} to find the variable to pad by,
+#' so the user doesn't have to specify it if the variable only contains one
+#' date variable.
+#' @param df An object of class \code{data.frame}.
+#' @return A character vector of the column names of the variables that are
+#' of class \code{Date}, \code{POSIXlt}, or \code{POSIXct}. If \code{df} does
+#' not contain any variable thes classes the character vector will be empty.
+#' @examples
+#' df_with_date <- data.frame(
+#' x = seq(as.Date('2014-01-01), as.Date('2014-12-01'), by = 'month),
+#' y = runif(12))
+#' get_date_variables(df_with_date)
+#' df_with_dates <- copy(df_with_date)
+#' df_with_dates$x2 <- seq(as.Date('2015-01-01), as.Date('2015-12-01'),
+#' by = 'month)
+#' get_date_variables(df_with_dates)
+#' get_date_variables(mtcars)
+
+get_date_variables <- function(df){
+  if(is.data.frame(df) %>% not) {
+    stop('df should be a data.frame', call. = FALSE)
+  }
+  classes <- lapply(df, class)
+  date_classes <- (sapply(classes, function(x) 'POSIXt' %in% x) |
+    sapply(classes, function(x) 'Date' %in% x)) %>%
+    which %>%
+    names
+  return(date_classes)
+}
+
+
