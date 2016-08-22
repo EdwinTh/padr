@@ -52,23 +52,5 @@ y = seq(as.POSIXct(strftime('2015-01-01')),
         as.POSIXct(strftime('2016-01-01')), by = 'year')
 
 
-span_year <- function(x) {
-  start_date <- x %>% min
-  lubridate::month(start_date) <- lubridate::day(start_date) <- 1
-  if('POSIXt' %in% class(x)) {
-    lubridate::hour(start_date) <- lubridate::second(start_date) <-
-      lubridate::minute(start_date) <- 0
-  }
-  end_date <- x %>% max
-  lubridate::year(end_date) <- lubridate::year(end_date) + 1
-  lubridate::month(end_date) <- lubridate::day(end_date) <- 1
-  if('POSIXt' %in% class(x)) {
-    lubridate::hour(end_date) <- lubridate::second(end_date) <-
-      lubridate::minute(end_date) <- 0
-  }
-  seq(start_date, end_date, 'year')
-}
 
-x <- as.Date(x)
 
-span_year(
