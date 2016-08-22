@@ -1,0 +1,16 @@
+Package: padr
+Type: Package
+Title: Padding of missing values in time series
+Version: 0.1.0
+Author: Edwin Thoen
+Maintainer: Edwin Thoen <edwinthoen@gmail.com>
+Description: TODO add accurate description when all is done
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+Imports:
+    dplyr,
+    magrittr
+Suggests:
+    testthat
+RoxygenNote: 5.0.1
