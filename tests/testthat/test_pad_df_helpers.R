@@ -58,7 +58,7 @@ test_get_date_variable_data <-
              y2 = letters[1:6],
              y3 = factor(letters[7:12]),
              stringsAsFactors = FALSE)
-test_get_date_variable_data2 <- copy(test_get_date_variable_data)
+test_get_date_variable_data2 <- test_get_date_variable_data
 test_get_date_variable_data2$x2 <- date_seq('month')
 
 test_that('get_date_variable only works on the right data types', {

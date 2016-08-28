@@ -2,7 +2,7 @@
 % Please edit documentation in R/pad_df.R
 \name{pad_date}
 \alias{pad_date}
-\title{Fast and Easy Date Padding}
+\title{Pad a data.frame}
 \usage{
 pad_date(df, pad = NULL, interval = NULL, with = c("0_or_NA", "NA",
   "last_caried_forward"), pad_present_NA = FALSE, ....)

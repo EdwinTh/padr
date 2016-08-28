@@ -1,4 +1,4 @@
-#' Fast and Easy Date Padding
+#' Pad a data.frame
 #'
 #' This function will take a \code{data.frame} that contains a variable of the
 #' following classes \code{Date}, \code{POSIXct}, or \code{POSIXlt}. It will

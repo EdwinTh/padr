@@ -62,7 +62,7 @@ get_interval <- function(x) {
 #' get_date_variables(mtcars)
 
 get_date_variables <- function(df){
-  if(is.data.frame(df) %>% not) {
+  if(!is.data.frame(df)) {
     stop('df should be a data.frame', call. = FALSE)
   }
   classes <- lapply(df, class)
@@ -72,7 +72,3 @@ get_date_variables <- function(df){
     names
   return(date_classes)
 }
-
-
-
-
