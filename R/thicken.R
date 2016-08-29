@@ -21,7 +21,11 @@
 #' lower in granularity than
 #' possible value (month = 1, day = 1, hour = 0, second = 0, minute = 0).
 #' @examples
-#'
+#' x_minute <- seq(as.POSIXct('2016-01-01 00:00:00'),
+#'                 as.POSIXct('2016-02-01 00:00:00'), by = 'min') %>%
+#'                 sample(1000) %>% sort
+#' thicken(x_minute, 'day')
+#' thicken(x_minute, 'day', rounding = 'down', allow_duplicates = FALSE)
 thicken <- function(x,
                    interval = c('year',
                                 'month',
@@ -31,7 +35,9 @@ thicken <- function(x,
                    rounding = c('closest',
                                  'up',
                                  'down'),
-                   allow_duplicates = TRUE) {
+                   allow_duplicates = TRUE,
+                   start = NULL,
+                   end = NULL) {
 
   if(c('Date', "POSIXt") %in% class(x) %>% any %>% not) {
     stop('x should be of class Date, POSIXct, or POSIXlt', call. = FALSE)
@@ -43,23 +49,24 @@ thicken <- function(x,
   # start by spanning the interval
   # here assign one of the span functions based on interval to the main.
 
-  # TODO figure out how to parse this to get rid off the if else
-  # span_function('span', interval, sep = '_')
+  # if a date variable is set to POSIX it uses GMT time, change this afterwords
   if(interval == 'year') {
-    span <- span_year(x) %>% as.POSIXlt
+    span <- span_year(x, start = start, end = end) %>% as.POSIXct
+    lubridate::hour(span) <- 0
   } else if (interval == 'month') {
-    span <- span_month(x) %>% as.POSIXlt
+    span <- span_month(x, start, end) %>% as.POSIXct
+    lubridate::hour(span) <- 0
   } else if (interval == 'day') {
-    span <- span_day(x) %>% as.POSIXlt
+    span <- span_day(x, start, end)
+    lubridate::hour(span) <- 0
   } else if (interval == 'hour') {
-    span <- span_hour(x) %>% as.POSIXlt
+    span <- span_hour(x, start, end)
   } else if (interval == 'minute') {
-    span <- span_minute(x) %>% as.POSIXlt
+    span <- span_minute(x, start, end)
   } else {
     stop("Not reach span_function if else")
   }
 
-  # TO DO sort out how to enforce a time to be midnight in local tz, instead of in GMT
   hour_dif <- outer(x, span, function(y,z) y-z)
 
   if(rounding == 'down') {
@@ -83,7 +90,7 @@ thicken <- function(x,
     x_thickened_dif = closest_dif
   )
 
-  if(allow_duplicates %>% not) {
+  if(!allow_duplicates) {
     return_frame_no_dups <-
       return_frame %>%
       dplyr::group_by(thickened) %>%
@@ -118,8 +125,4 @@ See the above datapoints."))
   }
   return_frame %>% dplyr::select(x, thickened) %>% as.data.frame
 }
-
-
-
-
 

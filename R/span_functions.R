@@ -1,42 +1,3 @@
-#' Adjust date by offset
-#'
-#' This function is a little helper to the span_ functions.
-#' @param x A vector of class \code{Date}, \code{POSIXlt}, or \code{POSIXct}.
-#' @param date_offset A numeric vector of respectively the year, month, day, hour,
-#' minute and second to change in \code{x}.
-#' @return \code{x} with the six time levels specified in \code{offset} added
-#' to it.
-#' @examples
-#'  a_time_value <- as.POSIXct(strftime('2014-03-04 10:43:16'))
-#'  desired_offset <- c(0, 2, 1, 2, 0, 18)
-#'  offset_date(a_time_value, desired_offset)
-offset_date <- function(x,
-                        date_offset) {
-  not = magrittr::not
-  if(c('Date', "POSIXt") %in% class(x) %>% any %>% not) {
-    stop('x should be of class Date, POSIXct, or POSIXlt', call. = FALSE)
-  }
-  if(c('numeric', "integer") %in% class(date_offset) %>% any %>% not) {
-    stop('date_offset should be of class numeric or integer', call. = FALSE)
-  }
-  if( (length(date_offset) != 6) | any(is.na(date_offset)) ) {
-    stop("date_offset should haven length 6, without NA's, use zeros at the positions you don't want to change", call. = FALSE)
-  }
-  if( date_offset[2] > 11 ){
-    stop('month value cannot exceed 11, please use year offset instead', .call = FALSE)
-  }
-
-  lubridate::year(x) <- lubridate::year(x) + date_offset[1]
-  new_month <- lubridate::month(x) + date_offset[2]
-  new_month[new_month > 12] <- new_month[new_month > 12] %% 12
-  lubridate::month(x) <- new_month
-  lubridate::day(x) <- lubridate::day(x) + date_offset[3]
-  lubridate::hour(x) <- lubridate::hour(x) + date_offset[4]
-  lubridate::minute(x) <- lubridate::minute(x) + date_offset[5]
-  lubridate::second(x) <- lubridate::second(x) + date_offset[6]
-  return(x)
-}
-
 #' Span a vector of dates
 #'
 #' The spanning functions take a vector of class \code{Date}, \code{POSIXlt}, or
@@ -75,34 +36,28 @@ span_year <- function(x,
                       start = NULL,
                       end   = NULL) {
 
-  # Get the necessary values for all the scenarios, this will make the ifelse
-  # down a lot easier to follow.
-  if( is.null(start) ){
-    start_at_null <- min(x)
-    lubridate::month(start_at_null) <- lubridate::day(start_at_null) <- 1
-    if( 'POSIXt' %in% class(x) ) {
-      lubridate::hour(start_at_null) <-  lubridate::minute(start_at_null) <- lubridate::second(start_at_null) <- 0
-      }
-  } else {
-    end_offset <- c(lubridate::year(start), lubridate::month(start),
-                    lubridate::day(start), lubridate::hour(start),
-                    lubridate::minute(start), lubridate::second(start))
+  # Initialize
+  start_at_null <- min(x)
+  lubridate::month(start_at_null) <- lubridate::day(start_at_null) <- 1
+  if( 'POSIXt' %in% class(x) ) {
+    lubridate::hour(start_at_null) <-  lubridate::minute(start_at_null) <- lubridate::second(start_at_null) <- 0
   }
 
-  if( is.null(end) ) {
-    end_at_null <- max(x)
-    lubridate::year(end_at_null) <- lubridate::year(end_at_null) + 1
-    lubridate::month(end_at_null) <- lubridate::day(end_at_null) <- 1
-    if('POSIXt' %in% class(x)) {
-      lubridate::hour(end_at_null) <- lubridate::minute(end_at_null) <- lubridate::second(end_at_null) <- 0
+  if( !is.null(start) ){
+    end_offset <- start - start_at_null
+  }
+
+  end_at_null <- max(x)
+  lubridate::year(end_at_null) <- lubridate::year(end_at_null) + 1
+  lubridate::month(end_at_null) <- lubridate::day(end_at_null) <- 1
+  if('POSIXt' %in% class(x)) {
+    lubridate::hour(end_at_null) <- lubridate::minute(end_at_null) <- lubridate::second(end_at_null) <- 0
     }
-  } else {
-    start_offset <- c(lubridate::year(end), lubridate::month(end),
-                      lubridate::day(end), lubridate::hour(end),
-                      lubridate::minute(end), lubridate::second(end))
+  if( !is.null(end) ){
+    start_offset <- end - end_at_null
   }
 
-  # Specify start and end values for the spanned sequence
+  # Assign
   if( !is.null(start) & !is.null(end) ) {
 
     if(get_interval(c(start, end)) != 'year') {
@@ -115,11 +70,11 @@ span_year <- function(x,
   } else if( !is.null(start) & is.null(end) ){
 
     start_seq <- start
-    end_seq   <- offset_date(end_at_null, end_offset)
+    end_seq   <- end_at_null + end_offset
 
   } else if ( is.null(start) & !is.null(end) ) {
 
-    start_seq <- offset_date(start_at_null, start_offset)
+    start_seq <- start_at_null + start_offset
     end_seq   <- end
 
   } else {
@@ -141,29 +96,26 @@ span_month <- function(x,
                        start = NULL,
                        end   = NULL){
 
-  if( is.null(start) ){
-    start <- min(x)
-    lubridate::day(start) <- 1
-    if('POSIXt' %in% class(x)) {
-      lubridate::hour(start) <-  lubridate::minute(start) <- lubridate::second(start) <- 0
-      }
-  } else {
-    end_offset <- c(lubridate::year(start), lubridate::month(start),
-                    lubridate::day(start), lubridate::hour(start),
-                    lubridate::minute(start), lubridate::second(start))
+  # Initialize
+  start_at_null <- min(x)
+  lubridate::day(start_at_null) <- 1
+  if('POSIXt' %in% class(x)) {
+    lubridate::hour(start_at_null) <-  lubridate::minute(start_at_null) <- lubridate::second(start_at_null) <- 0
   }
 
-  if( is.null(end) ) {
-    end <- max(x)
-    lubridate::month(end) <- lubridate::month(end) + 1
-    lubridate::day(end) <- 1
-    if('POSIXt' %in% class(x)) {
-      lubridate::hour(end) <- lubridate::minute(end) <- lubridate::second(end) <- 0
-    }
-  } else {
-    start_offset <- c(lubridate::year(end), lubridate::month(end),
-                      lubridate::day(end), lubridate::hour(end),
-                      lubridate::minute(end), lubridate::second(end))
+  if( !is.null(start) ){
+    end_offset <- start - start_at_null
+  }
+
+  end_at_null <- max(x)
+  lubridate::month(end_at_null) <- lubridate::month(end_at_null) + 1
+  lubridate::day(end_at_null) <- 1
+  if('POSIXt' %in% class(x)) {
+      lubridate::hour(end_at_null) <- lubridate::minute(end_at_null) <- lubridate::second(end_at_null) <- 0
+  }
+
+  if( !is.null(end) ){
+    start_offset <- end - end_at_null
   }
 
   # Specify start and end values for the spanned sequence
@@ -177,14 +129,15 @@ span_month <- function(x,
     start_seq <- start
     end_seq   <- end
 
+
   } else if( !is.null(start) & is.null(end) ){
 
     start_seq <- start
-    end_seq   <- offset_date(end_at_null, end_offset)
+    end_seq   <- end_at_null + end_offset
 
   } else if ( is.null(start) & !is.null(end) ) {
 
-    start_seq <- offset_date(start_at_null, start_offset)
+    start_seq <- start_at_null + start_offset
     end_seq   <- end
 
   } else {
@@ -205,32 +158,29 @@ span_month <- function(x,
 span_day <- function(x,
                      start = NULL,
                      end   = NULL){
+  # Initialize
   if('Date' %in% class(x)){
     stop('To use span_day x should be of class POSIXt', call. = FALSE)
   }
 
-  if( is.null(start) ){
-    start <- min(x)
-    lubridate::hour(start) <- lubridate::minute(start) <- lubridate::second(start) <- 0
-  } else {
-    end_offset <- c(lubridate::year(start), lubridate::month(start),
-                    lubridate::day(start), lubridate::hour(start),
-                    lubridate::minute(start), lubridate::second(start))
+  start_at_null <- min(x)
+  lubridate::hour(start_at_null) <- lubridate::minute(start_at_null) <- lubridate::second(start_at_null) <- 0
+
+  if( !is.null(start) ){
+    end_offset <- start - start_at_null
   }
 
-  if( is.null(end) ) {
-    end <- max(x)
-    lubridate::day(end) <- lubridate::day(end) + 1
-    if('POSIXt' %in% class(x)) {
-      lubridate::hour(end) <- lubridate::minute(end) <- lubridate::second(end) <- 0
-    }
-  } else {
-    start_offset <- c(lubridate::year(end), lubridate::month(end),
-                      lubridate::day(end), lubridate::hour(end),
-                      lubridate::minute(end), lubridate::second(end))
+  end_at_null <- max(x)
+  lubridate::day(end_at_null) <- lubridate::day(end_at_null) + 1
+  if('POSIXt' %in% class(x)) {
+    lubridate::hour(end_at_null) <- lubridate::minute(end_at_null) <- lubridate::second(end_at_null) <- 0
   }
 
-  # when both start and end are specified, they must be of interval day
+  if( !is.null(end) ){
+    start_offset <- end - end_at_null
+  }
+
+  # Assign
   if( !(start %>% is.null) & !(end %>% is.null) ) {
     if(!get_interval(c(start, end)) %in%  c('year', 'month', 'day')) {
       stop('When start and end are both specified in the span_day function,
@@ -243,11 +193,11 @@ span_day <- function(x,
   } else if( !is.null(start) & is.null(end) ){
 
     start_seq <- start
-    end_seq   <- offset_date(end_at_null, end_offset)
+    end_seq   <- end_at_null + end_offset
 
   } else if ( is.null(start) & !is.null(end) ) {
 
-    start_seq <- offset_date(start_at_null, start_offset)
+    start_seq <- start_at_null + start_offset
     end_seq   <- end
 
   } else {
@@ -272,25 +222,21 @@ span_hour <- function(x,
   }
 
   # Initialize
-  if( is.null(start) ){
-    start <- min(x)
-    lubridate::minute(start) <- lubridate::second(start) <- 0
-  } else {
-    end_offset <- c(lubridate::year(start), lubridate::month(start),
-                    lubridate::day(start), lubridate::hour(start),
-                    lubridate::minute(start), lubridate::second(start))
+  start_at_null <- min(x)
+  lubridate::minute(start_at_null) <- lubridate::second(start_at_null) <- 0
+
+  if( !is.null(start) ){
+    end_offset <- start - start_at_null
   }
 
-  if( is.null(end) ) {
-    end <- max(x)
-    lubridate::hour(end) <- lubridate::hour(end) + 1
-    if('POSIXt' %in% class(x)) {
-      lubridate::minute(end) <- lubridate::second(end) <- 0
-    }
-  } else {
-    start_offset <- c(lubridate::year(end), lubridate::month(end),
-                      lubridate::day(end), lubridate::hour(end),
-                      lubridate::minute(end), lubridate::second(end))
+  end_at_null <- max(x)
+  lubridate::hour(end_at_null) <- lubridate::hour(end_at_null) + 1
+  if('POSIXt' %in% class(x)) {
+    lubridate::minute(end_at_null) <- lubridate::second(end_at_null) <- 0
+  }
+
+  if( !is.null(end) ){
+    start_offset <- end - end_at_null
   }
 
   # Assign
@@ -304,22 +250,23 @@ span_hour <- function(x,
      start_seq <- start
      end_seq   <- end
 
-    } else if( !is.null(start) & is.null(end) ){
+  } else if( !is.null(start) & is.null(end) ){
 
-      start_seq <- start
-      end_seq   <- offset_date(end_at_null, end_offset)
+    start_seq <- start
+    end_seq   <- end_at_null + end_offset
 
-    } else if ( is.null(start) & !is.null(end) ) {
+  } else if ( is.null(start) & !is.null(end) ) {
 
-      start_seq <- offset_date(start_at_null, start_offset)
-      end_seq   <- end
+    start_seq <- start_at_null + start_offset
+    end_seq   <- end
 
-    } else {
+  } else {
 
-      start_seq <- start_at_null
-      end_seq   <- end_at_null
+    start_seq <- start_at_null
+    end_seq   <- end_at_null
 
-    }
+  }
+
 
   seq(start_seq, end_seq, 'hour')
 }
@@ -337,27 +284,22 @@ span_minute <- function(x,
   }
 
   # Initialize
-  if( is.null(start) ){
-    start <- min(x)
-    lubridate::second(start) <- 0
-  } else {
-    end_offset <- c(lubridate::year(start), lubridate::month(start),
-                    lubridate::day(start), lubridate::hour(start),
-                    lubridate::minute(start), lubridate::second(start))
+  start_at_null <- min(x)
+  lubridate::second(start_at_null) <- 0
+
+  if( !is.null(start) ){
+    end_offset <- start - start_at_null
   }
 
-  if( is.null(end) ) {
-    end <- max(x)
-    lubridate::minute(end) <- lubridate::minute(end) + 1
-    if('POSIXt' %in% class(x)) {
-      lubridate::second(end) <- 0
-    }
-  } else {
-    start_offset <- c(lubridate::year(end), lubridate::month(end),
-                      lubridate::day(end), lubridate::hour(end),
-                      lubridate::minute(end), lubridate::second(end))
+  end_at_null <- max(x)
+  lubridate::minute(end_at_null) <- lubridate::minute(end_at_null) + 1
+  if('POSIXt' %in% class(x)) {
+    lubridate::second(end_at_null) <- 0
   }
 
+  if( !is.null(end) ){
+    start_offset <- end - end_at_null
+  }
 
   if('Date' %in% class(x)){
     stop('To use span_minute x should be of class POSIXt', call. = FALSE)
@@ -374,23 +316,23 @@ span_minute <- function(x,
     start_seq <- start
     end_seq   <- end
 
-    } else if( !is.null(start) & is.null(end) ){
+  } else if( !is.null(start) & is.null(end) ){
 
-      start_seq <- start
-      end_seq   <- offset_date(end_at_null, end_offset)
+    start_seq <- start
+    end_seq   <- end_at_null + end_offset
 
-    } else if ( is.null(start) & !is.null(end) ) {
+  } else if ( is.null(start) & !is.null(end) ) {
 
-      start_seq <- offset_date(start_at_null, start_offset)
-      end_seq   <- end
+    start_seq <- start_at_null + start_offset
+    end_seq   <- end
 
-    } else {
+  } else {
 
-      start_seq <- start_at_null
-      end_seq   <- end_at_null
+    start_seq <- start_at_null
+    end_seq   <- end_at_null
 
-    }
+  }
 
-  seq(start, end, 'min')
+  seq(start_seq, end_seq, 'min')
 }
 

@@ -25,15 +25,13 @@ pad_date <- function(df,  # data.frame to pad
     date_variable <- get_date_variables(df)
 
     if(length(date_variable) == 0) {
-      stop('x does not contain variables of class POSIXct, POSIXlt or Date')
+      stop('data.frame does not contain variables of class POSIXct, POSIXlt or Date')
     } else if(length(date_variable) > 1) {
-      stop('x contains multiple variables POSIXct, POSIXlt or Date
+      stop('data.frame contains multiple variables POSIXct, POSIXlt or Date
            please provide the variable to pad by')
     } else {
       date_variable <- df[,colnames(df) == date_variable]
     }
-  } else {
-
   }
 
   # not sure whether this is the prettiest way to do it

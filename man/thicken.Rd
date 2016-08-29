@@ -4,37 +4,38 @@
 \alias{thicken}
 \title{Change datetime Granularity}
 \usage{
-thicken(x = date_seq("month"), interval = c("year", "month", "day", "hour",
-  "minute"), rounding = c("closest", "up", "down"), allow_duplicates = TRUE)
+thicken(x, interval = c("year", "month", "day", "hour", "minute"),
+  rounding = c("closest", "up", "down"), allow_duplicates = TRUE, ...)
 }
 \arguments{
 \item{x}{A vector of class \code{Date}, \code{POSIXlt}, or \code{POSIXct}.}
 
 \item{interval}{The desired interval of the output, which should be higher
-the interval of \codes{x}. Current choices are \code{year, quarter, month,
-day, hour, minute}.}
+the interval of \codes{x}. Current choices are \code{year, month, day,
+hour, minute}.}
 
 \item{rounding}{= closest Should \code{x} be rounded to the \code{closest}
-instance of \code{interval} or should it be rounde \code{up} or \down}
+instance of \code{interval} or should it be rounde \code{up} or \code{down}?}
 
 \item{allow_duplicates}{Logical indicating if we can have multiple instances
-of the same value in return. If FALSE the value in \code{x} closest to the
+of the same value in the return \code{data.frame}.
+If FALSE the value in \code{x} closest to the
 return time point will be selected. Will throw an error if FALSE and two or
-more timpe points are at the exact same distance.}
+more timpe points are at the exact same distance of an \code{interval} value.}
 }
 \value{
-A \code{data.frame} with two coluns, ther original vector \code{x}.
-And a vector of the same class as \code{x} with the datetime points to which
+A \code{data.frame} with two colums, the original vector \code{x}
+and a vector of the same class as \code{x} with the datetime points to which
 \code{x} should be mapped to thicken it.  Datetime levels that are
-lower in granularity than \code{interval} will be set to their first
-possible value (month = 01, day = 01, hour = 00, second = 00, minute = 00).
+lower in granularity than
+possible value (month = 1, day = 1, hour = 0, second = 0, minute = 0).
 }
 \description{
 This function will take a datetime vector of class and changes its
-granularity to a higher level that is provided.
+interval level to the provided level.
 }
 \details{
-The granularity is moved to a higher level by 'rounding' \code{x}
+The interval is moved to a higher level by 'rounding' \code{x}
 to the closest instance of the provided \code{interval}
 }
 \examples{
