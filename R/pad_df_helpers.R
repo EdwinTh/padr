@@ -1,4 +1,4 @@
-#' Determine the interval of a date variable.
+#' Determine the Interval of a Date Variable
 #'
 #' The interval is the lowest time level that can explain all instances of a
 #' variable of class \code{Date} or of class \code{POSIXct}. This function
@@ -41,7 +41,7 @@ get_interval <- function(x) {
 }
 
 
-#' Look for variables that are of class \code{Date} of \code{POSIXt}
+#' Look for Variables that are of Class \code{Date} or Class \code{POSIXt}
 #'
 #' This function is used within \code{pad_date} to find the variable to pad by,
 #' so the user doesn't have to specify it if the variable only contains one

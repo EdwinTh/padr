@@ -2,7 +2,7 @@
 % Please edit documentation in R/pad_df_helpers.R
 \name{get_interval}
 \alias{get_interval}
-\title{Determine the interval of a date variable.}
+\title{Determine the Interval of a Date Variable}
 \usage{
 get_interval(x)
 }

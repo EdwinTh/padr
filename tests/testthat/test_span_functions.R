@@ -1,5 +1,3 @@
-context('span_ functions throw error on wrong data types')
-
 x_posix <- as.POSIXct(strftime(c('2013-12-31 10:43:16',
                                  '2014-01-01 08:22:12')))
 x_date  <- as.Date(x_posix)
@@ -7,7 +5,25 @@ x_num   <- as.numeric(x_posix)
 x_char  <- as.character(x_posix)
 x_fac   <- as.character(x_posix)
 
-# expect_error(object, NA) = expect no error
+context('offset_date function on error and output')
+
+test_that('offset_date throws error on wrong data types', {
+  expect_error(offset_date(x_posix, 1:6), NA)
+  expect_error(offset_date(x_date, 1:6), NA)
+  expect_error(offset_date(x_posix, 1:5))
+  expect_error(offset_date(x_posix, c(1:5, NA)))
+  expect_error(offset_date(x_char, c(1:6)))
+  expect_error(offset_date(x_posix, c(1, 13, 3:6)))
+})
+
+test_that('offset_date gives correct output', {
+  expect_equal(offset_date(x_posix[2], 1:6),
+               as.POSIXct('2015-03-04 12:27:18'))
+})
+
+context('span_ functions throw error on wrong data types')
+
+# NOTE expect_error(object, NA) = expect no error
 test_that('span_year throws errors at wrong types', {
   expect_error(span_year(x_posix), NA)
   expect_error(span_year(x_date), NA)
