@@ -40,7 +40,9 @@ span_year <- function(x,
   start_at_null <- min(x)
   lubridate::month(start_at_null) <- lubridate::day(start_at_null) <- 1
   if( 'POSIXt' %in% class(x) ) {
-    lubridate::hour(start_at_null) <-  lubridate::minute(start_at_null) <- lubridate::second(start_at_null) <- 0
+    lubridate::hour(start_at_null) <-
+      lubridate::minute(start_at_null) <-
+      lubridate::second(start_at_null) <- 0
   }
 
   if( !is.null(start) ){
@@ -51,8 +53,11 @@ span_year <- function(x,
   lubridate::year(end_at_null) <- lubridate::year(end_at_null) + 1
   lubridate::month(end_at_null) <- lubridate::day(end_at_null) <- 1
   if('POSIXt' %in% class(x)) {
-    lubridate::hour(end_at_null) <- lubridate::minute(end_at_null) <- lubridate::second(end_at_null) <- 0
+    lubridate::hour(end_at_null) <-
+      lubridate::minute(end_at_null) <-
+      lubridate::second(end_at_null) <- 0
     }
+
   if( !is.null(end) ){
     start_offset <- end - end_at_null
   }
@@ -62,7 +67,8 @@ span_year <- function(x,
 
     if(get_interval(c(start, end)) != 'year') {
       stop('When start and end are both specified in the span_year function,
-           they can only differ from each other in years.')}
+           they can only differ from each other in years.')
+    }
 
     start_seq <- start
     end_seq   <- end
@@ -100,7 +106,9 @@ span_month <- function(x,
   start_at_null <- min(x)
   lubridate::day(start_at_null) <- 1
   if('POSIXt' %in% class(x)) {
-    lubridate::hour(start_at_null) <-  lubridate::minute(start_at_null) <- lubridate::second(start_at_null) <- 0
+    lubridate::hour(start_at_null) <-
+      lubridate::minute(start_at_null) <-
+      lubridate::second(start_at_null) <- 0
   }
 
   if( !is.null(start) ){
@@ -111,7 +119,9 @@ span_month <- function(x,
   lubridate::month(end_at_null) <- lubridate::month(end_at_null) + 1
   lubridate::day(end_at_null) <- 1
   if('POSIXt' %in% class(x)) {
-      lubridate::hour(end_at_null) <- lubridate::minute(end_at_null) <- lubridate::second(end_at_null) <- 0
+      lubridate::hour(end_at_null) <-
+        lubridate::minute(end_at_null) <-
+        lubridate::second(end_at_null) <- 0
   }
 
   if( !is.null(end) ){
@@ -164,7 +174,9 @@ span_day <- function(x,
   }
 
   start_at_null <- min(x)
-  lubridate::hour(start_at_null) <- lubridate::minute(start_at_null) <- lubridate::second(start_at_null) <- 0
+  lubridate::hour(start_at_null) <-
+    lubridate::minute(start_at_null) <-
+    lubridate::second(start_at_null) <- 0
 
   if( !is.null(start) ){
     end_offset <- start - start_at_null
