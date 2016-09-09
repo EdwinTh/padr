@@ -4,28 +4,26 @@
 #' interval level to the provided level.
 #' @details The interval is moved to a higher level by 'rounding' \code{x}
 #' to the closest instance of the provided \code{interval}
-#' @param x A vector of class \code{Date}, \code{POSIXlt}, or \code{POSIXct}.
+#' @param x A vector of class \code{Date}, \code{POSIXlt}, or \code{POSIXct},
+#' or a \code{data.frame} containing at least on column of these classes.
 #' @param interval The desired interval of the output, which should be higher
-#' the interval of \codes{x}. Current choices are \code{year, month, day,
-#' hour, minute}.
+#' then the interval of the datetime variable. Current choices are
+#' \code{year, month, day, hour, minute}.
 #' @param rounding = closest Should \code{x} be rounded to the \code{closest}
 #' instance of \code{interval} or should it be rounde \code{up} or \code{down}?
-#' @param allow_duplicates Logical indicating if we can have multiple instances
-#' of the same value in the return \code{data.frame}.
-#' If FALSE the value in \code{x} closest to the
-#' return time point will be selected. Will throw an error if FALSE and two or
-#' more timpe points are at the exact same distance of an \code{interval} value.
-#' @return A \code{data.frame} with two colums, the original vector \code{x}
-#' and a vector of the same class as \code{x} with the datetime points to which
-#' \code{x} should be mapped to thicken it.  Datetime levels that are
-#' lower in granularity than
-#' possible value (month = 1, day = 1, hour = 0, second = 0, minute = 0).
+#' @param by If \code{x} is a \class{data.frame} and contains multiple datetime
+#' variables, specify which column to pad by.
+#' @param start Change the default start point of the time range to which
+#' the datetime variable is thickened. See ?span_year for more information.
+#' @param end Change the default end point of the time range to which
+#' the datetime variable is thickened. See ?span_year for more information.
+#' @return The original \code{data.frame x} with the thickened variable added
+#' to it. If \code{x} is a datetime vector the return will be a
+#' \code{data.frame} comprising \code{x} and the thickened variable.
 #' @examples
-#' x_minute <- seq(as.POSIXct('2016-01-01 00:00:00'),
-#'                 as.POSIXct('2016-02-01 00:00:00'), by = 'min') %>%
-#'                 sample(1000) %>% sort
-#' thicken(x_minute, 'day')
-#' thicken(x_minute, 'day', rounding = 'down', allow_duplicates = FALSE)
+#' X <- data.frame(day_var = seq(as.Date('2016-01-01'), as.Date('2016-12-31'), by = 'day'),
+#'                 value   = runif(366, 50, 100))
+
 thicken <- function(x,
                    interval = c('year',
                                 'month',
@@ -35,13 +33,54 @@ thicken <- function(x,
                    rounding = c('closest',
                                  'up',
                                  'down'),
-                   allow_duplicates = TRUE,
+                   by    = NULL,
                    start = NULL,
-                   end = NULL) {
+                   end   = NULL) {
 
-  if(c('Date', "POSIXt") %in% class(x) %>% any %>% not) {
-    stop('x should be of class Date, POSIXct, or POSIXlt', call. = FALSE)
+  # Section 1: obtain datetime variable and see if the variable is valid
+  arguments <- as.list(match.call())
+
+  if(is.data.frame(x)){
+    original_data_frame <- x
+
+    if(!is.null(arguments$by)) {
+      if(length(arguments$by) > 1) stop('by can indicate one variable only')
+      dt_var  <- eval(arguments$by, x)
+    } else {
+      dt_var_name <- get_date_variables(x)
+      if(length(dt_var_name) == 0) {
+        stop('x does not contain a variabel of class Date, POSIXct, or POSIXlt',
+             call. = FALSE)
+      }
+      if(length(dt_var_name) > 1){
+        stop('x contanis multiple variables of class Date, POSIXct, or POSIXlt,
+please specify which variable to use in the by argument',
+             call. = FALSE)
+      }
+      dt_var <- x[ ,colnames(x) == dt_var_name]
+    }
+  } else {
+    if(c('Date', "POSIXt") %in% class(x) %>% any %>% not) {
+      stop('x should be of class Date, POSIXct, or POSIXlt', call. = FALSE)
+    }
+    dt_var <- x
   }
+
+  # Section 2: make the span_function and do the thickening
+  int_hierarchy <- 1:5
+  names(int_hierarchy) <- c('year','month','day','hour','minute')
+  if(int_hierarchy[get_interval(dt_var)] < int_hierarchy[interval]) {
+    stop('The interval in the datetime variable is larger than the interval given,
+you might be looking fo smear rather than for thicken.')
+  } else if (int_hierarchy[get_interval(dt_var)] == int_hierarchy[interval]) {
+    stop('The interval in the datetime variable is equal to the interval given,
+you might be looking for pad rather than for thicken.')
+  }
+}
+
+
+
+
 
   interval <- match.arg(interval)
   rounding <- match.arg(rounding)
@@ -123,6 +162,6 @@ See the above datapoints."))
       return_frame <- return_frame_no_dups
     }
   }
-  return_frame %>% dplyr::select(x, thickened) %>% as.data.frame
+
 }
 

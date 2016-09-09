@@ -34,15 +34,26 @@ x_sec   <- date_seq('sec')
 equal_dist <- c(as.POSIXct('2014-01-01 23:00:00'),
                 as.POSIXct('2014-01-02 01:00:00'))
 
+df_with_one_date  <- data.frame(dt_var1 = date_seq('month'),
+                                y = 1:6)
+df_with_two_dates <- data.frame(dt_var1  = date_seq('month'),
+                                dt_var2 = date_seq('month'),
+                                y = 1:6)
+
 context("Test the thicken function")
 
-test_that("thicken throws errors", {
+test_that("Section 1, correct error handling", {
   expect_error(thicken(x_month %>% as.character))
   expect_error(thicken(x_month %>% as.numeric))
-  expect_error(thicken(equal_dist,
-                       interval =  'day',
-                       rounding = 'closest',
-                       allow_duplicates = FALSE))
+  expect_error(thicken(mtcars))
+  expect_error(thicken(df_with_one_date), NA)
+  expect_error(thicken(df_with_two_dates))
+  expect_error(thicken(df_with_two_dates, by = dt_var1), NA)
+})
+
+test_that("Section 2, correct error handling", {
+  expect_error(thicken(x_month, 'month'))
+  expect_error(thicken(x_hour, 'month'), NA)
 })
 
 test_that("thicken gives correct interval", {

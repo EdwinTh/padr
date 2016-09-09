@@ -11,9 +11,8 @@
 #' get_interval(x_month)
 
 get_interval <- function(x) {
-  not    <- magrittr::not
-  equals <- magrittr::equals
-  if(c('Date', "POSIXt") %in% class(x) %>% any %>% not) {
+
+  if( !(c('Date', "POSIXt") %in% class(x) %>% any)) {
     stop('x should be of class Date, POSIXct, or POSIXlt', call. = FALSE)
   }
 
@@ -23,23 +22,22 @@ get_interval <- function(x) {
   }
 
   differs <- c(
-    year   = substr(x_char, 1, 4) %>% unique %>% length %>% equals(1) %>% not,
-    month  = substr(x_char, 6, 7) %>% unique %>% length %>% equals(1) %>% not,
-    day    = substr(x_char, 9, 10) %>% unique %>% length %>% equals(1) %>% not,
-    hour   = substr(x_char, 12, 13) %>% unique %>% length %>% equals(1) %>% not,
-    minute = substr(x_char, 15, 16) %>% unique %>% length %>% equals(1) %>% not,
-    second = substr(x_char, 18, 19) %>% unique %>% length %>% equals(1) %>% not
+    year   = substr(x_char, 1, 4) %>% unique %>% length %>% `==`(1) %>% `!`,
+    month  = substr(x_char, 6, 7) %>% unique %>% length %>% `==`(1) %>% `!`,
+    day    = substr(x_char, 9, 10) %>% unique %>% length %>% `==`(1) %>% `!`,
+    hour   = substr(x_char, 12, 13) %>% unique %>% length %>% `==`(1) %>% `!`,
+    minute = substr(x_char, 15, 16) %>% unique %>% length %>% `==`(1) %>% `!`,
+    second = substr(x_char, 18, 19) %>% unique %>% length %>% `==`(1) %>% `!`
   )
 
   does_differ <- differs %>% which
-  if(does_differ %>% length %>% equals(0)) {
+  if(does_differ %>% length %>% `==`(0)) {
     stop("x does not vary, cannot determine the interval", call. = FALSE)
   } else {
     lowest_level <- does_differ[length(does_differ)] %>% names
     return(lowest_level)
   }
 }
-
 
 #' Look for Variables that are of Class \code{Date} or Class \code{POSIXt}
 #'
