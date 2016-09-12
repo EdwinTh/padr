@@ -8,9 +8,9 @@
 #' @param x A vector of class \code{Date}, \code{POSIXlt}, or \code{POSIXct} for
 #' \code{span_year} or \code{span_month}. A vector of class  \code{POSIXlt}, or
 #' \code{POSIXct} for the others.
-#' @param start An object of class \code{Date}, \code{POSIXlt}, or \code{POSIXct}.
+#' @param start_val An object of class \code{Date}, \code{POSIXlt}, or \code{POSIXct}.
 #' See \code{details} for further information.
-#' @param end An object of class \code{Date}, \code{POSIXlt}, or \code{POSIXct}.
+#' @param end_va lAn object of class \code{Date}, \code{POSIXlt}, or \code{POSIXct}.
 #' #' See \code{details} for further information.
 #' @details The \code{start} and \code{end} arguments can be used in two ways to
 #' change the default behavior of the \code{span_} functions. First one can
@@ -33,8 +33,8 @@
 #### span_year ####
 ###################
 span_year <- function(x,
-                      start = NULL,
-                      end   = NULL) {
+                      start_val = NULL,
+                      end_val   = NULL) {
 
   # Initialize
   start_at_null <- min(x)
@@ -45,8 +45,8 @@ span_year <- function(x,
       lubridate::second(start_at_null) <- 0
   }
 
-  if( !is.null(start) ){
-    end_offset <- start - start_at_null
+  if( !is.null(start_val) ){
+    end_offset <- start_val- start_at_null
   }
 
   end_at_null <- max(x)
@@ -58,27 +58,27 @@ span_year <- function(x,
       lubridate::second(end_at_null) <- 0
     }
 
-  if( !is.null(end) ){
-    start_offset <- end - end_at_null
+  if( !is.null(end_val) ){
+    start_offset <- end_val- end_at_null
   }
 
   # Assign
-  if( !is.null(start) & !is.null(end) ) {
+  if( !is.null(start_val) & !is.null(end_val) ) {
 
-    if(get_interval(c(start, end)) != 'year') {
-      stop('When start and end are both specified in the span_year function,
+    if(get_interval(c(start, end_val)) != 'year') {
+      stop('When start_valand end_valare both specified in the span_year function,
            they can only differ from each other in years.')
     }
 
     start_seq <- start
     end_seq   <- end
 
-  } else if( !is.null(start) & is.null(end) ){
+  } else if( !is.null(start_val) & is.null(end_val) ){
 
     start_seq <- start
     end_seq   <- end_at_null + end_offset
 
-  } else if ( is.null(start) & !is.null(end) ) {
+  } else if ( is.null(start_val) & !is.null(end_val) ) {
 
     start_seq <- start_at_null + start_offset
     end_seq   <- end
@@ -99,8 +99,8 @@ span_year <- function(x,
 ####################
 #' @rdname span_year
 span_month <- function(x,
-                       start = NULL,
-                       end   = NULL){
+                       start_val= NULL,
+                       end_val  = NULL){
 
   # Initialize
   start_at_null <- min(x)
@@ -111,8 +111,8 @@ span_month <- function(x,
       lubridate::second(start_at_null) <- 0
   }
 
-  if( !is.null(start) ){
-    end_offset <- start - start_at_null
+  if( !is.null(start_val) ){
+    end_offset <- start_val- start_at_null
   }
 
   end_at_null <- max(x)
@@ -124,15 +124,15 @@ span_month <- function(x,
         lubridate::second(end_at_null) <- 0
   }
 
-  if( !is.null(end) ){
-    start_offset <- end - end_at_null
+  if( !is.null(end_val) ){
+    start_offset <- end_val- end_at_null
   }
 
-  # Specify start and end values for the spanned sequence
-  if( !is.null(start) & !is.null(end) ) {
+  # Specify start_valand end_valvalues for the spanned sequence
+  if( !is.null(start_val) & !is.null(end_val) ) {
 
-    if(!get_interval(c(start, end)) %in%  c('year', 'month')) {
-      stop('When start and end are both specified in the span_month function,
+    if(!get_interval(c(start, end_val)) %in%  c('year', 'month')) {
+      stop('When start_valand end_valare both specified in the span_month function,
            they can only differ from each other in months.')
     }
 
@@ -140,12 +140,12 @@ span_month <- function(x,
     end_seq   <- end
 
 
-  } else if( !is.null(start) & is.null(end) ){
+  } else if( !is.null(start_val) & is.null(end_val) ){
 
     start_seq <- start
     end_seq   <- end_at_null + end_offset
 
-  } else if ( is.null(start) & !is.null(end) ) {
+  } else if ( is.null(start_val) & !is.null(end_val) ) {
 
     start_seq <- start_at_null + start_offset
     end_seq   <- end
@@ -166,8 +166,8 @@ span_month <- function(x,
 ##################
 #' @rdname span_year
 span_day <- function(x,
-                     start = NULL,
-                     end   = NULL){
+                     start_val= NULL,
+                     end_val  = NULL){
   # Initialize
   if('Date' %in% class(x)){
     stop('To use span_day x should be of class POSIXt', call. = FALSE)
@@ -178,8 +178,8 @@ span_day <- function(x,
     lubridate::minute(start_at_null) <-
     lubridate::second(start_at_null) <- 0
 
-  if( !is.null(start) ){
-    end_offset <- start - start_at_null
+  if( !is.null(start_val) ){
+    end_offset <- start_val- start_at_null
   }
 
   end_at_null <- max(x)
@@ -188,26 +188,26 @@ span_day <- function(x,
     lubridate::hour(end_at_null) <- lubridate::minute(end_at_null) <- lubridate::second(end_at_null) <- 0
   }
 
-  if( !is.null(end) ){
-    start_offset <- end - end_at_null
+  if( !is.null(end_val) ){
+    start_offset <- end_val- end_at_null
   }
 
   # Assign
-  if( !(start %>% is.null) & !(end %>% is.null) ) {
-    if(!get_interval(c(start, end)) %in%  c('year', 'month', 'day')) {
-      stop('When start and end are both specified in the span_day function,
+  if( !(start_val%>% is.null) & !(end_val%>% is.null) ) {
+    if(!get_interval(c(start, end_val)) %in%  c('year', 'month', 'day')) {
+      stop('When start_valand end_valare both specified in the span_day function,
            they cannot differ from each other in an interval level lower than days')
     }
 
     start_seq <- start
     end_seq   <- end
 
-  } else if( !is.null(start) & is.null(end) ){
+  } else if( !is.null(start_val) & is.null(end_val) ){
 
     start_seq <- start
     end_seq   <- end_at_null + end_offset
 
-  } else if ( is.null(start) & !is.null(end) ) {
+  } else if ( is.null(start_val) & !is.null(end_val) ) {
 
     start_seq <- start_at_null + start_offset
     end_seq   <- end
@@ -227,8 +227,8 @@ span_day <- function(x,
 ###################
 #' @rdname span_year
 span_hour <- function(x,
-                      start = NULL,
-                      end   = NULL){
+                      start_val= NULL,
+                      end_val  = NULL){
   if('Date' %in% class(x)){
     stop('To use span_hour x should be of class POSIXt', call. = FALSE)
   }
@@ -237,8 +237,8 @@ span_hour <- function(x,
   start_at_null <- min(x)
   lubridate::minute(start_at_null) <- lubridate::second(start_at_null) <- 0
 
-  if( !is.null(start) ){
-    end_offset <- start - start_at_null
+  if( !is.null(start_val) ){
+    end_offset <- start_val- start_at_null
   }
 
   end_at_null <- max(x)
@@ -247,27 +247,27 @@ span_hour <- function(x,
     lubridate::minute(end_at_null) <- lubridate::second(end_at_null) <- 0
   }
 
-  if( !is.null(end) ){
-    start_offset <- end - end_at_null
+  if( !is.null(end_val) ){
+    start_offset <- end_val- end_at_null
   }
 
   # Assign
-  if( !is.null(start) & !is.null(end) ) {
+  if( !is.null(start_val) & !is.null(end_val) ) {
 
-    if(!get_interval(c(start, end)) %in%  c('year', 'month', 'day', 'hour')) {
-      stop('When start and end are both specified in the span_hour function,
+    if(!get_interval(c(start, end_val)) %in%  c('year', 'month', 'day', 'hour')) {
+      stop('When start_valand end_valare both specified in the span_hour function,
            they cannot differ from each other in an interval level lower than hours.')
     }
 
      start_seq <- start
      end_seq   <- end
 
-  } else if( !is.null(start) & is.null(end) ){
+  } else if( !is.null(start_val) & is.null(end_val) ){
 
     start_seq <- start
     end_seq   <- end_at_null + end_offset
 
-  } else if ( is.null(start) & !is.null(end) ) {
+  } else if ( is.null(start_val) & !is.null(end_val) ) {
 
     start_seq <- start_at_null + start_offset
     end_seq   <- end
@@ -289,8 +289,8 @@ span_hour <- function(x,
 #####################
 #' @rdname span_year
 span_minute <- function(x,
-                        start = NULL,
-                        end   = NULL) {
+                        start_val= NULL,
+                        end_val  = NULL) {
   if('Date' %in% class(x)){
     stop('To use span_hour x should be of class POSIXt', call. = FALSE)
   }
@@ -299,8 +299,8 @@ span_minute <- function(x,
   start_at_null <- min(x)
   lubridate::second(start_at_null) <- 0
 
-  if( !is.null(start) ){
-    end_offset <- start - start_at_null
+  if( !is.null(start_val) ){
+    end_offset <- start_val- start_at_null
   }
 
   end_at_null <- max(x)
@@ -309,8 +309,8 @@ span_minute <- function(x,
     lubridate::second(end_at_null) <- 0
   }
 
-  if( !is.null(end) ){
-    start_offset <- end - end_at_null
+  if( !is.null(end_val) ){
+    start_offset <- end_val- end_at_null
   }
 
   if('Date' %in% class(x)){
@@ -318,22 +318,22 @@ span_minute <- function(x,
   }
 
   # Assign
-  if( !is.null(start) & !is.null(end) ) {
+  if( !is.null(start_val) & !is.null(end_val) ) {
 
-    if(!get_interval(c(start, end)) %in%  c('year', 'month', 'day', 'hour', 'minute')) {
-      stop('When start and end are both specified in the span_minute function,
+    if(!get_interval(c(start, end_val)) %in%  c('year', 'month', 'day', 'hour', 'minute')) {
+      stop('When start_valand end_valare both specified in the span_minute function,
            they cannot differ from each other in an interval level lower than minutes.')
     }
 
     start_seq <- start
     end_seq   <- end
 
-  } else if( !is.null(start) & is.null(end) ){
+  } else if( !is.null(start_val) & is.null(end_val) ){
 
     start_seq <- start
     end_seq   <- end_at_null + end_offset
 
-  } else if ( is.null(start) & !is.null(end) ) {
+  } else if ( is.null(start_val) & !is.null(end_val) ) {
 
     start_seq <- start_at_null + start_offset
     end_seq   <- end
@@ -347,4 +347,5 @@ span_minute <- function(x,
 
   seq(start_seq, end_seq, 'min')
 }
+
 

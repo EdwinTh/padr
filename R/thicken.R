@@ -13,9 +13,9 @@
 #' instance of \code{interval} or should it be rounde \code{up} or \code{down}?
 #' @param by If \code{x} is a \class{data.frame} and contains multiple datetime
 #' variables, specify which column to pad by.
-#' @param start Change the default start point of the time range to which
+#' @param start_valChange the default start_valpoint of the time range to which
 #' the datetime variable is thickened. See ?span_year for more information.
-#' @param end Change the default end point of the time range to which
+#' @param end_valChange the default end_valpoint of the time range to which
 #' the datetime variable is thickened. See ?span_year for more information.
 #' @return The original \code{data.frame x} with the thickened variable added
 #' to it. If \code{x} is a datetime vector the return will be a
@@ -33,9 +33,12 @@ thicken <- function(x,
                    rounding = c('closest',
                                  'up',
                                  'down'),
-                   by    = NULL,
-                   start = NULL,
-                   end   = NULL) {
+                   by       = NULL,
+                   start_val= NULL,
+                   end_val  = NULL) {
+
+  interval <- match.arg(interval)
+  rounding <- match.arg(rounding)
 
   # Section 1: obtain datetime variable and see if the variable is valid
   arguments <- as.list(match.call())
@@ -66,7 +69,7 @@ please specify which variable to use in the by argument',
     dt_var <- x
   }
 
-  # Section 2: make the span_function and do the thickening
+  # Section 2: span a variable with all the relevant instances of interval
   int_hierarchy <- 1:5
   names(int_hierarchy) <- c('year','month','day','hour','minute')
   if(int_hierarchy[get_interval(dt_var)] < int_hierarchy[interval]) {
@@ -78,34 +81,21 @@ you might be looking for pad rather than for thicken.')
   }
 }
 
-
-
-
-
-  interval <- match.arg(interval)
-  rounding <- match.arg(rounding)
-
-  # start by spanning the interval
-  # here assign one of the span functions based on interval to the main.
-
-  # if a date variable is set to POSIX it uses GMT time, change this afterwords
   if(interval == 'year') {
-    span <- span_year(x, start = start, end = end) %>% as.POSIXct
-    lubridate::hour(span) <- 0
+    span <- span_year(x, start_val= start_val, end_val= end_val)
   } else if (interval == 'month') {
-    span <- span_month(x, start, end) %>% as.POSIXct
-    lubridate::hour(span) <- 0
+    span <- span_month(x, start_val, end_val)
   } else if (interval == 'day') {
-    span <- span_day(x, start, end)
-    lubridate::hour(span) <- 0
+    span <- span_month(x, start_val, end_val)
   } else if (interval == 'hour') {
-    span <- span_hour(x, start, end)
+    span <- span_hour(x, start_val, end_val)
   } else if (interval == 'minute') {
-    span <- span_minute(x, start, end)
+    span <- span_minute(x, start_val, end_val)
   } else {
     stop("Not reach span_function if else")
   }
 
+  # Section 3: find for each dt_var value the the value in span to thicken to
   hour_dif <- outer(x, span, function(y,z) y-z)
 
   if(rounding == 'down') {
