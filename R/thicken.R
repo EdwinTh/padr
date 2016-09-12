@@ -43,6 +43,7 @@ thicken <- function(x,
 
   if(is.data.frame(x)){
     original_data_frame <- x
+    x <- as.data.frame(x)
 
     if(!is.null(arguments$by)) {
       if(length(arguments$by) > 1) stop('by can indicate one variable only')
@@ -100,6 +101,7 @@ you might be looking for pad rather than for thicken.')
   }
 
   if(is.data.frame(x)) {
+    ## this throws an error for tbl_df >> still to do
     original_data_frame$thickened <- thickened
     return(original_data_frame)
   } else {

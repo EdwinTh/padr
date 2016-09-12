@@ -70,3 +70,14 @@ test_that("thicken gives correct output when x is a vector", {
   expect_equal(lubridate::year(day_to_year2[100,2]), 2017)
 })
 
+test_that("thicken gives correct ouput when x is a df",{
+  X <- data.frame(day_var = seq(as.Date('2016-01-01'), as.Date('2016-12-31'), by = 'day'),
+                                   value   = runif(366, 50, 100))
+
+  expect_equal(thicken(X) %>% nrow, 366)
+  expect_equal( lubridate::month(thicken(X, 'month')$thickened) %>% max, 12)
+  # TO DO make sure tbl works properly
+  expect_error( (thicken(dplyr::as_data_frame(X)) %>% print), NA)
+  expect_equal( (thicken(dplyr::as_data_frame(X)) %>% class)[1], 'tbl_df')
+  expect_equal((thicken(data.table::as.data.table(X)) %>% class)[1], 'data.table')
+})
