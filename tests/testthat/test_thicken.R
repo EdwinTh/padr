@@ -8,15 +8,9 @@ date_seq <- function(interval){
   }
 
   sequence <- seq(start_date,
-                  as.POSIXlt(strftime('2016-01-01')),
+                  as.POSIXlt(strftime('2017-01-01')),
                   by = interval)
-  # as.Date function is used for interval = 'day' so we are sure to stay out of
-  # timezone and daylight savings issues
-  if(interval == 'day') {
-    sequence <- seq(as.Date(strftime('2014-01-01')),
-                    as.Date(strftime('2017-01-01')),
-                    by = interval)
-  }
+
   set.seed(12345)
   if(length(sequence) > 100) {
     sampled_dates <- sample(sequence, 100)
@@ -27,7 +21,7 @@ date_seq <- function(interval){
 }
 
 x_month <- date_seq('month')
-x_day   <- date_seq('day')
+x_day   <- date_seq('DSTday')
 x_hour  <- date_seq('hour')
 x_min   <- date_seq('min')
 x_sec   <- date_seq('sec')
@@ -64,9 +58,15 @@ test_that("thicken gives correct interval", {
   expect_equal(thicken(x_sec, 'minute')$thickened %>% get_interval, 'minute')
 })
 
-test_that("rounding works properly in thicken",{
-  expect_equal(thicken(x_sec, 'year', 'closest', FALSE) %>% nrow, 2)
-  expect_equal(thicken(x_sec, 'year', 'down', FALSE) %>% nrow, 1)
-  expect_equal(thicken(x_sec, 'year', 'up', FALSE) %>% nrow, 1)
+test_that("thicken gives correct output when x is a vector", {
+  day_sorted <- sort(x_day)
+  day_to_year <- thicken(day_sorted, 'year')
+  day_to_year2 <- thicken(day_sorted, 'year', 'up')
+
+  expect_equal(day_to_year %>% nrow, 100)
+  expect_equal(lubridate::year(day_to_year[1,2]), 2015)
+  expect_equal(lubridate::year(day_to_year[100,2]), 2016)
+  expect_equal(lubridate::year(day_to_year2[1,2]), 2016)
+  expect_equal(lubridate::year(day_to_year2[100,2]), 2017)
 })
 

@@ -12,13 +12,15 @@
 #' See \code{details} for further information.
 #' @param end_va lAn object of class \code{Date}, \code{POSIXlt}, or \code{POSIXct}.
 #' #' See \code{details} for further information.
-#' @details The \code{start} and \code{end} arguments can be used in two ways to
+#' @details The \code{start_val} and \code{end_val} arguments can be used in two ways to
 #' change the default behavior of the \code{span_} functions. First one can
 #' lengthen or shorten the output by specifying a timepoint that is outside
 #' the default range. Second by default the lower order time units are set to the
 #' lowest possible value (that is 1 for month and day and 0 for hour, minute and
 #' second). \code{start} and \code{end} can be used as an offset for these
 #' default values. Of course these two functionalities are not mutually exclusive.
+#'
+#'
 #' @return A vector of the same data type as \code{x}.
 #' @examples
 #' x <- as.POSIXct(strftime(c('2014-03-04 10:43:16',
@@ -28,6 +30,7 @@
 #' span_day(x)
 #' span_hour(x)
 #' span_minute(x)
+
 
 ###################
 #### span_year ####
@@ -70,18 +73,18 @@ span_year <- function(x,
            they can only differ from each other in years.')
     }
 
-    start_seq <- start
-    end_seq   <- end
+    start_seq <- start_val
+    end_seq   <- end_val
 
   } else if( !is.null(start_val) & is.null(end_val) ){
 
-    start_seq <- start
+    start_seq <- start_val
     end_seq   <- end_at_null + end_offset
 
   } else if ( is.null(start_val) & !is.null(end_val) ) {
 
     start_seq <- start_at_null + start_offset
-    end_seq   <- end
+    end_seq   <- end_val
 
   } else {
 
@@ -90,7 +93,9 @@ span_year <- function(x,
 
   }
 
-  seq(start_seq, end_seq, 'year')
+  span <- seq(start_seq, end_seq, 'year')
+  if(class(x)[1] == 'POSIXlt') span <- span %>% as.POSIXlt
+  return(span)
 }
 
 
@@ -116,8 +121,8 @@ span_month <- function(x,
   }
 
   end_at_null <- max(x)
-  lubridate::month(end_at_null) <- lubridate::month(end_at_null) + 1
   lubridate::day(end_at_null) <- 1
+  lubridate::month(end_at_null) <- lubridate::month(end_at_null) + 1
   if('POSIXt' %in% class(x)) {
       lubridate::hour(end_at_null) <-
         lubridate::minute(end_at_null) <-
@@ -136,19 +141,19 @@ span_month <- function(x,
            they can only differ from each other in months.')
     }
 
-    start_seq <- start
-    end_seq   <- end
+    start_seq <- start_val
+    end_seq   <- end_val
 
 
   } else if( !is.null(start_val) & is.null(end_val) ){
 
-    start_seq <- start
+    start_seq <- start_val
     end_seq   <- end_at_null + end_offset
 
   } else if ( is.null(start_val) & !is.null(end_val) ) {
 
     start_seq <- start_at_null + start_offset
-    end_seq   <- end
+    end_seq   <- end_val
 
   } else {
 
@@ -157,7 +162,9 @@ span_month <- function(x,
 
   }
 
-  seq(start_seq, end_seq, 'month')
+  span <- seq(start_seq, end_seq, 'month')
+  if(class(x)[1] == 'POSIXlt') span <- span %>% as.POSIXlt
+  return(span)
 }
 
 
@@ -199,18 +206,18 @@ span_day <- function(x,
            they cannot differ from each other in an interval level lower than days')
     }
 
-    start_seq <- start
-    end_seq   <- end
+    start_seq <- start_val
+    end_seq   <- end_val
 
   } else if( !is.null(start_val) & is.null(end_val) ){
 
-    start_seq <- start
+    start_seq <- start_val
     end_seq   <- end_at_null + end_offset
 
   } else if ( is.null(start_val) & !is.null(end_val) ) {
 
     start_seq <- start_at_null + start_offset
-    end_seq   <- end
+    end_seq   <- end_val
 
   } else {
 
@@ -219,7 +226,9 @@ span_day <- function(x,
 
   }
 
-  seq(start_seq, end_seq, 'day')
+  span <- seq(start_seq, end_seq, 'DSTday')
+  if(class(x)[1] == 'POSIXlt') span <- span %>% as.POSIXlt
+  return(span)
 }
 
 ###################
@@ -259,18 +268,18 @@ span_hour <- function(x,
            they cannot differ from each other in an interval level lower than hours.')
     }
 
-     start_seq <- start
-     end_seq   <- end
+     start_seq <- start_val
+     end_seq   <- end_val
 
   } else if( !is.null(start_val) & is.null(end_val) ){
 
-    start_seq <- start
+    start_seq <- start_val
     end_seq   <- end_at_null + end_offset
 
   } else if ( is.null(start_val) & !is.null(end_val) ) {
 
     start_seq <- start_at_null + start_offset
-    end_seq   <- end
+    end_seq   <- end_val
 
   } else {
 
@@ -279,8 +288,9 @@ span_hour <- function(x,
 
   }
 
-
-  seq(start_seq, end_seq, 'hour')
+  span <- seq(start_seq, end_seq, 'hour')
+  if(class(x)[1] == 'POSIXlt') span <- span %>% as.POSIXlt
+  return(span)
 }
 
 
@@ -325,18 +335,18 @@ span_minute <- function(x,
            they cannot differ from each other in an interval level lower than minutes.')
     }
 
-    start_seq <- start
-    end_seq   <- end
+    start_seq <- start_val
+    end_seq   <- end_val
 
   } else if( !is.null(start_val) & is.null(end_val) ){
 
-    start_seq <- start
+    start_seq <- start_val
     end_seq   <- end_at_null + end_offset
 
   } else if ( is.null(start_val) & !is.null(end_val) ) {
 
     start_seq <- start_at_null + start_offset
-    end_seq   <- end
+    end_seq   <- end_val
 
   } else {
 
@@ -345,7 +355,9 @@ span_minute <- function(x,
 
   }
 
-  seq(start_seq, end_seq, 'min')
+  span <- seq(start_seq, end_seq, 'min')
+  if(class(x)[1] == 'POSIXlt') span <- span %>% as.POSIXlt
+  return(span)
 }
 
 

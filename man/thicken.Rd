@@ -5,30 +5,32 @@
 \title{Change datetime Granularity}
 \usage{
 thicken(x, interval = c("year", "month", "day", "hour", "minute"),
-  rounding = c("closest", "up", "down"), allow_duplicates = TRUE, ...)
+  rounding = c("down", "up"), by = NULL, start_val = NULL,
+  end_val = NULL)
 }
 \arguments{
-\item{x}{A vector of class \code{Date}, \code{POSIXlt}, or \code{POSIXct}.}
+\item{x}{A vector of class \code{Date}, \code{POSIXlt}, or \code{POSIXct},
+or a \code{data.frame} containing at least on column of these classes.}
 
 \item{interval}{The desired interval of the output, which should be higher
-the interval of \codes{x}. Current choices are \code{year, month, day,
-hour, minute}.}
+then the interval of the datetime variable. Current choices are
+\code{year, month, day, hour, minute}.}
 
-\item{rounding}{= closest Should \code{x} be rounded to the \code{closest}
-instance of \code{interval} or should it be rounde \code{up} or \code{down}?}
+\item{rounding}{= closest Should \code{x} be rounded \code{down} or \code{up}?}
 
-\item{allow_duplicates}{Logical indicating if we can have multiple instances
-of the same value in the return \code{data.frame}.
-If FALSE the value in \code{x} closest to the
-return time point will be selected. Will throw an error if FALSE and two or
-more timpe points are at the exact same distance of an \code{interval} value.}
+\item{by}{If \code{x} is a \class{data.frame} and contains multiple datetime
+variables, specify which column to pad by.}
+
+\item{start_valChange}{the default start_valpoint of the time range to which
+the datetime variable is thickened. See ?span_year for more information.}
+
+\item{end_valChange}{the default end_valpoint of the time range to which
+the datetime variable is thickened. See ?span_year for more information.}
 }
 \value{
-A \code{data.frame} with two colums, the original vector \code{x}
-and a vector of the same class as \code{x} with the datetime points to which
-\code{x} should be mapped to thicken it.  Datetime levels that are
-lower in granularity than
-possible value (month = 1, day = 1, hour = 0, second = 0, minute = 0).
+The original \code{data.frame x} with the thickened variable added
+to it. If \code{x} is a datetime vector the return will be a
+\code{data.frame} comprising \code{x} and the thickened variable.
 }
 \description{
 This function will take a datetime vector of class and changes its
@@ -39,6 +41,7 @@ The interval is moved to a higher level by 'rounding' \code{x}
 to the closest instance of the provided \code{interval}
 }
 \examples{
-
+X <- data.frame(day_var = seq(as.Date('2016-01-01'), as.Date('2016-12-31'), by = 'day'),
+                value   = runif(366, 50, 100))
 }
 

@@ -156,3 +156,37 @@ test_that('span_minute produces correct output', {
 })
 
 
+context('span_ output is of the same class as the input')
+
+test_that('span_year returns the same class', {
+  expect_equal(span_year(x_date) %>% class, x_date %>% class)
+  expect_equal(span_year(x_posix) %>% class, x_posix %>% class)
+  expect_equal(span_year(x_posix %>% as.POSIXlt) %>% class,
+               x_posix %>% as.POSIXlt %>%  class)
+})
+
+test_that('span_month returns the same class', {
+  expect_equal(span_month(x_date) %>% class, x_date %>% class)
+  expect_equal(span_month(x_posix) %>% class, x_posix %>% class)
+  expect_equal(span_month(x_posix %>% as.POSIXlt) %>% class,
+               x_posix %>% as.POSIXlt %>%  class)
+})
+
+test_that('span_day returns the same class', {
+  expect_equal(span_day(x_posix) %>% class, x_posix %>% class)
+  expect_equal(span_day(x_posix %>% as.POSIXlt) %>% class,
+               x_posix %>% as.POSIXlt %>%  class)
+})
+
+test_that('span_hour returns the same class', {
+  expect_equal(span_hour(x_posix) %>% class, x_posix %>% class)
+  expect_equal(span_hour(x_posix %>% as.POSIXlt) %>% class,
+               x_posix %>% as.POSIXlt %>%  class)
+})
+
+test_that('span_minute returns the same class', {
+  expect_equal(span_minute(x_posix) %>% class, x_posix %>% class)
+  expect_equal(span_minute(x_posix %>% as.POSIXlt) %>% class,
+               x_posix %>% as.POSIXlt %>%  class)
+})
+
