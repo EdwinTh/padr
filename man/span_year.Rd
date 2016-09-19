@@ -43,7 +43,7 @@ maximum of \code{x}. The functions are designed as hepers for the \code{thicken}
 function.
 }
 \details{
-The \code{start} and \code{end} arguments can be used in two ways to
+The \code{start_val} and \code{end_val} arguments can be used in two ways to
 change the default behavior of the \code{span_} functions. First one can
 lengthen or shorten the output by specifying a timepoint that is outside
 the default range. Second by default the lower order time units are set to the

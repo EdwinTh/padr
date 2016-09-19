@@ -36,7 +36,7 @@ round_down <- function(a,
   current_b_index <- 1
   current_b_val   <- b[1]
   next_b_val      <- b[2]
-  thickened       <- character(length(a))
+  thickened       <- numeric(length(a))
   class(thickened) <- class(a)
 
   for(i in seq_along(a)){
@@ -54,7 +54,7 @@ round_down <- function(a,
 
   thickened <- lubridate::with_tz(thickened, attr(a, "tz"))
   if(class(b)[1] == 'POSIXlt') thickened <- thickened %>% as.POSIXlt
-  thickened[order_a]
+  return(thickened[order_a])
 }
 
 #' @rdname span_year
@@ -88,5 +88,7 @@ round_up <- function(a,
 
   thickened <- lubridate::with_tz(thickened, attr(a, "tz"))
   if(class(b)[1] == 'POSIXlt') thickened <- thickened %>% as.POSIXlt
-  thickened[order_a]
+  return(thickened[order_a])
 }
+
+
