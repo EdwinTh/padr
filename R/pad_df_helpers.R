@@ -26,8 +26,8 @@ get_interval <- function(x) {
     month  = substr(x_char, 6, 7) %>% unique %>% length %>% `==`(1) %>% `!`,
     day    = substr(x_char, 9, 10) %>% unique %>% length %>% `==`(1) %>% `!`,
     hour   = substr(x_char, 12, 13) %>% unique %>% length %>% `==`(1) %>% `!`,
-    minute = substr(x_char, 15, 16) %>% unique %>% length %>% `==`(1) %>% `!`,
-    second = substr(x_char, 18, 19) %>% unique %>% length %>% `==`(1) %>% `!`
+    min    = substr(x_char, 15, 16) %>% unique %>% length %>% `==`(1) %>% `!`,
+    sec    = substr(x_char, 18, 19) %>% unique %>% length %>% `==`(1) %>% `!`
   )
 
   does_differ <- differs %>% which

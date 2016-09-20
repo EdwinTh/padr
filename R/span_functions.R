@@ -330,7 +330,7 @@ span_minute <- function(x,
   # Assign
   if( !is.null(start_val) & !is.null(end_val) ) {
 
-    if(!get_interval(c(start, end_val)) %in%  c('year', 'month', 'day', 'hour', 'minute')) {
+    if(!get_interval(c(start, end_val)) %in%  c('year', 'month', 'day', 'hour', 'min')) {
       stop('When start_val and end_val are both specified in the span_minute function,
            they cannot differ from each other in an interval level lower than minutes.')
     }

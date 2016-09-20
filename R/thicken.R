@@ -24,13 +24,12 @@
 #'                 value   = runif(366, 50, 100))
 #' @export
 
-
 thicken <- function(x,
                    interval = c('year',
                                 'month',
                                 'day',
                                 'hour',
-                                'minute'),
+                                'min'),
                    rounding = c('down',
                                  'up'),
                    by       = NULL,
@@ -40,12 +39,16 @@ thicken <- function(x,
   # Section 1: obtain datetime variable and see if the variable is valid
 
   arguments <- as.list(match.call())
-  if('by' %in% names(arguments)){by <- arguments$by} else {by <- NULL}
+  if('by' %in% names(arguments)) by_val <- as.character(arguments$by)
 
   if(is.data.frame(x)) {
     original_data_frame <- x
     x <- as.data.frame(x)
-    dt_var <- check_data_frame(x, by = by)
+    if('by' %in% names(arguments)){
+      dt_var <- check_data_frame(x, by = by_val)
+    } else {
+      dt_var <- check_data_frame(x)
+    }
   } else {
     dt_var <- check_vector(x)
   }
@@ -55,7 +58,7 @@ thicken <- function(x,
 
   # Section 2: span a variable with all the relevant instances of interval
   int_hierarchy <- 1:6
-  names(int_hierarchy) <- c('year','month','day','hour','minute', 'second')
+  names(int_hierarchy) <- c('year','month','day','hour','min', 'sec')
   if(int_hierarchy[get_interval(dt_var)] < int_hierarchy[interval]) {
     stop('The interval in the datetime variable is lower than the interval given,
 you might be looking fo smear rather than for thicken.')
@@ -72,7 +75,7 @@ you might be looking for pad rather than for thicken.')
     span <- span_day(dt_var, start_val, end_val)
   } else if (interval == 'hour') {
     span <- span_hour(dt_var, start_val, end_val)
-  } else if (interval == 'minute') {
+  } else if (interval == 'min') {
     span <- span_minute(dt_var, start_val, end_val)
   } else {
     stop("Not reach span_function if else")

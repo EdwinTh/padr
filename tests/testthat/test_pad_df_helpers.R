@@ -1,5 +1,3 @@
-context('Test the get_interval function')
-
 date_seq <- function(interval){
   # only use a wide interval to test year, all others less wide for performance
   if(interval == 'year') {
@@ -29,6 +27,8 @@ date_seq <- function(interval){
 
 test_errors_data <- date_seq('day')
 
+context('Test the get_interval function')
+
 test_that('get_interval only works on right data types',{
   expect_error(as.integer(test_errors_data) %>% get_interval)
   expect_error(as.numeric(test_errors_data) %>% get_interval)
@@ -44,8 +44,8 @@ test_that('get_interval gives the correct output',{
   expect_equal(date_seq('month') %>% get_interval, 'month')
   expect_equal(date_seq('day') %>% get_interval, 'day')
   expect_equal(date_seq('hour') %>% get_interval, 'hour')
-  expect_equal(date_seq('min') %>% get_interval, 'minute')
-  expect_equal(date_seq('sec') %>% get_interval, 'second')
+  expect_equal(date_seq('min') %>% get_interval, 'min')
+  expect_equal(date_seq('sec') %>% get_interval, 'sec')
 })
 
 

@@ -146,8 +146,8 @@ test_that('span_hour produces correct output', {
 
 test_that('span_minute produces correct output', {
   out_min <- span_minute(x_posix)
-  out_min_with_start <- span_minute(x_posix, start = as.POSIXct('2013-12-31 10:41:12'))
-  out_min_with_end <- span_minute(x_posix, end = as.POSIXct('2014-01-01 08:24:15'))
+  out_min_with_start <- span_minute(x_posix, start_val = as.POSIXct('2013-12-31 10:41:12'))
+  out_min_with_end <- span_minute(x_posix, end_val = as.POSIXct('2014-01-01 08:24:15'))
   expect_equal(out_min %>% length, 1301)
   expect_equal(out_min %>% min, '2013-12-31 10:43:00' %>% strftime %>% as.POSIXct)
   expect_equal(out_min %>% max, '2014-01-01 08:23:00' %>% strftime %>% as.POSIXct)

@@ -55,7 +55,7 @@ test_that("thicken gives correct interval", {
   expect_equal(thicken(x_sec, 'month')$thickened %>% get_interval, 'month')
   expect_equal(thicken(x_sec, 'day')$thickened %>% get_interval, 'day')
   expect_equal(thicken(x_sec, 'hour')$thickened %>% get_interval, 'hour')
-  expect_equal(thicken(x_sec, 'minute')$thickened %>% get_interval, 'minute')
+  expect_equal(thicken(x_sec, 'min')$thickened %>% get_interval, 'min')
 })
 
 test_that("thicken gives correct output when x is a vector", {
@@ -80,3 +80,4 @@ test_that("thicken gives correct ouput when x is a df",{
   expect_equal( (thicken(dplyr::as_data_frame(X)) %>% class)[1], 'tbl_df')
   expect_equal((thicken(data.table::as.data.table(X)) %>% class)[1], 'data.table')
 })
+
