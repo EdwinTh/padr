@@ -5,11 +5,9 @@
 \alias{thicken}
 \title{Change datetime interval up}
 \usage{
-smear(x, interval = c("year", "month", "day", "hour", "minute"),
-  rounding = c("down", "up"), by = NULL, start_val = NULL,
-  end_val = NULL)
+smear(x, interval = c("month", "day", "hour", "min", "sec"), by = NULL)
 
-thicken(x, interval = c("year", "month", "day", "hour", "minute"),
+thicken(x, interval = c("year", "month", "day", "hour", "min"),
   rounding = c("down", "up"), by = NULL, start_val = NULL,
   end_val = NULL)
 }
@@ -21,10 +19,10 @@ or a \code{data.frame} containing at least one column of these classes.}
 then the interval of the datetime variable. Current choices are
 \code{year, month, day, hour, minute}.}
 
-\item{rounding}{= closest Should \code{x} be rounded \code{down} or \code{up}?}
-
 \item{by}{If \code{x} is a \class{data.frame} and contains multiple datetime
 variables, specify which column to pad by.}
+
+\item{rounding}{= closest Should \code{x} be rounded \code{down} or \code{up}?}
 
 \item{start_val}{Change the default start_valpoint of the time range to which
 the datetime variable is thickened. See ?span_year for more information.}

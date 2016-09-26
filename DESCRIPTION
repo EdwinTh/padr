@@ -10,7 +10,9 @@ Encoding: UTF-8
 LazyData: true
 Imports:
     dplyr,
-    magrittr
+    magrittr,
+    Rcpp
 Suggests:
     testthat
 RoxygenNote: 5.0.1
+LinkingTo: Rcpp

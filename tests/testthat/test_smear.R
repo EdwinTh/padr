@@ -39,15 +39,16 @@ test_that("Section 1, correct error handling", {
   expect_error(smear(x_month %>% as.character))
   expect_error(smear(x_month %>% as.numeric))
   expect_error(smear(mtcars))
-  expect_error(smear(df_with_one_date, interval = 'day'), NA)
+  expect_error(suppressWarnings(smear(df_with_one_date, interval = 'day')), NA)
   expect_error(smear(df_with_two_dates, interval = 'day'))
-  expect_error(smear(df_with_two_dates, by = dt_var1, interval = 'day'), NA)
+  expect_error(suppressWarnings(smear(df_with_two_dates, by = dt_var1, interval = 'day')), NA)
 })
 
 test_that("Section 2, correct error handling", {
   expect_error(smear(x_month, 'month'))
   expect_error(smear(x_hour, 'month'))
   expect_error(smear(x_month, 'day'), NA)
+  expect_warning(smear(date_seq('month'), 'day'))
 })
 
 test_that("Smear gives the correct output", {
@@ -57,3 +58,4 @@ test_that("Smear gives the correct output", {
   # we lose one hour when moving to DST
   expect_equal(smear(x_month, 'hour')  %>% nrow,  181*24-1)
 })
+

@@ -1,6 +1,3 @@
-devtools::load_all()
-library(dplyr)
-library(lubridate)
 
 a_date <- seq(lubridate::ymd('20151201'), lubridate::ymd('20160201'), by = 'day') %>%
   sample(20) %>% sort
@@ -15,8 +12,6 @@ b_date <- span_month(a_date)
 b_ct   <- span_day(a_ct)
 b_ct_cet <- span_day(a_ct_cet)
 b_lt   <- span_day(a_lt)
-
-
 
 context('Throws errors at different data types')
 

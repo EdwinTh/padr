@@ -48,20 +48,24 @@ pad <- function(x,
 
   span <- span_pad(dt_var, start_val, end_val, interval)
 
-
   if(!is.data.frame(x)){
     return(span)
   } else {
     join_frame <- data.frame(span = span)
     colnames(original_data_frame)[colnames(original_data_frame) ==
                                     dt_var_name] <- 'span'
-    return_frame <- dplyr::right_join(original_data_frame, join_frame)
+    return_frame <- suppressMessages(
+      dplyr::right_join(original_data_frame, join_frame))
     colnames(return_frame)[colnames(return_frame) == 'span'] <- dt_var_name
+    class(return_frame) <-  class(original_data_frame)
     return(return_frame)
   }
 }
 
 
+# this is a helper function for pad, spanning for pad is much simpler
+# than for thicken. Adjusting the span_ functions for pad would make them
+# too fuzzy.
 span_pad <- function(x,
                      start_val = NULL,
                      end_val   = NULL,

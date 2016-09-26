@@ -70,3 +70,11 @@ get_date_variables <- function(df){
     names
   return(date_classes)
 }
+
+
+# These two Roxygen tags are required to use Cpp code (they could be anywhere
+# in the package)
+
+#' @useDynLib padr
+#' @importFrom Rcpp sourceCpp
+NULL

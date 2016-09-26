@@ -177,9 +177,9 @@ span_day <- function(x,
                      start_val= NULL,
                      end_val  = NULL){
   # Initialize
-#  if('Date' %in% class(x)){
-#    stop('To use span_day x should be of class POSIXt', call. = FALSE)
-#  }
+  if('Date' %in% class(x)){
+    stop('To use span_day x should be of class POSIXt', call. = FALSE)
+  }
 
   start_at_null <- min(x)
   lubridate::hour(start_at_null) <-
@@ -249,6 +249,10 @@ span_hour <- function(x,
                       start_val= NULL,
                       end_val  = NULL){
   # Initialize
+  if('Date' %in% class(x)){
+    stop('To use span_day x should be of class POSIXt', call. = FALSE)
+  }
+
   start_at_null <- min(x)
   lubridate::minute(start_at_null) <- lubridate::second(start_at_null) <- 0
 
@@ -294,13 +298,6 @@ span_hour <- function(x,
 
   }
 
-  if(class(start_seq) == "Date") {
-    start_seq <- as.POSIXct(start_seq)
-    lubridate::hour(start_seq) <- 0
-    end_seq <- as.POSIXct(end_seq)
-    lubridate::hour(end_seq) <- 0
-  }
-
   span <- seq(start_seq, end_seq, 'hour')
   if(class(x)[1] == 'POSIXlt') span <- span %>% as.POSIXlt
   return(span)
@@ -317,6 +314,10 @@ span_minute <- function(x,
 
 
   # Initialize
+  if('Date' %in% class(x)){
+    stop('To use span_day x should be of class POSIXt', call. = FALSE)
+  }
+
   start_at_null <- min(x)
   lubridate::second(start_at_null) <- 0
 
@@ -363,14 +364,6 @@ span_minute <- function(x,
     end_seq   <- end_at_null
 
   }
-
-  if(class(start_seq) == "Date") {
-    start_seq <- as.POSIXct(start_seq)
-    lubridate::hour(start_seq) <- 0
-    end_seq <- as.POSIXct(end_seq)
-    lubridate::hour(end_seq) <- 0
-  }
-
 
   span <- seq(start_seq, end_seq, 'min')
   if(class(x)[1] == 'POSIXlt') span <- span %>% as.POSIXlt

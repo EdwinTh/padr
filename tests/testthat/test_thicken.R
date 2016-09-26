@@ -40,22 +40,23 @@ test_that("Section 1, correct error handling", {
   expect_error(thicken(x_month %>% as.character))
   expect_error(thicken(x_month %>% as.numeric))
   expect_error(thicken(mtcars))
-  expect_error(thicken(df_with_one_date), NA)
+  expect_error(suppressWarnings(thicken(df_with_one_date)), NA)
   expect_error(thicken(df_with_two_dates))
-  expect_error(thicken(df_with_two_dates, by = dt_var1), NA)
+  expect_error(suppressWarnings(thicken(df_with_two_dates, by = dt_var1)), NA)
 })
 
 test_that("Section 2, correct error handling", {
   expect_error(thicken(x_month, 'month'))
-  expect_error(thicken(x_hour, 'month'), NA)
+  expect_error(suppressWarnings(thicken(x_hour, 'month')), NA)
+  expect_warning(thicken(x_month))
 })
 
 test_that("thicken gives correct interval", {
-  expect_equal(thicken(x_sec, 'year')$thickened %>% get_interval, 'year')
-  expect_equal(thicken(x_sec, 'month')$thickened %>% get_interval, 'month')
-  expect_equal(thicken(x_sec, 'day')$thickened %>% get_interval, 'day')
-  expect_equal(thicken(x_sec, 'hour')$thickened %>% get_interval, 'hour')
-  expect_equal(thicken(x_sec, 'min')$thickened %>% get_interval, 'min')
+  expect_equal(suppressWarnings(thicken(x_sec, 'year'))$thickened %>% get_interval, 'year')
+  expect_equal(suppressWarnings(thicken(x_sec, 'month'))$thickened %>% get_interval, 'month')
+  expect_equal(suppressWarnings(thicken(x_sec, 'day'))$thickened %>% get_interval, 'day')
+  expect_equal(suppressWarnings(thicken(x_sec, 'hour'))$thickened %>% get_interval, 'hour')
+  expect_equal(suppressWarnings(thicken(x_sec, 'min'))$thickened %>% get_interval, 'min')
 })
 
 test_that("thicken gives correct output when x is a vector", {

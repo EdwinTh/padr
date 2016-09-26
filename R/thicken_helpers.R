@@ -21,6 +21,7 @@
 #' spanx2 <- span_hour(x2)
 #' round_down(x2, spanx2)
 #' round_up(x2, spanx2)
+
 round_down <- function(a,
                        b) {
 
@@ -32,30 +33,19 @@ round_down <- function(a,
   a <- sort(a)
   b <- sort(b)
 
-  if(class(a)[1] == 'POSIXlt') a <- a %>% as.POSIXct
-  current_b_index <- 1
-  current_b_val   <- b[1]
-  next_b_val      <- b[2]
-  thickened       <- numeric(length(a))
-  class(thickened) <- class(a)
-
-  for(i in seq_along(a)){
-    if(next_b_val > a[i]) {
-      thickened[i] <- current_b_val
-    } else {
-      while(next_b_val <= a[i]) {
-        current_b_index <- current_b_index + 1
-        current_b_val   <- b[current_b_index]
-        next_b_val      <- b[current_b_index + 1]
-      }
-      thickened[i]    <- current_b_val
-    }
+  if(class(a)[1] == 'Date'){
+    thickened <- as.Date(round_down_core(a,b), origin = '1970-01-01')
+  } else if (class(a)[1] == 'POSIXct') {
+    thickened <- as.POSIXct(round_down_core(as.numeric(a), as.numeric(b)),
+                            origin = '1970-01-01', tz = attr(a, 'tz'))
+  } else {
+    thickened <- as.POSIXlt(round_down_core(as.numeric(a), as.numeric(b)),
+                            origin = '1970-01-01', tz = attr(a, 'tz'))
   }
 
-  thickened <- lubridate::with_tz(thickened, attr(a, "tz"))
-  if(class(b)[1] == 'POSIXlt') thickened <- thickened %>% as.POSIXlt
   return(thickened[order_a])
 }
+
 
 #' @rdname span_year
 round_up <- function(a,
@@ -68,26 +58,16 @@ round_up <- function(a,
   a <- sort(a)
   b <- sort(b)
 
-  if(class(a)[1] == 'POSIXlt') a <- a %>% as.POSIXct
-  current_b_index <- 1
-  current_b_val   <- b[1]
-  thickened       <- numeric(length(a))
-  class(thickened) <- class(a)
-
-  for(i in seq_along(a)){
-    if(current_b_val > a[i]) {
-      thickened[i] <- current_b_val
-    } else {
-      while(current_b_val <= a[i]){
-        current_b_index <- current_b_index + 1
-        current_b_val   <- b[current_b_index]
-      }
-      thickened[i]    <- current_b_val
-    }
+  if(class(a)[1] == 'Date'){
+    thickened <- as.Date(round_up_core(a,b), origin = '1970-01-01')
+  } else if (class(a)[1] == 'POSIXct') {
+    thickened <- as.POSIXct(round_up_core(as.numeric(a), as.numeric(b)),
+                            origin = '1970-01-01', tz = attr(a, 'tz'))
+  } else {
+    thickened <- as.POSIXlt(round_up_core(as.numeric(a), as.numeric(b)),
+                            origin = '1970-01-01', tz = attr(a, 'tz'))
   }
 
-  thickened <- lubridate::with_tz(thickened, attr(a, "tz"))
-  if(class(b)[1] == 'POSIXlt') thickened <- thickened %>% as.POSIXlt
   return(thickened[order_a])
 }
 

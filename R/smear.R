@@ -37,6 +37,10 @@ you might be looking fo thicken rather than for thicken.')
 you might be looking for pad rather than for thicken.')
   }
 
+  if(!all(dt_var[1:(length(dt_var)-1)] < dt_var[2:length(dt_var)])) {
+   warning('Datetime variable was unsorted, result will be unsorted as well.')
+  }
+
   # The smearing is done at POSIXct level, if applicable later converted back to Date
   start_val   <- min(dt_var)
   end_val     <- max(dt_var) %>% as.POSIXct
@@ -66,7 +70,8 @@ you might be looking for pad rather than for thicken.')
   } else {
     colnames(original_data_frame)[colnames(original_data_frame) ==
                                     dt_var_name] <- 'original'
-    return_frame <- dplyr::inner_join(original_data_frame, join_frame)
+    return_frame <- suppressMessages(
+      dplyr::inner_join(original_data_frame, join_frame))
     colnames(return_frame)[colnames(return_frame) == 'original'] <- dt_var_name
     return(return_frame)
   }

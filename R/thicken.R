@@ -67,6 +67,10 @@ you might be looking fo smear rather than for thicken.')
 you might be looking for pad rather than for thicken.')
   }
 
+  if(!all(dt_var[1:(length(dt_var)-1)] < dt_var[2:length(dt_var)])) {
+    warning('Datetime variable was unsorted, result will be unsorted as well.')
+  }
+
   if(interval == 'year') {
     span <- span_year(dt_var, start_val, end_val)
   } else if (interval == 'month') {
