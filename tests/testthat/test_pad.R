@@ -26,13 +26,15 @@ x_day   <- seq(as.Date('2015-01-01'), as.Date('2015-02-01'), by = 'day') %>% sam
   c(as.Date('2015-01-01'), as.Date('2015-02-01')) %>% unique
 x_hour  <- seq(as.POSIXct('2015-01-01 01:00:00'), as.POSIXct('2015-01-02 01:00:00'), by = 'hour')[c(1,25)]
 x_min   <- seq(lubridate::ymd_hm('2015-01-01 00:00'),
-               lubridate::ymd_hm('2015-01-01 00:59'), by = 'min') %>% sample(15)
+               lubridate::ymd_hm('2015-01-01 00:59'), by = 'min') %>% sample(15) %>%
+  c(lubridate::ymd_hm('2015-01-01 00:00'), lubridate::ymd_hm('2015-01-01 00:59')) %>% unique
 
 df_with_one_date  <- data.frame(dt_var1 = date_seq('month'),
                                 y = 1:6)
 df_with_two_dates <- data.frame(dt_var1  = date_seq('month'),
                                 dt_var2 = date_seq('month'),
                                 y = 1:6)
+
 
 context("Test the pad function")
 
@@ -51,7 +53,26 @@ test_that("Gives warning when unordered", {
 
 test_that("Pad gives correct results on vectors", {
   expect_equal(pad(x_year) %>% length, 4)
+  expect_equal(pad(x_year, end_val = as.Date('2021-01-01')) %>% length, 7)
+  expect_equal(pad(x_year, start_val = as.Date('2012-01-01')) %>% length, 7)
+  expect_equal(pad(x_year, interval = 'month') %>% length, 37)
   expect_equal(pad(x_month) %>% length, 6)
   expect_equal(pad(x_day) %>% length, 32)
-  expect_equal(pad(x_hour) %>% length, 25)
+  expect_equal(pad(x_hour) %>% length, 2)
+  expect_equal(pad(x_hour, interval = 'hour') %>% length, 25)
+  expect_equal(pad(x_min) %>% length, 60)
 })
+
+test_that("Pad gives correct results on data.frames", {
+  expect_equal(pad(data.frame(x_year, 1)) %>% nrow, 4)
+  expect_equal(pad(data.frame(x_year, 1), end_val = as.Date('2021-01-01')) %>% nrow, 7)
+  expect_equal(pad(data.frame(x_year, 1), start_val = as.Date('2012-01-01')) %>% nrow, 7)
+  expect_equal(pad(data.frame(x_year, 1), interval = 'month') %>% nrow, 37)
+  expect_equal(pad(data.frame(x_month, 1)) %>% nrow, 6)
+  expect_equal(pad(data.frame(x_day, 1)) %>% nrow, 32)
+  expect_equal(pad(data.frame(x_hour, 1)) %>% nrow, 2)
+  expect_equal(pad(data.frame(x_hour, 1), interval = 'hour') %>% nrow, 25)
+  expect_equal(pad(data.frame(x_min, 1)) %>% nrow, 60)
+})
+
+

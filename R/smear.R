@@ -40,7 +40,7 @@ you might be looking for pad rather than for thicken.')
   # The smearing is done at POSIXct level, if applicable later converted back to Date
   start_val   <- min(dt_var)
   end_val     <- max(dt_var) %>% as.POSIXct
-  if(is.Date(dt_var)) {
+  if(lubridate::is.Date(dt_var)) {
     start_val <- as.POSIXct(start_val); end_val <- as.POSIXct(end_val)
     lubridate::hour(start_val) <- lubridate::hour(end_val) <- 0
   }
@@ -56,17 +56,17 @@ you might be looking for pad rather than for thicken.')
   if(int_hierarchy[interval_dt_var] < 3) lubridate::day(original)    <- 1
   if(int_hierarchy[interval_dt_var] < 2) lubridate::month(original)  <- 1
 
-  if(is.Date(dt_var)) original <- as.Date(original) + 1
+  if(lubridate::is.Date(dt_var)) original <- as.Date(original) + 1
   if(int_hierarchy[interval] < 4) smeared <- as.Date(smeared) + 1
 
   join_frame <- data.frame(original, smeared)
 
   if(!is.data.frame(x)){
     return(join_frame)
-  } else{
+  } else {
     colnames(original_data_frame)[colnames(original_data_frame) ==
                                     dt_var_name] <- 'original'
-    return_frame <- inner_join(original_data_frame, join_frame)
+    return_frame <- dplyr::inner_join(original_data_frame, join_frame)
     colnames(return_frame)[colnames(return_frame) == 'original'] <- dt_var_name
     return(return_frame)
   }

@@ -88,7 +88,6 @@ you might be looking for pad rather than for thicken.')
     thickened <- round_up(dt_var, span)
   }
 
-original_data_frame$day_var
   if(is.data.frame(x)) {
     original_data_frame$thickened <- thickened
     return(original_data_frame)
