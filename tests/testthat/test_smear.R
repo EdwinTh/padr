@@ -1,3 +1,4 @@
+
 date_seq <- function(interval){
   # only use a wide interval to test year, all others less wide for performance
   if(interval == 'year') {
@@ -23,7 +24,8 @@ x_year  <- seq(as.Date('2015-01-01'), as.Date('2016-01-01'), by = 'year')
 x_month <- seq(as.Date('2015-01-01'), as.Date('2015-06-01'), by = 'month')
 x_day   <- seq(as.Date('2015-01-01'), as.Date('2015-02-01'), by = 'day')
 x_hour  <- seq(as.POSIXct('2015-01-01'), as.POSIXct('2015-01-02'), by = 'hour')
-x_min   <- seq(ymd_hm('2015-01-01 00:00'), ymd_hm('2015-01-01 00:59'), by = 'min')
+x_min   <- seq(lubridate::ymd_hm('2015-01-01 00:00'),
+               lubridate::ymd_hm('2015-01-01 00:59'), by = 'min')
 
 df_with_one_date  <- data.frame(dt_var1 = date_seq('month'),
                                 y = 1:6)
@@ -43,9 +45,9 @@ test_that("Section 1, correct error handling", {
 })
 
 test_that("Section 2, correct error handling", {
-  expect_error(thicken(x_month, 'month'))
-  expect_error(thicken(x_hour, 'month'))
-  expect_error(thicken(x_month, 'day'), NA)
+  expect_error(smear(x_month, 'month'))
+  expect_error(smear(x_hour, 'month'))
+  expect_error(smear(x_month, 'day'), NA)
 })
 
 test_that("Smear gives the correct output", {
@@ -54,5 +56,4 @@ test_that("Smear gives the correct output", {
   expect_equal(smear(x_month, 'day')  %>% nrow,  181)
   # we lose one hour when moving to DST
   expect_equal(smear(x_month, 'hour')  %>% nrow,  181*24-1)
-  expect_equal()
 })
