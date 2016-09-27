@@ -1,6 +1,6 @@
-#' @rdname thicken
 smear <- function(x,
-                  interval = c('month',
+                  interval = c('level_up',
+                               'month',
                                'day',
                                'hour',
                                'min',
@@ -29,16 +29,22 @@ smear <- function(x,
 
   int_hierarchy <- 1:6
   names(int_hierarchy) <- c('year','month','day','hour','min', 'sec')
+
+  if(interval == 'level_down'){
+    dt_var_interval_nr <- int_hierarchy[get_interval(dt_var)]
+    interval <- names(int_hierarchy[dt_var_interval_nr + 1])
+  }
+
   if(int_hierarchy[interval_dt_var] > int_hierarchy[interval]) {
     stop('The interval in the datetime variable is higher than the interval given,
-you might be looking fo thicken rather than for thicken.')
+         you might be looking fo thicken rather than for thicken.')
   } else if (int_hierarchy[get_interval(dt_var)] == int_hierarchy[interval]) {
     stop('The interval in the datetime variable is equal to the interval given,
-you might be looking for pad rather than for thicken.')
+         you might be looking for pad rather than for thicken.')
   }
 
   if(!all(dt_var[1:(length(dt_var)-1)] < dt_var[2:length(dt_var)])) {
-   warning('Datetime variable was unsorted, result will be unsorted as well.')
+    warning('Datetime variable was unsorted, result will be unsorted as well.')
   }
 
   # The smearing is done at POSIXct level, if applicable later converted back to Date
