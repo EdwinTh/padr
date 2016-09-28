@@ -31,15 +31,30 @@ get_interval <- function(x) {
   )
 
   does_differ <- differs %>% which
+
   if(does_differ %>% length %>% `==`(0)) {
     stop("x does not vary, cannot determine the interval", call. = FALSE)
   } else {
     lowest_level <- does_differ[length(does_differ)] %>% names
+
+    if(lowest_level == 'month') {
+      # quarter must be a special case of month, in order to be a quarter all
+      # months must be 1 of 4, irrespective of their intervals
+      # (difftime stops at months so we need this hack)
+      m <- lubridate::month(x)
+      months <- all(m %in% c(1,4,7,10)) | all(m %in% c(2,5,8,11)) |
+                      all(m %in% c(3,6,9,12))
+      if(months) lowest_level <- 'quarter'
+    } else if(lowest_level == 'day') {
+      weeks <- difftime(x[2:length(x)], x[1:(length(x)-1)], units = 'weeks') %>%
+        as.numeric %>% `%%`(1) %>% `==`(0) %>% all
+      if(weeks) lowest_level <- 'week'
+    }
     return(lowest_level)
   }
 }
 
-#' Look for Variables that are of Class \code{Date} or Class \code{POSIXt}
+#' Look for Variables that are of class \code{Date} or class \code{POSIXt}
 #'
 #' This function is used within \code{pad_date} to find the variable to pad by,
 #' so the user doesn't have to specify it if the variable only contains one

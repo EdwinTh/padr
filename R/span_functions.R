@@ -100,6 +100,78 @@ span_year <- function(x,
 }
 
 
+######################
+#### span_quarter ####
+######################
+span_quarter <- function(x,
+                         start_val = NULL,
+                         end_val   = NULL) {
+
+  # Initialize
+  start_at_null <- min(x)
+  lubridate::month(start_at_null) <-
+    ceiling(lubridate::month(start_at_null) / 3) * 3 - 2
+  lubridate::day(start_at_null) <- 1
+
+  if( 'POSIXt' %in% class(x) ) {
+    lubridate::hour(start_at_null) <-
+      lubridate::minute(start_at_null) <-
+      lubridate::second(start_at_null) <- 0
+  }
+
+  if( !is.null(start_val) ){
+    end_offset <- start_val - start_at_null
+  }
+
+  end_at_null <- max(x)
+  lubridate::month(end_at_null) <-
+    ceiling(lubridate::month(end_at_null) / 3) * 3 + 1
+  lubridate::day(end_at_null) <- 1
+
+  if('POSIXt' %in% class(x)) {
+    lubridate::hour(end_at_null) <-
+      lubridate::minute(end_at_null) <-
+      lubridate::second(end_at_null) <- 0
+  }
+
+  if( !is.null(end_val) ){
+    start_offset <- end_val- end_at_null
+  }
+
+  # Assign
+  if( !is.null(start_val) & !is.null(end_val) ) {
+
+    if(get_interval(c(start_val, end_val)) != 'year') {
+      stop('When start_val and end_val are both specified in the span_year function,
+           they can only differ from each other in years.')
+    }
+
+    start_seq <- start_val
+    end_seq   <- end_val
+
+    } else if( !is.null(start_val) & is.null(end_val) ){
+
+      start_seq <- start_val
+      end_seq   <- end_at_null + end_offset
+
+    } else if ( is.null(start_val) & !is.null(end_val) ) {
+
+      start_seq <- start_at_null + start_offset
+      end_seq   <- end_val
+
+    } else {
+
+      start_seq <- start_at_null
+      end_seq   <- end_at_null
+
+    }
+
+  span <- seq(start_seq, end_seq, 'year')
+  if(class(x)[1] == 'POSIXlt') span <- span %>% as.POSIXlt
+  return(span)
+}
+
+
 ####################
 #### span_month ####
 ####################
