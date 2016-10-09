@@ -1,7 +1,9 @@
 thicken <- function(x,
                     interval = c('level_down',
                                  'year',
+                                 'quarter',
                                  'month',
+                                 'week',
                                  'day',
                                  'hour',
                                  'min'),
@@ -32,8 +34,8 @@ thicken <- function(x,
   rounding <- match.arg(rounding)
 
   # Section 2: span a variable with all the relevant instances of interval
-  int_hierarchy <- 1:6
-  names(int_hierarchy) <- c('year','month','day','hour','min', 'sec')
+  int_hierarchy <- 1:8
+  names(int_hierarchy) <- c('year', 'quarter', 'month', 'week', 'day', 'hour','min', 'sec')
 
   if(interval == 'level_down'){
     dt_var_interval_nr <- int_hierarchy[get_interval(dt_var)]
@@ -54,8 +56,12 @@ thicken <- function(x,
 
   if(interval == 'year') {
     span <- span_year(dt_var, start_val, end_val)
+  } else if (interval == 'quarter') {
+    span <- span_quarter(dt_var, start_val, end_val)
   } else if (interval == 'month') {
     span <- span_month(dt_var, start_val, end_val)
+  } else if (interval == 'week') {
+    span <- span_week(dt_var, start_val, end_val)
   } else if (interval == 'day') {
     span <- span_day(dt_var, start_val, end_val)
   } else if (interval == 'hour') {
@@ -68,17 +74,8 @@ thicken <- function(x,
 
   # Section 3: make the thicken and create the return frame
   if(rounding == 'down'){
-    thickened <- round_down(dt_var, span)
+    return(round_down(dt_var, span))
   } else {
-    thickened <- round_up(dt_var, span)
+    return(round_up(dt_var, span))
   }
-
-  if(is.data.frame(x)) {
-    original_data_frame$thickened <- thickened
-    return(original_data_frame)
-  } else {
-    return_frame <- data.frame(dt_var, thickened)
-    colnames(return_frame)[1] <- as.character(arguments$x)
-    return(return_frame)
-  }
-  }
+}
