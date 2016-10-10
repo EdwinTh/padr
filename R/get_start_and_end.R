@@ -49,7 +49,7 @@ get_start_and_end <- function(dt_var,
 
   # up untill day : set hour
   if(return_position < 6) {
-    start_val$hour <- start_val$hour <- 0
+    start_val$hour <- end_val$hour <- 0
   }
 
   # hour only : set hour
@@ -76,7 +76,10 @@ get_start_and_end <- function(dt_var,
     end_val$sec <- end_val$sec + 1
   }
 
-  if(return_position < 6) {
+  to_date <- all( c(start_val$hour, start_val$min, start_val$sec,
+                    end_val$hour, end_val$min, end_val$sec) == 0 )
+
+  if(to_date) {
     start_val <- as.Date(start_val)
     end_val   <- as.Date(end_val)
   } else {
@@ -84,5 +87,5 @@ get_start_and_end <- function(dt_var,
     end_val   <- as.POSIXct(end_val)
   }
 
-   return(list(s = start_val, e = end_val))
+   return(list(start_val = start_val, end_val = end_val))
 }
