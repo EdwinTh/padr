@@ -71,3 +71,4 @@ test_that('get_date_variable gives the correct output', {
   expect_equal(get_date_variables(test_get_date_variable_data2), c('x', 'x2'))
   expect_equal(get_date_variables(mtcars), character())
 })
+

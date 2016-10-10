@@ -1,11 +1,17 @@
+
+
 smear <- function(x,
                   interval = c('level_up',
+                               'quarter',
                                'month',
+                               'week',
                                'day',
                                'hour',
                                'min',
                                'sec'),
-                  by = NULL) {
+                  by        = NULL,
+                  start_val = NULL,
+                  end_val   = NULL) {
 
   arguments <- as.list(match.call())
   if('by' %in% names(arguments)) by_val <- as.character(arguments$by)
@@ -27,10 +33,10 @@ smear <- function(x,
   interval <- match.arg(interval)
   interval_dt_var <- get_interval(dt_var)
 
-  int_hierarchy <- 1:6
-  names(int_hierarchy) <- c('year','month','day','hour','min', 'sec')
+  int_hierarchy <- 1:8
+  names(int_hierarchy) <- c('year','quarter', 'month', 'week', 'day','hour','min', 'sec')
 
-  if(interval == 'level_down'){
+  if(interval == 'level_up'){
     dt_var_interval_nr <- int_hierarchy[get_interval(dt_var)]
     interval <- names(int_hierarchy[dt_var_interval_nr + 1])
   }
@@ -47,13 +53,16 @@ smear <- function(x,
     warning('Datetime variable was unsorted, result will be unsorted as well.')
   }
 
-  # The smearing is done at POSIXct level, if applicable later converted back to Date
-  start_val   <- min(dt_var)
-  end_val     <- max(dt_var) %>% as.POSIXct
+  if(is.null(start_val)) start_val <- min(dt_var)
+  if(is.null(end_val))   end_val <- max(dt_var)
+
+
   if(lubridate::is.Date(dt_var)) {
     start_val <- as.POSIXct(start_val); end_val <- as.POSIXct(end_val)
     lubridate::hour(start_val) <- lubridate::hour(end_val) <- 0
   }
+
+
   end_val_seq <- seq(end_val, by = get_interval(dt_var), length.out = 2)[2]
   if(interval == 'day') smear_int <- 'DSTday' else smear_int <- interval
   smeared     <- seq(start_val, end_val_seq, by = smear_int)

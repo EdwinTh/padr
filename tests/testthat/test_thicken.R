@@ -52,11 +52,11 @@ test_that("Section 2, correct error handling", {
 })
 
 test_that("thicken gives correct interval", {
-  expect_equal(suppressWarnings(thicken(x_sec, 'year'))$thickened %>% get_interval, 'year')
-  expect_equal(suppressWarnings(thicken(x_sec, 'month'))$thickened %>% get_interval, 'month')
-  expect_equal(suppressWarnings(thicken(x_sec, 'day'))$thickened %>% get_interval, 'day')
-  expect_equal(suppressWarnings(thicken(x_sec, 'hour'))$thickened %>% get_interval, 'hour')
-  expect_equal(suppressWarnings(thicken(x_sec, 'min'))$thickened %>% get_interval, 'min')
+  expect_equal(suppressWarnings(thicken(x_sec, 'year')) %>% get_interval, 'year')
+  expect_equal(suppressWarnings(thicken(x_sec, 'month')) %>% get_interval, 'month')
+  expect_equal(suppressWarnings(thicken(x_sec, 'day')) %>% get_interval, 'day')
+  expect_equal(suppressWarnings(thicken(x_sec, 'hour')) %>% get_interval, 'hour')
+  expect_equal(suppressWarnings(thicken(x_sec, 'min')) %>% get_interval, 'min')
 })
 
 test_that("thicken gives correct output when x is a vector", {
@@ -64,21 +64,20 @@ test_that("thicken gives correct output when x is a vector", {
   day_to_year <- thicken(day_sorted, 'year')
   day_to_year2 <- thicken(day_sorted, 'year', 'up')
 
-  expect_equal(day_to_year %>% nrow, 100)
-  expect_equal(lubridate::year(day_to_year[1,2]), 2015)
-  expect_equal(lubridate::year(day_to_year[100,2]), 2016)
-  expect_equal(lubridate::year(day_to_year2[1,2]), 2016)
-  expect_equal(lubridate::year(day_to_year2[100,2]), 2017)
+  expect_equal(day_to_year %>% length, 100)
+  expect_equal(lubridate::year(day_to_year[1]), 2015)
+  expect_equal(lubridate::year(day_to_year[100]), 2016)
+  expect_equal(lubridate::year(day_to_year2[1]), 2016)
+  expect_equal(lubridate::year(day_to_year2[100]), 2017)
 })
 
 test_that("thicken gives correct ouput when x is a df",{
   X <- data.frame(day_var = seq(as.Date('2016-01-01'), as.Date('2016-12-31'), by = 'day'),
-                                   value   = runif(366, 50, 100))
+                  value   = runif(366, 50, 100))
 
-  expect_equal(thicken(X) %>% nrow, 366)
-  expect_equal( lubridate::month(thicken(X, 'month')$thickened) %>% max, 12)
-  expect_error( (thicken(dplyr::as_data_frame(X)) %>% print), NA)
-  expect_equal( (thicken(dplyr::as_data_frame(X)) %>% class)[1], 'tbl_df')
-  expect_equal((thicken(data.table::as.data.table(X)) %>% class)[1], 'data.table')
+  expect_equal(thicken(X, 'month') %>% length, 366)
+  expect_equal( lubridate::month(thicken(X, 'month')) %>% max, 12)
+  expect_error( (thicken(dplyr::as_data_frame(X), 'month')), NA)
+  expect_error( thicken(data.table::as.data.table(X), 'month') , NA)
 })
 

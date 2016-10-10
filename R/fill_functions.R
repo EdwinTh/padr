@@ -1,11 +1,4 @@
 
-x <- seq(ymd('20150101'), ymd('20160101'), by = 'day') %>%
-  sample(200) %>% sort %>% data_frame(x = .)
-x$y <- runif(200, 1, 20) %>% round
-x$z <- sample(LETTERS[1:5], 200, TRUE)
-x$w <- rnorm(200, 2, 2) %>% round(2)
-x <- pad(x)
-
 fill_na_by_mean <- function(x, ...){
   arguments <- as.list(match.call())
   x_to_fill <- as.data.frame(x)
@@ -33,4 +26,3 @@ fill_na_by_mean <- function(x, ...){
 }
 
 
-fill_na_by_mean(x)

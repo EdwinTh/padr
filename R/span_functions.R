@@ -60,7 +60,7 @@ span_year <- function(x,
     lubridate::hour(end_at_null) <-
       lubridate::minute(end_at_null) <-
       lubridate::second(end_at_null) <- 0
-    }
+  }
 
   if( !is.null(end_val) ){
     start_offset <- end_val- end_at_null
@@ -77,22 +77,22 @@ span_year <- function(x,
     start_seq <- start_val
     end_seq   <- end_val
 
-  } else if( !is.null(start_val) & is.null(end_val) ){
+    } else if( !is.null(start_val) & is.null(end_val) ){
 
-    start_seq <- start_val
-    end_seq   <- end_at_null + end_offset
+      start_seq <- start_val
+      end_seq   <- end_at_null + end_offset
 
-  } else if ( is.null(start_val) & !is.null(end_val) ) {
+    } else if ( is.null(start_val) & !is.null(end_val) ) {
 
-    start_seq <- start_at_null + start_offset
-    end_seq   <- end_val
+      start_seq <- start_at_null + start_offset
+      end_seq   <- end_val
 
-  } else {
+    } else {
 
-    start_seq <- start_at_null
-    end_seq   <- end_at_null
+      start_seq <- start_at_null
+      end_seq   <- end_at_null
 
-  }
+    }
 
   span <- seq(start_seq, end_seq, 'year')
   if(class(x)[1] == 'POSIXlt') span <- span %>% as.POSIXlt
@@ -166,7 +166,7 @@ span_quarter <- function(x,
 
     }
 
-  span <- seq(start_seq, end_seq, 'year')
+  span <- seq(start_seq, end_seq, 'quarter')
   if(class(x)[1] == 'POSIXlt') span <- span %>% as.POSIXlt
   return(span)
 }
@@ -197,9 +197,9 @@ span_month <- function(x,
   lubridate::day(end_at_null) <- 1
   lubridate::month(end_at_null) <- lubridate::month(end_at_null) + 1
   if('POSIXt' %in% class(x)) {
-      lubridate::hour(end_at_null) <-
-        lubridate::minute(end_at_null) <-
-        lubridate::second(end_at_null) <- 0
+    lubridate::hour(end_at_null) <-
+      lubridate::minute(end_at_null) <-
+      lubridate::second(end_at_null) <- 0
   }
 
   if( !is.null(end_val) ){
@@ -218,26 +218,69 @@ span_month <- function(x,
     end_seq   <- end_val
 
 
-  } else if( !is.null(start_val) & is.null(end_val) ){
+    } else if( !is.null(start_val) & is.null(end_val) ){
 
-    start_seq <- start_val
-    end_seq   <- end_at_null + end_offset
+      start_seq <- start_val
+      end_seq   <- end_at_null + end_offset
 
-  } else if ( is.null(start_val) & !is.null(end_val) ) {
+    } else if ( is.null(start_val) & !is.null(end_val) ) {
 
-    start_seq <- start_at_null + start_offset
-    end_seq   <- end_val
+      start_seq <- start_at_null + start_offset
+      end_seq   <- end_val
 
-  } else {
+    } else {
 
-    start_seq <- start_at_null
-    end_seq   <- end_at_null
+      start_seq <- start_at_null
+      end_seq   <- end_at_null
 
-  }
+    }
 
   span <- seq(start_seq, end_seq, 'month')
   if(class(x)[1] == 'POSIXlt') span <- span %>% as.POSIXlt
   return(span)
+}
+
+###################
+#### span_week ####
+###################
+#' @rdname span_week
+span_week <- function(x,
+                      start_val = NULL,
+                      end_val   = NULL,
+                      start_day = 'Saturday') {
+  # Initialize
+  weekday_order <- 1:7
+  names(weekday_order) <- weekdays(seq(as.Date('2016-10-02'),
+                                       length.out = 7, by = 'day'))
+  start_day_offset <- weekday_order[weekdays(min(x))] -
+    weekday_order[start_day]
+  if(start_day_offset < 0) start_day_offset <- start_day_offset + 7
+  start_at_null <- min(x) - start_day_offset
+
+  if('POSIXt' %in% class(x)) {
+    lubridate::hour(start_at_null) <-
+      lubridate::minute(start_at_null) <-
+      lubridate::second(start_at_null) <- 0
+  }
+
+  if( !is.null(start_val) ){
+    end_offset <- start_val- start_at_null
+  }
+
+  end_day_offset <- 7 - (weekday_order[weekdays(max(x))] -
+                           weekday_order[start_day])
+  end_at_null <- max(x) + end_day_offset
+
+  if('POSIXt' %in% class(x)) {
+    lubridate::hour(end_at_null) <-
+      lubridate::minute(end_at_null) <-
+      lubridate::second(end_at_null) <- 0
+  }
+
+  if( !is.null(end_val) ){
+    start_offset <- end_val- end_at_null
+  }
+
 }
 
 
@@ -282,22 +325,22 @@ span_day <- function(x,
     start_seq <- start_val
     end_seq   <- end_val
 
-  } else if( !is.null(start_val) & is.null(end_val) ){
+    } else if( !is.null(start_val) & is.null(end_val) ){
 
-    start_seq <- start_val
-    end_seq   <- end_at_null + end_offset
+      start_seq <- start_val
+      end_seq   <- end_at_null + end_offset
 
-  } else if ( is.null(start_val) & !is.null(end_val) ) {
+    } else if ( is.null(start_val) & !is.null(end_val) ) {
 
-    start_seq <- start_at_null + start_offset
-    end_seq   <- end_val
+      start_seq <- start_at_null + start_offset
+      end_seq   <- end_val
 
-  } else {
+    } else {
 
-    start_seq <- start_at_null
-    end_seq   <- end_at_null
+      start_seq <- start_at_null
+      end_seq   <- end_at_null
 
-  }
+    }
 
   if( 'POSIXt' %in% class(x) ) {
 
@@ -350,25 +393,25 @@ span_hour <- function(x,
            they cannot differ from each other in an interval level lower than hours.')
     }
 
-     start_seq <- start_val
-     end_seq   <- end_val
-
-  } else if( !is.null(start_val) & is.null(end_val) ){
-
     start_seq <- start_val
-    end_seq   <- end_at_null + end_offset
-
-  } else if ( is.null(start_val) & !is.null(end_val) ) {
-
-    start_seq <- start_at_null + start_offset
     end_seq   <- end_val
 
-  } else {
+    } else if( !is.null(start_val) & is.null(end_val) ){
 
-    start_seq <- start_at_null
-    end_seq   <- end_at_null
+      start_seq <- start_val
+      end_seq   <- end_at_null + end_offset
 
-  }
+    } else if ( is.null(start_val) & !is.null(end_val) ) {
+
+      start_seq <- start_at_null + start_offset
+      end_seq   <- end_val
+
+    } else {
+
+      start_seq <- start_at_null
+      end_seq   <- end_at_null
+
+    }
 
   span <- seq(start_seq, end_seq, 'hour')
   if(class(x)[1] == 'POSIXlt') span <- span %>% as.POSIXlt
@@ -420,26 +463,24 @@ span_minute <- function(x,
     start_seq <- start_val
     end_seq   <- end_val
 
-  } else if( !is.null(start_val) & is.null(end_val) ){
+    } else if( !is.null(start_val) & is.null(end_val) ){
 
-    start_seq <- start_val
-    end_seq   <- end_at_null + end_offset
+      start_seq <- start_val
+      end_seq   <- end_at_null + end_offset
 
-  } else if ( is.null(start_val) & !is.null(end_val) ) {
+    } else if ( is.null(start_val) & !is.null(end_val) ) {
 
-    start_seq <- start_at_null + start_offset
-    end_seq   <- end_val
+      start_seq <- start_at_null + start_offset
+      end_seq   <- end_val
 
-  } else {
+    } else {
 
-    start_seq <- start_at_null
-    end_seq   <- end_at_null
+      start_seq <- start_at_null
+      end_seq   <- end_at_null
 
-  }
+    }
 
   span <- seq(start_seq, end_seq, 'min')
   if(class(x)[1] == 'POSIXlt') span <- span %>% as.POSIXlt
   return(span)
 }
-
-

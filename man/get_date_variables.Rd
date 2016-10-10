@@ -2,7 +2,7 @@
 % Please edit documentation in R/pad_helpers.R
 \name{get_date_variables}
 \alias{get_date_variables}
-\title{Look for Variables that are of Class \code{Date} or Class \code{POSIXt}}
+\title{Look for Variables that are of class \code{Date} or class \code{POSIXt}}
 \usage{
 get_date_variables(df)
 }
