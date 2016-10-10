@@ -84,5 +84,5 @@ get_start_and_end <- function(dt_var,
     end_val   <- as.POSIXct(end_val)
   }
 
-   return(list(start_val, end_val))
+   return(list(s = start_val, e = end_val))
 }

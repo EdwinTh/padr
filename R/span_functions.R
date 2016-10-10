@@ -31,6 +31,41 @@
 #' span_hour(x)
 #' span_minute(x)
 
+span <- function(x,
+                 interval = c('year',
+                              'quarter',
+                              'month',
+                              'week',
+                              'day',
+                              'hour',
+                              'minute',
+                              'second'),
+                 start_val = NULL) {
+
+  interval <- match.arg(interval)
+
+  start_and_end <- get_start_and_end(x, return_interval = interval)
+
+  if( is.null(start_val) ) {
+    start_val <- start_and_end$start_val
+    end_val   <- start_and_end$end_val
+  } else if( !is.null(start_val) ){
+    end_val <- tail( seq(start_val, start_and_end$end_val, by = interval), 1)
+  } else {
+    break('Not reach span_function')
+  }
+
+  return_values <- seq(start_val, end_val, by = interval)
+  # when setting an offset for week the end of the span can be before the
+  # last value of x. TODO find cleaner solution
+  if( max(return_values) < max(x) ){
+    return_values <- seq(start_val,  by = interval,
+                         length.out = length(return_values) + 1)
+  }
+  return_values
+}
+
+
 
 ###################
 #### span_year ####
