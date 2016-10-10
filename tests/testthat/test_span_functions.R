@@ -29,7 +29,7 @@ test_that('span produces correct output for year', {
   expect_equal(max(out_year_with_start), as.POSIXct("2014-12-05 16:56:14"))
 })
 
-test_that('span_month produces correct output', {
+test_that('span produces correct output for month', {
   out_month <- span(x_posix, 'month')
   out_month_with_start <- span(x_posix, 'month', start_val = as.POSIXct('2013-11-17 16:56:14'))
 

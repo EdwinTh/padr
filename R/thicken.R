@@ -9,9 +9,8 @@ thicken <- function(x,
                                  'min'),
                     rounding = c('down',
                                  'up'),
-                    by       = NULL,
-                    start_val= NULL,
-                    end_val  = NULL) {
+                    by        = NULL,
+                    start_val = NULL) {
 
   # Section 1: obtain datetime variable and see if the variable is valid
 
@@ -54,28 +53,12 @@ thicken <- function(x,
     warning('Datetime variable was unsorted, result will be unsorted as well.')
   }
 
-  if(interval == 'year') {
-    span <- span_year(dt_var, start_val, end_val)
-  } else if (interval == 'quarter') {
-    span <- span_quarter(dt_var, start_val, end_val)
-  } else if (interval == 'month') {
-    span <- span_month(dt_var, start_val, end_val)
-  } else if (interval == 'week') {
-    span <- span_week(dt_var, start_val, end_val)
-  } else if (interval == 'day') {
-    span <- span_day(dt_var, start_val, end_val)
-  } else if (interval == 'hour') {
-    span <- span_hour(dt_var, start_val, end_val)
-  } else if (interval == 'min') {
-    span <- span_minute(dt_var, start_val, end_val)
-  } else {
-    stop("Not reach span_function if else")
-  }
+  spanned <- span(dt_var, interval, start_val)
 
   # Section 3: make the thicken and create the return frame
   if(rounding == 'down'){
-    return(round_down(dt_var, span))
+    return(round_down(dt_var, spanned))
   } else {
-    return(round_up(dt_var, span))
+    return(round_up(dt_var, spanned))
   }
 }

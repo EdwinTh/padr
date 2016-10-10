@@ -25,24 +25,29 @@
 round_down <- function(a,
                        b) {
 
-  if( !all(class(a) == class(b)) ){
-    stop('a and b should be of the same class')
-  }
-
   order_a <- order(a)
   a <- sort(a)
   b <- sort(b)
 
-  if(class(a)[1] == 'Date'){
-    thickened <- as.Date(round_down_core(a,b), origin = '1970-01-01')
-  } else if (class(a)[1] == 'POSIXct') {
+  if( 'POSIXt' %in% class(a) & is.Date(b) ) {
+    b <- as.POSIXct(strftime(b), tz = attr(a, 'tzone'))
+  }
+
+  if(is.Date(a)){
+    thickened <- as.Date(round_down_core(a, b), origin = '1970-01-01')
+  } else if ('POSIXt' %in% class(a)) {
     thickened <- as.POSIXct(round_down_core(as.numeric(a), as.numeric(b)),
                             origin = '1970-01-01', tz = attr(a, 'tz'))
   } else {
-    thickened <- as.POSIXlt(round_down_core(as.numeric(a), as.numeric(b)),
-                            origin = '1970-01-01', tz = attr(a, 'tz'))
+    break('Not reach round_down')
   }
 
+  if( 'POSIXt' %in% class(thickened) ){
+    thickened_check <- as.POSIXlt(thickened)
+    to_date <- all( c(thickened_check$hour, thickened_check$min,
+                      thickened_check$sec ) == 0 )
+    if(to_date) thickened <- as.Date(strptime(thickened, format = '%Y-%m-%d'))
+  }
   return(thickened[order_a])
 }
 
@@ -50,13 +55,14 @@ round_down <- function(a,
 #' @rdname span_year
 round_up <- function(a,
                      b) {
-  if( !all(class(a) == class(b)) ){
-    stop('a and b should be of the same class')
-  }
 
   order_a <- order(a)
   a <- sort(a)
   b <- sort(b)
+
+  if( 'POSIXt' %in% class(a) & is.Date(b) ) {
+    b <- as.POSIXct(strftime(b), tz = attr(a, 'tzone'))
+  }
 
   if(class(a)[1] == 'Date'){
     thickened <- as.Date(round_up_core(a,b), origin = '1970-01-01')
@@ -64,10 +70,15 @@ round_up <- function(a,
     thickened <- as.POSIXct(round_up_core(as.numeric(a), as.numeric(b)),
                             origin = '1970-01-01', tz = attr(a, 'tz'))
   } else {
-    thickened <- as.POSIXlt(round_up_core(as.numeric(a), as.numeric(b)),
-                            origin = '1970-01-01', tz = attr(a, 'tz'))
+    break('Not reach round_up')
   }
 
+  if( 'POSIXt' %in% class(thickened) ){
+    thickened_check <- as.POSIXlt(thickened)
+    to_date <- all( c(thickened_check$hour, thickened_check$min,
+                      thickened_check$sec ) == 0 )
+    if(to_date) thickened <-  as.Date(strptime(thickened, format = '%Y-%m-%d'))
+  }
   return(thickened[order_a])
 }
 

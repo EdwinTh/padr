@@ -22,12 +22,12 @@ get_interval <- function(x) {
   }
 
   differs <- c(
-    year   = substr(x_char, 1, 4) %>% unique %>% length %>% `==`(1) %>% `!`,
-    month  = substr(x_char, 6, 7) %>% unique %>% length %>% `==`(1) %>% `!`,
-    day    = substr(x_char, 9, 10) %>% unique %>% length %>% `==`(1) %>% `!`,
-    hour   = substr(x_char, 12, 13) %>% unique %>% length %>% `==`(1) %>% `!`,
-    min    = substr(x_char, 15, 16) %>% unique %>% length %>% `==`(1) %>% `!`,
-    sec    = substr(x_char, 18, 19) %>% unique %>% length %>% `==`(1) %>% `!`
+    year   = ! length( unique ( substr(x_char, 1, 4) ) ) == 1,
+    month  = ! length( unique ( substr(x_char, 6, 7) ) ) == 1,
+    day    = ! length( unique ( substr(x_char, 9, 10) ) ) == 1,
+    hour   = ! length( unique ( substr(x_char, 12, 13) ) ) == 1,
+    min    = ! length( unique ( substr(x_char, 15, 16) ) ) == 1,
+    sec    = ! length( unique ( substr(x_char, 18, 19) ) ) == 1
   )
 
   does_differ <- differs %>% which
@@ -39,15 +39,16 @@ get_interval <- function(x) {
 
     if(lowest_level == 'month') {
       # quarter must be a special case of month, in order to be a quarter all
-      # months must be 1 of 4, irrespective of their intervals
-      # (difftime stops at months so we need this hack)
-      m <- lubridate::month(x)
-      months <- all(m %in% c(1,4,7,10)) | all(m %in% c(2,5,8,11)) |
-                      all(m %in% c(3,6,9,12))
-      if(months) lowest_level <- 'quarter'
+      # months must be 1 of 4, irrespective of time between them
+      # remember $mon starts at 0 not at 1!!
+      m       <- as.POSIXlt(x_char)$mon
+      quarter <- all(m %in% c(1,4,7,10)) | all(m %in% c(2,5,8,11)) |
+                      all(m %in% c(0, 3,6,9))
+      if(quarter) lowest_level <- 'quarter'
+
     } else if(lowest_level == 'day') {
-      weeks <- difftime(x[2:length(x)], x[1:(length(x)-1)], units = 'weeks') %>%
-        as.numeric %>% `%%`(1) %>% `==`(0) %>% all
+      distances <- difftime(x[2:length(x)], x[1:(length(x)-1)], units = 'weeks')
+      weeks     <- all( ( as.numeric(distances) %% 1 ) == 1 )
       if(weeks) lowest_level <- 'week'
     }
     return(lowest_level)
@@ -80,10 +81,8 @@ get_date_variables <- function(df){
   }
   classes <- lapply(df, class)
   date_classes <- (sapply(classes, function(x) 'POSIXt' %in% x) |
-    sapply(classes, function(x) 'Date' %in% x)) %>%
-    which %>%
-    names
-  return(date_classes)
+    sapply(classes, function(x) 'Date' %in% x))
+  return(names ( which (date_classes) ))
 }
 
 

@@ -80,8 +80,8 @@ get_start_and_end <- function(dt_var,
                     end_val$hour, end_val$min, end_val$sec) == 0 )
 
   if(to_date) {
-    start_val <- as.Date(start_val)
-    end_val   <- as.Date(end_val)
+    start_val <- as.Date(strptime(start_val, format = '%Y-%m-%d'))
+    end_val   <- as.Date(strptime(end_val, format = '%Y-%m-%d'))
   } else {
     start_val <- as.POSIXct(start_val)
     end_val   <- as.POSIXct(end_val)
