@@ -2,8 +2,6 @@
 # Function that will obtain the start and end values from a vector
 # to be applied when start_val and end_val are both NULL
 
-dt_var <- ymd_hms(c('20160101 101231', '20160101 131231'))
-
 get_start_and_end <- function(dt_var,
                               return_interval) {
 
