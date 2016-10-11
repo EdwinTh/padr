@@ -44,8 +44,7 @@ span <- function(x,
                               'hour',
                               'min',
                               'sec'),
-                 start_val  = NULL,
-                 end_offset = NULL) {
+                 start_val  = NULL) {
 
   if( !( is.Date(x) | is.POSIXt(x) ) ){
     break('x should be of class Date, POSIXlt, or POSIXct')
@@ -69,10 +68,6 @@ span <- function(x,
 
   } else {
     break('Not reach span_function')
-  }
-
-  if(!is.null(end_offset)){
-    end_val <- tail(seq(end_val, length.out = 2, by = end_offset), 1)
   }
 
   return_values <- seq(start_val, end_val, by = interval)
