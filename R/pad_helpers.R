@@ -10,7 +10,7 @@
 #' x_month <- seq(as.Date('2016-01-01'), as.Date('2016-05-01'), by = 'month')
 #' get_interval(x_month)
 
-get_interval <- function(x) {
+get_pulse <- function(x) {
 
   if( !(c('Date', "POSIXt") %in% class(x) %>% any)) {
     stop('x should be of class Date, POSIXct, or POSIXlt', call. = FALSE)
@@ -33,7 +33,7 @@ get_interval <- function(x) {
   does_differ <- differs %>% which
 
   if(does_differ %>% length %>% `==`(0)) {
-    stop("x does not vary, cannot determine the interval", call. = FALSE)
+    stop("x does not vary, cannot determine the pulse", call. = FALSE)
   } else {
     lowest_level <- does_differ[length(does_differ)] %>% names
 

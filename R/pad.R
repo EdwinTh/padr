@@ -2,7 +2,7 @@
 
 pad <- function(x,
                 by       = NULL,
-                interval = NULL,
+                pulse    = NULL,
                 start_val= NULL,
                 end_val  = NULL){
 
@@ -28,25 +28,25 @@ pad <- function(x,
     warning('Datetime variable was unsorted, pad result is sorted.')
   }
 
-  if(is.null(interval)) {
-    interval <- get_interval(dt_var)
+  if(is.null(pulse)) {
+    pulse <- get_pulse(dt_var)
   } else {
-    if(! interval %in% c('year','month','day','hour','min')){
-      stop("Argument interval has an invalid value.")
+    if(! pulse %in% c('year','month','day','hour','min')){
+      stop("Argument pulse has an invalid value.")
     }
 
-    interval_dt_var <- get_interval(dt_var)
+    pulse_dt_var <- get_pulse(dt_var)
 
     int_hierarchy <- 1:6
     names(int_hierarchy) <- c('year','month','day','hour','min', 'sec')
 
-    if(int_hierarchy[interval_dt_var] > int_hierarchy[interval]) {
-      stop('The interval in the datetime variable is higher than the interval given,
-            if you wish to pad at this interval you should thicken and aggregate first.')
+    if(int_hierarchy[pulse_dt_var] > int_hierarchy[pulse]) {
+      stop('The pulse of the datetime variable is higher than the pulse given,
+            if you wish to pad at this pulse you should thicken and aggregate first.')
     }
   }
 
-  span <- span_pad(dt_var, start_val, end_val, interval)
+  span <- span_pad(dt_var, start_val, end_val, pulse)
 
   if(!is.data.frame(x)){
     return(span)
@@ -64,19 +64,18 @@ pad <- function(x,
 
 
 # this is a helper function for pad, spanning for pad is much simpler
-# than for thicken. Adjusting the span_ functions for pad would make them
-# too fuzzy.
+# than for thicken.
 span_pad <- function(x,
                      start_val = NULL,
                      end_val   = NULL,
-                     interval  =  c('year','month','day','hour','min', 'sec')) {
+                     pulse  =  c('year','quarter', 'month','week', 'day','hour','min', 'sec')) {
 
-  interval <- match.arg(interval)
+  pulse <- match.arg(pulse)
 
   if(is.null(start_val)) start_val <- min(x)
   if(is.null(end_val))   end_val   <- max(x)
 
-  span <- seq(start_val, end_val, interval)
+  span <- seq(start_val, end_val, pulse)
   return(span)
 }
 

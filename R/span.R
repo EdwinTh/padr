@@ -1,7 +1,3 @@
-
-
-
-
 #' Span a vector of dates
 #'
 #' The spanning functions take a vector of class \code{Date}, \code{POSIXlt}, or
@@ -36,7 +32,7 @@
 #' span_minute(x)
 
 span <- function(x,
-                 interval = c('year',
+                 pulse = c('year',
                               'quarter',
                               'month',
                               'week',
@@ -50,9 +46,9 @@ span <- function(x,
     break('x should be of class Date, POSIXlt, or POSIXct')
   }
 
-  interval <- match.arg(interval)
+  pulse <- match.arg(pulse)
 
-  start_and_end <- get_start_and_end(x, return_interval = interval)
+  start_and_end <- get_start_and_end(x, return_pulse = pulse)
 
   if( is.null(start_val) ) {
     start_val <- start_and_end$start_val
@@ -64,17 +60,17 @@ span <- function(x,
       to_val <- as.POSIXct( strftime(to_val), tz = attr(start_val, 'tzone'))
     }
 
-    end_val <- tail( seq(start_val, to_val, by = interval), 1)
+    end_val <- tail( seq(start_val, to_val, by = pulse), 1)
 
   } else {
     break('Not reach span_function')
   }
 
-  return_values <- seq(start_val, end_val, by = interval)
+  return_values <- seq(start_val, end_val, by = pulse)
   # when setting an offset for week the end of the span can be before the
   # last value of x. TODO find cleaner solution
   if( max(return_values) < max(x) ){
-    return_values <- seq(start_val,  by = interval,
+    return_values <- seq(start_val,  by = pulse,
                          length.out = length(return_values) + 1)
   }
   return_values
@@ -85,14 +81,14 @@ span <- function(x,
 # to be applied when start_val and end_val are both NULL
 
 get_start_and_end <- function(dt_var,
-                              return_interval) {
+                              return_pulse) {
 
   start_val <- as.POSIXlt( min(dt_var) )
   end_val   <- as.POSIXlt( max(dt_var) )
 
   int_hierarchy <- 1:8
   names(int_hierarchy) <- c('year', 'quarter', 'month', 'week', 'day', 'hour','min', 'sec')
-  return_position <- int_hierarchy[return_interval]
+  return_position <- int_hierarchy[return_pulse]
 
   # year only : set year and month
   if(return_position == 1) {
