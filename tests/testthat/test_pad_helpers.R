@@ -1,6 +1,6 @@
-date_seq <- function(interval){
-  # only use a wide interval to test year, all others less wide for performance
-  if(interval == 'year') {
+date_seq <- function(pulse){
+  # only use a wide pulse to test year, all others less wide for performance
+  if(pulse == 'year') {
     start_date <- as.POSIXlt(strftime('2005-01-01'))
   } else {
     start_date <- as.POSIXlt(strftime('2015-01-01'))
@@ -8,13 +8,13 @@ date_seq <- function(interval){
 
   sequence <- seq(start_date,
                   as.POSIXlt(strftime('2016-01-01')),
-                  by = interval)
-  # as.Date function is used for interval = 'day' so we are sure to stay out of
+                  by = pulse)
+  # as.Date function is used for pulse = 'day' so we are sure to stay out of
   # timezone and daylight savings issues
-  if(interval == 'day') {
+  if(pulse == 'day') {
     sequence <- seq(as.Date(strftime('2014-01-01')),
                     as.Date(strftime('2017-01-01')),
-                    by = interval)
+                    by = pulse)
   }
 
   if(length(sequence) > 1000) {
@@ -27,25 +27,25 @@ date_seq <- function(interval){
 
 test_errors_data <- date_seq('day')
 
-context('Test the get_interval function')
+context('Test the get_pulse function')
 
-test_that('get_interval only works on right data types',{
-  expect_error(as.integer(test_errors_data) %>% get_interval)
-  expect_error(as.numeric(test_errors_data) %>% get_interval)
-  expect_error(as.character(test_errors_data) %>% get_interval)
-  expect_error(as.factor(test_errors_data) %>% get_interval)
-  expect_error(test_errors_data %>% get_interval, NA)
-  expect_error(as.POSIXct(test_errors_data) %>% get_interval, NA)
-  expect_error(as.POSIXlt(test_errors_data) %>% get_interval, NA)
+test_that('get_pulse only works on right data types',{
+  expect_error(as.integer(test_errors_data) %>% get_pulse)
+  expect_error(as.numeric(test_errors_data) %>% get_pulse)
+  expect_error(as.character(test_errors_data) %>% get_pulse)
+  expect_error(as.factor(test_errors_data) %>% get_pulse)
+  expect_error(test_errors_data %>% get_pulse, NA)
+  expect_error(as.POSIXct(test_errors_data) %>% get_pulse, NA)
+  expect_error(as.POSIXlt(test_errors_data) %>% get_pulse, NA)
 })
 
-test_that('get_interval gives the correct output',{
-  expect_equal(date_seq('year') %>% get_interval, 'year')
-  expect_equal(date_seq('month') %>% get_interval, 'month')
-  expect_equal(date_seq('day') %>% get_interval, 'day')
-  expect_equal(date_seq('hour') %>% get_interval, 'hour')
-  expect_equal(date_seq('min') %>% get_interval, 'min')
-  expect_equal(date_seq('sec') %>% get_interval, 'sec')
+test_that('get_pulse gives the correct output',{
+  expect_equal(date_seq('year') %>% get_pulse, 'year')
+  expect_equal(date_seq('month') %>% get_pulse, 'month')
+  expect_equal(date_seq('day') %>% get_pulse, 'day')
+  expect_equal(date_seq('hour') %>% get_pulse, 'hour')
+  expect_equal(date_seq('min') %>% get_pulse, 'min')
+  expect_equal(date_seq('sec') %>% get_pulse, 'sec')
 })
 
 

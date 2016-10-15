@@ -1,7 +1,7 @@
 
-date_seq <- function(interval){
-  # only use a wide interval to test year, all others less wide for performance
-  if(interval == 'year') {
+date_seq <- function(pulse){
+  # only use a wide pulse to test year, all others less wide for performance
+  if(pulse == 'year') {
     start_date <- as.POSIXlt(strftime('2005-01-01'))
   } else {
     start_date <- as.POSIXlt(strftime('2015-01-01'))
@@ -9,7 +9,7 @@ date_seq <- function(interval){
 
   sequence <- seq(start_date,
                   as.POSIXlt(strftime('2017-01-01')),
-                  by = interval)
+                  by = pulse)
 
   set.seed(12345)
   if(length(sequence) > 100) {
@@ -51,12 +51,12 @@ test_that("Section 2, correct error handling", {
   expect_warning(thicken(x_month))
 })
 
-test_that("thicken gives correct interval", {
-  expect_equal(suppressWarnings(thicken(x_sec, 'year')) %>% get_interval, 'year')
-  expect_equal(suppressWarnings(thicken(x_sec, 'month')) %>% get_interval, 'month')
-  expect_equal(suppressWarnings(thicken(x_sec, 'day')) %>% get_interval, 'day')
-  expect_equal(suppressWarnings(thicken(x_sec, 'hour')) %>% get_interval, 'hour')
-  expect_equal(suppressWarnings(thicken(x_sec, 'min')) %>% get_interval, 'min')
+test_that("thicken gives correct pulse", {
+  expect_equal(suppressWarnings(thicken(x_sec, 'year')) %>% get_pulse, 'year')
+  expect_equal(suppressWarnings(thicken(x_sec, 'month')) %>% get_pulse, 'month')
+  expect_equal(suppressWarnings(thicken(x_sec, 'day')) %>% get_pulse, 'day')
+  expect_equal(suppressWarnings(thicken(x_sec, 'hour')) %>% get_pulse, 'hour')
+  expect_equal(suppressWarnings(thicken(x_sec, 'min')) %>% get_pulse, 'min')
 })
 
 test_that("thicken gives correct output when x is a vector", {

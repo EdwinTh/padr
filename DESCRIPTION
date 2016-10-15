@@ -10,7 +10,6 @@ Encoding: UTF-8
 LazyData: true
 Imports:
     dplyr,
-    magrittr,
     Rcpp
 Suggests:
     testthat

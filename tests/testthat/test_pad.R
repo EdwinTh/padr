@@ -1,7 +1,7 @@
 
-date_seq <- function(interval){
-  # only use a wide interval to test year, all others less wide for performance
-  if(interval == 'year') {
+date_seq <- function(pulse){
+  # only use a wide pulse to test year, all others less wide for performance
+  if(pulse == 'year') {
     start_date <- as.POSIXlt(strftime('2005-01-01'))
   } else {
     start_date <- as.POSIXlt(strftime('2015-01-01'))
@@ -9,7 +9,7 @@ date_seq <- function(interval){
 
   sequence <- seq(start_date,
                   as.POSIXlt(strftime('2017-01-01')),
-                  by = interval)
+                  by = pulse)
 
   set.seed(12345)
   if(length(sequence) > 100) {
@@ -55,11 +55,11 @@ test_that("Pad gives correct results on vectors", {
   expect_equal(pad(x_year) %>% length, 4)
   expect_equal(pad(x_year, end_val = as.Date('2021-01-01')) %>% length, 7)
   expect_equal(pad(x_year, start_val = as.Date('2012-01-01')) %>% length, 7)
-  expect_equal(pad(x_year, interval = 'month') %>% length, 37)
+  expect_equal(pad(x_year, pulse = 'month') %>% length, 37)
   expect_equal(pad(x_month) %>% length, 6)
   expect_equal(suppressWarnings(pad(x_day)) %>% length, 32)
   expect_equal(pad(x_hour) %>% length, 2)
-  expect_equal(pad(x_hour, interval = 'hour') %>% length, 25)
+  expect_equal(pad(x_hour, pulse = 'hour') %>% length, 25)
   expect_equal(suppressWarnings(pad(x_min)) %>% length, 60)
 })
 
@@ -67,11 +67,11 @@ test_that("Pad gives correct results on data.frames", {
   expect_equal(pad(data.frame(x_year, 1)) %>% nrow, 4)
   expect_equal(pad(data.frame(x_year, 1), end_val = as.Date('2021-01-01')) %>% nrow, 7)
   expect_equal(pad(data.frame(x_year, 1), start_val = as.Date('2012-01-01')) %>% nrow, 7)
-  expect_equal(pad(data.frame(x_year, 1), interval = 'month') %>% nrow, 37)
+  expect_equal(pad(data.frame(x_year, 1), pulse = 'month') %>% nrow, 37)
   expect_equal(pad(data.frame(x_month, 1)) %>% nrow, 6)
   expect_equal(suppressWarnings(pad(data.frame(x_day, 1))) %>% nrow, 32)
   expect_equal(pad(data.frame(x_hour, 1)) %>% nrow, 2)
-  expect_equal(pad(data.frame(x_hour, 1), interval = 'hour') %>% nrow, 25)
+  expect_equal(pad(data.frame(x_hour, 1), pulse = 'hour') %>% nrow, 25)
   expect_equal(suppressWarnings(pad(data.frame(x_min, 1))) %>% nrow, 60)
 })
 
