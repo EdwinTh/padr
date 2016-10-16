@@ -2,6 +2,7 @@
 #'
 #' Pad will fill the gaps in incomplete datetime variables, by figuring out
 #' what the pulse of the data is and what instances are missing.
+#'
 #' @param x Either a data frame containing at least one datetime variable or
 #' an object of class \code{Date} or class \class{POSIXt}.
 #' @param pulse The pulse of the returned datetime variable. When NULL the
@@ -18,7 +19,7 @@
 #' multiple variables that are eligable for padding. \code{by} indicates which
 #' to use for padding.
 #' @details The pulse of a datetime variable is the time unit at which the
-#' observations occur. \code{pad} allows for eight differenct time units which
+#' observations occur. \code{pad} allows for eight different time units which
 #' are from high to low \code{year}, \code{quarter}, \code{month}, \code{week},
 #' \code{day}, \code{hour}, \code{min}, \code{sec}. \code{pad} will figure out
 #' the pulse of the input data and will fill the gaps for the instances that
@@ -50,7 +51,6 @@
 #'
 #' x_df_grp %>% dplyr::group_by(grp) %>% dplyr::do(pad(.)) %>% dplyr::ungroup %>%
 #' tidyr::fill(grp)
-
 
 pad <- function(x,
                 pulse    = NULL,
@@ -114,9 +114,10 @@ pad <- function(x,
   }
 }
 
-
-# this is a helper function for pad, spanning for pad is much simpler
-# than for thicken.
+# when spanning for pad we want to allow for an end_val that is (far) after
+# max(x), when spanning for thicken this is not sensible. Since spanning for
+# pad is simple rather make a simple span_pad function than adjusting the
+# main span function for it.
 span_pad <- function(x,
                      start_val = NULL,
                      end_val   = NULL,

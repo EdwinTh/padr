@@ -1,36 +1,22 @@
-#' Span a vector of dates
+#' Span a variable of a different pulse
 #'
-#' The spanning functions take a vector of class \code{Date}, \code{POSIXlt}, or
-#' \code{POSIXct} and span a vector of its given interval from the first instance
-#' smaller than the minimum of \code{x} to the first instance larger than the
-#' maximum of \code{x}. The functions are designed as hepers for the \code{thicken}.
-#' function.
-#' @param x A vector of class \code{Date}, \code{POSIXlt}, or \code{POSIXct} for
-#' \code{span_year} or \code{span_month}. A vector of class  \code{POSIXlt}, or
-#' \code{POSIXct} for the others.
-#' @param start_val An object of class \code{Date}, \code{POSIXlt}, or \code{POSIXct}.
-#' See \code{details} for further information.
-#' @param end_va lAn object of class \code{Date}, \code{POSIXlt}, or \code{POSIXct}.
-#' #' See \code{details} for further information.
-#' @details The \code{start_val} and \code{end_val} arguments can be used in two ways to
-#' change the default behavior of the \code{span_} functions. First one can
-#' lengthen or shorten the output by specifying a timepoint that is outside
-#' the default range. Second by default the lower order time units are set to the
-#' lowest possible value (that is 1 for month and day and 0 for hour, minute and
-#' second). \code{start} and \code{end} can be used as an offset for these
-#' default values. Of course these two functionalities are not mutually exclusive.
+#' Span takes a vector of class \code{Date} or \code{POSIXt} and spans a vector
+#' of the specified pulse around it.
+#' @param x A vector of class \code{Date}, \code{POSIXlt}, or \code{POSIXct}.
+#' @param pulse The pulse of the returned variable.
+#' @param start_val By default the first instance of \code{pulse} that is lower
+#' than the lowest value of \code{x}, with all time units on
+#' default value. Specify \code{start_val} as an offset to change the values
+#' of the time units.
 #'
-#'
-#' @return A vector of the same data type as \code{x}.
+#' @return A vector of class \code{Date} or \code{POSIXTct}, dependant on its
+#' pulse.
 #' @examples
 #' x <- as.POSIXct(strftime(c('2014-03-04 10:43:16',
 #'                            '2014-03-05 08:22:12')))
-#' span_year(x)
-#' span_month(x)
-#' span_day(x)
-#' span_hour(x)
-#' span_minute(x)
-
+#' span(x, 'hour')
+#' span(x, 'day')
+#' span(x, 'year')
 span <- function(x,
                  pulse = c('year',
                               'quarter',
