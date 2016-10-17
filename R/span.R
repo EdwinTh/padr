@@ -1,16 +1,16 @@
-#' Span a variable of a different pulse
+#' Span a variable of a different interval
 #'
 #' Span takes a vector of class \code{Date} or \code{POSIXt} and spans a vector
-#' of the specified pulse around it.
+#' of the specified interval around it.
 #' @param x A vector of class \code{Date}, \code{POSIXlt}, or \code{POSIXct}.
-#' @param pulse The pulse of the returned variable.
-#' @param start_val By default the first instance of \code{pulse} that is lower
+#' @param interval The interval of the returned variable.
+#' @param start_val By default the first instance of \code{interval} that is lower
 #' than the lowest value of \code{x}, with all time units on
 #' default value. Specify \code{start_val} as an offset to change the values
 #' of the time units.
 #'
 #' @return A vector of class \code{Date} or \code{POSIXTct}, dependant on its
-#' pulse.
+#' interval.
 #' @examples
 #' x <- as.POSIXct(strftime(c('2014-03-04 10:43:16',
 #'                            '2014-03-05 08:22:12')))
@@ -18,7 +18,7 @@
 #' span(x, 'day')
 #' span(x, 'year')
 span <- function(x,
-                 pulse = c('year',
+                 interval = c('year',
                               'quarter',
                               'month',
                               'week',
@@ -32,9 +32,9 @@ span <- function(x,
     break('x should be of class Date, POSIXlt, or POSIXct')
   }
 
-  pulse <- match.arg(pulse)
+  interval <- match.arg(interval)
 
-  start_and_end <- get_start_and_end(x, return_pulse = pulse)
+  start_and_end <- get_start_and_end(x, return_interval = interval)
 
   if( is.null(start_val) ) {
     start_val <- start_and_end$start_val
@@ -46,17 +46,17 @@ span <- function(x,
       to_val <- as.POSIXct( strftime(to_val), tz = attr(start_val, 'tzone'))
     }
 
-    end_val <- tail( seq(start_val, to_val, by = pulse), 1)
+    end_val <- tail( seq(start_val, to_val, by = interval), 1)
 
   } else {
     break('Not reach span_function')
   }
 
-  return_values <- seq(start_val, end_val, by = pulse)
+  return_values <- seq(start_val, end_val, by = interval)
   # when setting an offset for week the end of the span can be before the
   # last value of x. TODO find cleaner solution
   if( max(return_values) < max(x) ){
-    return_values <- seq(start_val,  by = pulse,
+    return_values <- seq(start_val,  by = interval,
                          length.out = length(return_values) + 1)
   }
   return_values
@@ -67,14 +67,14 @@ span <- function(x,
 # to be applied when start_val and end_val are both NULL
 
 get_start_and_end <- function(dt_var,
-                              return_pulse) {
+                              return_interval) {
 
   start_val <- as.POSIXlt( min(dt_var) )
   end_val   <- as.POSIXlt( max(dt_var) )
 
   int_hierarchy <- 1:8
   names(int_hierarchy) <- c('year', 'quarter', 'month', 'week', 'day', 'hour','min', 'sec')
-  return_position <- int_hierarchy[return_pulse]
+  return_position <- int_hierarchy[return_interval]
 
   # year only : set year and month
   if(return_position == 1) {

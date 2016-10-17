@@ -1,14 +1,14 @@
 #' Pad the dateteime column of a data frame or a datetime vector
 #'
 #' Pad will fill the gaps in incomplete datetime variables, by figuring out
-#' what the pulse of the data is and what instances are missing.
+#' what the interval of the data is and what instances are missing.
 #'
 #' @param x Either a data frame containing at least one datetime variable or
 #' an object of class \code{Date} or class \class{POSIXt}.
-#' @param pulse The pulse of the returned datetime variable. When NULL the
-#' the pulse will be equal to the pulse of the input data and will be obtained
-#' by applying \code{get_pulse}. If specified it can only be lower than the
-#' pulse of the input data.
+#' @param interval The interval of the returned datetime variable. When NULL the
+#' the interval will be equal to the interval of the input data and will be obtained
+#' by applying \code{get_interval}. If specified it can only be lower than the
+#' interval of the input data.
 #' @param start_val An object of class \code{Date} or class \class{POSIXt} that
 #' specifies the start of returned datatime variable. If NULL it will use the
 #' lowest value of the input variable. See Details.
@@ -18,12 +18,12 @@
 #' @param by Only needs to be specified when x is a data frame containing
 #' multiple variables that are eligable for padding. \code{by} indicates which
 #' to use for padding.
-#' @details The pulse of a datetime variable is the time unit at which the
+#' @details The interval of a datetime variable is the time unit at which the
 #' observations occur. \code{pad} allows for eight different time units which
 #' are from high to low \code{year}, \code{quarter}, \code{month}, \code{week},
 #' \code{day}, \code{hour}, \code{min}, \code{sec}. \code{pad} will figure out
-#' the pulse of the input data and will fill the gaps for the instances that
-#' would be expected from the pulse but are missing from the input data. See
+#' the interval of the input data and will fill the gaps for the instances that
+#' would be expected from the interval but are missing from the input data. See
 #' the vignette for the default behavior of \code{pad}.
 #' @return If \code{x} is a data frame it the return will be the same data frame
 #' with rows inserted where the datetime variable is padded. All other values
@@ -33,8 +33,8 @@
 #' x_var <- seq(as.Date('2016-04-01'), as.Date('2017-04-01'), by = 'month')
 #' x_var_incomplete <- x_var[c(1, 4, 5, 7, 9, 10, 13)]
 #' all.equal(x_var, pad(x_var_incomplete))
-#' # use a different pulse than the one of the data itself
-#' pad(x_var_incomplete, pulse = 'day')
+#' # use a different interval than the one of the data itself
+#' pad(x_var_incomplete, interval = 'day')
 #'
 #' library(dplyr)
 #' x_df <- data.frame(x_var = x_var_incomplete,
@@ -53,7 +53,7 @@
 #' tidyr::fill(grp)
 
 pad <- function(x,
-                pulse    = NULL,
+                interval    = NULL,
                 start_val= NULL,
                 end_val  = NULL,
                 by       = NULL){
@@ -80,25 +80,25 @@ pad <- function(x,
     warning('Datetime variable was unsorted, pad result is sorted.')
   }
 
-  if(is.null(pulse)) {
-    pulse <- get_pulse(dt_var)
+  if(is.null(interval)) {
+    interval <- get_interval(dt_var)
   } else {
-    if(! pulse %in% c('year','month','day','hour','min')){
-      stop("Argument pulse has an invalid value.")
+    if(! interval %in% c('year','month','day','hour','min')){
+      stop("Argument interval has an invalid value.")
     }
 
-    pulse_dt_var <- get_pulse(dt_var)
+    interval_dt_var <- get_interval(dt_var)
 
     int_hierarchy <- 1:6
     names(int_hierarchy) <- c('year','month','day','hour','min', 'sec')
 
-    if(int_hierarchy[pulse_dt_var] > int_hierarchy[pulse]) {
-      stop('The pulse of the datetime variable is higher than the pulse given,
-            if you wish to pad at this pulse you should thicken and aggregate first.')
+    if(int_hierarchy[interval_dt_var] > int_hierarchy[interval]) {
+      stop('The interval of the datetime variable is higher than the interval given,
+            if you wish to pad at this interval you should thicken and aggregate first.')
     }
   }
 
-  span <- span_pad(dt_var, start_val, end_val, pulse)
+  span <- span_pad(dt_var, start_val, end_val, interval)
 
   if(!is.data.frame(x)){
     return(span)
@@ -121,14 +121,14 @@ pad <- function(x,
 span_pad <- function(x,
                      start_val = NULL,
                      end_val   = NULL,
-                     pulse  =  c('year','quarter', 'month','week', 'day','hour','min', 'sec')) {
+                     interval  =  c('year','quarter', 'month','week', 'day','hour','min', 'sec')) {
 
-  pulse <- match.arg(pulse)
+  interval <- match.arg(interval)
 
   if(is.null(start_val)) start_val <- min(x)
   if(is.null(end_val))   end_val   <- max(x)
 
-  span <- seq(start_val, end_val, pulse)
+  span <- seq(start_val, end_val, interval)
   return(span)
 }
 

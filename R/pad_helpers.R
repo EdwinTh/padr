@@ -1,16 +1,16 @@
-#' Get the pulse of a datetime variable
+#' Get the interval of a datetime variable
 #'
-#' The pulse is the lowest highest time unit that can explain all instances of a
+#' The interval is the lowest highest time unit that can explain all instances of a
 #' variable of class \code{Date} or of class \code{POSIXct}. This function
-#' will determine what the pulse of the variable is.
+#' will determine what the interval of the variable is.
 #'
 #' @param x A variable of class of class \code{Date} or of class \code{POSIXt}.
-#' @return A character string indicating the pulse of \code{x}.
+#' @return A character string indicating the interval of \code{x}.
 #' @examples
 #' x_month <- seq(as.Date('2016-01-01'), as.Date('2016-05-01'), by = 'month')
-#' get_pulse(x_month)
+#' get_interval(x_month)
 
-get_pulse <- function(x) {
+get_interval <- function(x) {
 
   if( !(c('Date', "POSIXt") %in% class(x) %>% any)) {
     stop('x should be of class Date, POSIXct, or POSIXlt', call. = FALSE)
@@ -33,7 +33,7 @@ get_pulse <- function(x) {
   does_differ <- differs %>% which
 
   if(does_differ %>% length %>% `==`(0)) {
-    stop("x does not vary, cannot determine the pulse", call. = FALSE)
+    stop("x does not vary, cannot determine the interval", call. = FALSE)
   } else {
     lowest_level <- does_differ[length(does_differ)] %>% names
 
