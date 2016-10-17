@@ -12,8 +12,8 @@
 #' the closest value that is lower (\code{down}) or that is higher (\code{up})
 #' than itself.
 #' @param by Only needs to be specified when x is a data frame containing
-#' multiple variables that are eligable for padding. \code{by} indicates which
-#' to use for padding.
+#' multiple variables that are eligable for padding. \code{by} indicates the
+#' bare column name that should be used.
 #' @param start_val By default the first instance of \code{pulse} that is lower
 #' than the lowest value of the input datetime variable, with all time units on
 #' default value. Specify \code{start_val} as an offset to change the values
