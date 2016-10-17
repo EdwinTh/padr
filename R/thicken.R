@@ -4,7 +4,7 @@
 #' pulse thicken will create this variable of a higher pulse.
 #'
 #' @param x Either a data frame containing at least one datetime variable or
-#' an object of class \code{Date} or class \class{POSIXt}.
+#' an object of class \code{Date} or class \code{POSIXt}.
 #' @param pulse The pulse of the returned datetime variable, should be higher
 #' than the pulse of the input datetime variable. Default mode is one level
 #' higher than the pulse of the input datetime variable.
@@ -61,7 +61,7 @@ thicken <- function(x,
   # Section 1: obtain datetime variable and see if the variable is valid
 
   arguments <- as.list(match.call())
-  if('by' %in% names(arguments)) by_val <- as.character(arguments$by)
+  if(!missing(by)) by_val <- as.character(arguments$by)
 
   if(is.data.frame(x)) {
     original_data_frame <- x

@@ -9,7 +9,7 @@ thicken(x, pulse = c("level_up", "year", "quarter", "month", "week", "day",
 }
 \arguments{
 \item{x}{Either a data frame containing at least one datetime variable or
-an object of class \code{Date} or class \class{POSIXt}.}
+an object of class \code{Date} or class \code{POSIXt}.}
 
 \item{pulse}{The pulse of the returned datetime variable, should be higher
 than the pulse of the input datetime variable. Default mode is one level
@@ -20,8 +20,8 @@ the closest value that is lower (\code{down}) or that is higher (\code{up})
 than itself.}
 
 \item{by}{Only needs to be specified when x is a data frame containing
-multiple variables that are eligable for padding. \code{by} indicates which
-to use for padding.}
+multiple variables that are eligable for padding. \code{by} indicates the
+bare column name that should be used.}
 
 \item{start_val}{By default the first instance of \code{pulse} that is lower
 than the lowest value of the input datetime variable, with all time units on
@@ -29,7 +29,7 @@ default value. Specify \code{start_val} as an offset to change the values
 of the time units.}
 }
 \value{
-A vector of class \code{Date} or \code{POSIXTct}, dependant on the
+A vector of class \code{Date} or \code{POSIXTct}, dependant on its
 pulse. This vector serves as a mapping between the input datetime variable
 and the variable of the desired pulse.
 }

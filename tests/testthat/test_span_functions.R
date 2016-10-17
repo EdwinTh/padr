@@ -87,3 +87,41 @@ test_that('span_year returns the same class', {
   expect_true( 'POSIXct' %in% (span(x_posix, 'min') %>% class) )
   expect_true( 'POSIXct' %in% (span(x_posix, 'sec') %>% class) )
 })
+
+
+context('test get_start_and_end')
+test_that('get_start_and_end output correct values', {
+  expect_equal(get_start_and_end(x_posix, 'sec')$start_val %>% as.character,
+               '2013-12-31 10:43:16')
+  expect_equal(get_start_and_end(x_posix, 'sec')$end_val %>% as.character,
+               '2014-01-01 08:22:13')
+  expect_equal(get_start_and_end(x_posix, 'min')$start_val %>% as.character,
+               '2013-12-31 10:43:00')
+  expect_equal(get_start_and_end(x_posix, 'min')$end_val %>% as.character,
+               '2014-01-01 08:23:00')
+  expect_equal(get_start_and_end(x_posix, 'hour')$start_val %>% as.character,
+               '2013-12-31 10:00:00')
+  expect_equal(get_start_and_end(x_posix, 'hour')$end_val %>% as.character,
+               '2014-01-01 09:00:00')
+  expect_equal(get_start_and_end(x_posix, 'day')$start_val %>% as.character,
+               '2013-12-31')
+  expect_equal(get_start_and_end(x_posix, 'day')$end_val %>% as.character,
+               '2014-01-02')
+  expect_equal(get_start_and_end(x_posix, 'week')$start_val %>% as.character,
+               '2013-12-29')
+  expect_equal(get_start_and_end(x_posix, 'week')$end_val %>% as.character,
+               '2014-01-05')
+  expect_equal(get_start_and_end(x_posix, 'month')$start_val %>% as.character,
+               '2013-12-01')
+  expect_equal(get_start_and_end(x_posix, 'month')$end_val %>% as.character,
+               '2014-02-01')
+  expect_equal(get_start_and_end(x_posix, 'quarter')$start_val %>% as.character,
+               '2013-10-01')
+  expect_equal(get_start_and_end(x_posix, 'quarter')$end_val %>% as.character,
+               '2014-04-01')
+  expect_equal(get_start_and_end(x_posix, 'year')$start_val %>% as.character,
+               '2013-01-01')
+  expect_equal(get_start_and_end(x_posix, 'year')$end_val %>% as.character,
+               '2015-01-01')
+})
+

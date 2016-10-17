@@ -2,7 +2,7 @@
 % Please edit documentation in R/pad_helpers.R
 \name{get_pulse}
 \alias{get_pulse}
-\title{Determine the Interval of a Date Variable}
+\title{Get the pulse of a datetime variable}
 \usage{
 get_pulse(x)
 }
@@ -10,16 +10,15 @@ get_pulse(x)
 \item{x}{A variable of class of class \code{Date} or of class \code{POSIXt}.}
 }
 \value{
-A character string indicating the interval of \code{x}.
+A character string indicating the pulse of \code{x}.
 }
 \description{
-The interval is the lowest time level that can explain all instances of a
+The pulse is the lowest highest time unit that can explain all instances of a
 variable of class \code{Date} or of class \code{POSIXct}. This function
-will determine what the interval of the variable is. It is used within
-the \code{pad_date} function when the interval is not provided.
+will determine what the pulse of the variable is.
 }
 \examples{
 x_month <- seq(as.Date('2016-01-01'), as.Date('2016-05-01'), by = 'month')
-get_interval(x_month)
+get_pulse(x_month)
 }
 

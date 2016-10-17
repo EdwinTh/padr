@@ -23,6 +23,9 @@ fill_by_value <- function(x,
                           ...,
                           value = 0) {
 
+  if(!is.data.frame(x)) {
+    stop('x should be a data frame')
+  }
   arguments <- as.list(match.call())[-1]
   if('value' %in% names(arguments)) value <- arguments$value
   cols <- arguments[ names(arguments) == '' ]
@@ -60,7 +63,11 @@ fill_by_function <- function(x,
                              ...,
                              fun = mean) {
   if(! is.function(fun) ) {
-    break('fun is not a valid function')
+    stop('fun is not a valid function')
+  }
+
+  if(!is.data.frame(x)) {
+    stop('x should be a data frame')
   }
 
   arguments <- as.list(match.call())[-1]
@@ -87,8 +94,6 @@ fill_by_function <- function(x,
    return(x)
 }
 
-x_df %>% pad %>% fill_by_function(y1, y2)
-
 #' Fill missing values by a function of the nonmissings
 #'
 #' For each specified column in \code{x} replace the missing values by a
@@ -107,28 +112,34 @@ x_df %>% pad %>% fill_by_function(y1, y2)
 fill_by_prevalent <- function(x,
                               ...) {
 
+  if(!is.data.frame(x)) {
+    stop('x should be a data frame')
+  }
+
   arguments <- as.list(match.call())[-1]
   cols <- arguments[ names(arguments) == '' ]
-  inds <- numeric(length(cols))
   for(i in 1:length(cols)) {
     inds[i] <- which( colnames(x) == as.character( cols[[i]] ) )
   }
 
   for(i in inds) {
     val <- unlist ( x[ ,i] )
+
     x_count <- table(val)
 
     if( sum(x_count == max(x_count)) > 1 ) {
-      tied <- paste(names( which (x_count == max(x_count) ) ), collapse = ', ')
-      break(paste( tied, 'tie for most prevalent, please select a value and use fill_by_value') )
+       tied <- paste(names( which (x_count == max(x_count) ) ), collapse = ', ')
+       stop(paste( tied, 'tie for most prevalent, please select a value and use fill_by_value') )
     }
 
-    value <- names( which( x_count == max(x_count) ) )
-    val[is.na(val)] <- value
-    x[ ,i] <- val
+  value <- names( which( x_count == max(x_count) ) )
+  if( is.numeric(val) ) value <- as.numeric(value)
+  val[is.na(val)] <- value
+  x[ ,i] <- val
   }
   return(x)
 }
+
 
 
 
