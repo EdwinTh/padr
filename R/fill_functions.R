@@ -1,91 +1,135 @@
-#' Fill all NA values in a vector by the same value
+#' Fill missing values by a single value
 #'
-#' @param x A vector containing NA values.
-#' @param replace The value to replace the NA values by.
-#' @return \code{x} with its NA values replaced by \code{replace}
+#' Replace all missing values in the specified columns by the same value.
+#' @param x A data frame.
+#' @param ... The unquoted column names of the variables that should be filled.
+#' @param replace The value to replace the missing values by.
+#' @return \code{x} with the altered columns.
+#'
 #' @examples
-#' x <- round(rnorm(200), 2)
-#' x[sample(1:200, 50)] <- NA
-#' fill_by_value(x, 42)
-#'
-#' x <- rep(letters[1:10], each = 10)
-#' x[sample(1:100, 25)] <- NA
-#' fill_by_value(x, 'Missing')
+#' library(dplyr)
+#' x <- seq(as.Date('2016-01-01'), by = 'day', length.out = 366)
+#' x <- x[sample(1:366, 200)] %>% sort
+#' x_df <- data_frame(x  = x,
+#'                    y1 = runif(200, 10, 20) %>% round,
+#'                    y2 = runif(200, 1, 50) %>% round,
+#'                    y3 = runif(200, 20, 40) %>% round,
+#'                    y4 = sample(letters[1:5], 200, replace = TRUE))
+#' x_padded <- x_df %>% pad
+#' x_padded %>% fill_by_value(y1)
+#' x_df %>% pad %>% fill_by_value(y1, y2, value = 42)
 
 fill_by_value <- function(x,
+                          ...,
                           value = 0) {
-  if(! any (is.na(x) )) {
-    warning('x does not contain NA values, just returning x')
-    return(x)
+
+  arguments <- as.list(match.call())[-1]
+  if('value' %in% names(arguments)) value <- arguments$value
+  cols <- arguments[ names(arguments) == '' ]
+  inds <- numeric(length(cols))
+  for(i in 1:length(cols)) {
+    inds[i] <- which( colnames(x) == as.character( cols[[i]] ) )
   }
-  x[is.na(x)] <- value
+
+  for(i in inds) {
+    val <- x[ ,i]
+    val[is.na(val)] <- value
+    x[ ,i] <- val
+  }
   return(x)
 }
 
-
-#' Fill all NA values in a vector by a function of it
+#' Fill missing values by a function of the nonmissings
 #'
-#' Take all the nonmissing values in x and apply a function on it. Subsequently
-#' replace all NA values by the outcome of the function.
-#' @param x A vector containing NA values.
-#' @param fun The function to apply on all nonmissing values of x.
-#' @param ... Optional parameters for \code{fun}.
-#' @return \code{x} with its NA values replaced by the outcome of \code{fun}.
-#' x <- round(rnorm(200), 2)
-#' x[sample(1:200, 50)] <- NA
-#' fill_by_function(x)
-#' fill_by_function(x, median)
-#'
-#' my_function <- function(x, y) mean(x^2 / y)
-#' fill_by_function(x, my_function, .1)
-#' fill_by_function(x, my_function, 10)
+#' For each specified column in \code{x} replace the missing values by a
+#' function of the nonmissing values.
+#' @param x A data frame.
+#' @param fun The function to apply on the nonmissing values.
+#' @param ... The unquoted column names of the variables that should be filled.
+#' In addition optional parameters to \code{fun}.
+#' @return \code{x} with the altered columns.
+#' @examples
+#' x <- seq(as.Date('2016-01-01'), by = 'day', length.out = 366)
+#' x <- x[sample(1:366, 200)] %>% sort
+#' x_df <- data_frame(x  = x,
+#'                    y1 = runif(200, 10, 20) %>% round,
+#'                    y2 = runif(200, 1, 50) %>% round)
+#' x_df %>% pad %>% fill_by_function(y1, y2)
+#' x_df %>% pad %>% fill_by_function(y1, y2, fun = median)
 fill_by_function <- function(x,
-                             fun = mean,
-                             ...) {
-  if(! any (is.na(x) )) {
-    warning('x does not contain NA values, just returning x')
-    return(x)
-  }
+                             ...,
+                             fun = mean) {
   if(! is.function(fun) ) {
     break('fun is not a valid function')
   }
 
-  x_no_na <- x[!is.na(x)]
-  value <- fun(x_no_na, ...)
-
-  if(length(value) > 1){
-    warning('fun does return multiple values, only the first is used')
-    value <- value[1]
+  arguments <- as.list(match.call())[-1]
+  if('value' %in% names(arguments)) value <- arguments$value
+  cols <- arguments[ names(arguments) == '' ]
+  inds <- numeric(length(cols))
+  for(i in 1:length(cols)) {
+     inds[i] <- which( colnames(x) == as.character( cols[[i]] ) )
   }
-  x[is.na(x)] <- value
-  return(x)
+
+  for(i in inds) {
+      val <- unlist( x[ ,i] )
+      val_no_na <- val[!is.na(val)]
+      value <- fun(val_no_na)
+
+     if(length(value) > 1){
+       warning('fun does return multiple values, only the first is used')
+       value <- value[1]
+     }
+
+     val[is.na(val)] <- value
+     x[ ,i] <- val
+   }
+   return(x)
 }
 
-#' Fill all NA values in a vector by the most prevalent nonmissing value
+x_df %>% pad %>% fill_by_function(y1, y2)
+
+#' Fill missing values by a function of the nonmissings
 #'
-#' @param x A vector containing NA values.
-#' @return \code{x} with its NA values replaced by its most prevalent
-#' nonmissing value.
+#' For each specified column in \code{x} replace the missing values by a
+#' function of the nonmissing values.
+#' @param x A data frame.
+#' @param ... The unquoted column names of the variables that should be filled.
+#' @return \code{x} with the altered columns.
 #' @examples
-#' x <- rep(letters[1:10], seq(20, 2, by =-2))
-#' x[sample(length(x), 25)] <- NA
-#' fill_by_prevalent(x)
+#' x <- seq(as.Date('2016-01-01'), by = 'day', length.out = 366)
+#' x <- x[sample(1:366, 200)] %>% sort
+#' x_df <- data_frame(x  = x,
+#'                   y1 = rep(letters[1:3], c(80, 70, 50)) %>% sample,
+#'                   y2 = rep(letters[2:5], c(60, 80, 40, 20)) %>% sample)
+#' x_df %>% pad %>% fill_by_prevalent(y1, y2)
 
-fill_by_prevalent <- function(x) {
-  if(! any (is.na(x) )) {
-    warning('x does not contain NA values, just returning x')
-    return(x)
+fill_by_prevalent <- function(x,
+                              ...) {
+
+  arguments <- as.list(match.call())[-1]
+  cols <- arguments[ names(arguments) == '' ]
+  inds <- numeric(length(cols))
+  for(i in 1:length(cols)) {
+    inds[i] <- which( colnames(x) == as.character( cols[[i]] ) )
   }
 
-  x_count <- table(x)
-  if( sum(x_count == max(x_count)) > 1 ) {
-    vals <- paste(names( which (x_count == max(x_count) ) ), collapse = ', ')
-    break(paste( vals, 'tie for most prevalent, please select a value and use fill_by_value') )
-  }
+  for(i in inds) {
+    val <- unlist ( x[ ,i] )
+    x_count <- table(val)
 
-  value <- names( which( x_count == max(x_count) ) )
-  x[is.na(x)] <- value
+    if( sum(x_count == max(x_count)) > 1 ) {
+      tied <- paste(names( which (x_count == max(x_count) ) ), collapse = ', ')
+      break(paste( tied, 'tie for most prevalent, please select a value and use fill_by_value') )
+    }
+
+    value <- names( which( x_count == max(x_count) ) )
+    val[is.na(val)] <- value
+    x[ ,i] <- val
+  }
   return(x)
 }
+
+
 
 
