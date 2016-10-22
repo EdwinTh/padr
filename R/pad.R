@@ -53,13 +53,13 @@
 #' tidyr::fill(grp)
 
 pad <- function(x,
-                interval    = NULL,
+                interval = NULL,
                 start_val= NULL,
                 end_val  = NULL,
                 by       = NULL){
 
   arguments <- as.list(match.call())
-  if('by' %in% names(arguments)) by_val <- as.character(arguments$by)
+  if(!missing(by)) by_val <- as.character(arguments$by)
 
   if(is.data.frame(x)) {
     original_data_frame <- x
@@ -83,14 +83,11 @@ pad <- function(x,
   if(is.null(interval)) {
     interval <- get_interval(dt_var)
   } else {
-    if(! interval %in% c('year','month','day','hour','min')){
-      stop("Argument interval has an invalid value.")
-    }
 
     interval_dt_var <- get_interval(dt_var)
 
-    int_hierarchy <- 1:6
-    names(int_hierarchy) <- c('year','month','day','hour','min', 'sec')
+    int_hierarchy <- 1:8
+    names(int_hierarchy) <- c('year','quarter', 'month', 'week', 'day', 'hour','min', 'sec')
 
     if(int_hierarchy[interval_dt_var] > int_hierarchy[interval]) {
       stop('The interval of the datetime variable is higher than the interval given,
@@ -98,17 +95,21 @@ pad <- function(x,
     }
   }
 
-  span <- span_pad(dt_var, start_val, end_val, interval)
+  if(is.Date(dt_var) & int_hierarchy[interval] > 5) {
+     dt_var <- as.POSIXct(as.character(dt_var))
+  }
+
+  spanned <- span_pad(dt_var, start_val, end_val, interval)
 
   if(!is.data.frame(x)){
-    return(span)
+    return(spanned)
   } else {
-    join_frame <- data.frame(span = span)
+    join_frame <- data.frame(spanned = spanned)
     colnames(original_data_frame)[colnames(original_data_frame) ==
-                                    dt_var_name] <- 'span'
+                                    dt_var_name] <- 'spanned'
     return_frame <- suppressMessages(
       dplyr::right_join(original_data_frame, join_frame))
-    colnames(return_frame)[colnames(return_frame) == 'span'] <- dt_var_name
+    colnames(return_frame)[colnames(return_frame) == 'spanned'] <- dt_var_name
     class(return_frame) <-  class(original_data_frame)
     return(return_frame)
   }
@@ -131,6 +132,8 @@ span_pad <- function(x,
   span <- seq(start_val, end_val, interval)
   return(span)
 }
+
+
 
 
 
