@@ -1,0 +1,58 @@
+---
+title: "Using padr for preparing data that contain datetime variables"
+author: "Edwn Thoen"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Working with dates and times
+
+Raw data containing date and time variables are often not in a for that allows for direct analysis. Getting the data in the correct form can be somewhat tedious, even when using packages that allow for powerful data transformation like `data.table` and `dplyr`. The `padr` package aims to take away a part of the hassle of date and time variables cleaning. Its core consists of two functions `pad` and `thicken` that do some heavy lifting when going from raw data to an analyssi set.
+
+## Interval
+
+The interval of the data in the context of `padr` is the recurrence of observations in a date or time variable. It can be thought of as the heartbeat of the data, at each pulse we have an observation. The interval is "year" when we have an observation each year, "month" when there is an observation each month etc.[^1]
+
+[^1]: Many users that work with date and time variables will be working with the powerful `lubridate` package. The definition of an interval in `lubridate` is different from the definition in `padr`. In `lubridate` an interval is a period between two time points and has nothing to do with recurrence. Please keep this in mind.
+
+## Styles
+
+The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
+
+    output: 
+      rmarkdown::html_vignette:
+        css: mystyles.css
+
+## Figures
+
+The figure sizes have been customised so that you can easily put two images side-by-side. 
+
+```{r, fig.show='hold'}
+plot(1:10)
+plot(10:1)
+```
+
+You can enable figure captions by `fig_caption: yes` in YAML:
+
+    output:
+      rmarkdown::html_vignette:
+        fig_caption: yes
+
+Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
+
+## More Examples
+
+You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
+
+```{r, echo=FALSE, results='asis'}
+knitr::kable(head(mtcars, 10))
+```
+
+Also a quote using `>`:
+
+> "He who gives up [code] safety for [code] speed deserves neither."
+([via](https://twitter.com/hadleywickham/status/504368538874703872))
