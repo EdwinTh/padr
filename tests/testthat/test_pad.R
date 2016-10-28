@@ -55,11 +55,11 @@ test_that("Pad gives correct results on vectors", {
   expect_equal(pad(x_year) %>% length, 4)
   expect_equal(pad(x_year, end_val = as.Date('2021-01-01')) %>% length, 7)
   expect_equal(pad(x_year, start_val = as.Date('2012-01-01')) %>% length, 7)
-  expect_equal(pad(x_year, pulse = 'month') %>% length, 37)
+  expect_equal(pad(x_year, interval = 'month') %>% length, 37)
   expect_equal(pad(x_month) %>% length, 6)
   expect_equal(suppressWarnings(pad(x_day)) %>% length, 32)
   expect_equal(pad(x_hour) %>% length, 2)
-  expect_equal(pad(x_hour, pulse = 'hour') %>% length, 25)
+  expect_equal(pad(x_hour, interval = 'hour') %>% length, 25)
   expect_equal(suppressWarnings(pad(x_min)) %>% length, 60)
 })
 
@@ -67,11 +67,11 @@ test_that("Pad gives correct results on data.frames", {
   expect_equal(pad(data.frame(x_year, 1)) %>% nrow, 4)
   expect_equal(pad(data.frame(x_year, 1), end_val = as.Date('2021-01-01')) %>% nrow, 7)
   expect_equal(pad(data.frame(x_year, 1), start_val = as.Date('2012-01-01')) %>% nrow, 7)
-  expect_equal(pad(data.frame(x_year, 1), pulse = 'month') %>% nrow, 37)
+  expect_equal(pad(data.frame(x_year, 1), interval = 'month') %>% nrow, 37)
   expect_equal(pad(data.frame(x_month, 1)) %>% nrow, 6)
   expect_equal(suppressWarnings(pad(data.frame(x_day, 1))) %>% nrow, 32)
   expect_equal(pad(data.frame(x_hour, 1)) %>% nrow, 2)
-  expect_equal(pad(data.frame(x_hour, 1), pulse = 'hour') %>% nrow, 25)
+  expect_equal(pad(data.frame(x_hour, 1), interval = 'hour') %>% nrow, 25)
   expect_equal(suppressWarnings(pad(data.frame(x_min, 1))) %>% nrow, 60)
 })
 
@@ -79,5 +79,4 @@ test_that('Pad works properly on data.table and tbl', {
   expect_equal(class(pad(data.table::data.table(x_year, 1)))[1], 'data.table')
   expect_equal(class(pad(dplyr::data_frame(x_year, 1)))[1], 'tbl_df')
 })
-
 

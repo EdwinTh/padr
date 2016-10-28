@@ -118,6 +118,8 @@ fill_by_prevalent <- function(x,
 
   arguments <- as.list(match.call())[-1]
   cols <- arguments[ names(arguments) == '' ]
+
+  inds <- numeric(length(cols))
   for(i in 1:length(cols)) {
     inds[i] <- which( colnames(x) == as.character( cols[[i]] ) )
   }

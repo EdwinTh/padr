@@ -20,8 +20,8 @@ test_that('span throws errors at wrong types', {
 context('Test the span_ functions on output')
 
 test_that('span produces correct output for year', {
-  out_year <- span(x_posix, pulse = 'year')
-  out_year_with_start <- span(x_posix,pulse = 'year',
+  out_year <- span(x_posix, interval = 'year')
+  out_year_with_start <- span(x_posix,interval = 'year',
                               start_val = as.POSIXct('2012-12-05 16:56:14'))
   expect_equal(length(out_year), 3)
   expect_equal(min(out_year), as.Date('2013-01-01'))

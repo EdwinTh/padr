@@ -64,9 +64,9 @@ round_up <- function(a,
     b <- as.POSIXct(strftime(b), tz = attr(a, 'tzone'))
   }
 
-  if(class(a)[1] == 'Date'){
+  if(is.Date(a)){
     thickened <- as.Date(round_up_core(a,b), origin = '1970-01-01')
-  } else if (class(a)[1] == 'POSIXct') {
+  } else if ('POSIXt' %in% class(a)) {
     thickened <- as.POSIXct(round_up_core(as.numeric(a), as.numeric(b)),
                             origin = '1970-01-01', tz = attr(a, 'tz'))
   } else {

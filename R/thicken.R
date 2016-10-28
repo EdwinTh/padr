@@ -11,6 +11,9 @@
 #' @param rounding Should a value in the input datetime variable be mapped to
 #' the closest value that is lower (\code{down}) or that is higher (\code{up})
 #' than itself.
+#' @param colname The column name of the added variable. If \code{NULL} it will
+#' be name of the original datetime variable, with the interval suffixed to it
+#' separeted by an underscore.
 #' @param by Only needs to be specified when x is a data frame containing
 #' multiple variables that are eligable for padding. \code{by} indicates the
 #' bare column name that should be used.
@@ -53,6 +56,7 @@ thicken <- function(x,
                               'day',
                               'hour',
                               'min'),
+                    colname  = NULL,
                     rounding = c('down',
                                  'up'),
                     by        = NULL,
@@ -89,7 +93,7 @@ thicken <- function(x,
 
   if(int_hierarchy[get_interval(dt_var)] < int_hierarchy[interval]) {
     stop('The interval in the datetime variable is lower than the interval given,
-         you might be looking fo smear rather than for thicken.')
+         you might be looking fo pad rather than for thicken.')
   } else if (int_hierarchy[get_interval(dt_var)] == int_hierarchy[interval]) {
     stop('The interval in the datetime variable is equal to the interval given,
          you might be looking for pad rather than for thicken.')
@@ -103,8 +107,28 @@ thicken <- function(x,
 
   # Section 3: make the thicken and create the return frame
   if(rounding == 'down'){
-    return(round_down(dt_var, spanned))
+    thickened <- round_down(dt_var, spanned)
   } else {
-    return(round_up(dt_var, spanned))
+    thickened <- round_up(dt_var, spanned)
   }
+
+
+  if(is.data.frame(x)) {
+
+    x_name <- get_date_variables(x)
+    if(is.null(colname)) colname <- paste(x_name, interval, sep = '_')
+    return_frame <- cbind(x, thickened)
+    colnames(return_frame)[ncol(return_frame)] <- colname
+
+  } else {
+
+    x_name <- deparse(substitute(x))
+    return_frame <- data.frame(x, thickened)
+    if(is.null(colname)) colname <- paste(x_name, interval, sep = '_')
+    colnames(return_frame) <- c(x_name, colname)
+
+  }
+
+  return(return_frame)
+
 }

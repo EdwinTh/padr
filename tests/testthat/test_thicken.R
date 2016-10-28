@@ -1,7 +1,7 @@
 
-date_seq <- function(pulse){
-  # only use a wide pulse to test year, all others less wide for performance
-  if(pulse == 'year') {
+date_seq <- function(interval){
+  # only use a wide interval to test year, all others less wide for performance
+  if(interval == 'year') {
     start_date <- as.POSIXlt(strftime('2005-01-01'))
   } else {
     start_date <- as.POSIXlt(strftime('2015-01-01'))
@@ -9,7 +9,7 @@ date_seq <- function(pulse){
 
   sequence <- seq(start_date,
                   as.POSIXlt(strftime('2017-01-01')),
-                  by = pulse)
+                  by = interval)
 
   set.seed(12345)
   if(length(sequence) > 100) {
@@ -30,6 +30,7 @@ equal_dist <- c(as.POSIXct('2014-01-01 23:00:00'),
 
 df_with_one_date  <- data.frame(dt_var1 = date_seq('month'),
                                 y = 1:6)
+df_with_one_date_sorted <- df_with_one_date %>% arrange(dt_var1)
 df_with_two_dates <- data.frame(dt_var1  = date_seq('month'),
                                 dt_var2 = date_seq('month'),
                                 y = 1:6)
@@ -46,23 +47,23 @@ test_that("Section 1, correct error handling", {
 })
 
 test_that("Section 2, correct error handling", {
-  expect_error(thicken(x_month, 'month'))
-  expect_error(suppressWarnings(thicken(x_hour, 'month')), NA)
+  expect_error(thicken(x_month %>% sort, interval = 'month'))
+  expect_error(suppressWarnings(thicken(x_hour, interval = 'month')), NA)
   expect_warning(thicken(x_month))
 })
 
-test_that("thicken gives correct pulse", {
-  expect_equal(suppressWarnings(thicken(x_sec, 'year')) %>% get_pulse, 'year')
-  expect_equal(suppressWarnings(thicken(x_sec, 'month')) %>% get_pulse, 'month')
-  expect_equal(suppressWarnings(thicken(x_sec, 'day')) %>% get_pulse, 'day')
-  expect_equal(suppressWarnings(thicken(x_sec, 'hour')) %>% get_pulse, 'hour')
-  expect_equal(suppressWarnings(thicken(x_sec, 'min')) %>% get_pulse, 'min')
+test_that("thicken gives correct interval", {
+  expect_equal(suppressWarnings(thicken(x_sec, interval = 'year'))$x_sec_year %>% get_interval, 'year')
+  expect_equal(suppressWarnings(thicken(x_sec, interval = 'month'))$x_sec_month %>% get_interval, 'month')
+  expect_equal(suppressWarnings(thicken(x_sec, interval = 'day'))$x_sec_day %>% get_interval, 'day')
+  expect_equal(suppressWarnings(thicken(x_sec, interval = 'hour'))$x_sec_hour %>% get_interval, 'hour')
+  expect_equal(suppressWarnings(thicken(x_sec, interval = 'min'))$x_sec_min %>% get_interval, 'min')
 })
 
 test_that("thicken gives correct output when x is a vector", {
   day_sorted <- sort(x_day)
-  day_to_year <- thicken(day_sorted, 'year')
-  day_to_year2 <- thicken(day_sorted, 'year', 'up')
+  day_to_year <- thicken(day_sorted, 'x', interval = 'year')$x
+  day_to_year2 <- thicken(day_sorted, 'x', interval = 'year', rounding = 'up')$x
 
   expect_equal(day_to_year %>% length, 100)
   expect_equal(lubridate::year(day_to_year[1]), 2015)
@@ -75,9 +76,20 @@ test_that("thicken gives correct ouput when x is a df",{
   X <- data.frame(day_var = seq(as.Date('2016-01-01'), as.Date('2016-12-31'), by = 'day'),
                   value   = runif(366, 50, 100))
 
-  expect_equal(thicken(X, 'month') %>% length, 366)
-  expect_equal( lubridate::month(thicken(X, 'month')) %>% max, 12)
-  expect_error( (thicken(dplyr::as_data_frame(X), 'month')), NA)
-  expect_error( thicken(data.table::as.data.table(X), 'month') , NA)
+  expect_equal(thicken(X, interval = 'month') %>% nrow, 366)
+  expect_equal( lubridate::month(thicken(X, interval = 'month')$day_var_month) %>% max, 12)
+  expect_error( (thicken(dplyr::as_data_frame(X), interval = 'month')), NA)
+  expect_error( thicken(data.table::as.data.table(X), interval = 'month') , NA)
 })
+
+
+test_that('column naming works properly', {
+  a <- sort(x_day)
+  a_df <- data.frame(a = a, b = 42)
+  expect_equal(colnames(thicken(a))[2], 'a_week')
+  expect_equal(colnames(thicken(a, colname = 'jos'))[2], 'jos')
+  expect_equal(colnames(thicken(a_df))[3], 'a_week')
+  expect_equal(colnames(thicken(a_df, colname = 'jos'))[3], 'jos')
+})
+
 
