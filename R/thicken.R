@@ -1,22 +1,26 @@
 #' Create a variable of a higher interval from a datetime variable
 #'
 #' If the interval of the data is too low and it needs to be aggregated to a higher
-#' interval thicken will create this variable of a higher interval.
+#' interval thicken will create this variable of a higher interval. It will create
+#' a data frame of the original variable and the thickend variable if \code{x}
+#' is a vector. If \code{x} is a data frame it will return \code{x} with the
+#' thickened variabel added to it.
 #'
-#' @param x Either a data frame containing at least one datetime variable or
-#' an object of class \code{Date} or class \code{POSIXt}.
+#' @param x Either a data frame containing at least one datetime variable of
+#' class \code{Date} or class \code{POSIXt} oran object of class \code{Date} or
+#' class \code{POSIXt}.
 #' @param interval The interval of the returned datetime variable, should be higher
 #' than the interval of the input datetime variable. Default mode is one level
 #' higher than the interval of the input datetime variable.
+#' @param colname The column name of the added variable. If \code{NULL} it will
+#' be the name of the original datetime variable with the interval suffixed to
+#' it, separeted by an underscore.
 #' @param rounding Should a value in the input datetime variable be mapped to
 #' the closest value that is lower (\code{down}) or that is higher (\code{up})
 #' than itself.
-#' @param colname The column name of the added variable. If \code{NULL} it will
-#' be name of the original datetime variable, with the interval suffixed to it
-#' separeted by an underscore.
 #' @param by Only needs to be specified when x is a data frame containing
 #' multiple variables that are eligable for padding. \code{by} indicates the
-#' bare column name that should be used.
+#' bare column name of the variable that should be used.
 #' @param start_val By default the first instance of \code{interval} that is lower
 #' than the lowest value of the input datetime variable, with all time units on
 #' default value. Specify \code{start_val} as an offset to change the values
@@ -32,19 +36,20 @@
 #'
 #' library(dplyr)
 #' x_df <- data.frame(
-#'   x_day = seq(lubridate::ymd(20130101), by = 'day', length.out = 1000) %>%
+#'   x = seq(lubridate::ymd(20130101), by = 'day', length.out = 1000) %>%
 #'     sample(500),
 #'   y = runif(500, 10, 50) %>% round) %>%
-#'   arrange(x_day)
+#'   arrange(x)
 #'
 #' # get the max per month
-#' x_df %>% mutate(x_month = thicken(., 'month')) %>% group_by(x_month) %>%
+#' x_df %>% thicken('month') %>% group_by(x_month) %>%
 #'   summarise(y_max = max(y))
 #'
 #' # get the average per week, but you want your week to start at Mondays instead
 #' # of Sundays
-#' start_day <- span(x_df$x_day, interval = 'week')[1] + 1
-#' x_df %>% mutate(x_week = thicken(., start_val = start_day)) %>%
+#' min_x <- x_df$x %>% min
+#' weekdays(min_x)
+#' x_df %>% thicken(start_val = min_x - 1) %>%
 #'   group_by(x_week) %>% summarise(y_avg = mean(y))
 
 thicken <- function(x,
