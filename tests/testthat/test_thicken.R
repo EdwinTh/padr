@@ -48,22 +48,23 @@ test_that("Section 1, correct error handling", {
 
 test_that("Section 2, correct error handling", {
   expect_error(thicken(x_month %>% sort, interval = 'month'))
-  expect_error(suppressWarnings(thicken(x_hour, interval = 'month')), NA)
-  expect_warning(thicken(x_month))
+  expect_error(suppressWarnings(thicken(x_hour %>% as.data.frame, interval = 'month')), NA)
+  expect_warning(thicken(x_month %>% as.data.frame))
 })
 
 test_that("thicken gives correct interval", {
-  expect_equal(suppressWarnings(thicken(x_sec, interval = 'year'))$x_sec_year %>% get_interval, 'year')
-  expect_equal(suppressWarnings(thicken(x_sec, interval = 'month'))$x_sec_month %>% get_interval, 'month')
-  expect_equal(suppressWarnings(thicken(x_sec, interval = 'day'))$x_sec_day %>% get_interval, 'day')
-  expect_equal(suppressWarnings(thicken(x_sec, interval = 'hour'))$x_sec_hour %>% get_interval, 'hour')
-  expect_equal(suppressWarnings(thicken(x_sec, interval = 'min'))$x_sec_min %>% get_interval, 'min')
+  x_df <- data.frame(x_sec = x_sec)
+  expect_equal(suppressWarnings(thicken(x_df, interval = 'year'))$x_sec_year %>% get_interval, 'year')
+  expect_equal(suppressWarnings(thicken(x_df, interval = 'month'))$x_sec_month %>% get_interval, 'month')
+  expect_equal(suppressWarnings(thicken(x_df, interval = 'day'))$x_sec_day %>% get_interval, 'day')
+  expect_equal(suppressWarnings(thicken(x_df, interval = 'hour'))$x_sec_hour %>% get_interval, 'hour')
+  expect_equal(suppressWarnings(thicken(x_df, interval = 'min'))$x_sec_min %>% get_interval, 'min')
 })
 
 test_that("thicken gives correct output when x is a vector", {
   day_sorted <- sort(x_day)
-  day_to_year <- thicken(day_sorted, 'x', interval = 'year')$x
-  day_to_year2 <- thicken(day_sorted, 'x', interval = 'year', rounding = 'up')$x
+  day_to_year <- thicken(day_sorted %>% as.data.frame, 'x', interval = 'year')$x
+  day_to_year2 <- thicken(day_sorted %>% as.data.frame, 'x', interval = 'year', rounding = 'up')$x
 
   expect_equal(day_to_year %>% length, 100)
   expect_equal(lubridate::year(day_to_year[1]), 2015)
@@ -86,8 +87,6 @@ test_that("thicken gives correct ouput when x is a df",{
 test_that('column naming works properly', {
   a <- sort(x_day)
   a_df <- data.frame(a = a, b = 42)
-  expect_equal(colnames(thicken(a))[2], 'a_week')
-  expect_equal(colnames(thicken(a, colname = 'jos'))[2], 'jos')
   expect_equal(colnames(thicken(a_df))[3], 'a_week')
   expect_equal(colnames(thicken(a_df, colname = 'jos'))[3], 'jos')
 })

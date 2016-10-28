@@ -23,10 +23,3 @@ check_data_frame <- function(x,
   }
 }
 
-
-check_vector <- function(x){
-  if( !( c('Date', "POSIXt") %in% class(x) %>% any) ) {
-    stop('x should be a data.frame or a vector of class Date, POSIXct, or POSIXlt')
-  }
-  return(x)
-}

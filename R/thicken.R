@@ -1,14 +1,11 @@
 #' Create a variable of a higher interval from a datetime variable
 #'
 #' If the interval of the data is too low and it needs to be aggregated to a higher
-#' interval thicken will create this variable of a higher interval. It will create
-#' a data frame of the original variable and the thickend variable if \code{x}
-#' is a vector. If \code{x} is a data frame it will return \code{x} with the
-#' thickened variabel added to it.
+#' interval thicken will create this variable of a higher interval. It will
+#' return \code{x} with the thickened variable added to it.
 #'
-#' @param x Either a data frame containing at least one datetime variable of
-#' class \code{Date} or class \code{POSIXt} oran object of class \code{Date} or
-#' class \code{POSIXt}.
+#' @param x A data frame containing at least one datetime variable of
+#' class \code{Date} or class \code{POSIXt}.
 #' @param interval The interval of the returned datetime variable, should be higher
 #' than the interval of the input datetime variable. Default mode is one level
 #' higher than the interval of the input datetime variable.
@@ -18,21 +15,21 @@
 #' @param rounding Should a value in the input datetime variable be mapped to
 #' the closest value that is lower (\code{down}) or that is higher (\code{up})
 #' than itself.
-#' @param by Only needs to be specified when x is a data frame containing
-#' multiple variables that are eligable for padding. \code{by} indicates the
-#' bare column name of the variable that should be used.
+#' @param by Only needs to be specified when \code{x} contains multiple
+#' variables of class \code{Date} or of class \class{POSIXt}. \code{by}
+#' indicates which to use for padding.
 #' @param start_val By default the first instance of \code{interval} that is lower
 #' than the lowest value of the input datetime variable, with all time units on
-#' default value. Specify \code{start_val} as an offset to change the values
-#' of the time units.
-#' @return A vector of class \code{Date} or \code{POSIXTct}, dependant on its
-#' interval. This vector serves as a mapping between the input datetime variable
-#' and the variable of the desired interval.
+#' default value. Specify \code{start_val} as an offset if you want the range
+#' to be nonstandard.
+#' @return The data frame \code{x} with the thickened variable added to it.
 #' @examples
-#' x_hour <- seq(lubridate::ymd_hms('20160301 000000'), by = 'hour',
-#'               length.out = 1000)
+#' x_hour <- seq(lubridate::ymd_hms('20160302 000000'), by = 'hour',
+#'               length.out = 200)
+#' some_df <- data.frame(x_hour = x_hour)
 #' thicken(x_hour)
 #' thicken(x_hour, 'month')
+#' thicken(x_hour, start_val = lubridate::ymd_hms('20160301 120000'))
 #'
 #' library(dplyr)
 #' x_df <- data.frame(
@@ -67,27 +64,24 @@ thicken <- function(x,
                     by        = NULL,
                     start_val = NULL) {
 
-  # Section 1: obtain datetime variable and see if the variable is valid
+  if(!is.data.frame(x)) {
+    stop('x should be a data frame.')
+  }
 
   arguments <- as.list(match.call())
   if(!missing(by)) by_val <- as.character(arguments$by)
 
-  if(is.data.frame(x)) {
-    original_data_frame <- x
-    x <- as.data.frame(x)
-    if('by' %in% names(arguments)){
-      dt_var <- check_data_frame(x, by = by_val)
-    } else {
-      dt_var <- check_data_frame(x)
-    }
+  original_data_frame <- x
+  x <- as.data.frame(x)
+  if('by' %in% names(arguments)){
+    dt_var <- check_data_frame(x, by = by_val)
   } else {
-    dt_var <- check_vector(x)
+    dt_var <- check_data_frame(x)
   }
 
   interval <- match.arg(interval)
   rounding <- match.arg(rounding)
 
-  # Section 2: span a variable with all the relevant instances of interval
   int_hierarchy <- 1:8
   names(int_hierarchy) <- c('year', 'quarter', 'month', 'week', 'day', 'hour','min', 'sec')
 
@@ -110,30 +104,16 @@ thicken <- function(x,
 
   spanned <- span(dt_var, interval, start_val)
 
-  # Section 3: make the thicken and create the return frame
   if(rounding == 'down'){
     thickened <- round_down(dt_var, spanned)
   } else {
     thickened <- round_up(dt_var, spanned)
   }
 
-
-  if(is.data.frame(x)) {
-
-    x_name <- get_date_variables(x)
-    if(is.null(colname)) colname <- paste(x_name, interval, sep = '_')
-    return_frame <- cbind(x, thickened)
-    colnames(return_frame)[ncol(return_frame)] <- colname
-
-  } else {
-
-    x_name <- deparse(substitute(x))
-    return_frame <- data.frame(x, thickened)
-    if(is.null(colname)) colname <- paste(x_name, interval, sep = '_')
-    colnames(return_frame) <- c(x_name, colname)
-
-  }
+  x_name <- get_date_variables(x)
+  if(is.null(colname)) colname <- paste(x_name, interval, sep = '_')
+  return_frame <- cbind(x, thickened)
+  colnames(return_frame)[ncol(return_frame)] <- colname
 
   return(return_frame)
-
 }
