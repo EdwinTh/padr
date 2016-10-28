@@ -48,19 +48,7 @@ test_that("Correct error handling", {
 })
 
 test_that("Gives warning when unordered", {
-  expect_warning(pad(x_day))
-})
-
-test_that("Pad gives correct results on vectors", {
-  expect_equal(pad(x_year) %>% length, 4)
-  expect_equal(pad(x_year, end_val = as.Date('2021-01-01')) %>% length, 7)
-  expect_equal(pad(x_year, start_val = as.Date('2012-01-01')) %>% length, 7)
-  expect_equal(pad(x_year, interval = 'month') %>% length, 37)
-  expect_equal(pad(x_month) %>% length, 6)
-  expect_equal(suppressWarnings(pad(x_day)) %>% length, 32)
-  expect_equal(pad(x_hour) %>% length, 2)
-  expect_equal(pad(x_hour, interval = 'hour') %>% length, 25)
-  expect_equal(suppressWarnings(pad(x_min)) %>% length, 60)
+  expect_warning(pad(x_day %>% as.data.frame))
 })
 
 test_that("Pad gives correct results on data.frames", {

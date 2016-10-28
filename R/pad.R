@@ -1,10 +1,11 @@
 #' Pad the dateteime column of a data frame or a datetime vector
 #'
 #' Pad will fill the gaps in incomplete datetime variables, by figuring out
-#' what the interval of the data is and what instances are missing.
+#' what the interval of the data is and what instances are missing. For all
+#' other variables a missing value will be insterted.
 #'
-#' @param x Either a data frame containing at least one datetime variable or
-#' an object of class \code{Date} or class \class{POSIXt}.
+#' @param x A data frame containing at least one variable of class \code{Date}
+#' or of class \class{POSIXt}.
 #' @param interval The interval of the returned datetime variable. When NULL the
 #' the interval will be equal to the interval of the input data and will be obtained
 #' by applying \code{get_interval}. If specified it can only be lower than the
@@ -15,8 +16,9 @@
 #' @param end_val An object of class \code{Date} or class \class{POSIXt} that
 #' specifies the end of returned datatime variable. If NULL it will use the
 #' highest value of the input variable.
-#' @param by Only needs to be specified when x is a data frame containing
-#' multiple variables that are eligable for padding. \code{by} indicates which
+#' @param by Only needs to be specified when \code{x} contains multiple
+#' variables of class \code{Date} or of class \class{POSIXt}. \code{by}
+#' indicates which
 #' to use for padding.
 #' @details The interval of a datetime variable is the time unit at which the
 #' observations occur. \code{pad} allows for eight different time units which
@@ -25,20 +27,14 @@
 #' the interval of the input data and will fill the gaps for the instances that
 #' would be expected from the interval but are missing from the input data. See
 #' the vignette for the default behavior of \code{pad}.
-#' @return If \code{x} is a data frame it the return will be the same data frame
-#' with rows inserted where the datetime variable is padded. All other values
-#' at the inserted rows will be NA. If \code{x} is an object of class
-#' \code{Date} or class \class{POSIXt}, the return will be the padded \code{x}.
+#' @return \code{x} with the datetime variable padded. All other variables will
+#' have missing values at the rows that are padded.
 #' @examples
 #' x_var <- seq(as.Date('2016-04-01'), as.Date('2017-04-01'), by = 'month')
 #' x_var_incomplete <- x_var[c(1, 4, 5, 7, 9, 10, 13)]
-#' all.equal(x_var, pad(x_var_incomplete))
-#' # use a different interval than the one of the data itself
-#' pad(x_var_incomplete, interval = 'day')
-#'
 #' library(dplyr)
-#' x_df <- data.frame(x_var = x_var_incomplete,
-#'                    y     = runif(length(x_var_incomplete), 10, 20) %>% round(0))
+#' x_df <- data.frame(x = x_var_incomplete,
+#'                    y = runif(length(x_var_incomplete), 10, 20) %>% round(0))
 #' # forward fill the padded values with tidyr's fill
 #' x_df %>% pad %>% tidyr::fill(y)
 #' # TODO show an example of fill_by_value
@@ -58,21 +54,22 @@ pad <- function(x,
                 end_val  = NULL,
                 by       = NULL){
 
+  if(!is.data.frame(x)) {
+    stop('x should be a data frame.')
+  }
+
   arguments <- as.list(match.call())
   if(!missing(by)) by_val <- as.character(arguments$by)
 
-  if(is.data.frame(x)) {
-    original_data_frame <- x
-    x <- as.data.frame(x)
-    if('by' %in% names(arguments)){
-      dt_var <- check_data_frame(x, by = by_val)
-      dt_var_name <- by_val
-    } else {
-      dt_var <- check_data_frame(x)
-      dt_var_name <- get_date_variables(x)
-    }
+  original_data_frame <- x
+  # remove optional extra classes from x, like data.table or tbl
+  x <- as.data.frame(x)
+  if('by' %in% names(arguments)){
+    dt_var <- check_data_frame(x, by = by_val)
+    dt_var_name <- by_val
   } else {
-    dt_var <- check_vector(x)
+    dt_var <- check_data_frame(x)
+    dt_var_name <- get_date_variables(x)
   }
 
   if(!all(dt_var[1:(length(dt_var)-1)] < dt_var[2:length(dt_var)])) {
@@ -101,18 +98,14 @@ pad <- function(x,
 
   spanned <- span_pad(dt_var, start_val, end_val, interval)
 
-  if(!is.data.frame(x)){
-    return(spanned)
-  } else {
-    join_frame <- data.frame(spanned = spanned)
-    colnames(original_data_frame)[colnames(original_data_frame) ==
-                                    dt_var_name] <- 'spanned'
-    return_frame <- suppressMessages(
-      dplyr::right_join(original_data_frame, join_frame))
-    colnames(return_frame)[colnames(return_frame) == 'spanned'] <- dt_var_name
-    class(return_frame) <-  class(original_data_frame)
-    return(return_frame)
-  }
+  join_frame <- data.frame(spanned = spanned)
+  colnames(original_data_frame)[colnames(original_data_frame) ==
+                                dt_var_name] <- 'spanned'
+  return_frame <- suppressMessages(
+    dplyr::right_join(original_data_frame, join_frame))
+  colnames(return_frame)[colnames(return_frame) == 'spanned'] <- dt_var_name
+  class(return_frame) <-  class(original_data_frame)
+  return(return_frame)
 }
 
 # when spanning for pad we want to allow for an end_val that is (far) after
