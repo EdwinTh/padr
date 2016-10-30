@@ -98,7 +98,7 @@ pad <- function(x,
   }
 
   # Proper handling of switching between Date and POSIX
-  if(class(dt_var) == 'Date' & int_hierarchy[interval] > 5) {
+  if( 'Date' %in% class(dt_var) & int_hierarchy[interval] > 5) {
      dt_var <- as.POSIXct(as.character(dt_var))
      pos    <- which(colnames(original_data_frame) == dt_var_name)
      original_data_frame[ ,pos] <- dt_var

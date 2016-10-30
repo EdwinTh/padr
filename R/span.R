@@ -17,6 +17,7 @@
 #' span(x, 'hour')
 #' span(x, 'day')
 #' span(x, 'year')
+
 span <- function(x,
                  interval = c('year',
                               'quarter',
@@ -42,7 +43,7 @@ span <- function(x,
   } else if( !is.null(start_val) ){
     to_val <- start_and_end$end_val
 
-    if( 'POSIXt'%in% class(start_val) & 'Date' %in% to_val) {
+    if( 'POSIXt'%in% class(start_val) & 'Date' %in% class(to_val)) {
       to_val <- as.POSIXct( strftime(to_val), tz = attr(start_val, 'tzone'))
     }
 

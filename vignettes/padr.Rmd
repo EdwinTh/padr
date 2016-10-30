@@ -1,5 +1,5 @@
 ---
-title: "Using padr for preparing data that contain datetime variables"
+title: "Quickly get time series data ready for analysis with padr"
 author: "Edwn Thoen"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -42,7 +42,7 @@ There are eight possible values of the interval and they form a hierarchy. They 
 
 Be aware that the interval of the data only concerns the recurrence of the data, not the value of the different time units. For instance you can have a monthly observation at any point in time within a month as long as it recurs at the exact same moment each month. A second thing to note here is that the interval definition does not require that there is an observation at each and every time point where the could be one. It is the highest recurrence level in the hierarchy that can explain all the observations. `padr` comes with the `get_interval` function to test of what interval a date time variable is.
 
-```{r}
+```{r, message=FALSE}
 library(dplyr)
 monthly <- seq(as.Date('2016-01-01'), length.out = 12, by ='month')
 get_interval(monthly)
@@ -54,7 +54,7 @@ get_interval(emergency$time_stamp)
 
 We wouldn't be interested in the emergency data the second interval, rather we like to see developments on a daily, weekly or monthly level. This is where the `thicken` functions comes to help. As its input it takes a data frame and it looks for the date or time variable (if there are mutliple you tell it which one to use with the `by` argument). It will then add a date or datetime variable to the data frame that is of the desired interval. In combination with a framework like `dplyr` it is then quite simple to aggregate the data to this level. As an example lets make a plot of the total number of emergency calls per day.
 
-```{r, fig.width=7}
+```{r, fig.width=7, warning=FALSE}
 emergency %>% thicken(interval = 'day') %>% 
   group_by(time_stamp_day) %>% 
   summarise(nr = n()) %>% 
@@ -68,7 +68,7 @@ Alright, what just happened here? We had a data frame containing one datetime va
 
 Now lets deal with the situation where there are records 'missing' from the data, since there were no observations that day. Lets look at the number of emergency calls related to dehydration. One would expect they occur more often in summertime, lets see if this is the case. First we aggregate to a daily level again.
 
-```{r}
+```{r, warning=FALSE}
 dehydration_day <- emergency %>% filter(title == 'EMS: DEHYDRATION') %>% 
   thicken(interval = 'day') %>% group_by(time_stamp_day) %>% 
   summarise(nr = n())

@@ -1,6 +1,6 @@
 Package: padr
 Type: Package
-Title: Quickly get time series data ready for analysis
+Title: Quickly get Time Series Data Ready for Analysis
 Version: 0.1.0
 Author: Edwin Thoen
 Maintainer: Edwin Thoen <edwinthoen@gmail.com>
