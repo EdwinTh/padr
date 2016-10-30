@@ -29,11 +29,11 @@ round_down <- function(a,
   a <- sort(a)
   b <- sort(b)
 
-  if( 'POSIXt' %in% class(a) & is.Date(b) ) {
+  if( 'POSIXt' %in% class(a) & 'Date' %in% class(b) ) {
     b <- as.POSIXct(strftime(b), tz = attr(a, 'tzone'))
   }
 
-  if(is.Date(a)){
+  if('Date' %in% class(a)){
     thickened <- as.Date(round_down_core(a, b), origin = '1970-01-01')
   } else if ('POSIXt' %in% class(a)) {
     thickened <- as.POSIXct(round_down_core(as.numeric(a), as.numeric(b)),
@@ -58,11 +58,11 @@ round_up <- function(a,
   a <- sort(a)
   b <- sort(b)
 
-  if( 'POSIXt' %in% class(a) & is.Date(b) ) {
+  if( 'POSIXt' %in% class(a) & 'Date' %in% class(b) ) {
     b <- as.POSIXct(strftime(b), tz = attr(a, 'tzone'))
   }
 
-  if(is.Date(a)){
+  if('Date' %in% class(a)){
     thickened <- as.Date(round_up_core(a,b), origin = '1970-01-01')
   } else if ('POSIXt' %in% class(a)) {
     thickened <- as.POSIXct(round_up_core(as.numeric(a), as.numeric(b)),
