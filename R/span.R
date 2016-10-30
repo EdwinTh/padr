@@ -42,7 +42,7 @@ span <- function(x,
   } else if( !is.null(start_val) ){
     to_val <- start_and_end$end_val
 
-    if(is.POSIXt(start_val) & 'Date' %in% to_val) {
+    if( 'POSIXt'%in% class(start_val) & 'Date' %in% to_val) {
       to_val <- as.POSIXct( strftime(to_val), tz = attr(start_val, 'tzone'))
     }
 
