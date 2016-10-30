@@ -96,14 +96,14 @@ cardiac_week %>% arrange(weekstart) %>% head
 Hmmm, thats a little strange, we have the first observations more than two months after the start of data collections. Probably a data quality issue when we looking at the number of cardiac arrests in the weeks that do have data. Lets fill these months with the median value for the purpose of illustration.
 
 ```{r}
-cardiac_week$weekstart %>% pad(start_val = first_day) %>% 
+cardiac_week %>% pad(start_val = first_day - 3) %>% 
   fill_by_function(nr, fun = median) %>% 
   ggplot(aes(weekstart, nr)) + geom_bar(aes(fill = nr), stat = 'identity')
 ```
 
-```{r}
-cardiac_week %>% mutate(next_week = lead(weekstart)) %>% 
-  mutate(daydiff = next_week - weekstart) %>% select(daydiff) %>% table
-```
+Ok I'll admit it, the medians at the beginning are not very insightful. However I hope you'll see from this last example that you can use the `start_val` and `end_val` argumements to extand the period of date padding beyond the period present in the data. 
+
+## Any suggestions?
+Found a bug? Ideas for improving or expandig `padr`. Your input is highly appreciated. The code is maintained at https://github.com/EdwinTh/padr and your most welcome to file and issue or do a pull request.
 
 

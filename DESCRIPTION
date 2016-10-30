@@ -1,11 +1,11 @@
 Package: padr
 Type: Package
-Title: Padding of missing values in time series
+Title: Quickly get time series data ready for analysis
 Version: 0.1.0
 Author: Edwin Thoen
 Maintainer: Edwin Thoen <edwinthoen@gmail.com>
-Description: TODO add accurate description when all is done
-License: What license is it under?
+Description: The padr package helps transforming raw time series data to a format ready for analysis. It offers two functionalities; aggregating data to a higher level interval (thicken) and filling in records where observations were absent (pad). It offers a few functions that assist at filling missing values after padding.
+License: MIT
 Encoding: UTF-8
 LazyData: true
 Imports:
@@ -14,7 +14,8 @@ Imports:
 Suggests:
     testthat,
     knitr,
-    rmarkdown
+    rmarkdown,
+    tidyr
 RoxygenNote: 5.0.1
 LinkingTo: Rcpp
 VignetteBuilder: knitr
