@@ -48,7 +48,7 @@
 #' weekdays(min_x)
 #' x_df %>% thicken(start_val = min_x - 1) %>%
 #'   group_by(x_week) %>% summarise(y_avg = mean(y))
-
+#' @export
 thicken <- function(x,
                     interval = c('level_up',
                               'year',

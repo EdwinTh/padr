@@ -2,28 +2,28 @@
 % Please edit documentation in R/span.R
 \name{span}
 \alias{span}
-\title{Span a variable of a different pulse}
+\title{Span a variable of a different interval}
 \usage{
-span(x, pulse = c("year", "quarter", "month", "week", "day", "hour", "min",
+span(x, interval = c("year", "quarter", "month", "week", "day", "hour", "min",
   "sec"), start_val = NULL)
 }
 \arguments{
 \item{x}{A vector of class \code{Date}, \code{POSIXlt}, or \code{POSIXct}.}
 
-\item{pulse}{The pulse of the returned variable.}
+\item{interval}{The interval of the returned variable.}
 
-\item{start_val}{By default the first instance of \code{pulse} that is lower
+\item{start_val}{By default the first instance of \code{interval} that is lower
 than the lowest value of \code{x}, with all time units on
 default value. Specify \code{start_val} as an offset to change the values
 of the time units.}
 }
 \value{
 A vector of class \code{Date} or \code{POSIXTct}, dependant on its
-pulse.
+interval.
 }
 \description{
 Span takes a vector of class \code{Date} or \code{POSIXt} and spans a vector
-of the specified pulse around it.
+of the specified interval around it.
 }
 \examples{
 x <- as.POSIXct(strftime(c('2014-03-04 10:43:16',

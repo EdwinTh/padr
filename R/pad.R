@@ -52,7 +52,7 @@
 #'
 #' x_df_grp %>% group_by(grp) %>% do(pad(.)) %>% ungroup %>%
 #' tidyr::fill(grp)
-
+#' @export
 pad <- function(x,
                 interval = NULL,
                 start_val= NULL,
@@ -82,14 +82,14 @@ pad <- function(x,
     warning('Datetime variable was unsorted, pad result is sorted.')
   }
 
+  int_hierarchy <- 1:8
+  names(int_hierarchy) <- c('year','quarter', 'month', 'week', 'day', 'hour','min', 'sec')
+
   if(is.null(interval)) {
     interval <- get_interval(dt_var)
   } else {
 
     interval_dt_var <- get_interval(dt_var)
-
-    int_hierarchy <- 1:8
-    names(int_hierarchy) <- c('year','quarter', 'month', 'week', 'day', 'hour','min', 'sec')
 
     if(int_hierarchy[interval_dt_var] > int_hierarchy[interval]) {
       stop('The interval of the datetime variable is higher than the interval given,
@@ -97,8 +97,32 @@ pad <- function(x,
     }
   }
 
-  if(is.Date(dt_var) & int_hierarchy[interval] > 5) {
+  # Proper handling of switching between Date and POSIX
+  if(class(dt_var) == 'Date' & int_hierarchy[interval] > 5) {
      dt_var <- as.POSIXct(as.character(dt_var))
+     pos    <- which(colnames(original_data_frame) == dt_var_name)
+     original_data_frame[ ,pos] <- dt_var
+  }
+
+  if('Date' %in% class(dt_var) & ('POSIXt' %in% class(start_val) |
+                                'POSIXt' %in% class(end_val))) {
+    dt_var <- as.POSIXct(as.character(dt_var))
+    pos    <- which(colnames(original_data_frame) == dt_var_name)
+    original_data_frame[ ,pos] <- dt_var
+  }
+
+  if('POSIXt' %in% class(dt_var) & ('Date' %in% class(start_val) |
+                                     'Date' %in% class(end_val))){
+    stop('start_val and/or end_val should be of class POSIXt when the input variable is as well')
+  }
+
+  # Throw an error when start_val and / or end_val are not in sync with the interval
+  all_elements <- list(start_val, dt_var, end_val)
+  all_non_null <- all_elements[sapply(all_elements, function(x) !is.null(x))]
+  all_non_null <- do.call('c', all_non_null)
+  necesarry_interval <- get_interval(all_non_null)
+  if(int_hierarchy[necesarry_interval] > int_hierarchy[interval]) {
+    stop('start_val and/or end_val are invalid for the given combination of interval and the datetime variable')
   }
 
   spanned <- span_pad(dt_var, start_val, end_val, interval)

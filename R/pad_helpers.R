@@ -9,11 +9,11 @@
 #' @examples
 #' x_month <- seq(as.Date('2016-01-01'), as.Date('2016-05-01'), by = 'month')
 #' get_interval(x_month)
-
+#' @export
 get_interval <- function(x) {
 
   if( !(c('Date', "POSIXt") %in% class(x) %>% any)) {
-    stop('x should be of class Date, POSIXct, or POSIXlt', call. = FALSE)
+    stop('x should be of class Date, POSIXct, or POSIXlt')
   }
 
   x_char <- strftime(x)
@@ -48,7 +48,7 @@ get_interval <- function(x) {
 
     } else if(lowest_level == 'day') {
       distances <- difftime(x[2:length(x)], x[1:(length(x)-1)], units = 'weeks')
-      weeks     <- all( ( as.numeric(distances) %% 1 ) == 1 )
+      weeks     <- all( ( as.numeric(distances) %% 1 ) == 0 )
       if(weeks) lowest_level <- 'week'
     }
     return(lowest_level)

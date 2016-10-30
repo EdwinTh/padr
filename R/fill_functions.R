@@ -18,7 +18,7 @@
 #' x_padded <- x_df %>% pad
 #' x_padded %>% fill_by_value(y1)
 #' x_df %>% pad %>% fill_by_value(y1, y2, value = 42)
-
+#' @export
 fill_by_value <- function(x,
                           ...,
                           value = 0) {
@@ -59,6 +59,7 @@ fill_by_value <- function(x,
 #'                    y2 = runif(200, 1, 50) %>% round)
 #' x_df %>% pad %>% fill_by_function(y1, y2)
 #' x_df %>% pad %>% fill_by_function(y1, y2, fun = median)
+#' @export
 fill_by_function <- function(x,
                              ...,
                              fun = mean) {
@@ -108,7 +109,7 @@ fill_by_function <- function(x,
 #'                   y1 = rep(letters[1:3], c(80, 70, 50)) %>% sample,
 #'                   y2 = rep(letters[2:5], c(60, 80, 40, 20)) %>% sample)
 #' x_df %>% pad %>% fill_by_prevalent(y1, y2)
-
+#' @export
 fill_by_prevalent <- function(x,
                               ...) {
 

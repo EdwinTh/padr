@@ -51,8 +51,6 @@ round_down <- function(a,
   return(thickened[order_a])
 }
 
-
-#' @rdname span_year
 round_up <- function(a,
                      b) {
 

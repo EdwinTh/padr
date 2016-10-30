@@ -2,62 +2,69 @@
 % Please edit documentation in R/thicken.R
 \name{thicken}
 \alias{thicken}
-\title{Create a variable of a higher pulse from a datetime variable}
+\title{Create a variable of a higher interval from a datetime variable}
 \usage{
-thicken(x, pulse = c("level_up", "year", "quarter", "month", "week", "day",
-  "hour", "min"), rounding = c("down", "up"), by = NULL, start_val = NULL)
+thicken(x, interval = c("level_up", "year", "quarter", "month", "week", "day",
+  "hour", "min"), colname = NULL, rounding = c("down", "up"), by = NULL,
+  start_val = NULL)
 }
 \arguments{
-\item{x}{Either a data frame containing at least one datetime variable or
-an object of class \code{Date} or class \code{POSIXt}.}
+\item{x}{A data frame containing at least one datetime variable of
+class \code{Date} or class \code{POSIXt}.}
 
-\item{pulse}{The pulse of the returned datetime variable, should be higher
-than the pulse of the input datetime variable. Default mode is one level
-higher than the pulse of the input datetime variable.}
+\item{interval}{The interval of the returned datetime variable, should be higher
+than the interval of the input datetime variable. Default mode is one level
+higher than the interval of the input datetime variable.}
+
+\item{colname}{The column name of the added variable. If \code{NULL} it will
+be the name of the original datetime variable with the interval suffixed to
+it, separeted by an underscore.}
 
 \item{rounding}{Should a value in the input datetime variable be mapped to
 the closest value that is lower (\code{down}) or that is higher (\code{up})
 than itself.}
 
-\item{by}{Only needs to be specified when x is a data frame containing
-multiple variables that are eligable for padding. \code{by} indicates the
-bare column name that should be used.}
+\item{by}{Only needs to be specified when \code{x} contains multiple
+variables of class \code{Date} or of class \class{POSIXt}. \code{by}
+indicates which to use for padding.}
 
-\item{start_val}{By default the first instance of \code{pulse} that is lower
+\item{start_val}{By default the first instance of \code{interval} that is lower
 than the lowest value of the input datetime variable, with all time units on
-default value. Specify \code{start_val} as an offset to change the values
-of the time units.}
+default value. Specify \code{start_val} as an offset if you want the range
+to be nonstandard.}
 }
 \value{
-A vector of class \code{Date} or \code{POSIXTct}, dependant on its
-pulse. This vector serves as a mapping between the input datetime variable
-and the variable of the desired pulse.
+The data frame \code{x} with the thickened variable added to it.
 }
 \description{
-If the pulse of the data is too low and it needs to be aggregated to a higher
-pulse thicken will create this variable of a higher pulse.
+If the interval of the data is too low and it needs to be aggregated to a higher
+interval thicken will create this variable of a higher interval. It will
+return \code{x} with the thickened variable added to it.
 }
 \examples{
-x_hour <- seq(lubridate::ymd_hms('20160301 000000'), by = 'hour',
-              length.out = 1000)
+x_hour <- seq(lubridate::ymd_hms('20160302 000000'), by = 'hour',
+              length.out = 200)
+some_df <- data.frame(x_hour = x_hour)
 thicken(x_hour)
 thicken(x_hour, 'month')
+thicken(x_hour, start_val = lubridate::ymd_hms('20160301 120000'))
 
 library(dplyr)
 x_df <- data.frame(
-  x_day = seq(lubridate::ymd(20130101), by = 'day', length.out = 1000) \%>\%
+  x = seq(lubridate::ymd(20130101), by = 'day', length.out = 1000) \%>\%
     sample(500),
   y = runif(500, 10, 50) \%>\% round) \%>\%
-  arrange(x_day)
+  arrange(x)
 
 # get the max per month
-x_df \%>\% mutate(x_month = thicken(., 'month')) \%>\% group_by(x_month) \%>\%
+x_df \%>\% thicken('month') \%>\% group_by(x_month) \%>\%
   summarise(y_max = max(y))
 
 # get the average per week, but you want your week to start at Mondays instead
 # of Sundays
-start_day <- span(x_df$x_day, pulse = 'week')[1] + 1
-x_df \%>\% mutate(x_week = thicken(., start_val = start_day)) \%>\%
+min_x <- x_df$x \%>\% min
+weekdays(min_x)
+x_df \%>\% thicken(start_val = min_x - 1) \%>\%
   group_by(x_week) \%>\% summarise(y_avg = mean(y))
 }
 
