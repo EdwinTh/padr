@@ -28,7 +28,7 @@ span <- function(x,
                               'sec'),
                  start_val  = NULL) {
 
-  if( !( is.Date(x) | is.POSIXt(x) ) ){
+  if( !( 'Date' %in% class(x) | 'POSIXt' %in% class(x) ) ){
     break('x should be of class Date, POSIXlt, or POSIXct')
   }
 
@@ -42,7 +42,7 @@ span <- function(x,
   } else if( !is.null(start_val) ){
     to_val <- start_and_end$end_val
 
-    if(is.POSIXt(start_val) & is.Date(to_val)) {
+    if(is.POSIXt(start_val) & 'Date' %in% to_val) {
       to_val <- as.POSIXct( strftime(to_val), tz = attr(start_val, 'tzone'))
     }
 
