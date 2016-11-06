@@ -16,7 +16,7 @@ get_interval <- function(x) {
     stop('x should be of class Date, POSIXct, or POSIXlt')
   }
 
-  x_char <- strftime(x)
+  x_char <- as.character(x)
   if(unique(nchar(x_char)) == 10){
     x_char <- paste(x_char, '00:00:00')
   }
