@@ -48,6 +48,7 @@ test_that('Thicken quarter to year, x = date, posix offset, with CET', {
 })
 
 
+context("Thicken quarter to year gives correct result, x = posix")
 
 test_that('Thicken quarter to year, x = posix, no offset', {
   expect_equal(thicken(df_quarter_dt)[,2],
@@ -72,7 +73,7 @@ test_that('Thicken quarter to year, x = posix, posix offset', {
 
 test_that('Thicken quarter to year, x = posix, posix offset, with CET', {
   expect_equal(thicken(df_quarter_dt_cet, start_val = ymd_hms('20151231 010101', tz = 'CET'))[,2],
-               ymd_hms(c(rep('20151231 010101', 4), '20161231 010101')))
-  expect_equal(thicken(df_quarter_dt, rounding = 'up', start_val = ymd_hms('20151231 010101'))[,2],
-               ymd_hms(c(rep('20161231 010101', 4), '20171231 010101')))
+               ymd_hms(c(rep('20151231 010101', 4), '20161231 010101'), tz = 'CET'))
+  expect_equal(thicken(df_quarter_dt_cet, rounding = 'up', start_val = ymd_hms('20151231 010101', tz = 'CET'))[,2],
+               ymd_hms(c(rep('20161231 010101', 4), '20171231 010101'), tz = 'CET'))
 })
