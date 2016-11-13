@@ -21,8 +21,6 @@
 #' spanx2 <- span_hour(x2)
 #' round_down(x2, spanx2)
 #' round_up(x2, spanx2)
-a <- seq(lubridate::ymd_hms('20160101 120000'), length.out = 36, by = 'hour')
-b <- seq(lubridate::ymd(20151230), by = 'day', length.out = 5)
 
 round_down <- function(a,
                        b) {
@@ -33,6 +31,8 @@ round_down <- function(a,
 
   if( 'POSIXt' %in% class(a) & 'Date' %in% class(b) ) {
     b <- as.POSIXct(strftime(b), tz = attr(a, 'tzone'))
+  } else if ( 'Date' %in% class(a) & 'POSIXt' %in% class(b) ) {
+    a <- as.POSIXct(as.character(a), tz = attr(b, 'tz'))
   }
 
   if('Date' %in% class(a)){
@@ -62,6 +62,8 @@ round_up <- function(a,
 
   if( 'POSIXt' %in% class(a) & 'Date' %in% class(b) ) {
     b <- as.POSIXct(strftime(b), tz = attr(a, 'tzone'))
+  } else if ( 'Date' %in% class(a) & 'POSIXt' %in% class(b) ) {
+    a <- as.POSIXct(as.character(a), tz = attr(b, 'tz'))
   }
 
   if('Date' %in% class(a)){

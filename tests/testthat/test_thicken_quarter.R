@@ -13,7 +13,6 @@ df_quarter <- data_frame(datetime = seq(start_day, end_day, by = 'quarter'))
 df_quarter_dt <- data_frame(datetime = seq(start_val, end_val, by = 'quarter'))
 df_quarter_dt_cet <- data_frame(datetime = seq(start_val_cet, end_val_cet, by = 'quarter'))
 
-
 context("Thicken quarter to year gives correct result, x = date")
 
 test_that('Thicken quarter to year, x = date, no offset', {

@@ -97,6 +97,25 @@ pad <- function(x,
     }
   }
 
+  # When start_val or end_val are of a different time zone, coerce to tz of dt_var
+  if('POSIXt' %in% class(start_val) & 'POSIXt' %in% class(dt_var)) {
+    tz_start_val <- attr(start_val, 'tzone')
+    tz_dt_var    <- attr(dt_var, 'tzone')
+    if(tz_start_val != tz_dt_var) {
+      warning(paste("start_val time zone will be coerced from", tz_start_val, "to", tz_dt_var))
+      start_val <- as.POSIXct(as.character(start_val), tz = tz_dt_var)
+    }
+  }
+
+  if('POSIXt' %in% class(end_val) & 'POSIXt' %in% class(dt_var)) {
+    tz_end_val <- attr(end_val, 'tzone')
+    tz_dt_var  <- attr(dt_var, 'tzone')
+    if(tz_end_val != tz_dt_var) {
+      warning(paste("end_val time zone will be coerced from", tz_end_val, "to", tz_dt_var))
+      end_val <- as.POSIXct(as.character(end_val), tz = tz_dt_var)
+    }
+  }
+
   # Proper handling of switching between Date and POSIX
   if( 'Date' %in% class(dt_var) & int_hierarchy[interval] > 5) {
      dt_var <- as.POSIXct(as.character(dt_var))
