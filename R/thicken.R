@@ -51,13 +51,13 @@
 #' @export
 thicken <- function(x,
                     interval = c('level_up',
-                              'year',
-                              'quarter',
-                              'month',
-                              'week',
-                              'day',
-                              'hour',
-                              'min'),
+                                 'year',
+                                 'quarter',
+                                 'month',
+                                 'week',
+                                 'day',
+                                 'hour',
+                                 'min'),
                     colname  = NULL,
                     rounding = c('down',
                                  'up'),
@@ -102,6 +102,15 @@ thicken <- function(x,
     warning('Datetime variable was unsorted, result will be unsorted as well.')
   }
 
+  if('POSIXt' %in% class(start_val) & 'POSIXt' %in% class(dt_var)) {
+    tz_start_val <- attr(start_val, 'tzone')
+    tz_dt_var    <- attr(dt_var, 'tzone')
+    if(tz_start_val != tz_dt_var) {
+      warning(paste("start_val time zone will be coerced from", tz_start_val, "to", tz_dt_var))
+      start_val <- as.POSIXct(as.character(start_val), tz = tz_dt_var)
+    }
+  }
+
   spanned <- span(dt_var, interval, start_val)
 
   if(rounding == 'down'){
@@ -116,4 +125,4 @@ thicken <- function(x,
   colnames(return_frame)[ncol(return_frame)] <- colname
 
   return(return_frame)
-}
+  }
