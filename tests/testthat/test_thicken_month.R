@@ -39,14 +39,6 @@ test_that('Thicken month to year, x = date, posix offset', {
 })
 
 
-test_that('Thicken month to year, x = date, posix offset, with CET', {
-  expect_equal(thicken(df_month, start_val = ymd_hms('20151231 010101', tz = 'CET'), interval = 'year')[,2],
-               ymd_hms(c(rep('20151231 010101', 4), '20161231 010101')))
-  expect_equal(thicken(df_month, rounding = 'up', start_val = ymd_hms('20151231 010101'), interval = 'year')[,2],
-               ymd_hms(c(rep('20161231 010101', 4), '20171231 010101')))
-})
-
-
 context("Thicken month to year gives correct result, x = posix")
 
 test_that('Thicken month to year, x = posix, no offset', {
@@ -71,22 +63,20 @@ test_that('Thicken month to year, x = posix, posix offset', {
 })
 
 test_that('Thicken month to year, x = posix, posix offset, with CET', {
-  expect_equal(thicken(df_month_dt_cet, start_val = ymd_hms('20151231 010101', tz = 'CET'), interval = 'year')[,2],
-               ymd_hms(c(rep('20151231 010101', 4), '20161231 010101'), tz = 'CET'))
-  expect_equal(thicken(df_month_dt_cet, rounding = 'up', start_val = ymd_hms('20151231 010101', tz = 'CET'),  interval = 'year')[,2],
-               ymd_hms(c(rep('20161231 010101', 4), '20171231 010101'), tz = 'CET'))
+  suppressWarnings(expect_equal(thicken(df_month_dt_cet, start_val = ymd_hms('20151231 010101'), interval = 'year')[,2],
+               ymd_hms(c(rep('20151231 010101', 4), '20161231 010101'), tz = 'CET')))
+  suppressWarnings(expect_equal(thicken(df_month_dt_cet, rounding = 'up', start_val = ymd_hms('20151231 010101'),  interval = 'year')[,2],
+               ymd_hms(c(rep('20161231 010101', 4), '20171231 010101'), tz = 'CET')))
 })
 
-
-#### Done from here
 
 context("Thicken month to quarter gives correct result, x = date")
 
 test_that('Thicken month to quarter, x = date, no offset', {
   expect_equal(thicken(df_month)[,2],
-               ymd( rep ( c(20160101, 20160401, 20160701, 20161001), each = 3)  %>% c(20170101)) )
+               ymd( c(20160101, 20160101, 20160401, 20160701, 20170101)))
   expect_equal(thicken(df_month, rounding = 'up')[,2],
-               ymd( rep ( c(20160401, 20160701, 20161001, 20170101), each = 3)  %>% c(20170401)) )
+               ymd( c(20160401, 20160401, 20160701, 20161001, 20170401)))
 })
 
 
