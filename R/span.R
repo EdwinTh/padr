@@ -38,107 +38,109 @@ span <- function(x,
   start_and_end <- get_start_and_end(x, return_interval = interval)
 
   if( is.null(start_val) ) {
+
     start_val <- start_and_end$start_val
     end_val   <- start_and_end$end_val
+
   } else if( !is.null(start_val) ){
-    to_val <- start_and_end$end_val
 
-    if( 'POSIXt'%in% class(start_val) & 'Date' %in% class(to_val)) {
-      to_val <- as.POSIXct( strftime(to_val), tz = attr(start_val, 'tzone'))
-    }
+    end_val <- shift_end_from_start(start_and_end, start_val)
+    end_val <- assure_greater_than_max_x(max(x), end_val, interval)
 
-    end_val <- tail( seq(start_val, to_val, by = interval), 1)
-
-  } else {
-    break('Not reach span_function')
   }
 
   return_values <- seq(start_val, end_val, by = interval)
-  # when setting an offset for week the end of the span can be before the
-  # last value of x. TODO find cleaner solution
-  if( max(return_values) < max(x) ){
-    return_values <- seq(start_val,  by = interval,
-                         length.out = length(return_values) + 1)
-  }
+
   return_values
 }
 
+# to_val is the end_val as obtained from the get_start_and_end function
+shift_end_from_start <- function(start_and_end, start_val){
 
-# Function that will obtain the start and end values from a vector
-# to be applied when start_val and end_val are both NULL
+  start_when_null <- start_and_end$start_val
+  end_when_null   <- start_and_end$end_val
 
+    if( 'POSIXt'%in% class(start_val) & 'Date' %in% class(start_when_null) ) {
+    start_when_null <- as.POSIXct( as.character(start_when_null),
+                                   tz = attr(start_val, 'tzone'))
+    end_when_null <- as.POSIXct( as.character(end_when_null),
+                                   tz = attr(start_val, 'tzone'))
+  }
+  start_offset <- start_when_null - start_val
+
+  return(end_when_null - start_offset)
+}
+
+# by taking the offset in shift_end_from_start the end_val might be smaller
+# than the largest value in x this function corrects this
+assure_greater_than_max_x <- function(max_x,
+                                      end_val,
+                                      interval) {
+  if( 'POSIXt'%in% class(end_val) & 'Date' %in% class(max_x) ) {
+    max_x <- as.POSIXct( as.character(max_x), tz = attr(end_val, 'tzone'))
+  }
+
+  while(end_val <= max_x) {
+    end_val <- seq(end_val, length.out = 2, by = interval)[2]
+  }
+
+  return(end_val)
+
+}
+
+#----------------------------------------------------------------------------#
+# get_start_and_end with all units
 get_start_and_end <- function(dt_var,
                               return_interval) {
 
-  start_val <- as.POSIXlt( min(dt_var) )
-  end_val   <- as.POSIXlt( max(dt_var) )
+  dt_var_posix_lt <- as.POSIXlt(dt_var)
+  min_v <- min(dt_var_posix_lt)
+  max_v <- max(dt_var_posix_lt)
 
-  int_hierarchy <- 1:8
-  names(int_hierarchy) <- c('year', 'quarter', 'month', 'week', 'day', 'hour','min', 'sec')
-  return_position <- int_hierarchy[return_interval]
+  if(return_interval == 'year') {
 
-  # year only : set year and month
-  if(return_position == 1) {
-    start_val$mon <- 0
-    end_val$year <- end_val$year + 1
-    end_val$mon <- 0
-  }
+    start_val <- min_v %>% month_to_1 %>% day_to_1 %>% hour_to_0 %>%
+      min_to_0 %>% sec_to_0
+    end_val <- max_v %>% next_year %>% month_to_1 %>% day_to_1 %>% hour_to_0 %>%
+      min_to_0 %>% sec_to_0
 
-  # quarter only : set month
-  if(return_position == 2) {
-    start_val$mon <- floor( start_val$mon / 3) * 3
-    end_val$mon   <- floor( end_val$mon   / 3) * 3 + 3
-  }
+  } else if(return_interval == 'quarter') {
 
-  # month only : set month
-  if(return_position == 3){
-    end_val$mon <- end_val$mon + 1
-  }
+    start_val <- min_v %>% this_quarter_month %>% day_to_1 %>% hour_to_0 %>%
+      min_to_0 %>% sec_to_0
+    end_val <- max_v %>% next_quarter_month %>%  day_to_1 %>% hour_to_0 %>%
+      min_to_0 %>% sec_to_0
 
-  # up untill month : set day
-  if(return_position < 4) {
-    start_val$mday <- end_val$mday <- 1
-  }
+  } else if(return_interval == 'month') {
 
-  # week only : set day
-  if (return_position == 4) {
-    # note that when applying weekdays() or $wday it will return original value
-    start_val$mday <- start_val$mday - start_val$wday
-    end_val$mday   <- end_val$mday   + (7 - end_val$wday)
-  }
+    start_val <- min_v %>% day_to_1 %>% hour_to_0 %>% min_to_0 %>% sec_to_0
+    end_val  <- max_v %>% next_month %>%  day_to_1 %>% hour_to_0 %>%
+      min_to_0 %>% sec_to_0
 
-  # day only : set day
-  if(return_position == 5) {
-    end_val$mday <- end_val$mday + 1
-  }
+  } else if(return_interval == 'week') {
 
-  # up untill day : set hour
-  if(return_position < 6) {
-    start_val$hour <- end_val$hour <- 0
-  }
+    start_val <- min_v %>% this_week %>% hour_to_0 %>% min_to_0 %>% sec_to_0
+    end_val <- max_v %>% next_week %>% hour_to_0 %>% min_to_0 %>% sec_to_0
 
-  # hour only : set hour
-  if(return_position == 6) {
-    end_val$hour <- end_val$hour + 1
-  }
+  } else if(return_interval == 'day') {
 
-  # up untill hour : set minute
-  if(return_position < 7) {
-    start_val$min <- end_val$min <- 0
-  }
+    start_val <- min_v %>% hour_to_0 %>% min_to_0 %>% sec_to_0
+    end_val <- max_v %>% next_day %>% hour_to_0 %>% min_to_0 %>% sec_to_0
 
-  # minute only : set minute
-  if(return_position == 7) {
-    end_val$min <- end_val$min + 1
-  }
+  } else if(return_interval == 'hour') {
 
-  # up untill minute : set second
-  if(return_position < 8) {
-    start_val$sec <- end_val$sec <- 0
-  }
+    start_val <- min_v %>% min_to_0 %>% sec_to_0
+    end_val <- max_v %>% next_hour %>%  min_to_0 %>% sec_to_0
 
-  if(return_position == 8) {
-    end_val$sec <- end_val$sec + 1
+  } else if(return_interval == 'min') {
+
+    start_val <- min_v %>% sec_to_0
+    end_val <- max_v %>% next_min %>% sec_to_0
+
+  } else if(return_interval == 'sec') {
+
+    end_val <- max_v %>% next_sec
+
   }
 
   to_date <- all( c(start_val$hour, start_val$min, start_val$sec,
@@ -153,5 +155,82 @@ get_start_and_end <- function(dt_var,
   }
 
   return(list(start_val = start_val, end_val = end_val))
+
 }
 
+# this set of functions take a POSIXlt and alter time units as named
+next_year <- function(x) {
+  x$year <- x$year + 1
+  return(x)
+}
+
+next_month <- function(x) {
+  x$mon <- x$mon + 1
+  return(x)
+}
+
+next_day <- function(x) {
+  x$mday <- x$mday + 1
+  return(x)
+}
+
+next_hour <- function(x) {
+  x$hour <- x$hour + 1
+  return(x)
+}
+
+next_min <- function(x) {
+  x$min <- x$min + 1
+  return(x)
+}
+
+next_sec <- function(x) {
+  x$sec <- x$sec + 1
+  return(x)
+}
+
+month_to_1 <- function(x) {
+  # note month ranges from 0 to 11
+  x$mon <- 0
+  return(x)
+}
+
+day_to_1 <- function(x) {
+  x$mday <- 1
+  return(x)
+}
+
+hour_to_0 <- function(x) {
+  x$hour <- 0
+  return(x)
+}
+
+min_to_0 <- function(x) {
+  x$min <- 0
+  return(x)
+}
+
+sec_to_0 <- function(x) {
+  x$sec <- 0
+  return(x)
+}
+
+this_quarter_month <- function(x) {
+  x$mon <- floor(x$mon / 3) * 3
+  return(x)
+}
+
+next_quarter_month <- function(x) {
+  x$mon <- floor( x$mon   / 3) * 3 + 3
+  return(x)
+}
+
+this_week <- function(x) {
+  x$mday <- x$mday - x$wday
+  return(x)
+}
+
+next_week <- function(x) {
+  x$mday   <- x$mday   + (7 - x$wday)
+  return(x)
+}

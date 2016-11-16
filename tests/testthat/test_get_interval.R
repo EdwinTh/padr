@@ -1,32 +1,5 @@
-date_seq <- function(interval){
-  # only use a wide interval to test year, all others less wide for performance
-  if(interval == 'year') {
-    start_date <- as.POSIXlt(strftime('2005-01-01'))
-  } else {
-    start_date <- as.POSIXlt(strftime('2015-01-01'))
-  }
 
-  sequence <- seq(start_date,
-                  as.POSIXlt(strftime('2016-01-01')),
-                  by = interval)
-  # as.Date function is used for interval = 'day' so we are sure to stay out of
-  # timezone and daylight savings issues
-  if(interval == 'day') {
-    sequence <- seq(as.Date(strftime('2014-01-01')),
-                    as.Date(strftime('2017-01-01')),
-                    by = interval)
-  }
-
-  if(length(sequence) > 1000) {
-    sampled_dates <- sample(sequence, 1000)
-  } else {
-    sampled_dates <- sample(sequence, length(sequence) / 2)
-  }
-  return(sampled_dates)
-}
-
-test_errors_data <- date_seq('day')
-
+# standard inputs for class testing
 days <- as.Date(c('2016-01-01', '2016-02-29'))
 posix_ct <- as.POSIXct(c('2016-01-01 21:19:53', '2016-02-29 10:16:11'))
 posix_lt <- as.POSIXlt(c('2016-01-01 21:19:53', '2016-02-29 10:16:11'))
@@ -109,28 +82,5 @@ test_that('is_day_week gives correct result' , {
 })
 
 
-#-----------------------------------------------------------------------------#
-# get_date_variables
 
-context('Test the get_date_variable function')
-
-test_get_date_variable_data <-
-  data.frame(x = date_seq('month'),
-             y1 = runif(6),
-             y2 = letters[1:6],
-             y3 = factor(letters[7:12]),
-             stringsAsFactors = FALSE)
-test_get_date_variable_data2 <- test_get_date_variable_data
-test_get_date_variable_data2$x2 <- date_seq('month')
-
-test_that('get_date_variable only works on the right data types', {
-  expect_error(get_date_variables(test_get_date_variable_data %>% as.matrix))
-  expect_error(get_date_variables(test_get_date_variable_data$x))
-})
-
-test_that('get_date_variable gives the correct output', {
-  expect_equal(get_date_variables(test_get_date_variable_data), 'x')
-  expect_equal(get_date_variables(test_get_date_variable_data2), c('x', 'x2'))
-  expect_equal(get_date_variables(mtcars), character())
-})
 

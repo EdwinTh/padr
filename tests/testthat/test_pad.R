@@ -42,16 +42,26 @@ test_that("Correct error handling", {
   expect_error(pad(x_month %>% as.character))
   expect_error(pad(x_month %>% as.numeric))
   expect_error(pad(mtcars))
-  expect_error(suppressWarnings(pad(df_with_one_date)), NA)
-  expect_error(pad(df_with_two_dates))
-  expect_error(suppressWarnings(pad(df_with_two_dates, by = dt_var1)), NA)
 })
 
 test_that("Gives warning when unordered", {
   expect_warning(pad(x_day %>% as.data.frame))
 })
 
-test_that("Pad gives correct results on data.frames", {
+test_that('Pad works properly on data.table and tbl', {
+  expect_equal(class(pad(data.table::data.table(x_year, 1)))[1], 'data.table')
+  expect_equal(class(pad(dplyr::data_frame(x_year, 1)))[1], 'tbl_df')
+})
+
+test_that('check_start_end throws error' , {
+  expect_error( check_start_end(x_hour, as.POSIXct('2015-01-01 01:01:00'),
+                                NULL, 'hour' ))
+  expect_error( check_start_end(x_hour, as.POSIXct('2015-01-01 01:01:00'),
+                                NULL, 'min' ), NA)
+})
+
+context('pad integration tests')
+test_that("Pad gives correct results", {
   expect_equal(pad(data.frame(x_year, 1)) %>% nrow, 4)
   expect_equal(pad(data.frame(x_year, 1), end_val = as.Date('2021-01-01')) %>% nrow, 7)
   expect_equal(pad(data.frame(x_year, 1), start_val = as.Date('2012-01-01')) %>% nrow, 7)
@@ -62,9 +72,3 @@ test_that("Pad gives correct results on data.frames", {
   expect_equal(pad(data.frame(x_hour, 1), interval = 'hour') %>% nrow, 25)
   expect_equal(suppressWarnings(pad(data.frame(x_min, 1))) %>% nrow, 60)
 })
-
-test_that('Pad works properly on data.table and tbl', {
-  expect_equal(class(pad(data.table::data.table(x_year, 1)))[1], 'data.table')
-  expect_equal(class(pad(dplyr::data_frame(x_year, 1)))[1], 'tbl_df')
-})
-

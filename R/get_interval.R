@@ -68,23 +68,4 @@ is_day_week <- function(x_char){
   weeks     <- all( ( as.numeric(distances) %% 1 ) == 0 )
 }
 
-#-----------------------------------------------------------------------------#
-# get_date_variables
 
-get_date_variables <- function(df){
-  if(!is.data.frame(df)) {
-    stop('df should be a data.frame', call. = FALSE)
-  }
-  classes <- lapply(df, class)
-  date_classes <- (sapply(classes, function(x) 'POSIXt' %in% x) |
-    sapply(classes, function(x) 'Date' %in% x))
-  return(names ( which (date_classes) ))
-}
-
-
-# These two Roxygen tags are required to use Cpp code (they could be anywhere
-# in the package)
-
-#' @useDynLib padr
-#' @importFrom Rcpp sourceCpp
-NULL

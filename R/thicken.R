@@ -69,10 +69,12 @@ thicken <- function(x,
   }
 
   arguments <- as.list(match.call())
-  if(!missing(by)) by_val <- as.character(arguments$by)
+  if(!missing(by)) by_val <- as.character(arguments$by) else by_val <- NULL
 
+  # keep original data.frame so return will be of the correct class
   original_data_frame <- x
   x <- as.data.frame(x)
+
   if('by' %in% names(arguments)){
     dt_var <- check_data_frame(x, by = by_val)
   } else {
@@ -103,21 +105,12 @@ thicken <- function(x,
   }
 
   if('POSIXt' %in% class(start_val) & 'POSIXt' %in% class(dt_var)) {
-    tz_start_val <- attr(start_val, 'tzone')
-    tz_dt_var    <- attr(dt_var, 'tzone')
-    if(tz_start_val != tz_dt_var) {
-      warning(paste("start_val time zone will be coerced from", tz_start_val, "to", tz_dt_var))
-      start_val <- as.POSIXct(as.character(start_val), tz = tz_dt_var)
-    }
+      start_val <- enforce_time_zone(start_val, dt_var)
   }
 
   spanned <- span(dt_var, interval, start_val)
 
-  if(rounding == 'down'){
-    thickened <- round_down(dt_var, spanned)
-  } else {
-    thickened <- round_up(dt_var, spanned)
-  }
+  thickened <- round_thicken(dt_var, spanned, rounding)
 
   x_name <- get_date_variables(x)
   if(is.null(colname)) colname <- paste(x_name, interval, sep = '_')
@@ -125,4 +118,6 @@ thicken <- function(x,
   colnames(return_frame)[ncol(return_frame)] <- colname
 
   return(return_frame)
-  }
+}
+
+
