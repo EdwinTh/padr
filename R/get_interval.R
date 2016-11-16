@@ -24,9 +24,13 @@ get_interval <- function(x) {
     stop("x does not vary, cannot determine the interval", call. = FALSE)
   }
 
-  if(differ == 'month' & is_month_quarter(x_char)) differ <- 'quarter'
+  if(differ == 'month') {
+    if(is_month_quarter(x_char)) differ <- 'quarter'
+  }
 
-  if(differ == 'day' & is_day_week(x_char)) differ <- 'week'
+  if(differ == 'day') {
+    if(is_day_week(x_char)) differ <- 'week'
+  }
 
   return(differ)
 }
