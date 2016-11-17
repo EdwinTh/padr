@@ -1,5 +1,4 @@
-library(lubridate)
-library(dplyr)
+source("library.R")
 
 # standard inputs for class testing
 day_vec <- as.Date(c('2016-01-01', '2016-02-29'))

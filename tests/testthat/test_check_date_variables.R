@@ -1,5 +1,4 @@
-library(lubridate)
-library(dplyr)
+source("library.R")
 no_dt <- data.frame(x = 1:2, y = c('A', 'B'))
 one_dt <- data.frame(x = 1:2, y = c('A', 'B'), dt1 = ymd(c(20160401, 20160803)))
 two_dt <- data.frame(x = 1:2, y = c('A', 'B'), dt1 = ymd(c(20160401, 20160803)),

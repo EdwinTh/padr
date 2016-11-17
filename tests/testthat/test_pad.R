@@ -1,5 +1,4 @@
-library(lubridate)
-library(dplyr)
+source("library.R")
 
 x_year  <- c(as.Date('2015-01-01'), as.Date('2018-01-01'))
 x_month <- seq(as.Date('2015-01-01'), as.Date('2015-06-01'), by = 'month')[c(1, 3, 4, 6)]

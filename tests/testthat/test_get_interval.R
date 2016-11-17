@@ -1,5 +1,4 @@
-library(lubridate)
-library(dplyr)
+source("library.R")
 # standard inputs for class testing
 days <- as.Date(c('2016-01-01', '2016-02-29'))
 posix_ct <- as.POSIXct(c('2016-01-01 21:19:53', '2016-02-29 10:16:11'))
