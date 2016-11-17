@@ -44,4 +44,3 @@ test_that('enforce_timee zone works as expected', {
   expect_equal( attr(different, 'tz'), 'CET')
   expect_equal( as.character(different), c("2015-12-01 03:00:00", "2016-02-01 03:00:00"))
 })
-

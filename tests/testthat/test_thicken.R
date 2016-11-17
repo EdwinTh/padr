@@ -99,5 +99,3 @@ test_that('column naming works properly', {
   expect_equal(colnames(thicken(a_df))[3], 'a_week')
   expect_equal(colnames(thicken(a_df, colname = 'jos'))[3], 'jos')
 })
-
-

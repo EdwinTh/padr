@@ -26,4 +26,3 @@ check_data_frame <- function(x,
     return(x[ ,colnames(x) == dt_var_name])
   }
 }
-

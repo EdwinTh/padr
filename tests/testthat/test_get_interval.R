@@ -81,7 +81,3 @@ test_that('is_day_week gives correct result' , {
   expect_true( is_day_week(c('2016-01-01 12:51:16', '2016-01-08 12:51:16')))
   expect_false( is_day_week(c('2016-01-01 12:51:16', '2016-01-09 12:51:16')))
 })
-
-
-
-

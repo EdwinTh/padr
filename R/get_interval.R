@@ -73,7 +73,3 @@ is_day_week <- function(x_char){
   x_posix <- as.POSIXlt(x_char, tz = 'UTC')
   all(as.numeric(x_posix) %in% as.numeric(all_weeks))
 }
-
-
-
-

@@ -120,8 +120,3 @@ thicken <- function(x,
 
   return(return_frame)
 }
-
-
-
-
-
