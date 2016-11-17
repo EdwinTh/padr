@@ -3,3 +3,22 @@
 language: R
 sudo: false
 cache: packages
+
+r_binary_packages:
+  # install locally to avoid rev dep
+  - covr # code coverage check
+  - lintr # code lint
+
+after_success:
+  - Rscript -e 'covr::codecov()'
+
+notifications:
+  email:
+    on_success: change
+    on_failure: change
+
+branches:
+  only:
+    - master
+    - dev
+    - travis
