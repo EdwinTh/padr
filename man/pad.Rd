@@ -8,23 +8,23 @@ pad(x, interval = NULL, start_val = NULL, end_val = NULL, by = NULL)
 }
 \arguments{
 \item{x}{A data frame containing at least one variable of class \code{Date}
-or of class \class{POSIXt}.}
+or of class \code{POSIXt}.}
 
 \item{interval}{The interval of the returned datetime variable. When NULL the
 the interval will be equal to the interval of the input data and will be obtained
 by applying \code{get_interval}. If specified it can only be lower than the
 interval of the input data.}
 
-\item{start_val}{An object of class \code{Date} or class \class{POSIXt} that
+\item{start_val}{An object of class \code{Date} or class \code{POSIXt} that
 specifies the start of returned datatime variable. If NULL it will use the
 lowest value of the input variable. See Details.}
 
-\item{end_val}{An object of class \code{Date} or class \class{POSIXt} that
+\item{end_val}{An object of class \code{Date} or class \code{POSIXt} that
 specifies the end of returned datatime variable. If NULL it will use the
 highest value of the input variable.}
 
 \item{by}{Only needs to be specified when \code{x} contains multiple
-variables of class \code{Date} or of class \class{POSIXt}. \code{by}
+variables of class \code{Date} or of class \code{POSIXt}. \code{by}
 indicates which to use for padding.}
 }
 \value{

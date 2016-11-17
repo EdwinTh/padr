@@ -19,6 +19,7 @@ For each specified column in \code{x} replace the missing values by a
 function of the nonmissing values.
 }
 \examples{
+library(dplyr)
 x <- seq(as.Date('2016-01-01'), by = 'day', length.out = 366)
 x <- x[sample(1:366, 200)] \%>\% sort
 x_df <- data_frame(x  = x,

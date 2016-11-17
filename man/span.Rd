@@ -25,11 +25,4 @@ interval.
 Span takes a vector of class \code{Date} or \code{POSIXt} and spans a vector
 of the specified interval around it.
 }
-\examples{
-x <- as.POSIXct(strftime(c('2014-03-04 10:43:16',
-                           '2014-03-05 08:22:12')))
-span(x, 'hour')
-span(x, 'day')
-span(x, 'year')
-}
 
