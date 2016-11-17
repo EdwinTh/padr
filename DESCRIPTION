@@ -14,8 +14,8 @@ Imports:
     dplyr,
     Rcpp
 Suggests:
-	lubridate,
-	ggplot2,
+    lubridate,
+    ggplot2,
     testthat,
     knitr,
     rmarkdown,
