@@ -5,7 +5,7 @@ Version: 0.1.0
 Author: Edwin Thoen
 Maintainer: Edwin Thoen <edwinthoen@gmail.com>
 Description: The padr package helps transforming raw time series data to a format ready for analysis. It offers two functionalities; aggregating data to a higher level interval (thicken) and filling in records where observations were absent (pad). It offers a few functions that assist at filling missing values after padding.
-License: License: GPL-2
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Depends:
@@ -19,6 +19,7 @@ Suggests:
     testthat,
     knitr,
     rmarkdown,
+    lazyeval,
     tidyr
 RoxygenNote: 5.0.1
 LinkingTo: Rcpp

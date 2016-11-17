@@ -1,3 +1,6 @@
+library(lubridate)
+library(dplyr)
+
 # standard inputs for class testing
 day_vec <- as.Date(c('2016-01-01', '2016-02-29'))
 posix_ct <- as.POSIXct(c('2016-01-01 21:19:53', '2016-02-29 10:16:11'))

@@ -1,3 +1,5 @@
+library(lubridate)
+library(dplyr)
 set.seed(543)
 x <- seq(as.Date('2016-01-01'), by = 'day', length.out = 366)
 x <- x[sample(1:366, 200)] %>% sort

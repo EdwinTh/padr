@@ -1,5 +1,6 @@
-
 library(lubridate)
+library(dplyr)
+
 a_date <- ymd(c('20151201', '20160201'))
 a_ct <- ymd_h(c('20151201 03', '20160201 03'))
 b_date <- span(a_date, 'month')

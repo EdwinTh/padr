@@ -77,7 +77,7 @@ pad <- function(x,
     dt_var_name <- get_date_variables(x)
   }
 
-  if(!all(dt_var[1:(length(dt_var)-1)] < dt_var[2:length(dt_var)])) {
+  if(!all(dt_var[1:(length(dt_var)-1)] <= dt_var[2:length(dt_var)])) {
     dt_var <- sort(dt_var)
     warning('Datetime variable was unsorted, pad result is sorted.')
   }
@@ -134,8 +134,8 @@ pad <- function(x,
 
   colnames(original_data_frame)[colnames(original_data_frame) ==
                                 dt_var_name] <- 'spanned'
-  return_frame <- suppressMessages(
-    dplyr::right_join(original_data_frame, join_frame))
+  return_frame  <- merge(join_frame, original_data_frame, by = 'spanned',
+                         all.x = TRUE)
   colnames(return_frame)[colnames(return_frame) == 'spanned'] <- dt_var_name
   class(return_frame) <-  class(original_data_frame)
   return(return_frame)
