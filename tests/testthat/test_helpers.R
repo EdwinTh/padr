@@ -3,24 +3,23 @@
 
 context('Test the get_date_variable function')
 
-test_get_date_variable_data <-
-  data.frame(x = date_seq('month'),
-             y1 = runif(6),
-             y2 = letters[1:6],
-             y3 = factor(letters[7:12]),
-             stringsAsFactors = FALSE)
-test_get_date_variable_data2 <- test_get_date_variable_data
-test_get_date_variable_data2$x2 <- date_seq('month')
+library(lubridate)
+no_dt_var <- mtcars
+one_day_var <- data.frame(x = ymd(20160201, 20160301), y = c(1,2))
+one_dt_var <- data.frame(x = ymd_h('20160201 02', '20160301 03'), y = c(1,2))
+two_dt_var <- data.frame(x = ymd_h('20160201 02', '20160301 03'), y = c(1,2),
+                         x2 = ymd(20160201, 20160301))
 
 test_that('get_date_variable only works on the right data types', {
-  expect_error(get_date_variables(test_get_date_variable_data %>% as.matrix))
-  expect_error(get_date_variables(test_get_date_variable_data$x))
+  expect_error(get_date_variables(one_day_var %>% as.matrix))
+  expect_error(get_date_variables(one_day_var$x))
 })
 
 test_that('get_date_variable gives the correct output', {
-  expect_equal(get_date_variables(test_get_date_variable_data), 'x')
-  expect_equal(get_date_variables(test_get_date_variable_data2), c('x', 'x2'))
-  expect_equal(get_date_variables(mtcars), character())
+  expect_equal(length(get_date_variables(no_dt_var)), 0)
+  expect_equal(get_date_variables(one_day_var), 'x')
+  expect_equal(get_date_variables(one_dt_var), 'x')
+  expect_equal(get_date_variables(two_dt_var), c('x', 'x2'))
 })
 
 #-----------------------------------------------------------------------------#

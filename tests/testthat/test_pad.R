@@ -7,12 +7,6 @@ x_min   <- seq(lubridate::ymd_hms('2015-01-01 00:00:00'),
                lubridate::ymd_hms('2015-01-01 00:59:00'), by = 'min') %>% sample(15) %>%
   c(lubridate::ymd_hm('2015-01-01 00:00'), lubridate::ymd_hm('2015-01-01 00:59')) %>% unique
 
-df_with_one_date  <- data.frame(dt_var1 = date_seq('month'),
-                                y = 1:6)
-df_with_two_dates <- data.frame(dt_var1  = date_seq('month'),
-                                dt_var2 = date_seq('month'),
-                                y = 1:6)
-
 
 context("Test the pad function")
 
