@@ -145,10 +145,12 @@ pad <- function(x,
 # max(x), when spanning for thicken this is not sensible. Since spanning for
 # pad is simple, rather make a simple span_pad function than adjusting the
 # main span function for it.
-span_pad <- function(x,
-                     start_val = NULL,
-                     end_val   = NULL,
-                     interval  =  c('year', 'quarter', 'month', 'week', 'day', 'hour', 'min', 'sec')) {
+span_pad <- function(
+  x,
+  start_val = NULL,
+  end_val   = NULL,
+  interval  =  c('year', 'quarter', 'month', 'week', 'day', 'hour', 'min', 'sec')
+) {
 
   interval <- match.arg(interval)
 
@@ -168,6 +170,6 @@ check_start_end <- function(dt_var, start_val, end_val, interval){
   all_non_null <- do.call('c', all_non_null)
   necesarry_interval <- get_interval(all_non_null)
   if (int_hierarchy[necesarry_interval] > int_hierarchy[interval]) {
-    stop('start_val and/or end_val are invalid for the given combination of interval and the datetime variable')
+    stop('start_val and/or end_val are invalid for the given combination of interval and the datetime variable') # nolint
   }
 }

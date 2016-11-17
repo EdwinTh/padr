@@ -82,7 +82,9 @@ get_start_and_end <- function(dt_var,
 
     start_val <- sec_to_0 ( min_to_0 ( hour_to_0 ( day_to_1 ( month_to_1 ( min_v ) ) ) ) )
 
-    end_val <- sec_to_0 ( min_to_0 ( hour_to_0 ( day_to_1 ( month_to_1 ( next_year ( max_v ) ) ) ) ) )
+    end_val <- sec_to_0 ( min_to_0 ( hour_to_0 (
+      day_to_1 ( month_to_1 ( next_year ( max_v ) ) )
+    ) ) )
 
   } else if (return_interval == 'quarter') {
 
