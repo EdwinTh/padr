@@ -8,9 +8,6 @@
 # Usage
 
 ```r
-library(padr)
-library(dplyr)
-
 coffee <- data.frame(
   time_stamp =  as.POSIXct(c(
     '2016-07-07 09:11:21', '2016-07-07 09:46:48',
@@ -28,3 +25,4 @@ coffee %>%
   ggplot2::ggplot(ggplot2::aes(time_stamp_day, day_amount)) +
     ggplot2::geom_line()
 ```
+![](readme_plot.png)
