@@ -67,9 +67,13 @@ is_month_quarter <- function(x_char) {
 
 # if the interval is day we we will look for week
 is_day_week <- function(x_char){
-  distances <- difftime(x_char[2:length(x_char)], x_char[1:(length(x_char)-1)],
-                        units = 'weeks')
-  weeks     <- all( ( as.numeric(distances) %% 1 ) == 0 )
+  all_weeks <- seq( as.POSIXlt(min(x_char), tz = 'UTC'),
+                    as.POSIXlt(max(x_char), tz = 'UTC'),
+                    by = '7 DSTdays')
+  x_posix <- as.POSIXlt(x_char, tz = 'UTC')
+  all(as.numeric(x_posix) %in% as.numeric(all_weeks))
 }
+
+
 
 
