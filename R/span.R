@@ -1,16 +1,3 @@
-#' Span a variable of a different interval
-#'
-#' Span takes a vector of class \code{Date} or \code{POSIXt} and spans a vector
-#' of the specified interval around it.
-#' @param x A vector of class \code{Date}, \code{POSIXlt}, or \code{POSIXct}.
-#' @param interval The interval of the returned variable.
-#' @param start_val By default the first instance of \code{interval} that is lower
-#' than the lowest value of \code{x}, with all time units on
-#' default value. Specify \code{start_val} as an offset to change the values
-#' of the time units.
-#'
-#' @return A vector of class \code{Date} or \code{POSIXTct}, dependant on its
-#' interval.
 
 span <- function(x,
                  interval = c('year',

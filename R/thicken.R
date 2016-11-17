@@ -101,9 +101,9 @@ thicken <- function(x,
          you might be looking for pad rather than for thicken.')
   }
 
-  #if(!all(dt_var[1:(length(dt_var)-1)] <= dt_var[2:length(dt_var)])) {
-  #  warning('Datetime variable was unsorted, result will be unsorted as well.')
- #}
+  if(!all(dt_var[1:(length(dt_var)-1)] <= dt_var[2:length(dt_var)])) {
+    warning('Datetime variable was unsorted, result will be unsorted as well.')
+  }
 
   if('POSIXt' %in% class(start_val) & 'POSIXt' %in% class(dt_var)) {
       start_val <- enforce_time_zone(start_val, dt_var)

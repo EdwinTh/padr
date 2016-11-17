@@ -1,15 +1,3 @@
-#' Find closest value of a in b
-#'
-#' For two vectors of class \code{Date}, \code{POSIXct}, or \code{POSIXlt} find
-#' the closest value of \code{a} in \code{b} under the restriction that the
-#' returned value is either smaller than the value in \code{a}, when using
-#' \code{round_down}, or larger than the value in \code{b}.
-#' @param a A vector of class \code{Date}, \code{POSIXct}, or \code{POSIXlt}.
-#' @param b A vector of the same class as \code{a}.
-#' @param direction Should rounding be \code{up} or \code{down}.
-#' @return A vector of the same class and the same length as \code{a}, with
-#' for each value of \code{a} the closest value in \code{b}, either rounded up
-#' or rounded down.
 
 round_thicken <- function(a,
                           b,
