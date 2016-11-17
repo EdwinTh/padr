@@ -77,7 +77,7 @@ pad <- function(x,
     dt_var_name <- get_date_variables(x)
   }
 
-  if (!all(dt_var[1:(length(dt_var)-1)] <= dt_var[2:length(dt_var)])) {
+  if (!all(dt_var[1:(length(dt_var) - 1)] <= dt_var[2:length(dt_var)])) {
     dt_var <- sort(dt_var)
     warning('Datetime variable was unsorted, pad result is sorted.')
   }

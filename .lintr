@@ -2,7 +2,9 @@ cache_directory: ".lintr_cache"
 linters: with_defaults(
     single_quotes_linter = NULL, # 412
     line_length_linter(100),
-    infix_spaces_linter = NULL, # 6
     commented_code_linter = NULL, # 2
     NULL
+  )
+exclusions: list(
+    "R/RcppExports.R"
   )

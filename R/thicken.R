@@ -101,7 +101,7 @@ thicken <- function(x,
          you might be looking for pad rather than for thicken.')
   }
 
-  if (!all(dt_var[1:(length(dt_var)-1)] <= dt_var[2:length(dt_var)])) {
+  if (!all(dt_var[1:(length(dt_var) - 1)] <= dt_var[2:length(dt_var)])) {
     warning('Datetime variable was unsorted, result will be unsorted as well.')
   }
 

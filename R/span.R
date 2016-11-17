@@ -41,7 +41,7 @@ shift_end_from_start <- function(start_and_end, start_val){
   start_when_null <- start_and_end$start_val
   end_when_null   <- start_and_end$end_val
 
-    if ( 'POSIXt'%in% class(start_val) & 'Date' %in% class(start_when_null) ) {
+    if ( 'POSIXt' %in% class(start_val) & 'Date' %in% class(start_when_null) ) {
     start_when_null <- as.POSIXct( as.character(start_when_null),
                                    tz = attr(start_val, 'tzone'))
     end_when_null <- as.POSIXct( as.character(end_when_null),
@@ -57,7 +57,7 @@ shift_end_from_start <- function(start_and_end, start_val){
 assure_greater_than_max_x <- function(max_x,
                                       end_val,
                                       interval) {
-  if ( 'POSIXt'%in% class(end_val) & 'Date' %in% class(max_x) ) {
+  if ( 'POSIXt' %in% class(end_val) & 'Date' %in% class(max_x) ) {
     max_x <- as.POSIXct( as.character(max_x), tz = attr(end_val, 'tzone'))
   }
 
