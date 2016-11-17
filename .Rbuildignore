@@ -2,3 +2,5 @@
 ^\.Rproj\.user$
 ^\.travis\.yml$
 ^\.lintr
+^scripts
+^readme_plot.png$
