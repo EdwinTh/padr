@@ -37,6 +37,7 @@ seq(start_val, by = '7 DSTdays', length.out = 2)
 The arguments `start_val` (in `pad` and `thicken`) and `end_val` (in `pad`) could have a different time zone than the input datetime variable. In this case the function will coerce the argument to be of same time zone as the input variable *while keeping the clock time equal*. Take the following example:
 
 ```{r}
+library(padr)
 to_pad <- data.frame(dt = seq(ymd_hms('20160202 145312', tz = 'CET'),
                                       length.out = 2, by = 'day'))
 pad(to_pad, start_val = ymd_hms('20160201 145312', tz = 'EST'))

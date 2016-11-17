@@ -11,12 +11,6 @@
 #'
 #' @return A vector of class \code{Date} or \code{POSIXTct}, dependant on its
 #' interval.
-#' @examples
-#' x <- as.POSIXct(strftime(c('2014-03-04 10:43:16',
-#'                            '2014-03-05 08:22:12')))
-#' span(x, 'hour')
-#' span(x, 'day')
-#' span(x, 'year')
 
 span <- function(x,
                  interval = c('year',
@@ -99,48 +93,49 @@ get_start_and_end <- function(dt_var,
 
   if(return_interval == 'year') {
 
-    start_val <- min_v %>% month_to_1 %>% day_to_1 %>% hour_to_0 %>%
-      min_to_0 %>% sec_to_0
-    end_val <- max_v %>% next_year %>% month_to_1 %>% day_to_1 %>% hour_to_0 %>%
-      min_to_0 %>% sec_to_0
+    start_val <- sec_to_0 ( min_to_0 ( hour_to_0 ( day_to_1 ( month_to_1 ( min_v ) ) ) ) )
+
+    end_val <- sec_to_0 ( min_to_0 ( hour_to_0 ( day_to_1 ( month_to_1 ( next_year ( max_v ) ) ) ) ) )
 
   } else if(return_interval == 'quarter') {
 
-    start_val <- min_v %>% this_quarter_month %>% day_to_1 %>% hour_to_0 %>%
-      min_to_0 %>% sec_to_0
-    end_val <- max_v %>% next_quarter_month %>%  day_to_1 %>% hour_to_0 %>%
-      min_to_0 %>% sec_to_0
+    start_val <- sec_to_0 ( min_to_0 ( hour_to_0 ( day_to_1 ( this_quarter_month ( min_v ) ) ) ) )
+
+    end_val <- sec_to_0 ( min_to_0 ( hour_to_0 ( day_to_1  ( next_quarter_month ( max_v ) ) ) ) )
 
   } else if(return_interval == 'month') {
 
-    start_val <- min_v %>% day_to_1 %>% hour_to_0 %>% min_to_0 %>% sec_to_0
-    end_val  <- max_v %>% next_month %>%  day_to_1 %>% hour_to_0 %>%
-      min_to_0 %>% sec_to_0
+    start_val <- sec_to_0 ( min_to_0 ( hour_to_0 ( day_to_1 ( min_v ) ) ) )
+
+    end_val  <- sec_to_0 ( min_to_0 ( hour_to_0 ( day_to_1  ( next_month ( max_v ) ) ) ) )
 
   } else if(return_interval == 'week') {
 
-    start_val <- min_v %>% this_week %>% hour_to_0 %>% min_to_0 %>% sec_to_0
-    end_val <- max_v %>% next_week %>% hour_to_0 %>% min_to_0 %>% sec_to_0
+    start_val <- sec_to_0 ( min_to_0 ( hour_to_0 ( this_week ( min_v ) ) ) )
+
+    end_val <- sec_to_0 ( min_to_0 ( hour_to_0 ( next_week ( max_v ) ) ) )
 
   } else if(return_interval == 'day') {
 
-    start_val <- min_v %>% hour_to_0 %>% min_to_0 %>% sec_to_0
-    end_val <- max_v %>% next_day %>% hour_to_0 %>% min_to_0 %>% sec_to_0
+    start_val <- sec_to_0 ( min_to_0 ( hour_to_0 ( min_v ) ) )
+
+    end_val <- sec_to_0 ( min_to_0 ( hour_to_0 ( next_day ( max_v ) ) ) )
 
   } else if(return_interval == 'hour') {
 
-    start_val <- min_v %>% min_to_0 %>% sec_to_0
-    end_val <- max_v %>% next_hour %>%  min_to_0 %>% sec_to_0
+    start_val <- sec_to_0 ( min_to_0 ( min_v ) )
+
+    end_val <- sec_to_0 ( min_to_0 ( next_hour ( max_v ) ) )
 
   } else if(return_interval == 'min') {
 
-    start_val <- min_v %>% sec_to_0
-    end_val <- max_v %>% next_min %>% sec_to_0
+    start_val <-  sec_to_0 ( min_v )
+
+    end_val <- sec_to_0 ( next_min ( max_v ) )
 
   } else if(return_interval == 'sec') {
 
-    end_val <- max_v %>% next_sec
-
+    end_val <- next_sec ( max_v )
   }
 
   to_date <- all( c(start_val$hour, start_val$min, start_val$sec,

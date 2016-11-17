@@ -3,7 +3,7 @@
 #' Replace all missing values in the specified columns by the same value.
 #' @param x A data frame.
 #' @param ... The unquoted column names of the variables that should be filled.
-#' @param replace The value to replace the missing values by.
+#' @param  value The value to replace the missing values by.
 #' @return \code{x} with the altered columns.
 #'
 #' @examples
@@ -52,6 +52,7 @@ fill_by_value <- function(x,
 #' In addition optional parameters to \code{fun}.
 #' @return \code{x} with the altered columns.
 #' @examples
+#' library(dplyr)
 #' x <- seq(as.Date('2016-01-01'), by = 'day', length.out = 366)
 #' x <- x[sample(1:366, 200)] %>% sort
 #' x_df <- data_frame(x  = x,
@@ -103,6 +104,7 @@ fill_by_function <- function(x,
 #' @param ... The unquoted column names of the variables that should be filled.
 #' @return \code{x} with the altered columns.
 #' @examples
+#' library(dplyr)
 #' x <- seq(as.Date('2016-01-01'), by = 'day', length.out = 366)
 #' x <- x[sample(1:366, 200)] %>% sort
 #' x_df <- data_frame(x  = x,

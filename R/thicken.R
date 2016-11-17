@@ -16,7 +16,7 @@
 #' the closest value that is lower (\code{down}) or that is higher (\code{up})
 #' than itself.
 #' @param by Only needs to be specified when \code{x} contains multiple
-#' variables of class \code{Date} or of class \class{POSIXt}. \code{by}
+#' variables of class \code{Date} or of class \code{POSIXt}. \code{by}
 #' indicates which to use for padding.
 #' @param start_val By default the first instance of \code{interval} that is lower
 #' than the lowest value of the input datetime variable, with all time units on
@@ -27,9 +27,9 @@
 #' x_hour <- seq(lubridate::ymd_hms('20160302 000000'), by = 'hour',
 #'               length.out = 200)
 #' some_df <- data.frame(x_hour = x_hour)
-#' thicken(x_hour)
-#' thicken(x_hour, 'month')
-#' thicken(x_hour, start_val = lubridate::ymd_hms('20160301 120000'))
+#' thicken(some_df)
+#' thicken(some_df, 'month')
+#' thicken(some_df, start_val = lubridate::ymd_hms('20160301 120000'))
 #'
 #' library(dplyr)
 #' x_df <- data.frame(

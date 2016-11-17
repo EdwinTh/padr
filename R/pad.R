@@ -5,19 +5,19 @@
 #' other variables a missing value will be insterted.
 #'
 #' @param x A data frame containing at least one variable of class \code{Date}
-#' or of class \class{POSIXt}.
+#' or of class \code{POSIXt}.
 #' @param interval The interval of the returned datetime variable. When NULL the
 #' the interval will be equal to the interval of the input data and will be obtained
 #' by applying \code{get_interval}. If specified it can only be lower than the
 #' interval of the input data.
-#' @param start_val An object of class \code{Date} or class \class{POSIXt} that
+#' @param start_val An object of class \code{Date} or class \code{POSIXt} that
 #' specifies the start of returned datatime variable. If NULL it will use the
 #' lowest value of the input variable. See Details.
-#' @param end_val An object of class \code{Date} or class \class{POSIXt} that
+#' @param end_val An object of class \code{Date} or class \code{POSIXt} that
 #' specifies the end of returned datatime variable. If NULL it will use the
 #' highest value of the input variable.
 #' @param by Only needs to be specified when \code{x} contains multiple
-#' variables of class \code{Date} or of class \class{POSIXt}. \code{by}
+#' variables of class \code{Date} or of class \code{POSIXt}. \code{by}
 #' indicates which to use for padding.
 #' @details The interval of a datetime variable is the time unit at which the
 #' observations occur. \code{pad} allows for eight different time units which

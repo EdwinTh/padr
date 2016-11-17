@@ -23,7 +23,7 @@ url <- "https://storage.googleapis.com/montco-stats/tzr.csv"
 #' @format A data frame with 120450 rows and 6 variables:
 #' \describe{
 #' \item{lat}{Latitude from Google maps, based on the address}
-#' \item{lon}{Longitude from Google maps, based on the address}
+#' \item{lng}{Longitude from Google maps, based on the address}
 #' \item{zip}{Zipcode from Google, when possible}
 #' \item{title}{Title, emergency category}
 #' \item{time_stamp}{YYYY-MM-DD HH:MM:SS}

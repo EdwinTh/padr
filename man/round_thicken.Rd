@@ -10,6 +10,8 @@ round_thicken(a, b, direction = c("down", "up"))
 \item{a}{A vector of class \code{Date}, \code{POSIXct}, or \code{POSIXlt}.}
 
 \item{b}{A vector of the same class as \code{a}.}
+
+\item{direction}{Should rounding be \code{up} or \code{down}.}
 }
 \value{
 A vector of the same class and the same length as \code{a}, with

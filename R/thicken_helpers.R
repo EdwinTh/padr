@@ -6,21 +6,10 @@
 #' \code{round_down}, or larger than the value in \code{b}.
 #' @param a A vector of class \code{Date}, \code{POSIXct}, or \code{POSIXlt}.
 #' @param b A vector of the same class as \code{a}.
+#' @param direction Should rounding be \code{up} or \code{down}.
 #' @return A vector of the same class and the same length as \code{a}, with
 #' for each value of \code{a} the closest value in \code{b}, either rounded up
 #' or rounded down.
-#' @examples
-#' x <- seq(as.Date('2016-01-01'), as.Date('2016-12-31'), by = 'day')
-#' x <- sample(x, 200)
-#' month_span <- span_month(x)
-#' round_down(x, month_span)
-#' round_up(x, month_span)
-#'
-#' x2 <- seq(as.POSIXct('2016-01-01'), as.POSIXct('2016-01-02'), by = 'min')
-#' x2 <- sample(x2, 300)
-#' spanx2 <- span_hour(x2)
-#' round_down(x2, spanx2)
-#' round_up(x2, spanx2)
 
 round_thicken <- function(a,
                           b,

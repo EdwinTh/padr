@@ -11,7 +11,7 @@ fill_by_value(x, ..., value = 0)
 
 \item{...}{The unquoted column names of the variables that should be filled.}
 
-\item{replace}{The value to replace the missing values by.}
+\item{value}{The value to replace the missing values by.}
 }
 \value{
 \code{x} with the altered columns.
