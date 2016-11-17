@@ -1,9 +1,7 @@
 cache_directory: ".lintr_cache"
 linters: with_defaults(
     single_quotes_linter = NULL, # 412
-    spaces_left_parentheses_linter = NULL, # 74
-    line_length_linter = NULL, # 56
-    commas_linter = NULL, # 51
+    line_length_linter(100),
     infix_spaces_linter = NULL, # 6
     commented_code_linter = NULL, # 2
     NULL

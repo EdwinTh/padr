@@ -8,7 +8,7 @@ posix_lt <- as.POSIXlt(c('2016-01-01 21:19:53', '2016-02-29 10:16:11'))
 
 context('get_interval fails on wrong input')
 
-test_that('get_interval fails on non-datetime vectors',{
+test_that('get_interval fails on non-datetime vectors', {
   expect_error(as.integer(days) %>% get_interval)
   expect_error(as.numeric(days) %>% get_interval)
   expect_error(as.character(days) %>% get_interval)
@@ -19,7 +19,7 @@ test_that('get_interval fails on data.frames', {
   expect_error(mtcars %>% get_interval)
 })
 
-test_that('get_interval does not fail on Date, POSIXct and POSIXlt',{
+test_that('get_interval does not fail on Date, POSIXct and POSIXlt', {
   expect_error(days %>% get_interval, NA)
   expect_error(posix_ct %>% get_interval, NA)
   expect_error(posix_lt %>% get_interval, NA)
@@ -68,14 +68,14 @@ test_that('lowest_differ returns the correct interval', {
 
 context('is_ functions correctly identify quarter and week')
 
-test_that('is_month_quarter gives correct result' , {
+test_that('is_month_quarter gives correct result', {
   expect_true( is_month_quarter(c('2016-01-01 00:00:00', '2016-04-01 00:00:00')))
   expect_false( is_month_quarter(c('2016-01-01 00:00:00', '2016-03-01 00:00:00')))
   expect_true( is_month_quarter(c('2016-01-01 12:51:16', '2016-01-01 12:51:16')))
   expect_false( is_month_quarter(c('2016-01-01 12:51:16', '2016-03-01 12:51:16')))
 })
 
-test_that('is_day_week gives correct result' , {
+test_that('is_day_week gives correct result', {
   expect_true( is_day_week(c('2016-01-01 00:00:00', '2016-01-08 00:00:00')))
   expect_false( is_day_week(c('2016-01-01 00:00:00', '2016-01-09 00:00:00')))
   expect_true( is_day_week(c('2016-01-01 12:51:16', '2016-01-08 12:51:16')))

@@ -1,6 +1,6 @@
 
 get_date_variables <- function(df){
-  if(!is.data.frame(df)) {
+  if (!is.data.frame(df)) {
     stop('df should be a data.frame', call. = FALSE)
   }
   classes <- lapply(df, class)
@@ -13,7 +13,7 @@ get_date_variables <- function(df){
 enforce_time_zone <- function(val1, val2) {
   tz_val1 <- attr(val1, 'tzone')
   tz_val2 <- attr(val2, 'tzone')
-  if( is.null(tz_val1) ) {
+  if ( is.null(tz_val1) ) {
     warning(paste("coercing time zone from", tz_val1, "to", tz_val2), call. = FALSE)
     val1 <- as.POSIXct(as.character(val1), tz = tz_val2)
   } else if (tz_val1 != tz_val2) {

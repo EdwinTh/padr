@@ -8,9 +8,9 @@ context('Test the get_date_variable function')
 
 library(lubridate)
 no_dt_var <- mtcars
-one_day_var <- data.frame(x = ymd(20160201, 20160301), y = c(1,2))
-one_dt_var <- data.frame(x = ymd_h('20160201 02', '20160301 03'), y = c(1,2))
-two_dt_var <- data.frame(x = ymd_h('20160201 02', '20160301 03'), y = c(1,2),
+one_day_var <- data.frame(x = ymd(20160201, 20160301), y = c(1, 2))
+one_dt_var <- data.frame(x = ymd_h('20160201 02', '20160301 03'), y = c(1, 2))
+two_dt_var <- data.frame(x = ymd_h('20160201 02', '20160301 03'), y = c(1, 2),
                          x2 = ymd(20160201, 20160301))
 
 test_that('get_date_variable only works on the right data types', {
