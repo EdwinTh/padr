@@ -86,23 +86,24 @@ thicken <- function(x,
 
   int_hierarchy <- 1:8
   names(int_hierarchy) <- c('year', 'quarter', 'month', 'week', 'day', 'hour','min', 'sec')
+  dt_var_interval <- get_interval(dt_var)
 
   if(interval == 'level_up'){
-    dt_var_interval_nr <- int_hierarchy[get_interval(dt_var)]
+    dt_var_interval_nr <- int_hierarchy[dt_var_interval]
     interval <- names(int_hierarchy[dt_var_interval_nr - 1])
   }
 
-  if(int_hierarchy[get_interval(dt_var)] < int_hierarchy[interval]) {
+  if(int_hierarchy[dt_var_interval] < int_hierarchy[interval]) {
     stop('The interval in the datetime variable is lower than the interval given,
          you might be looking fo pad rather than for thicken.')
-  } else if (int_hierarchy[get_interval(dt_var)] == int_hierarchy[interval]) {
+  } else if (int_hierarchy[dt_var_interval] == int_hierarchy[interval]) {
     stop('The interval in the datetime variable is equal to the interval given,
          you might be looking for pad rather than for thicken.')
   }
 
-  if(!all(dt_var[1:(length(dt_var)-1)] <= dt_var[2:length(dt_var)])) {
-    warning('Datetime variable was unsorted, result will be unsorted as well.')
-  }
+  #if(!all(dt_var[1:(length(dt_var)-1)] <= dt_var[2:length(dt_var)])) {
+  #  warning('Datetime variable was unsorted, result will be unsorted as well.')
+ #}
 
   if('POSIXt' %in% class(start_val) & 'POSIXt' %in% class(dt_var)) {
       start_val <- enforce_time_zone(start_val, dt_var)

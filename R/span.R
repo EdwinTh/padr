@@ -87,9 +87,9 @@ assure_greater_than_max_x <- function(max_x,
 get_start_and_end <- function(dt_var,
                               return_interval) {
 
-  dt_var_posix_lt <- as.POSIXlt(dt_var)
-  min_v <- min(dt_var_posix_lt)
-  max_v <- max(dt_var_posix_lt)
+  # calculate min and max on ct for performance, convert those to lt
+  min_v <- as.POSIXlt( min(dt_var) )
+  max_v <- as.POSIXlt( max(dt_var) )
 
   if(return_interval == 'year') {
 

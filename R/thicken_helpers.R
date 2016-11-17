@@ -63,7 +63,8 @@ posix_to_date <- function(x) {
   if('POSIXt' %in% class(x)) {
   check_var <- as.POSIXlt(x)
   to_date <- all( c(check_var$hour, check_var$min, check_var$sec ) == 0 )
-  if(to_date) x <- as.Date(strptime(x, format = '%Y-%m-%d'))
+  if(to_date) x <- as.Date(x)
   }
   return(x)
 }
+
