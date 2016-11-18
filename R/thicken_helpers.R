@@ -14,7 +14,7 @@ round_thicken <- function(a,
 
   rounded <- apply_rounding(a_same_level, b_same_level, direction)
 
-  if('Date' %in% class(a_same_level)){
+  if ('Date' %in% class(a_same_level)){
     thickened <- as.Date(rounded, origin = '1970-01-01')
   } else {
     thickened <- as.POSIXct(rounded, origin = '1970-01-01',
@@ -28,7 +28,7 @@ round_thicken <- function(a,
 # If either of the two variables is of class posix, the other should be posix
 # as well
 to_posix <- function(a, b) {
-  if( 'POSIXt' %in% class(a) & 'Date' %in% class(b) ) {
+  if ( 'POSIXt' %in% class(a) & 'Date' %in% class(b) ) {
     b <- as.POSIXct(strftime(b), tz = attr(a, 'tzone'))
   } else if ( 'Date' %in% class(a) & 'POSIXt' %in% class(b) ) {
     a <- as.POSIXct(as.character(a), tz = attr(b, 'tz'))
@@ -38,7 +38,7 @@ to_posix <- function(a, b) {
 
 # apply the correct rounding function, based on the direction
 apply_rounding <- function(a, b,  direction = c('up', 'down')) {
-  if(direction == 'up') {
+  if (direction == 'up') {
     round_up_core(a, b)
   } else {
     round_down_core(a, b)
@@ -48,11 +48,10 @@ apply_rounding <- function(a, b,  direction = c('up', 'down')) {
 # If the thickened variabel is of class POSIXt this function checks if it as
 # well can be of class Date
 posix_to_date <- function(x) {
-  if('POSIXt' %in% class(x)) {
+  if ('POSIXt' %in% class(x)) {
   check_var <- as.POSIXlt(x)
   to_date <- all( c(check_var$hour, check_var$min, check_var$sec ) == 0 )
-  if(to_date) x <- as.Date(x)
+  if (to_date) x <- as.Date(x)
   }
   return(x)
 }
-

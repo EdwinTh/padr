@@ -64,18 +64,18 @@ thicken <- function(x,
                     by        = NULL,
                     start_val = NULL) {
 
-  if(!is.data.frame(x)) {
+  if (!is.data.frame(x)) {
     stop('x should be a data frame.')
   }
 
   arguments <- as.list(match.call())
-  if(!missing(by)) by_val <- as.character(arguments$by) else by_val <- NULL
+  if (!missing(by)) by_val <- as.character(arguments$by) else by_val <- NULL
 
   # keep original data.frame so return will be of the correct class
   original_data_frame <- x
   x <- as.data.frame(x)
 
-  if('by' %in% names(arguments)){
+  if ('by' %in% names(arguments)){
     dt_var <- check_data_frame(x, by = by_val)
   } else {
     dt_var <- check_data_frame(x)
@@ -85,15 +85,15 @@ thicken <- function(x,
   rounding <- match.arg(rounding)
 
   int_hierarchy <- 1:8
-  names(int_hierarchy) <- c('year', 'quarter', 'month', 'week', 'day', 'hour','min', 'sec')
+  names(int_hierarchy) <- c('year', 'quarter', 'month', 'week', 'day', 'hour', 'min', 'sec')
   dt_var_interval <- get_interval(dt_var)
 
-  if(interval == 'level_up'){
+  if (interval == 'level_up'){
     dt_var_interval_nr <- int_hierarchy[dt_var_interval]
     interval <- names(int_hierarchy[dt_var_interval_nr - 1])
   }
 
-  if(int_hierarchy[dt_var_interval] < int_hierarchy[interval]) {
+  if (int_hierarchy[dt_var_interval] < int_hierarchy[interval]) {
     stop('The interval in the datetime variable is lower than the interval given,
          you might be looking fo pad rather than for thicken.')
   } else if (int_hierarchy[dt_var_interval] == int_hierarchy[interval]) {
@@ -101,11 +101,11 @@ thicken <- function(x,
          you might be looking for pad rather than for thicken.')
   }
 
-  if(!all(dt_var[1:(length(dt_var)-1)] <= dt_var[2:length(dt_var)])) {
+  if (!all(dt_var[1:(length(dt_var) - 1)] <= dt_var[2:length(dt_var)])) {
     warning('Datetime variable was unsorted, result will be unsorted as well.')
   }
 
-  if('POSIXt' %in% class(start_val) & 'POSIXt' %in% class(dt_var)) {
+  if ('POSIXt' %in% class(start_val) & 'POSIXt' %in% class(dt_var)) {
       start_val <- enforce_time_zone(start_val, dt_var)
   }
 
@@ -114,14 +114,9 @@ thicken <- function(x,
   thickened <- round_thicken(dt_var, spanned, rounding)
 
   x_name <- get_date_variables(x)
-  if(is.null(colname)) colname <- paste(x_name, interval, sep = '_')
+  if (is.null(colname)) colname <- paste(x_name, interval, sep = '_')
   return_frame <- cbind(x, thickened)
   colnames(return_frame)[ncol(return_frame)] <- colname
 
   return(return_frame)
 }
-
-
-
-
-

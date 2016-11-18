@@ -23,21 +23,21 @@ fill_by_value <- function(x,
                           ...,
                           value = 0) {
 
-  if(!is.data.frame(x)) {
+  if (!is.data.frame(x)) {
     stop('x should be a data frame')
   }
   arguments <- as.list(match.call())[-1]
-  if('value' %in% names(arguments)) value <- arguments$value
+  if ('value' %in% names(arguments)) value <- arguments$value
   cols <- arguments[ names(arguments) == '' ]
   inds <- numeric(length(cols))
-  for(i in 1:length(cols)) {
+  for (i in 1:length(cols)) {
     inds[i] <- which( colnames(x) == as.character( cols[[i]] ) )
   }
 
-  for(i in inds) {
-    val <- x[ ,i]
+  for (i in inds) {
+    val <- x[, i]
     val[is.na(val)] <- value
-    x[ ,i] <- val
+    x[, i] <- val
   }
   return(x)
 }
@@ -64,34 +64,34 @@ fill_by_value <- function(x,
 fill_by_function <- function(x,
                              ...,
                              fun = mean) {
-  if(! is.function(fun) ) {
+  if (! is.function(fun) ) {
     stop('fun is not a valid function')
   }
 
-  if(!is.data.frame(x)) {
+  if (!is.data.frame(x)) {
     stop('x should be a data frame')
   }
 
   arguments <- as.list(match.call())[-1]
-  if('value' %in% names(arguments)) value <- arguments$value
+  if ('value' %in% names(arguments)) value <- arguments$value
   cols <- arguments[ names(arguments) == '' ]
   inds <- numeric(length(cols))
-  for(i in 1:length(cols)) {
+  for (i in 1:length(cols)) {
      inds[i] <- which( colnames(x) == as.character( cols[[i]] ) )
   }
 
-  for(i in inds) {
-      val <- unlist( x[ ,i] )
+  for (i in inds) {
+      val <- unlist( x[, i] )
       val_no_na <- val[!is.na(val)]
       value <- fun(val_no_na)
 
-     if(length(value) > 1){
+     if (length(value) > 1){
        warning('fun does return multiple values, only the first is used')
        value <- value[1]
      }
 
      val[is.na(val)] <- value
-     x[ ,i] <- val
+     x[, i] <- val
    }
    return(x)
 }
@@ -115,7 +115,7 @@ fill_by_function <- function(x,
 fill_by_prevalent <- function(x,
                               ...) {
 
-  if(!is.data.frame(x)) {
+  if (!is.data.frame(x)) {
     stop('x should be a data frame')
   }
 
@@ -123,29 +123,24 @@ fill_by_prevalent <- function(x,
   cols <- arguments[ names(arguments) == '' ]
 
   inds <- numeric(length(cols))
-  for(i in 1:length(cols)) {
+  for (i in 1:length(cols)) {
     inds[i] <- which( colnames(x) == as.character( cols[[i]] ) )
   }
 
-  for(i in inds) {
-    val <- unlist ( x[ ,i] )
+  for (i in inds) {
+    val <- unlist ( x[, i] )
 
     x_count <- table(val)
 
-    if( sum(x_count == max(x_count)) > 1 ) {
+    if ( sum(x_count == max(x_count)) > 1 ) {
        tied <- paste(names( which (x_count == max(x_count) ) ), collapse = ', ')
        stop(paste( tied, 'tie for most prevalent, please select a value and use fill_by_value') )
     }
 
   value <- names( which( x_count == max(x_count) ) )
-  if( is.numeric(val) ) value <- as.numeric(value)
+  if ( is.numeric(val) ) value <- as.numeric(value)
   val[is.na(val)] <- value
-  x[ ,i] <- val
+  x[, i] <- val
   }
   return(x)
 }
-
-
-
-
-

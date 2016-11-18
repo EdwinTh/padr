@@ -9,7 +9,7 @@ one_posix <- as.POSIXlt('2016-02-17 21:19:53')
 
 context('span fails on wrong input')
 
-test_that('span fails on non-datetime vectors',{
+test_that('span fails on non-datetime vectors', {
   expect_error(as.integer(day_vec) %>% span)
   expect_error(as.numeric(day_vec) %>% span)
   expect_error(as.character(day_vec) %>% span)
@@ -20,7 +20,7 @@ test_that('span fails on data.frames', {
   expect_error(mtcars %>% span)
 })
 
-test_that('span does not fail on Date, POSIXct and POSIXlt',{
+test_that('span does not fail on Date, POSIXct and POSIXlt', {
   expect_error(day_vec %>% span, NA)
   expect_error(posix_ct %>% span, NA)
   expect_error(posix_lt %>% span, NA)

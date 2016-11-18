@@ -2,10 +2,14 @@ library(lubridate)
 library(dplyr)
 
 x_year  <- c(as.Date('2015-01-01'), as.Date('2018-01-01'))
-x_month <- seq(as.Date('2015-01-01'), as.Date('2015-06-01'), by ='month')[c(1,3,4,6)]
+x_month <- seq(as.Date('2015-01-01'), as.Date('2015-06-01'), by = 'month')[c(1, 3, 4, 6)]
 x_day   <- seq(as.Date('2015-01-01'), as.Date('2015-02-01'), by = 'day') %>% sample(15) %>%
   c(as.Date('2015-01-01'), as.Date('2015-02-01')) %>% unique
-x_hour  <- seq(as.POSIXct('2015-01-01 01:00:00'), as.POSIXct('2015-01-02 01:00:00'), by = 'hour')[c(1,25)]
+x_hour  <- seq(
+  as.POSIXct('2015-01-01 01:00:00'),
+  as.POSIXct('2015-01-02 01:00:00'),
+  by = 'hour'
+)[c(1, 25)]
 x_min   <- seq(lubridate::ymd_hms('2015-01-01 00:00:00'),
                lubridate::ymd_hms('2015-01-01 00:59:00'), by = 'min') %>% sample(15) %>%
   c(lubridate::ymd_hm('2015-01-01 00:00'), lubridate::ymd_hm('2015-01-01 00:59')) %>% unique
@@ -28,7 +32,7 @@ test_that('Pad works properly on data.table and tbl', {
   expect_equal(class(pad(dplyr::data_frame(x_year, 1)))[1], 'tbl_df')
 })
 
-test_that('check_start_end throws error' , {
+test_that('check_start_end throws error', {
   expect_error( check_start_end(x_hour, as.POSIXct('2015-01-01 01:01:00'),
                                 NULL, 'hour' ))
   expect_error( check_start_end(x_hour, as.POSIXct('2015-01-01 01:01:00'),

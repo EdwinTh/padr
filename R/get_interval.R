@@ -12,7 +12,7 @@
 #' @export
 get_interval <- function(x) {
 
-  if( !('Date'%in% class(x) | 'POSIXt' %in% class(x)) ) {
+  if ( !('Date' %in% class(x) | 'POSIXt' %in% class(x)) ) {
     stop('x should be of class Date, POSIXct, or POSIXlt')
   }
 
@@ -20,16 +20,16 @@ get_interval <- function(x) {
 
   differ <- lowest_differ(x_char)
 
-  if( length(differ) == 0 ) {
+  if ( length(differ) == 0 ) {
     stop("x does not vary, cannot determine the interval", call. = FALSE)
   }
 
-  if(differ == 'month') {
-    if(is_month_quarter(x_char)) differ <- 'quarter'
+  if (differ == 'month') {
+    if (is_month_quarter(x_char)) differ <- 'quarter'
   }
 
-  if(differ == 'day') {
-    if(is_day_week(x_char)) differ <- 'week'
+  if (differ == 'day') {
+    if (is_day_week(x_char)) differ <- 'week'
   }
 
   return(differ)
@@ -39,7 +39,7 @@ get_interval <- function(x) {
 # as input for the differing
 datetime_char <- function(x) {
   x_char <- as.character(x)
-  if(unique(nchar(x_char)) == 10){
+  if (unique(nchar(x_char)) == 10){
     x_char <- paste(x_char, '00:00:00')
   }
   return(x_char)
@@ -62,7 +62,7 @@ lowest_differ <- function(x_char) {
 # if the interval is month we look for quarter (quarter is special case of month)
 is_month_quarter <- function(x_char) {
   m <- as.POSIXlt(x_char)$mon
-  all(m %in% c(1,4,7,10)) | all(m %in% c(2,5,8,11)) | all(m %in% c(0, 3,6,9))
+  all(m %in% c(1, 4, 7, 10)) | all(m %in% c(2, 5, 8, 11)) | all(m %in% c(0, 3, 6, 9))
 }
 
 # if the interval is day we we will look for week
@@ -73,7 +73,3 @@ is_day_week <- function(x_char){
   x_posix <- as.POSIXlt(x_char, tz = 'UTC')
   all(as.numeric(x_posix) %in% as.numeric(all_weeks))
 }
-
-
-
-

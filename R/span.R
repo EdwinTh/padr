@@ -10,7 +10,7 @@ span <- function(x,
                               'sec'),
                  start_val  = NULL) {
 
-  if( !( 'Date' %in% class(x) | 'POSIXt' %in% class(x) ) ){
+  if ( !( 'Date' %in% class(x) | 'POSIXt' %in% class(x) ) ){
     break('x should be of class Date, POSIXlt, or POSIXct')
   }
 
@@ -18,12 +18,12 @@ span <- function(x,
 
   start_and_end <- get_start_and_end(x, return_interval = interval)
 
-  if( is.null(start_val) ) {
+  if ( is.null(start_val) ) {
 
     start_val <- start_and_end$start_val
     end_val   <- start_and_end$end_val
 
-  } else if( !is.null(start_val) ){
+  } else if ( !is.null(start_val) ){
 
     end_val <- shift_end_from_start(start_and_end, start_val)
     end_val <- assure_greater_than_max_x(max(x), end_val, interval)
@@ -41,7 +41,7 @@ shift_end_from_start <- function(start_and_end, start_val){
   start_when_null <- start_and_end$start_val
   end_when_null   <- start_and_end$end_val
 
-    if( 'POSIXt'%in% class(start_val) & 'Date' %in% class(start_when_null) ) {
+    if ( 'POSIXt' %in% class(start_val) & 'Date' %in% class(start_when_null) ) {
     start_when_null <- as.POSIXct( as.character(start_when_null),
                                    tz = attr(start_val, 'tzone'))
     end_when_null <- as.POSIXct( as.character(end_when_null),
@@ -57,11 +57,11 @@ shift_end_from_start <- function(start_and_end, start_val){
 assure_greater_than_max_x <- function(max_x,
                                       end_val,
                                       interval) {
-  if( 'POSIXt'%in% class(end_val) & 'Date' %in% class(max_x) ) {
+  if ( 'POSIXt' %in% class(end_val) & 'Date' %in% class(max_x) ) {
     max_x <- as.POSIXct( as.character(max_x), tz = attr(end_val, 'tzone'))
   }
 
-  while(end_val <= max_x) {
+  while (end_val <= max_x) {
     end_val <- seq(end_val, length.out = 2, by = interval)[2]
   }
 
@@ -78,49 +78,51 @@ get_start_and_end <- function(dt_var,
   min_v <- as.POSIXlt( min(dt_var) )
   max_v <- as.POSIXlt( max(dt_var) )
 
-  if(return_interval == 'year') {
+  if (return_interval == 'year') {
 
     start_val <- sec_to_0 ( min_to_0 ( hour_to_0 ( day_to_1 ( month_to_1 ( min_v ) ) ) ) )
 
-    end_val <- sec_to_0 ( min_to_0 ( hour_to_0 ( day_to_1 ( month_to_1 ( next_year ( max_v ) ) ) ) ) )
+    end_val <- sec_to_0 ( min_to_0 ( hour_to_0 (
+      day_to_1 ( month_to_1 ( next_year ( max_v ) ) )
+    ) ) )
 
-  } else if(return_interval == 'quarter') {
+  } else if (return_interval == 'quarter') {
 
     start_val <- sec_to_0 ( min_to_0 ( hour_to_0 ( day_to_1 ( this_quarter_month ( min_v ) ) ) ) )
 
     end_val <- sec_to_0 ( min_to_0 ( hour_to_0 ( day_to_1  ( next_quarter_month ( max_v ) ) ) ) )
 
-  } else if(return_interval == 'month') {
+  } else if (return_interval == 'month') {
 
     start_val <- sec_to_0 ( min_to_0 ( hour_to_0 ( day_to_1 ( min_v ) ) ) )
 
     end_val  <- sec_to_0 ( min_to_0 ( hour_to_0 ( day_to_1  ( next_month ( max_v ) ) ) ) )
 
-  } else if(return_interval == 'week') {
+  } else if (return_interval == 'week') {
 
     start_val <- sec_to_0 ( min_to_0 ( hour_to_0 ( this_week ( min_v ) ) ) )
 
     end_val <- sec_to_0 ( min_to_0 ( hour_to_0 ( next_week ( max_v ) ) ) )
 
-  } else if(return_interval == 'day') {
+  } else if (return_interval == 'day') {
 
     start_val <- sec_to_0 ( min_to_0 ( hour_to_0 ( min_v ) ) )
 
     end_val <- sec_to_0 ( min_to_0 ( hour_to_0 ( next_day ( max_v ) ) ) )
 
-  } else if(return_interval == 'hour') {
+  } else if (return_interval == 'hour') {
 
     start_val <- sec_to_0 ( min_to_0 ( min_v ) )
 
     end_val <- sec_to_0 ( min_to_0 ( next_hour ( max_v ) ) )
 
-  } else if(return_interval == 'min') {
+  } else if (return_interval == 'min') {
 
     start_val <-  sec_to_0 ( min_v )
 
     end_val <- sec_to_0 ( next_min ( max_v ) )
 
-  } else if(return_interval == 'sec') {
+  } else if (return_interval == 'sec') {
 
     end_val <- next_sec ( max_v )
   }
@@ -128,7 +130,7 @@ get_start_and_end <- function(dt_var,
   to_date <- all( c(start_val$hour, start_val$min, start_val$sec,
                     end_val$hour, end_val$min, end_val$sec) == 0 )
 
-  if(to_date) {
+  if (to_date) {
     start_val <- as.Date(strptime(start_val, format = '%Y-%m-%d'))
     end_val   <- as.Date(strptime(end_val, format = '%Y-%m-%d'))
   } else {

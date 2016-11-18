@@ -12,8 +12,8 @@ IntegerVector round_down_core(IntegerVector a, IntegerVector b){
   int next_b    = b[1];
   int current_b_index = 0;
 
-  for(int i = 0; i < n; ++i) {
-    if(next_b > a[i]) {
+  for (int i = 0; i < n; ++i) {
+    if (next_b > a[i]) {
       ret[i] = current_b;
     } else {
       while(next_b <= a[i]) {

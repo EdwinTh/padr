@@ -59,17 +59,17 @@ pad <- function(x,
                 end_val  = NULL,
                 by       = NULL){
 
-  if(!is.data.frame(x)) {
+  if (!is.data.frame(x)) {
     stop('x should be a data frame.')
   }
 
   arguments <- as.list(match.call())
-  if(!missing(by)) by_val <- as.character(arguments$by)
+  if (!missing(by)) by_val <- as.character(arguments$by)
 
   original_data_frame <- x
   x <- as.data.frame(x)
 
-  if('by' %in% names(arguments)){
+  if ('by' %in% names(arguments)){
     dt_var <- check_data_frame(x, by = by_val)
     dt_var_name <- by_val
   } else {
@@ -77,54 +77,54 @@ pad <- function(x,
     dt_var_name <- get_date_variables(x)
   }
 
-  if(!all(dt_var[1:(length(dt_var)-1)] <= dt_var[2:length(dt_var)])) {
+  if (!all(dt_var[1:(length(dt_var) - 1)] <= dt_var[2:length(dt_var)])) {
     dt_var <- sort(dt_var)
     warning('Datetime variable was unsorted, pad result is sorted.')
   }
 
   int_hierarchy <- 1:8
-  names(int_hierarchy) <- c('year','quarter', 'month', 'week', 'day', 'hour','min', 'sec')
+  names(int_hierarchy) <- c('year', 'quarter', 'month', 'week', 'day', 'hour', 'min', 'sec')
 
-  if(is.null(interval)) {
+  if (is.null(interval)) {
     interval <- get_interval(dt_var)
   } else {
 
     interval_dt_var <- get_interval(dt_var)
 
-    if(int_hierarchy[interval_dt_var] > int_hierarchy[interval]) {
+    if (int_hierarchy[interval_dt_var] > int_hierarchy[interval]) {
       stop('The interval of the datetime variable is higher than the interval given,
             if you wish to pad at this interval you should thicken and aggregate first.')
     }
   }
 
   # When start_val or end_val are of a different time zone, coerce to tz of dt_var
-  if('POSIXt' %in% class(start_val) & 'POSIXt' %in% class(dt_var)) {
+  if ('POSIXt' %in% class(start_val) & 'POSIXt' %in% class(dt_var)) {
     start_val <- enforce_time_zone(start_val, dt_var)
   }
 
-  if('POSIXt' %in% class(end_val) & 'POSIXt' %in% class(dt_var)) {
+  if ('POSIXt' %in% class(end_val) & 'POSIXt' %in% class(dt_var)) {
     start_val <- enforce_time_zone(end_val, dt_var)
   }
 
   # if we want to pad a lower level than the dt_interval, we need to make it
   # a posix first to do proper padding
-  if( 'Date' %in% class(dt_var) & int_hierarchy[interval] > 5) {
+  if ( 'Date' %in% class(dt_var) & int_hierarchy[interval] > 5) {
      dt_var <- as.POSIXct(as.character(dt_var))
   }
 
-  if(! is.null(start_val )) {
+  if (! is.null(start_val )) {
     dt_var <- to_posix(dt_var, start_val)$a
     start_val <- to_posix(dt_var, start_val)$b
   }
 
-  if(! is.null(end_val )) {
+  if (! is.null(end_val )) {
     dt_var <- to_posix(dt_var, end_val)$a
     end_val <- to_posix(dt_var, end_val)$b
   }
 
   # Because dt_var might be changed we need to adjust it in the df to join later
   pos <- which(colnames(original_data_frame) == dt_var_name)
-  original_data_frame[ ,pos] <- dt_var
+  original_data_frame[, pos] <- dt_var
 
   check_start_end(dt_var, start_val, end_val, interval)
 
@@ -145,15 +145,17 @@ pad <- function(x,
 # max(x), when spanning for thicken this is not sensible. Since spanning for
 # pad is simple, rather make a simple span_pad function than adjusting the
 # main span function for it.
-span_pad <- function(x,
-                     start_val = NULL,
-                     end_val   = NULL,
-                     interval  =  c('year','quarter', 'month','week', 'day','hour','min', 'sec')) {
+span_pad <- function(
+  x,
+  start_val = NULL,
+  end_val   = NULL,
+  interval  =  c('year', 'quarter', 'month', 'week', 'day', 'hour', 'min', 'sec')
+) {
 
   interval <- match.arg(interval)
 
-  if(is.null(start_val)) start_val <- min(x)
-  if(is.null(end_val))   end_val   <- max(x)
+  if (is.null(start_val)) start_val <- min(x)
+  if (is.null(end_val))   end_val   <- max(x)
 
   span <- seq(start_val, end_val, interval)
   return(span)
@@ -162,12 +164,12 @@ span_pad <- function(x,
 # Throw an error when start_val and / or end_val are not in sync with the interval
 check_start_end <- function(dt_var, start_val, end_val, interval){
   int_hierarchy <- 1:8
-  names(int_hierarchy) <- c('year','quarter', 'month', 'week', 'day', 'hour','min', 'sec')
+  names(int_hierarchy) <- c('year', 'quarter', 'month', 'week', 'day', 'hour', 'min', 'sec')
   all_elements <- list(start_val, dt_var, end_val)
   all_non_null <- all_elements[sapply(all_elements, function(x) !is.null(x))]
   all_non_null <- do.call('c', all_non_null)
   necesarry_interval <- get_interval(all_non_null)
-  if(int_hierarchy[necesarry_interval] > int_hierarchy[interval]) {
-    stop('start_val and/or end_val are invalid for the given combination of interval and the datetime variable')
+  if (int_hierarchy[necesarry_interval] > int_hierarchy[interval]) {
+    stop('start_val and/or end_val are invalid for the given combination of interval and the datetime variable') # nolint
   }
 }

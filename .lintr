@@ -1,0 +1,9 @@
+cache_directory: ".lintr_cache"
+linters: with_defaults(
+    single_quotes_linter = NULL, # 412 # always use single
+    line_length_linter(100),
+    NULL
+  )
+exclusions: list(
+    "R/RcppExports.R"
+  )
