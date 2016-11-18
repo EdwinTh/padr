@@ -1,9 +1,3 @@
-library(dplyr)
-library(ggplot2)
-library(lubridate)
-filter <- dplyr::filter
-
-
 
 #' Emergency Calls for Montgomery County, PA
 #'

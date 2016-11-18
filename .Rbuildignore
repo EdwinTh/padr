@@ -1,4 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^\.travis\.yml$
-^\.lintr
+\.lintr
+^scripts
+^readme_plot.png$
+^cran-comments\.md$
