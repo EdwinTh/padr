@@ -20,7 +20,8 @@ Suggests:
     knitr,
     rmarkdown,
     lazyeval,
-    tidyr
+    tidyr,
+    data.table
 RoxygenNote: 5.0.1
 LinkingTo: Rcpp
 VignetteBuilder: knitr
