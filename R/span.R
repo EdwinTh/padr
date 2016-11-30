@@ -11,7 +11,7 @@ span <- function(x,
                  start_val  = NULL) {
 
   if ( !( 'Date' %in% class(x) | 'POSIXt' %in% class(x) ) ){
-    break('x should be of class Date, POSIXlt, or POSIXct')
+    break ('x should be of class Date, POSIXlt, or POSIXct')
   }
 
   interval <- match.arg(interval)

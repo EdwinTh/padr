@@ -51,7 +51,7 @@ posix_to_date <- function(x) {
   if ('POSIXt' %in% class(x)) {
   check_var <- as.POSIXlt(x)
   to_date <- all( c(check_var$hour, check_var$min, check_var$sec ) == 0 )
-  if (to_date) x <- as.Date(x)
+  if (to_date) x <- as.Date(x, tz = attr(x, 'tzone'))
   }
   return(x)
 }
