@@ -170,6 +170,6 @@ check_start_end <- function(dt_var, start_val, end_val, interval){
   all_non_null <- do.call('c', all_non_null)
   necesarry_interval <- get_interval(all_non_null)
   if (int_hierarchy[necesarry_interval] > int_hierarchy[interval]) {
-    stop('start_val and/or end_val are invalid for the given combination of interval and the datetime variable') # nolint
+    stop ('start_val and/or end_val are invalid for the given combination of interval and the datetime variable') # nolint
   }
 }

@@ -72,7 +72,6 @@ thicken <- function(x,
   if (!missing(by)) by_val <- as.character(arguments$by) else by_val <- NULL
 
   # keep original data.frame so return will be of the correct class
-  original_data_frame <- x
   x <- as.data.frame(x)
 
   if ('by' %in% names(arguments)){
