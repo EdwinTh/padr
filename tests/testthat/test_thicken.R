@@ -38,6 +38,7 @@ df_with_two_dates <- data.frame(dt_var1  = date_seq('month'),
                                 y = 1:6)
 x_month <- data.frame(x = ymd(c(20160201, 20160301)))
 x_month_unordered  <- data.frame(x = ymd(c(20160301, 20160201)))
+sw <- suppressWarnings
 
 context("thicken function errors and warnings")
 
@@ -62,7 +63,6 @@ context("thicken integration tests")
 
 test_that("thicken gives correct interval", {
   x_df <- data.frame(x_sec = x_sec)
-  sw <- suppressWarnings
   expect_equal(sw(thicken(x_df, interval = 'year'))$x_sec_year %>% get_interval, 'year')
   expect_equal(sw(thicken(x_df, interval = 'month'))$x_sec_month %>% get_interval, 'month')
   expect_equal(sw(thicken(x_df, interval = 'day'))$x_sec_day %>% get_interval, 'day')
@@ -109,5 +109,3 @@ test_that('set_to_original_type returns tbl or data.table', {
   expect_equal(sw(data.table::as.data.table(df_with_one_date) %>% thicken %>% class),
                c("data.table", "data.frame"))
 })
-
-
