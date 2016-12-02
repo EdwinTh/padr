@@ -99,3 +99,15 @@ test_that('column naming works properly', {
   expect_equal(colnames(thicken(a_df))[3], 'a_week')
   expect_equal(colnames(thicken(a_df, colname = 'jos'))[3], 'jos')
 })
+
+
+context("test set_to_original_type")
+
+test_that('set_to_original_type returns tbl or data.table', {
+  expect_equal(sw(dplyr::as_data_frame(df_with_one_date) %>% thicken %>% class),
+               c("tbl_df", "tbl", "data.frame"))
+  expect_equal(sw(data.table::as.data.table(df_with_one_date) %>% thicken %>% class),
+               c("data.table", "data.frame"))
+})
+
+

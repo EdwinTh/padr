@@ -48,7 +48,7 @@ apply_rounding <- function(a, b,  direction = c('up', 'down')) {
   }
 }
 
-# If the thickened variabel is of class POSIXt this function checks if it as
+# If the thickened variable is of class POSIXt this function checks if it as
 # well can be of class Date
 posix_to_date <- function(x) {
   if ('POSIXt' %in% class(x)) {
