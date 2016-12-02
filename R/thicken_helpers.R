@@ -5,14 +5,17 @@ round_thicken <- function(a,
 
   direction <- match.arg(direction)
 
-  order_a <- order(a)
-  a <- sort(a)
-  b <- sort(b)
-
   a_same_level <- to_posix(a, b)$a
   b_same_level <- to_posix(a, b)$b
 
-  rounded <- apply_rounding(a_same_level, b_same_level, direction)
+  a_df <- data.frame(a_same_level = a_same_level,
+                     sorting_var = 1:length(a))
+  a_df <- a_df[order(a_df$a), ]
+  b_same_level <- sort(b_same_level)
+
+  a_df$rounded <- apply_rounding(a_df$a_same_level, b_same_level, direction)
+  a_df <- a_df[order(a_df$sorting_var), ]
+  rounded <- a_df$rounded
 
   if ('Date' %in% class(a_same_level)){
     thickened <- as.Date(rounded, origin = '1970-01-01')
@@ -22,7 +25,7 @@ round_thicken <- function(a,
   }
   thickened <- posix_to_date(thickened)
 
-  return(thickened[order_a])
+  return(thickened)
 }
 
 # If either of the two variables is of class posix, the other should be posix
