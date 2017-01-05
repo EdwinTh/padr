@@ -137,7 +137,8 @@ pad <- function(x,
   return_frame  <- merge(join_frame, original_data_frame, by = 'spanned',
                          all.x = TRUE)
   colnames(return_frame)[colnames(return_frame) == 'spanned'] <- dt_var_name
-  class(return_frame) <-  class(original_data_frame)
+
+  return_frame <- set_to_original_type(return_frame, original_data_frame)
   return(return_frame)
 }
 

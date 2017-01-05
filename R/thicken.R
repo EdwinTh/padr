@@ -118,13 +118,13 @@ thicken <- function(x,
   return_frame <- cbind(x, thickened)
   colnames(return_frame)[ncol(return_frame)] <- colname
 
-  return_frame <- set_to_originale_type(return_frame, original_data_frame)
+  return_frame <- set_to_original_type(return_frame, original_data_frame)
 
   return(return_frame)
 }
 
 # restore to data_frame of data.table if the input data was of this type
-set_to_originale_type <- function(x,
+set_to_original_type <- function(x,
                                   original) {
   if ('tbl_df' %in% class(original)) {
     x <- dplyr::as_data_frame(x)
