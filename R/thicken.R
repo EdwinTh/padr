@@ -126,9 +126,9 @@ thicken <- function(x,
 # restore to data_frame of data.table if the input data was of this type
 set_to_original_type <- function(x,
                                   original) {
-  if ('tbl_df' %in% class(original)) {
+  if (inherits(original, "tbl_df")) {
     x <- dplyr::as_data_frame(x)
-  } else if ('data.table' %in% class(original)) {
+  } else if (inherits(original, "data.table")) {
     x <- data.table::as.data.table(x)
   }
   return(x)
