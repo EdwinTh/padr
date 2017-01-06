@@ -4,7 +4,7 @@ Title: Quickly get Datetime Data ready for Analysis
 Version: 0.1.0
 Author: Edwin Thoen
 Maintainer: Edwin Thoen <edwinthoen@gmail.com>
-Description: The padr package helps transforming raw datetime data to a format ready for analysis. It offers two functionalities; aggregating data to a higher level interval (thicken) and filling records where observations were absent (pad). It also offers a few functions that assist with filling missing values after padding.
+Description: The padr package helps transforming datetime data into a format ready for analysis. It offers two functionalities; aggregating data to a higher level interval (thicken) and imputing records where observations were absent (pad). It also offers a few functions that assist with filling missing values after padding.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
