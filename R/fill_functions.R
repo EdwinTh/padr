@@ -1,4 +1,4 @@
-#' Fill missing values by a single value
+#' Fill missing values by a single value.
 #'
 #' Replace all missing values in the specified columns by the same value.
 #' @param x A data frame.
@@ -7,7 +7,6 @@
 #' @return \code{x} with the altered columns.
 #'
 #' @examples
-#' library(dplyr)
 #' x <- seq(as.Date('2016-01-01'), by = 'day', length.out = 366)
 #' x <- x[sample(1:366, 200)] %>% sort
 #' x_df <- data_frame(x  = x,
@@ -42,17 +41,16 @@ fill_by_value <- function(x,
   return(x)
 }
 
-#' Fill missing values by a function of the nonmissings
+#' Fill missing values by a function of the nonmissings.
 #'
 #' For each specified column in \code{x} replace the missing values by a
 #' function of the nonmissing values.
 #' @param x A data frame.
-#' @param fun The function to apply on the nonmissing values.
 #' @param ... The unquoted column names of the variables that should be filled.
 #' In addition optional parameters to \code{fun}.
+#' @param fun The function to apply on the nonmissing values.
 #' @return \code{x} with the altered columns.
 #' @examples
-#' library(dplyr)
 #' x <- seq(as.Date('2016-01-01'), by = 'day', length.out = 366)
 #' x <- x[sample(1:366, 200)] %>% sort
 #' x_df <- data_frame(x  = x,
@@ -96,15 +94,14 @@ fill_by_function <- function(x,
    return(x)
 }
 
-#' Fill missing values by a function of the nonmissings
+#' Fill missing values by the most prevalent nonnmissing value.
 #'
-#' For each specified column in \code{x} replace the missing values by a
-#' function of the nonmissing values.
+#' For each specified column in \code{x} replace the missing values by the most
+#' prevalent nonmissing value.
 #' @param x A data frame.
 #' @param ... The unquoted column names of the variables that should be filled.
 #' @return \code{x} with the altered columns.
 #' @examples
-#' library(dplyr)
 #' x <- seq(as.Date('2016-01-01'), by = 'day', length.out = 366)
 #' x <- x[sample(1:366, 200)] %>% sort
 #' x_df <- data_frame(x  = x,
