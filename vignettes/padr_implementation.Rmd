@@ -1,7 +1,7 @@
 ---
-title: "Time Zones and Daylight Savings Time in padr"
+title: "Implementation Information of padr"
 author: "Edwn Thoen"
-date: "2016-11-08"
+date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
@@ -9,7 +9,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-Regarding daylight savings time and different time zones some explicit choices had to be made. They are explained here, so the user knows what to expect when using the `padr` funcitons.
+Regarding daylight savings time and different time zones some explicit choices had to be made. They are explained here, so the user knows what to expect when using the `padr` funcitons. The last paragraph provides detailed information about the workings of `thicken`.
 
 ## Daylight savings time
 The `padr` package relies heavily on the base R functions `seq.Date` and `seq.POSIXt` to span the date and datetime variables for the `thicken` and `pad` functions. In the latter, choices had to be made about ignoring daylight savings time or not. Take the following example.
@@ -45,3 +45,22 @@ pad(to_pad, start_val = ymd_hms('20160201 145312', tz = 'EST'))
 
 This behavior was chosen over throwing an error or converting to the other time zone with adjusting the clock time, because it is assumed that the user did not use two time zones on purpose. Time zone differences are more likely due to different object sources, rather than being created intentional. For instance using `as.POSIXct` without specifying the time zone, will use the time zone from the System's locale. When creating a datetime variable with `lubridate` on the ohter hand, it will use *UTC* as the default time zone. 
 
+## Details working `thicken`
+
+`thicken` takes the interval of the input datetime variable and spans a variable of a higher interval around it. When `rounding` is "down" each value in the input variable will be mapped to the closest value in the spanned variable, that is lower or equal than itself. When `rounding` is "up" this is to the closest value that is larger than itself. Graphically this looks like:
+
+<img src="thicken_graph.png" height="400px" width="800px" />
+
+The blue dots are the values of the input datetime variable. The red dots are the timepoints that are spanned around the original time points. In this example the `rounding` is "down", so the original values are mapped to the closest value in spanned, that is earlier than the original.
+
+For all the seven intervals that could be spanned, by default the spanned variable will be as 'tightly' around the input variable as the interval allows. Meaning that the first value of the spanned variable is the latest possible timepoint that is still smaller than the smallest value of the input variable. The last value is the first possible timepoint that is larger than the the largest value of the input variable.
+
+This is the default spanning behavior of the seven intervals. The first five will be of class `Date`, the last two will be of class `POSIXct`.
+
+* **year** will start and end on January 1st
+* **quarter** will start and end on one of the following: January 1st, April 1st, July 1st, or October 1st.
+* **month** will start and end on the first day of a month.
+* **week** will start and end on a Sunday.
+* **day** will start and end on any given day.
+* **hour** will start and end on the full hour, with minute and second being zero.
+* **minute** will start and end on the full minute, with second being zero.
