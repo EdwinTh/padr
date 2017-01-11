@@ -32,4 +32,4 @@ coffee %>%
 ![](readme_plot.png)
 
 # More information
-See the the general [introduction Vignette](https://github.com/EdwinTh/padr/blob/master/vignettes/padr.Rmd) for more examples. The [implementation details Vignette](https://github.com/EdwinTh/padr/blob/master/vignettes/padr.Rmd) describes how `padr` handles different time zones and daylight savings time.
+See the the general [introduction Vignette](https://github.com/EdwinTh/padr/blob/master/vignettes/padr.Rmd) for more examples. The [implementation details Vignette](https://github.com/EdwinTh/padr/blob/master/vignettes/padr_implementation.Rmd) describes how `padr` handles different time zones and daylight savings time.
