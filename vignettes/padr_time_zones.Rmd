@@ -9,10 +9,10 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-Regarding daylight savings time and different time zones some exmplicit choices had to be made. They are explained here, so the user knows what to expect when using the `padr` funcitons.
+Regarding daylight savings time and different time zones some explicit choices had to be made. They are explained here, so the user knows what to expect when using the `padr` funcitons.
 
 ## Daylight savings time
-The `padr` package relies heavily on the base R functions `seq.Date` and `seq.POSIXt` to span the date and datetime variables for the `thicken` and `pad` functions. In the latter choices have to be made about ignoring day light savings time or not. Take the following example.
+The `padr` package relies heavily on the base R functions `seq.Date` and `seq.POSIXt` to span the date and datetime variables for the `thicken` and `pad` functions. In the latter, choices had to be made about ignoring daylight savings time or not. Take the following example.
 
 ```{r, message = FALSE, warning= FALSE, }
 library(lubridate)
@@ -27,7 +27,7 @@ As the help file of `seq.POSIXt` mentions: *"The difference between "day" and "D
 seq(start_val, by = 'week', length.out = 2)
 ```
 
-Spanning of variables of this interval is rather implemented as:
+Spanning of variables of this interval is therefore implemented as:
 
 ```{r}
 seq(start_val, by = '7 DSTdays', length.out = 2)
@@ -43,6 +43,5 @@ to_pad <- data.frame(dt = seq(ymd_hms('20160202 145312', tz = 'CET'),
 pad(to_pad, start_val = ymd_hms('20160201 145312', tz = 'EST'))
 ```
 
-This behavior was chosen over throwing an error or converting to the other time zone with adjusting the clock time, becaus it is assumed that the user did not use two time zones on purpose. Time zone differences are more likely due to different object sources, rather than being created intentional. For instance using `as.POSIXct` without specifying the time zone, it will use the time zone from the System's locale. When creating a datetime variable with `lubridate` on the ohter hand, it will use *UTC* as the default time zone. 
-
+This behavior was chosen over throwing an error or converting to the other time zone with adjusting the clock time, because it is assumed that the user did not use two time zones on purpose. Time zone differences are more likely due to different object sources, rather than being created intentional. For instance using `as.POSIXct` without specifying the time zone, will use the time zone from the System's locale. When creating a datetime variable with `lubridate` on the ohter hand, it will use *UTC* as the default time zone. 
 
