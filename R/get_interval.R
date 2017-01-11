@@ -1,14 +1,16 @@
-#' Get the interval of a datetime variable
+#' Get the interval of a datetime variable.
 #'
-#' The interval is the lowest highest time unit that can explain all instances of a
-#' variable of class \code{Date} or of class \code{POSIXct}. This function
-#' will determine what the interval of the variable is.
-#'
+#' The interval is the highest time unit that can explain all instances of a
+#' variable of class \code{Date}, class \code{POSIXct}, or class \code{POSIXct}.
+#' This function will determine what the interval of the variable is.
 #' @param x A variable of class of class \code{Date} or of class \code{POSIXt}.
 #' @return A character string indicating the interval of \code{x}.
 #' @examples
 #' x_month <- seq(as.Date('2016-01-01'), as.Date('2016-05-01'), by = 'month')
 #' get_interval(x_month)
+#'
+#' x_sec <- seq(as.POSIXct('2016-01-01 00:00:00'), length.out = 100, by = 'sec')
+#' get_interval(x_sec)
 #' @export
 get_interval <- function(x) {
 
