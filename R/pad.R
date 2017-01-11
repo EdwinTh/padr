@@ -1,29 +1,28 @@
-#' Pad the dateteime column of a data frame or a datetime vector
+#' Pad the datetime column of a data frame.
 #'
 #' Pad will fill the gaps in incomplete datetime variables, by figuring out
 #' what the interval of the data is and what instances are missing. For all
-#' other variables a missing value will be insterted.
+#' other variables a missing value will be insterted at the padded rows.
 #'
-#' @param x A data frame containing at least one variable of class \code{Date}
-#' or of class \code{POSIXt}.
+#' @param x A data frame containing at least one variable of class \code{Date},
+#' class \code{POSIXct} or class \code{POSIXlt}.
 #' @param interval The interval of the returned datetime variable. When NULL the
-#' the interval will be equal to the interval of the input data and will be obtained
-#' by applying \code{get_interval}. If specified it can only be lower than the
-#' interval of the input data.
-#' @param start_val An object of class \code{Date} or class \code{POSIXt} that
-#' specifies the start of returned datatime variable. If NULL it will use the
-#' lowest value of the input variable. See Details.
-#' @param end_val An object of class \code{Date} or class \code{POSIXt} that
-#' specifies the end of returned datatime variable. If NULL it will use the
-#' highest value of the input variable.
+#' the interval will be equal to the interval of the datetime variable. When
+#' specified it can only be lower than the interval of the input data. See Details.
+#' @param start_val An object of class \code{Date}, class \code{POSIXct} or
+#' class \code{POSIXlt} that specifies the start of the returned datetime variable.
+#' If NULL it will use the lowest value of the input variable.
+#' @param end_val An object of class \code{Date}, class \code{POSIXct} or
+#' class \code{POSIXlt} that specifies the end of returned datatime variable.
+#' If NULL it will use the highest value of the input variable.
 #' @param by Only needs to be specified when \code{x} contains multiple
-#' variables of class \code{Date} or of class \code{POSIXt}. \code{by}
-#' indicates which to use for padding.
+#' variables of An object of class \code{Date}, class \code{POSIXct} or
+#' class \code{POSIXlt}. \code{by} indicates which variable to use for padding.
 #' @details The interval of a datetime variable is the time unit at which the
-#' observations occur. \code{pad} allows for eight different time units which
-#' are from high to low \code{year}, \code{quarter}, \code{month}, \code{week},
-#' \code{day}, \code{hour}, \code{min}, \code{sec}. \code{pad} will figure out
-#' the interval of the input data and will fill the gaps for the instances that
+#' observations occur. The eight intervals in \code{padr} are from high to low
+#' \code{year}, \code{quarter}, \code{month}, \code{week}, \code{day},
+#' \code{hour}, \code{min}, \code{sec}. \code{pad} will figure out
+#' the interval of the input variable and will fill the gaps for the instances that
 #' would be expected from the interval but are missing from the input data. See
 #' the vignette for the default behavior of \code{pad}.
 #' @return \code{x} with the datetime variable padded. All other variables will
