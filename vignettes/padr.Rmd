@@ -9,12 +9,12 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-When getting time series data ready for analysis one is often confronted with the following two challenges:
+When getting time series data ready for analysis, one is often confronted with the following two challenges:
 
 * The observations are done on too low a level, we need to aggregate first.
-* When there are no observations, there are typically no records.
+* There are no records for the time points where obsevations were absent.
 
-`padr` aims to make light work of solving these two problems by offering the functions `thicken` and `pad`. A small example before we go into the details. Say I want to make a line plot of my daily expenses at the coffee place. The data for a few days might look like.
+`padr` aims to make light work of preparing time series data by offering the two main functions `thicken` and `pad`. A small example before we get into detail. Say I want to make a line plot of my daily expenses at the coffee place. The data for a few days might look like.
 
 ```{r, fig.width=7}
 coffee <- data.frame(time_stamp =  as.POSIXct(c('2016-07-07 09:11:21',
@@ -24,24 +24,25 @@ coffee <- data.frame(time_stamp =  as.POSIXct(c('2016-07-07 09:11:21',
                      amount =  c(3.14, 2.98, 4.11, 3.14))
 ```
 
-That is recorded on the second level, not on a daily level. Making the plot quickly with `padr` in combination with `dplyr`:
+With `padr` and `dplyr` this plot is made in the following way:
 
 ```{r, fig.width=7, message = FALSE}
 library(padr); library(ggplot2); library(dplyr)
 
-coffee %>% thicken('day') %>% 
+coffee %>% 
+  thicken('day') %>% 
   group_by(time_stamp_day) %>%
   summarise(day_amount = sum(amount)) %>% 
-  pad %>% 
+  pad() %>% 
   fill_by_value(day_amount) %>% 
   ggplot(aes(time_stamp_day, day_amount)) + geom_line()
 ```
 
-A lot going on here, let's go through the functions to see what they do.
+A lot going on here, let's go through the functions one by one to see what they do.
 
 ### thicken
 
-`thicken` adds a column to a data frame that is of a higher *interval* than that of the original datetime variable. The interval in the `padr` context is the heartbeat of the data, the recurrence of the observations.[^1] The original time_stamp had the interval "second", the added variable was of interval "day."
+`thicken` adds a column to a data frame that is of a higher *interval* than that of the original datetime variable. The interval in the `padr` context is the heartbeat of the data, the recurrence of the observations.[^1] The original variable "time_stamp" had the interval *second*, the added variable was of interval *day*.
 
 ```{r}
 coffee2 <- coffee %>% thicken('day')
@@ -49,15 +50,21 @@ coffee2$time_stamp %>% get_interval
 coffee2$time_stamp_day %>% get_interval
 ```
 
-`thicken` does figure out some stuff for you. First of all it finds the datetime variable, and sees what the interval of it is. By default it moves up one level in the hierarchy that has eight levels year, quarter, month, week, day, hour, minute, second.
+`thicken` does figure out some stuff for you. First it finds the datetime variable in your data frame (given there is only one). Next it will determine the interval of this variable, which is one of the following: year, quarter, month, week, day, hour, minute, second. Finally it adds a variable to the data frame that is of a higher interval than the original datetime variable. The user can then use this variable to aggregate to the higher level, for instance using `dplyr`. By default the interval of the added variable is one level higher than the interval of the original variable, but if you want it to be of a different level you specify the interval argument.
 
 ```{r}
-data.frame(day = as.Date(c('2016-08-12', '2016-08-29'))) %>% thicken
+data.frame(day_var = as.Date(c('2016-08-12', '2016-08-29'))) %>% thicken
 ```
 
-So in the above example the interval was day and `thicken` moves it up one level to week. We did not specify the beginning of the week, so thicken goes to its default behavior, that is weeks starting on Sundays. In many situation the user will be content with `thicken`'s defaults, however some flexibility is offered.
+So in the above example the interval of "day_var" was *day*. `thicken` than added a variable of one interval higher, which is *week*. We did not specify the beginning of the week, so thicken goes to its default behavior, that is weeks starting on Sundays. In many situation the user probably will be content with `thicken`'s defaults, however some flexibility is offered.
 
-We use the emergency data set for illustration. It contains 120,450 emergency calls in Montgomery County, PA, between 2015-12-10 and 2016-10-17. It has four columns that contain information about the location of the emergency, a title field indicating the type of the emergency, and a time stamp. The data set was created from a Google Api, thanks to Mike Chirico for maintaining this set. 
+We use the emergency data set for further illustration. It contains 120,450 emergency calls in Montgomery County, PA, between 2015-12-10 and 2016-10-17. It has four columns that contain information about the location of the emergency, a title field indicating the type of the emergency, and a time stamp. The data set was created from a Google Api, thanks to Mike Chirico for maintaining this set. 
+
+```{r}
+head(emergency)
+```
+
+Say we are interested in the number of overdoses that occured daily. However, we don't want incidents during the same night to be split into two days, what would have happened when we use the default behavior. Rather, we reset the count at 8 am, grouping all nightly cases on the same day. The interval is still *day*, but each new day starts at 8 am instead of midnight. The `start_val` serves as an offset. 
 
 ```{r}
 emergency %>% filter(title == 'EMS: OVERDOSE') %>% 
@@ -69,12 +76,12 @@ emergency %>% filter(title == 'EMS: OVERDOSE') %>%
   head
 ```
 
-Say we are interested in the number of overdoses that occured on a day. However since we know that many cases occur during the night we don't want to separate the days at midnight. Rather we reset the count at 8 am, grouping all nightly cases on the same day. The interval is day, but each new day commences at 8 am instead of midnight. The `start_val` serves as an offset. Note also that we specified the column name of the thickened colums. If we don't it takes the column name of the original datetime variable and append it with the interval of the thickened variable. 
+Note also that we specified the column name of the added column. If we don't, `thicken` takes the column name of the original datetime variable and appends it with the interval of the thickened variable, separated by an underscore. 
 
-Two points on intervals:
+Two final points on intervals before we are going to `pad`:
 
-* It is about the recurrence pattern, not the time unit. (A yearly observation can take place each year at June 23rd at 9.15 pm)
-* It doesn't requier an observation at each and every time point where the could be one. It is the highest recurrence level in the hierarchy that can explain all the observations.
+* It is about the recurrence pattern, not the time unit. (A yearly observation can take place each year at June 23rd at 9.15 pm).
+* It doesn't require an observation at each and every time point where there could be one. It is the highest recurrence level in the hierarchy that can explain all the observations.
 
 ### pad
 
@@ -86,28 +93,30 @@ account <- data.frame(day     = as.Date(c('2016-10-21', '2016-10-23', '2016-10-2
 account %>% pad
 ```
 
-The account dataframe has three observations on different days. `pad` found out that interval of the observations was "day", figured out that some observations were missing and inserted rows for these lacking days. All non-datetime columns get missing values at the padded rows. This is account balance data that only gets a new record with a new observation. We need to cary the last value forward for missing observations. It just needs `tidyr::fill` to arrive at a tidy data set.
+The account dataframe has three observations on different days. Like `thicken` the `pad` function figured out what the datetime variable in the data frame is, and then assessed its interval. Next it noticed that within the interval, *day* in this case, rows are lacking between the first and last observation. It inserts a row in the data frame for every time point that is lacking from the data set. All non-datetime values will get missing values at the padded rows. 
+
+It is up to the user what to do with the missing records. In the case of the balance of an account we want to carry the last observation forward. It needs `tidyr::fill` to arrive at the tidy data set.
 
 ```{r}
 account %>% pad %>% tidyr::fill(balance)
 ```
 
-Also `pad` allows for deviation of its default behavior. By default it pads all observations between the first and the last observation, but you can use `start_val` and `end_val` to deviate from this. You can also specify a lower interval than the one of the variable, using `pad` as the inverse of `thicken`.
+Also `pad` allows for deviations from its default behavior. By default it pads all observations between the first and the last observation, but you can use `start_val` and `end_val` to deviate from this. You can also specify a lower interval than the one of the variable, using `pad` as the inverse of `thicken`.
 
 ```{r}
 account %>% pad('hour', start_val = as.POSIXct('2016-10-20 22:00:00')) %>% head
 ```
 
 ### fill functions
-We already saw `tidyr::fill` coming in handy for the filling of missing values after padding. `padr` comes with three more fill functions: `fill_by_value`, `fill_by_function`, and `fill_by_prevalent`. They fill missing values by respectively a single value, a function of nonmissing values, and the most prevalent value among the nonmissing values.
+We already saw `tidyr::fill` coming in handy for the filling of missing values after padding. `padr` comes with three more fill functions: `fill_by_value`, `fill_by_function`, and `fill_by_prevalent`. They fill missing values by respectively a single value, a function of the nonmissing values, and the most prevalent value among the nonmissing values.
 
 ```{r}
 counts <- data.frame(x = as.Date(c('2016-11-21', '2016-11-23',  '2016-11-24')),
                      y = c(2, 4, 4))
 
-counts %>% pad %>% fill_by_value(y, value = 42)
-counts %>% pad %>% fill_by_function(y, fun = mean)
-counts %>% pad %>% fill_by_prevalent(y)
+counts %>% pad() %>% fill_by_value(y, value = 42)
+counts %>% pad() %>% fill_by_function(y, fun = mean)
+counts %>% pad() %>% fill_by_prevalent(y)
 ```
 
 
@@ -120,7 +129,7 @@ dehydration_day <- emergency %>%
   thicken(interval = 'day') %>% 
   group_by(time_stamp_day) %>% 
   summarise(nr = n()) %>% 
-  pad %>% 
+  pad() %>% 
   fill_by_value(nr)
 ggplot(dehydration_day, aes(time_stamp_day, nr)) +
   geom_point() +
@@ -128,7 +137,7 @@ ggplot(dehydration_day, aes(time_stamp_day, nr)) +
 ```
 
 ## Any suggestions?
-Found a bug? Ideas for improving or expandig `padr`. Your input is much appreciated. The code is maintained at https://github.com/EdwinTh/padr and you are most welcome to file and issue or do a pull request.
+Found a bug? Ideas for improving or expandig `padr`. Your input is much appreciated. The code is maintained at https://github.com/EdwinTh/padr and you are most welcome to file an issue or do a pull request.
 
 
 [^1]: Many users that work with date and time variables will be using the `lubridate` package. The definition of an interval in `lubridate` is different from the definition in `padr`. In `lubridate` an interval is a period between two time points and has nothing to do with recurrence. Please keep this in mind.
