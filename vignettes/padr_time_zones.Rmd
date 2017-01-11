@@ -21,7 +21,7 @@ seq(start_val, by = 'day', length.out = 4)
 seq(start_val, by = 'DSTdays', length.out = 4)
 ```
 
-As the help file of `seq.POSIXt` mensions: *"The difference between "day" and "DSTday" is that the former ignores changes to/from daylight savings time and the latter takes the same clock time each day."* The interval of a datetime variable in the `padr` context is determined by the lowest time unit that differs over the individual datetime observations. When the hour of the observation shifts as a result of daylight savings time this will cause the interval to change from 'day' to 'hour'. This implies that when we pad a variable that has interval 'day', the daylight savings time can't be ignored and we thus take the same clock time everyday. The only other interval that can be distorted by daylight savings time is 'week'.
+As the help file of `seq.POSIXt` mentions: *"The difference between "day" and "DSTday" is that the former ignores changes to/from daylight savings time and the latter takes the same clock time each day."* The interval of a datetime variable in the `padr` context is determined by the lowest time unit that differs over the individual datetime observations. When the hour of the observation shifts as a result of daylight savings time this will cause the interval to change from 'day' to 'hour'. This implies that when we pad a variable that has interval 'day', the daylight savings time can't be ignored and we thus take the same clock time everyday. The only other interval that can be distorted by daylight savings time is 'week'.
 
 ```{r}
 seq(start_val, by = 'week', length.out = 2)

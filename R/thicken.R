@@ -105,7 +105,7 @@ thicken <- function(x,
     warning('Datetime variable was unsorted, result will be unsorted as well.')
   }
 
-  if ('POSIXt' %in% class(start_val) & 'POSIXt' %in% class(dt_var)) {
+  if (inherits(start_val, 'POSIXt') & inherits(dt_var, 'POSIXt')) {
       start_val <- enforce_time_zone(start_val, dt_var)
   }
 

@@ -98,17 +98,17 @@ pad <- function(x,
   }
 
   # When start_val or end_val are of a different time zone, coerce to tz of dt_var
-  if ('POSIXt' %in% class(start_val) & 'POSIXt' %in% class(dt_var)) {
+  if (inherits(start_val, 'POSIXt') & inherits(dt_var, 'POSIXt')) {
     start_val <- enforce_time_zone(start_val, dt_var)
   }
 
-  if ('POSIXt' %in% class(end_val) & 'POSIXt' %in% class(dt_var)) {
+  if (inherits(end_val, 'POSIXt') & inherits(dt_var, 'POSIXt')) {
     start_val <- enforce_time_zone(end_val, dt_var)
   }
 
   # if we want to pad a lower level than the dt_interval, we need to make it
   # a posix first to do proper padding
-  if ( 'Date' %in% class(dt_var) & int_hierarchy[interval] > 5) {
+  if (inherits(dt_var, 'Date') & int_hierarchy[interval] > 5) {
      dt_var <- as.POSIXct(as.character(dt_var))
   }
 

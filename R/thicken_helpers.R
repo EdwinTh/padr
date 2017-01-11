@@ -17,7 +17,7 @@ round_thicken <- function(a,
   a_df <- a_df[order(a_df$sorting_var), ]
   rounded <- a_df$rounded
 
-  if ('Date' %in% class(a_same_level)){
+  if (inherits(a_same_level, 'Date')){
     thickened <- as.Date(rounded, origin = '1970-01-01')
   } else {
     thickened <- as.POSIXct(rounded, origin = '1970-01-01',
@@ -31,9 +31,9 @@ round_thicken <- function(a,
 # If either of the two variables is of class posix, the other should be posix
 # as well
 to_posix <- function(a, b) {
-  if ( 'POSIXt' %in% class(a) & 'Date' %in% class(b) ) {
+  if ( inherits(a, 'POSIXt') &  inherits(b, 'Date') ) {
     b <- as.POSIXct(strftime(b), tz = attr(a, 'tzone'))
-  } else if ( 'Date' %in% class(a) & 'POSIXt' %in% class(b) ) {
+  } else if ( inherits(a, 'Date') & inherits(b, 'POSIXt') ) {
     a <- as.POSIXct(as.character(a), tz = attr(b, 'tz'))
   }
   return(list(a = a, b = b))
@@ -51,7 +51,7 @@ apply_rounding <- function(a, b,  direction = c('up', 'down')) {
 # If the thickened variable is of class POSIXt this function checks if it as
 # well can be of class Date
 posix_to_date <- function(x) {
-  if ('POSIXt' %in% class(x)) {
+  if ( inherits(x, 'POSIXt')) {
   check_var <- as.POSIXlt(x)
   to_date <- all( c(check_var$hour, check_var$min, check_var$sec ) == 0 )
   if (to_date) x <- as.Date(x, tz = attr(x, 'tzone'))

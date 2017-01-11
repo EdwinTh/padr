@@ -12,7 +12,7 @@
 #' @export
 get_interval <- function(x) {
 
-  if ( !('Date' %in% class(x) | 'POSIXt' %in% class(x)) ) {
+  if ( !( inherits(x, 'Date') |  inherits(x, 'POSIXt')) ) {
     stop('x should be of class Date, POSIXct, or POSIXlt')
   }
 
