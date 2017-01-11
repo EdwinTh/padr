@@ -2,7 +2,7 @@
 % Please edit documentation in R/thicken.R
 \name{thicken}
 \alias{thicken}
-\title{Create a variable of a higher interval from a datetime variable}
+\title{Add a variable of a higher interval to a data frame.}
 \usage{
 thicken(x, interval = c("level_up", "year", "quarter", "month", "week", "day",
   "hour", "min"), colname = NULL, rounding = c("down", "up"), by = NULL,
@@ -10,14 +10,14 @@ thicken(x, interval = c("level_up", "year", "quarter", "month", "week", "day",
 }
 \arguments{
 \item{x}{A data frame containing at least one datetime variable of
-class \code{Date} or class \code{POSIXt}.}
+\code{Date}, class \code{POSIXct} or class \code{POSIXlt}.}
 
-\item{interval}{The interval of the returned datetime variable, should be higher
-than the interval of the input datetime variable. Default mode is one level
+\item{interval}{The interval of the added datetime variable, which should be higher
+than the interval of the input datetime variable. If \code{NULL} it will be one level
 higher than the interval of the input datetime variable.}
 
 \item{colname}{The column name of the added variable. If \code{NULL} it will
-be the name of the original datetime variable with the interval suffixed to
+be the name of the original datetime variable with the interval name added to
 it, separeted by an underscore.}
 
 \item{rounding}{Should a value in the input datetime variable be mapped to
@@ -25,21 +25,27 @@ the closest value that is lower (\code{down}) or that is higher (\code{up})
 than itself.}
 
 \item{by}{Only needs to be specified when \code{x} contains multiple
-variables of class \code{Date} or of class \code{POSIXt}. \code{by}
-indicates which to use for padding.}
+variables of class \code{Date}, class \code{POSIXct} or class \code{POSIXlt}.
+\code{by} indicates which to use.}
 
 \item{start_val}{By default the first instance of \code{interval} that is lower
 than the lowest value of the input datetime variable, with all time units on
 default value. Specify \code{start_val} as an offset if you want the range
-to be nonstandard.}
+to be nonstandard. See implementation vignette for the default values.}
 }
 \value{
-The data frame \code{x} with the thickened variable added to it.
+The data frame \code{x} with the variable added to it.
 }
 \description{
-If the interval of the data is too low and it needs to be aggregated to a higher
-interval thicken will create this variable of a higher interval. It will
-return \code{x} with the thickened variable added to it.
+\code{thicken} will take the datetime variable in a data frame and map this
+to a variable of a higher interval. The mapping is added to the data frame
+in a new variable. After applying \code{thicken} the user can aggregate the
+other variables in the data frame to the higher interval, for instance using
+\code{dplyr}.
+}
+\details{
+See the implementation vignette for more information about the
+workings of `thicken`.
 }
 \examples{
 x_hour <- seq(lubridate::ymd_hms('20160302 000000'), by = 'hour',

@@ -7,6 +7,7 @@
 #' @return \code{x} with the altered columns.
 #'
 #' @examples
+#' library(dplyr) # for the pipe operator
 #' x <- seq(as.Date('2016-01-01'), by = 'day', length.out = 366)
 #' x <- x[sample(1:366, 200)] %>% sort
 #' x_df <- data_frame(x  = x,
@@ -51,6 +52,7 @@ fill_by_value <- function(x,
 #' @param fun The function to apply on the nonmissing values.
 #' @return \code{x} with the altered columns.
 #' @examples
+#' library(dplyr) # for the pipe operator
 #' x <- seq(as.Date('2016-01-01'), by = 'day', length.out = 366)
 #' x <- x[sample(1:366, 200)] %>% sort
 #' x_df <- data_frame(x  = x,
@@ -102,6 +104,7 @@ fill_by_function <- function(x,
 #' @param ... The unquoted column names of the variables that should be filled.
 #' @return \code{x} with the altered columns.
 #' @examples
+#' library(dplyr) # for the pipe operator
 #' x <- seq(as.Date('2016-01-01'), by = 'day', length.out = 366)
 #' x <- x[sample(1:366, 200)] %>% sort
 #' x_df <- data_frame(x  = x,

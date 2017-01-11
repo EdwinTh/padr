@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_interval.R
 \name{get_interval}
 \alias{get_interval}
-\title{Get the interval of a datetime variable}
+\title{Get the interval of a datetime variable.}
 \usage{
 get_interval(x)
 }
@@ -13,12 +13,15 @@ get_interval(x)
 A character string indicating the interval of \code{x}.
 }
 \description{
-The interval is the lowest highest time unit that can explain all instances of a
-variable of class \code{Date} or of class \code{POSIXct}. This function
-will determine what the interval of the variable is.
+The interval is the highest time unit that can explain all instances of a
+variable of class \code{Date}, class \code{POSIXct}, or class \code{POSIXct}.
+This function will determine what the interval of the variable is.
 }
 \examples{
 x_month <- seq(as.Date('2016-01-01'), as.Date('2016-05-01'), by = 'month')
 get_interval(x_month)
+
+x_sec <- seq(as.POSIXct('2016-01-01 00:00:00'), length.out = 100, by = 'sec')
+get_interval(x_sec)
 }
 

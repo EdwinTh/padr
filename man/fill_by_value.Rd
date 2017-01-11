@@ -2,7 +2,7 @@
 % Please edit documentation in R/fill_functions.R
 \name{fill_by_value}
 \alias{fill_by_value}
-\title{Fill missing values by a single value}
+\title{Fill missing values by a single value.}
 \usage{
 fill_by_value(x, ..., value = 0)
 }
@@ -20,7 +20,7 @@ fill_by_value(x, ..., value = 0)
 Replace all missing values in the specified columns by the same value.
 }
 \examples{
-library(dplyr)
+library(dplyr) # for the pipe operator
 x <- seq(as.Date('2016-01-01'), by = 'day', length.out = 366)
 x <- x[sample(1:366, 200)] \%>\% sort
 x_df <- data_frame(x  = x,

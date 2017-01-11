@@ -1,5 +1,5 @@
 ---
-title: "Implementation Information of padr"
+title: "Implementation Information of `padr`"
 author: "Edwn Thoen"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette

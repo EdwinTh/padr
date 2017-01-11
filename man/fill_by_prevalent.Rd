@@ -2,7 +2,7 @@
 % Please edit documentation in R/fill_functions.R
 \name{fill_by_prevalent}
 \alias{fill_by_prevalent}
-\title{Fill missing values by a function of the nonmissings}
+\title{Fill missing values by the most prevalent nonnmissing value.}
 \usage{
 fill_by_prevalent(x, ...)
 }
@@ -15,11 +15,11 @@ fill_by_prevalent(x, ...)
 \code{x} with the altered columns.
 }
 \description{
-For each specified column in \code{x} replace the missing values by a
-function of the nonmissing values.
+For each specified column in \code{x} replace the missing values by the most
+prevalent nonmissing value.
 }
 \examples{
-library(dplyr)
+library(dplyr) # for the pipe operator
 x <- seq(as.Date('2016-01-01'), by = 'day', length.out = 366)
 x <- x[sample(1:366, 200)] \%>\% sort
 x_df <- data_frame(x  = x,

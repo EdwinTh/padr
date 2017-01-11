@@ -18,13 +18,15 @@
 #' the closest value that is lower (\code{down}) or that is higher (\code{up})
 #' than itself.
 #' @param by Only needs to be specified when \code{x} contains multiple
-#' variables of class \code{Date}, class \code{POSIXct} or class \code{POSIXlt}. \code{by}
-#' indicates which to use.
+#' variables of class \code{Date}, class \code{POSIXct} or class \code{POSIXlt}.
+#' \code{by} indicates which to use.
 #' @param start_val By default the first instance of \code{interval} that is lower
 #' than the lowest value of the input datetime variable, with all time units on
 #' default value. Specify \code{start_val} as an offset if you want the range
 #' to be nonstandard. See implementation vignette for the default values.
 #' @return The data frame \code{x} with the variable added to it.
+#' @details See the implementation vignette for more information about the
+#' workings of `thicken`.
 #' @examples
 #' x_hour <- seq(lubridate::ymd_hms('20160302 000000'), by = 'hour',
 #'               length.out = 200)

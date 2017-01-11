@@ -13,7 +13,7 @@
 #' class \code{POSIXlt} that specifies the start of the returned datetime variable.
 #' If NULL it will use the lowest value of the input variable.
 #' @param end_val An object of class \code{Date}, class \code{POSIXct} or
-#' class \code{POSIXlt} that specifies the end of returned datatime variable.
+#' class \code{POSIXlt} that specifies the end of returned datetime variable.
 #' If NULL it will use the highest value of the input variable.
 #' @param by Only needs to be specified when \code{x} contains multiple
 #' variables of An object of class \code{Date}, class \code{POSIXct} or
@@ -32,14 +32,15 @@
 #'                         some_value = c(3,4))
 #' pad(simple_df)
 #'
-#' library(dplyr)
+#' library(dplyr) # for the pipe operator
 #' month <- seq(as.Date('2016-04-01'), as.Date('2017-04-01'),
 #'               by = 'month')[c(1, 4, 5, 7, 9, 10, 13)]
 #' month_df <- data.frame(month = month,
 #'                        y = runif(length(month), 10, 20) %>% round)
 #' # forward fill the padded values with tidyr's fill
 #' month_df %>% pad %>% tidyr::fill(y)
-#' # or fill it all with 0
+#'
+#' # or fill all with 0
 #' month_df %>% pad %>% fill_by_value(y)
 #'
 #' # padding a data.frame on group level
