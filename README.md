@@ -5,6 +5,8 @@
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/padr)](https://cran.r-project.org/package=padr)
 [![](http://cranlogs.r-pkg.org/badges/padr)](https://cran.r-project.org/package=padr)
 
+`padr` is an R package that assists with preparing time series data. It provides two main functions that will quickly get the data in the format you want. When data is observed on too low a level, `thicken` will add a column of a higher interval to the data frame, after which the user can apply the appropriate aggregation. When there are missing records for time points where observations were absent, `pad` will automatically insert these records. A number of `fill_` functions help to subsequently fill the missing values.
+
 # Usage
 
 ```r
@@ -28,3 +30,6 @@ coffee %>%
     ggplot2::geom_line()
 ```
 ![](readme_plot.png)
+
+# More information
+See the the general [introduction Vignette](https://github.com/EdwinTh/padr/blob/master/vignettes/padr.Rmd) for more examples. The [implementation details Vignette](https://github.com/EdwinTh/padr/blob/master/vignettes/padr.Rmd) describes how `padr` handles different time zones and daylight savings time.
