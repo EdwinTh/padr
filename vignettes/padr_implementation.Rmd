@@ -9,10 +9,10 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-Regarding daylight savings time and different time zones some explicit choices had to be made. They are explained here, so the user knows what to expect when using the `padr` funcitons. The last paragraph provides detailed information about the workings of `thicken`.
+Regarding daylight savings time and different time zones, some explicit choices had to be made. They are explained here, so the user knows what to expect when using the `padr` functions. The last paragraph provides detailed information about the workings of `thicken`.
 
 ## Daylight savings time
-The `padr` package relies heavily on the base R functions `seq.Date` and `seq.POSIXt` to span the date and datetime variables for the `thicken` and `pad` functions. In the latter, choices had to be made about ignoring daylight savings time or not. Take the following example.
+The `padr` package relies heavily on the base R functions `seq.Date` and `seq.POSIXt` to span the date and datetime variables for `thicken` and `pad` In the latter, choices had to be made about ignoring daylight savings time or not. Take the following example.
 
 ```{r, message = FALSE, warning= FALSE, }
 library(lubridate)
@@ -21,7 +21,7 @@ seq(start_val, by = 'day', length.out = 4)
 seq(start_val, by = 'DSTdays', length.out = 4)
 ```
 
-As the help file of `seq.POSIXt` mentions: *"The difference between "day" and "DSTday" is that the former ignores changes to/from daylight savings time and the latter takes the same clock time each day."* The interval of a datetime variable in the `padr` context is determined by the lowest time unit that differs over the individual datetime observations. When the hour of the observation shifts as a result of daylight savings time this will cause the interval to change from 'day' to 'hour'. This implies that when we pad a variable that has interval 'day', the daylight savings time can't be ignored and we thus take the same clock time everyday. The only other interval that can be distorted by daylight savings time is 'week'.
+As the help file of `seq.POSIXt` mentions: 'The difference between "day" and "DSTday" is that the former ignores changes to/from daylight savings time and the latter takes the same clock time each day.' The interval of a datetime variable in the `padr` context is determined by the lowest time unit that differs over the individual datetime observations. When the hour of the observation shifts as a result of daylight savings time this will cause the interval to change from 'day' to 'hour'. This implies that when we pad a variable that has interval 'day', the daylight savings time can't be ignored and we thus take the same clock time everyday. The only other interval that can be distorted by daylight savings time is 'week'.
 
 ```{r}
 seq(start_val, by = 'week', length.out = 2)
@@ -34,7 +34,7 @@ seq(start_val, by = '7 DSTdays', length.out = 2)
 ```
 
 ## Different time zones
-The arguments `start_val` (in `pad` and `thicken`) and `end_val` (in `pad`) could have a different time zone than the input datetime variable. In this case the function will coerce the argument to be of same time zone as the input variable *while keeping the clock time equal*. Take the following example:
+The arguments `start_val` (in `pad` and `thicken`) and `end_val` (in `pad`) can have a different time zone than the input datetime variable. In this case the function will coerce the argument to be of same time zone as the input variable *while keeping the clock time equal*. It does so with throwing a warning. Take the following example:
 
 ```{r}
 library(padr)
