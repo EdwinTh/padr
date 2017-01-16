@@ -1,10 +1,10 @@
 ---
-title: "Quickly get time series data ready for analysis with padr"
+title: "Introduction to `padr`"
 author: "Edwn Thoen"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{Introduction to `padr`}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
