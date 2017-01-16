@@ -16,3 +16,14 @@
 #' }
 #' @source \url{https://storage.googleapis.com/montco-stats/tzr.csv}
 "emergency"
+
+
+#' Coffee Data Set
+#'
+#' Made-up data set for demonstrating \code{padr}.
+#' @format A data frame with 4 rows and 2 variables:
+#' \describe{
+#' \item{time_stamp}{YYYY-MM-DD HH:MM:SS}
+#' \item{amount}{Amount spent on coffee}
+#' }
+"coffee"

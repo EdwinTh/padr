@@ -17,17 +17,14 @@ When getting time series data ready for analysis, you might be confronted by the
 `padr` aims to make light work of preparing time series data by offering the two main functions `thicken` and `pad`. A small example before we get into detail. Say I want to make a line plot of my daily expenses at the coffee place. The data for a few days might look like.
 
 ```{r, fig.width=7}
-coffee <- data.frame(time_stamp =  as.POSIXct(c('2016-07-07 09:11:21',
-                                                '2016-07-07 09:46:48',
-                                                '2016-07-09 13:25:17', 
-                                                '2016-07-10 10:45:11')),
-                     amount =  c(3.14, 2.98, 4.11, 3.14))
+library(padr)
+coffee
 ```
 
 Using `padr` in combination with `dplyr` this plot is made in the following way:
 
 ```{r, fig.width=7, message = FALSE}
-library(padr); library(ggplot2); library(dplyr)
+library(ggplot2); library(dplyr)
 
 coffee %>% 
   thicken('day') %>% 
