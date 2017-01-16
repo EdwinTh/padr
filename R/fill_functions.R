@@ -48,7 +48,6 @@ fill_by_value <- function(x,
 #' function of the nonmissing values.
 #' @param x A data frame.
 #' @param ... The unquoted column names of the variables that should be filled.
-#' In addition optional parameters to \code{fun}.
 #' @param fun The function to apply on the nonmissing values.
 #' @return \code{x} with the altered columns.
 #' @examples

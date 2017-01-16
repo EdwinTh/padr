@@ -9,8 +9,7 @@ fill_by_function(x, ..., fun = mean)
 \arguments{
 \item{x}{A data frame.}
 
-\item{...}{The unquoted column names of the variables that should be filled.
-In addition optional parameters to \code{fun}.}
+\item{...}{The unquoted column names of the variables that should be filled.}
 
 \item{fun}{The function to apply on the nonmissing values.}
 }

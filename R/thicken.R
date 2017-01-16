@@ -7,7 +7,7 @@
 #' \code{dplyr}.
 #'
 #' @param x A data frame containing at least one datetime variable of
-#' \code{Date}, class \code{POSIXct} or class \code{POSIXlt}.
+#' class \code{Date}, class \code{POSIXct} or class \code{POSIXlt}.
 #' @param interval The interval of the added datetime variable, which should be higher
 #' than the interval of the input datetime variable. If \code{NULL} it will be one level
 #' higher than the interval of the input datetime variable.
@@ -23,10 +23,12 @@
 #' @param start_val By default the first instance of \code{interval} that is lower
 #' than the lowest value of the input datetime variable, with all time units on
 #' default value. Specify \code{start_val} as an offset if you want the range
-#' to be nonstandard. See implementation vignette for the default values.
+#' to be nonstandard.
 #' @return The data frame \code{x} with the variable added to it.
-#' @details See the implementation vignette for more information about the
-#' workings of `thicken`.
+#' @details See \code{vignette("padr")} for more information on \code{thicken}.
+#' See \code{vignette("padr_implementation")} for detailed information on
+#' daylight savings time, different timezones, and the implementation of
+#' \code{thicken}.
 #' @examples
 #' x_hour <- seq(lubridate::ymd_hms('20160302 000000'), by = 'hour',
 #'               length.out = 200)
@@ -46,8 +48,8 @@
 #' x_df %>% thicken('month') %>% group_by(x_month) %>%
 #'   summarise(y_max = max(y))
 #'
-#' # get the average per week, but you want your week to start at Mondays instead
-#' # of Sundays
+#' # get the average per week, but you want your week to start on Mondays
+#' # instead of Sundays
 #' min_x <- x_df$x %>% min
 #' weekdays(min_x)
 #' x_df %>% thicken(start_val = min_x - 1) %>%

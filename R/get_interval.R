@@ -5,6 +5,7 @@
 #' This function will determine what the interval of the variable is.
 #' @param x A variable of class of class \code{Date} or of class \code{POSIXt}.
 #' @return A character string indicating the interval of \code{x}.
+#' @details See \code{vignette("padr")} for more information on intervals.
 #' @examples
 #' x_month <- seq(as.Date('2016-01-01'), as.Date('2016-05-01'), by = 'month')
 #' get_interval(x_month)

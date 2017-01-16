@@ -17,6 +17,9 @@ The interval is the highest time unit that can explain all instances of a
 variable of class \code{Date}, class \code{POSIXct}, or class \code{POSIXct}.
 This function will determine what the interval of the variable is.
 }
+\details{
+See \code{vignette("padr")} for more information on intervals.
+}
 \examples{
 x_month <- seq(as.Date('2016-01-01'), as.Date('2016-05-01'), by = 'month')
 get_interval(x_month)

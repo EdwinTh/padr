@@ -1,8 +1,9 @@
 #' Pad the datetime column of a data frame.
 #'
-#' Pad will fill the gaps in incomplete datetime variables, by figuring out
-#' what the interval of the data is and what instances are missing. For all
-#' other variables a missing value will be insterted at the padded rows.
+#' \code{pad} will fill the gaps in incomplete datetime variables, by figuring out
+#' what the interval of the data is and what instances are missing. It will insert
+#' a record for each of the missing time points. For all
+#' other variables in the data frame a missing value will be insterted at the padded rows.
 #'
 #' @param x A data frame containing at least one variable of class \code{Date},
 #' class \code{POSIXct} or class \code{POSIXlt}.
@@ -16,17 +17,20 @@
 #' class \code{POSIXlt} that specifies the end of returned datetime variable.
 #' If NULL it will use the highest value of the input variable.
 #' @param by Only needs to be specified when \code{x} contains multiple
-#' variables of An object of class \code{Date}, class \code{POSIXct} or
+#' variables of class \code{Date}, class \code{POSIXct} or
 #' class \code{POSIXlt}. \code{by} indicates which variable to use for padding.
 #' @details The interval of a datetime variable is the time unit at which the
 #' observations occur. The eight intervals in \code{padr} are from high to low
 #' \code{year}, \code{quarter}, \code{month}, \code{week}, \code{day},
-#' \code{hour}, \code{min}, \code{sec}. \code{pad} will figure out
+#' \code{hour}, \code{min}, and \code{sec}. \code{pad} will figure out
 #' the interval of the input variable and will fill the gaps for the instances that
-#' would be expected from the interval but are missing from the input data. See
-#' the vignette for the default behavior of \code{pad}.
-#' @return \code{x} with the datetime variable padded. All other variables will
-#' have missing values at the rows that are padded.
+#' would be expected from the interval, but are missing in the input data.
+#' See \code{vignette("padr")} for more information on \code{pad}.
+#' See \code{vignette("padr_implementation")} for detailed information on
+#' daylight savings time, different timezones, and the implementation of
+#' \code{thicken}.
+#' @return The data frame \code{x} with the datetime variable padded. All other variables
+#' in the data frame will have missing values at the rows that are padded.
 #' @examples
 #' simple_df <- data.frame(day = as.Date(c('2016-04-01', '2016-04-03')),
 #'                         some_value = c(3,4))
@@ -40,7 +44,7 @@
 #' # forward fill the padded values with tidyr's fill
 #' month_df %>% pad %>% tidyr::fill(y)
 #'
-#' # or fill all with 0
+#' # or fill all y with 0
 #' month_df %>% pad %>% fill_by_value(y)
 #'
 #' # padding a data.frame on group level
