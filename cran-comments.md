@@ -1,3 +1,8 @@
+## Resubmission
+This is a resubmission, I altered the Description according to the following comment:
+
+Please omit the redundant "The padr package helps" and just start "Transforms ....".
+
 ## Test environments
 * local OS X install, R 3.3.2
 * ubuntu 12.04 (on travis-ci), R 3.3.2
