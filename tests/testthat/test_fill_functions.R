@@ -47,3 +47,18 @@ test_that("fill_by_prevalent gives expected outcomes", {
   expect_equal( fill_by_prevalent(x_df, y3, y4)$y3[2], 10)
   expect_error( fill_by_prevalent(x_df, y1))
 })
+
+test_that("get_the_inds works properly", {
+  x <- coffee %>% thicken('day') %>% group_by(time_stamp_day) %>%
+    summarise(a = sum(amount)) %>% pad
+  x$b <- NA
+  cols <- colnames(x)
+  make_funargs <- function(x, ...) return(as.list(match.call()))
+  no_cols <- make_funargs(x)
+  one_col <- make_funargs(x, a)
+  two_cols <- make_funargs(x, a, b)
+
+  expect_error(get_the_inds(cols, no_cols))
+  expect_equal(get_the_inds(cols, one_col), 2)
+  expect_equal(get_the_inds(cols, two_cols), 2:3)
+})
