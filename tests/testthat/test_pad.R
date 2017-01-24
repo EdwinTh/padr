@@ -47,6 +47,23 @@ test_that("check_start_end throws error", {
                                 NULL, "min" ), NA)
 })
 
+
+context("pad gives correct output with one datetime value")
+
+test_that('gives warning and same result when start_val and end_val are NULL', {
+  x <- data.frame(tm = ymd(20160102))
+  expect_warning(pad(x))
+  suppressWarnings(expect_equal(pad(x), x))
+})
+
+test_that('gives correct output when end_val and/or start_val are specified', {
+  expect_equal(pad(x, start_val = ymd(20160101))$tm, c(ymd(20160101), x$tm))
+  expect_equal(pad(x, end_val = ymd(20160104))$tm,
+               c(x$tm, ymd(20160103), ymd(20160104)))
+  expect_equal(pad(x, start_val = ymd(20160101), end_val = ymd(20160104))$tm,
+               seq(ymd(20160101), by = 'day', length.out = 4))
+})
+
 context("pad integration tests")
 test_that("Pad gives correct results", {
   expect_equal(pad(data.frame(x_year, 1)) %>% nrow, 4)

@@ -81,16 +81,38 @@ pad <- function(x,
     dt_var_name <- get_date_variables(x)
   }
 
-  if (!all(dt_var[1:(length(dt_var) - 1)] <= dt_var[2:length(dt_var)])) {
-    dt_var <- sort(dt_var)
-    warning('Datetime variable was unsorted, pad result is sorted.')
+  # if we have just one value we need a number of exceptions, so make a
+  # variable for clarity
+  just_one_val <- length(unique(dt_var)) == 1
+
+  if (just_one_val) {
+    if (is.null(start_val) && is.null(end_val)) {
+      warning('datetime variable contains one value only and start_val and end_val are not specified,\n  returning x without padding') #nolint
+      return(x)
+    }
+  } else {
+    if (!all(dt_var[1:(length(dt_var) - 1)] <= dt_var[2:length(dt_var)])) {
+      dt_var <- sort(dt_var)
+      warning('Datetime variable was unsorted, pad result is sorted.')
+    }
   }
 
   int_hierarchy <- 1:8
   names(int_hierarchy) <- c('year', 'quarter', 'month', 'week', 'day', 'hour', 'min', 'sec')
 
   if (is.null(interval)) {
-    interval <- get_interval(dt_var)
+
+    if (just_one_val) {
+
+      # we start with dt_var and then sort, because if start_val = NULL than the
+      # and we start with it, all_vals will be coerced to numeric
+      all_vals <- sort(c(dt_var, start_val, end_val))
+
+      interval <- get_interval( c(all_vals) )
+    } else {
+      interval <- get_interval(dt_var)
+    }
+
   } else {
 
     interval_dt_var <- get_interval(dt_var)
