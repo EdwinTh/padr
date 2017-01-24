@@ -40,7 +40,7 @@ test_that("fill_by_function gives expected outcomes", {
   expect_equal( fill_by_function(x_df, y1, y2, fun = median)$y1 %>% median, 15)
 })
 
-test_that("fillby_prevalent gives expected outcomes", {
+test_that("fill_by_prevalent gives expected outcomes", {
   expect_equal( fill_by_prevalent(x_df, y4)$y4[2], "a")
   expect_equal( fill_by_prevalent(x_df, y3)$y3[2], 10)
   expect_equal( fill_by_prevalent(x_df, y3, y4)$y4[2], "a")

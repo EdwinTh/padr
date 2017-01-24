@@ -26,7 +26,13 @@ fill_by_value <- function(x,
   if (!is.data.frame(x)) {
     stop('x should be a data frame')
   }
-  arguments <- as.list(match.call())[-1]
+
+  arguments <- as.list(match.call())[-c(1:2)]
+
+  if (length(arguments) == 0) {
+    stop("There are no variables specified to fill")
+  }
+
   if ('value' %in% names(arguments)) value <- arguments$value
   cols <- arguments[ names(arguments) == '' ]
   inds <- numeric(length(cols))
@@ -71,7 +77,12 @@ fill_by_function <- function(x,
     stop('x should be a data frame')
   }
 
-  arguments <- as.list(match.call())[-1]
+  arguments <- as.list(match.call())[-c(1:2)]
+
+  if (length(arguments) == 0) {
+    stop("There are no variables specified to fill")
+  }
+
   if ('value' %in% names(arguments)) value <- arguments$value
   cols <- arguments[ names(arguments) == '' ]
   inds <- numeric(length(cols))
@@ -118,7 +129,12 @@ fill_by_prevalent <- function(x,
     stop('x should be a data frame')
   }
 
-  arguments <- as.list(match.call())[-1]
+  arguments <- as.list(match.call())[-c(1:2)]
+
+  if (length(arguments) == 0) {
+    stop("There are no variables specified to fill")
+  }
+
   cols <- arguments[ names(arguments) == '' ]
 
   inds <- numeric(length(cols))
