@@ -57,6 +57,7 @@ test_that('gives warning and same result when start_val and end_val are NULL', {
 })
 
 test_that('gives correct output when end_val and/or start_val are specified', {
+  x <- data.frame(tm = ymd(20160102))
   expect_equal(pad(x, start_val = ymd(20160101))$tm, c(ymd(20160101), x$tm))
   expect_equal(pad(x, end_val = ymd(20160104))$tm,
                c(x$tm, ymd(20160103), ymd(20160104)))
