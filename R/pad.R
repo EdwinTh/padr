@@ -19,6 +19,8 @@
 #' @param by Only needs to be specified when \code{x} contains multiple
 #' variables of class \code{Date}, class \code{POSIXct} or
 #' class \code{POSIXlt}. \code{by} indicates which variable to use for padding.
+#' @param group Optional character vector that specifies the grouping
+#' variable(s). Padding will take place within the different group values.
 #' @details The interval of a datetime variable is the time unit at which the
 #' observations occur. The eight intervals in \code{padr} are from high to low
 #' \code{year}, \code{quarter}, \code{month}, \code{week}, \code{day},
@@ -58,22 +60,54 @@
 #' tidyr::fill(grp)
 #' @export
 pad <- function(x,
-                interval = NULL,
-                start_val= NULL,
-                end_val  = NULL,
-                by       = NULL){
+                interval  = NULL,
+                start_val = NULL,
+                end_val   = NULL,
+                by        = NULL,
+                group     = NULL){
+
+  if (is.null(group)) {
+    pad_single(x,
+               interval  = interval,
+               start_val = start_val,
+               end_val   = end_val,
+               by        = by,
+               group     = NULL)
+  } else {
+    pad_multiple(x,
+                 interval  = interval,
+                 start_val = start_val,
+                 end_val   = end_val,
+                 by        = by,
+                 group     = group)
+  }
+}
+
+# Function is almost equal to the previous function of pad, however it does
+# padding with grouping vars
+
+# Note that the group here is different from the main pad. In the main function
+# it is the character vector indicating which variable(s) to use for grouping.
+# Here it is a single instance of the grouping variables, in a data frame.
+# pad_single should be applied to each of the keys.
+pad_single  <- function(x,
+                        interval  = NULL,
+                        start_val = NULL,
+                        end_val   = NULL,
+                        by        = NULL,
+                        group     = NULL){
 
   if (!is.data.frame(x)) {
     stop('x should be a data frame.')
   }
 
   arguments <- as.list(match.call())
-  if (!missing(by)) by_val <- as.character(arguments$by)
+  if (!is.null(by)) by_val <- as.character(arguments$by)
 
   original_data_frame <- x
   x <- as.data.frame(x)
 
-  if ('by' %in% names(arguments)){
+  if (!is.null(by)){
     dt_var <- check_data_frame(x, by = by_val)
     dt_var_name <- by_val
   } else {
@@ -81,8 +115,8 @@ pad <- function(x,
     dt_var_name <- get_date_variables(x)
   }
 
-  # if we have just one value we need a number of exceptions, so make a
-  # variable for clarity
+  # if we have just one unique dt value we need a number of exceptions, so make
+  # a variable for clarity
   just_one_val <- length(unique(dt_var)) == 1
 
   if (just_one_val) {
@@ -157,6 +191,11 @@ pad <- function(x,
   spanned <- span_pad(dt_var, start_val, end_val, interval)
 
   join_frame <- data.frame(spanned = spanned)
+
+  if (!is.null(group)) {
+    stopifnot(is.data.frame(group))
+    join_frame <- cbind(join_frame, group)
+  }
 
   colnames(original_data_frame)[colnames(original_data_frame) ==
                                 dt_var_name] <- 'spanned'

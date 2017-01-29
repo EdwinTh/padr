@@ -38,18 +38,18 @@ pad_groups <- function(x,
                        start_val= NULL,
                        end_val  = NULL,
                        by       = NULL) {
-  if (!is.data.frame(x)) {
-    stop('x should be a data frame.')
-  }
+  if (!is.data.frame(x)) stop('x should be a data frame.')
 
   grouping_vars <- get_the_group_vars( as.list(match.call()) )
   return(grouping_vars)
 }
 
 
-# little helper get the variable which we use for grouping before padding
+# little helper get the variable (s) which we use for grouping before padding
 get_the_group_vars <- function(fun_args) {
   without_fun_name <- fun_args[-1]
-  as.character( fun_args[names(without_fun_name) == ""] )
+  as.character( without_fun_name[names(without_fun_name) == ""] )
 }
+
+
 
