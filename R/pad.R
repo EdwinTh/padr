@@ -226,7 +226,7 @@ pad_multiple <- function(x,
     stop('Not all grouping variables are column names of x.')
   }
 
-  groupings <- unique(x[, colnames(x) %in% group])
+  groupings <- unique(x[, colnames(x) %in% group, drop = FALSE])
   padded_groups <- vector("list", nrow(groupings))
 
   for (i in 1:nrow(groupings)){
