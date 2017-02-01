@@ -84,12 +84,12 @@ pad <- function(x,
 }
 
 # Function is almost equal to the previous function of pad, however it does
-# padding with grouping vars
+# padding with grouping vars. If group is NULL nothing changes to v 0.1.0.
 
 # Note that the group here is different from the main pad. In the main function
 # it is the character vector indicating which variable(s) to use for grouping.
 # Here it is a single instance of the grouping variables, in a data frame.
-# pad_single should be applied to each of the keys.
+# pad_single should be applied to each of the unique keys.
 pad_single  <- function(x,
                         interval  = NULL,
                         start_val = NULL,
@@ -192,19 +192,64 @@ pad_single  <- function(x,
 
   join_frame <- data.frame(spanned = spanned)
 
+  cols_to_join_on <- 'spanned'
+
+  # we simply add the keys before joining
   if (!is.null(group)) {
     stopifnot(is.data.frame(group))
     join_frame <- cbind(join_frame, group)
+    cols_to_join_on <- c(cols_to_join_on, colnames(group))
   }
 
   colnames(original_data_frame)[colnames(original_data_frame) ==
                                 dt_var_name] <- 'spanned'
-  return_frame  <- merge(join_frame, original_data_frame, by = 'spanned',
+
+
+  return_frame  <- merge(join_frame, original_data_frame, by = cols_to_join_on,
                          all.x = TRUE)
   colnames(return_frame)[colnames(return_frame) == 'spanned'] <- dt_var_name
 
   return_frame <- set_to_original_type(return_frame, original_data_frame)
   return(return_frame)
+}
+
+# This is the wrapper around pad_single, it will apply it on each of the
+# groups using dplyr.
+pad_multiple <- function(x,
+                         interval  = NULL,
+                         start_val = NULL,
+                         end_val   = NULL,
+                         by        = NULL,
+                         group     = group){
+  stopifnot(is.data.frame(x))
+  if (!all(group %in% colnames(x))) {
+    stop('Not all grouping variables are column names of x.')
+  }
+
+  groupings <- unique(x[, colnames(x) %in% group])
+  padded_groups <- vector("list", nrow(groupings))
+
+  for (i in 1:nrow(groupings)){
+
+    indic_mat <- matrix(0, nrow(x), ncol(groupings))
+    for (j in 1:ncol(groupings)){
+      indic_mat[, j] <-
+        unlist(x[, colnames(x) == group[j]]) == unlist(groupings[i, j])
+    }
+
+    x_iter <- x[rowSums(indic_mat) == ncol(groupings), ]
+
+    # because we span a data frame with the grouping vars included, we want to
+    # remove them from the data frame going into padr
+
+    padded_groups[[i]] <- pad_single(x_iter,
+                                     interval  = interval,
+                                     start_val = start_val,
+                                     end_val   = end_val,
+                                     by        = by,
+                                     group     = groupings[i, ])
+  }
+  do.call("rbind", padded_groups)
 }
 
 # when spanning for pad we want to allow for an end_val that is (far) after
