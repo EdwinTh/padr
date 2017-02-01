@@ -51,13 +51,15 @@
 #'
 #' # padding a data.frame on group level
 #' day_var <- seq(as.Date('2016-01-01'), length.out = 12, by = 'month')
-#' x_df_grp <- data.frame(grp  = rep(LETTERS[1:3], each =4),
+#' x_df_grp <- data.frame(grp1 = rep(LETTERS[1:3], each =4),
+#'                        grp2 = letters[1:2],
 #'                        y    = runif(12, 10, 20) %>% round(0),
 #'                        date = sample(day_var, 12, TRUE)) %>%
-#'  arrange(grp, date)
+#'  arrange(grp1, grp2, date)
 #'
-#' x_df_grp %>% group_by(grp) %>% do(pad(.)) %>% ungroup %>%
-#' tidyr::fill(grp)
+#'  # pad by one group
+#'  x_df_grp %>% pad(group = 'grp2')
+
 #' @export
 pad <- function(x,
                 interval  = NULL,
@@ -197,7 +199,8 @@ pad_single  <- function(x,
   # we simply add the keys before joining
   if (!is.null(group)) {
     stopifnot(is.data.frame(group))
-    join_frame <- cbind(join_frame, group)
+    # cbind gives a warning when row names are unequal with base df's
+    join_frame <- suppressWarnings( cbind(join_frame, group) )
     cols_to_join_on <- c(cols_to_join_on, colnames(group))
   }
 
@@ -247,7 +250,7 @@ pad_multiple <- function(x,
                                      start_val = start_val,
                                      end_val   = end_val,
                                      by        = by,
-                                     group     = groupings[i, ])
+                                     group     = groupings[i, , drop = FALSE]) #nolint
   }
   do.call("rbind", padded_groups)
 }

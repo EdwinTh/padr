@@ -4,7 +4,8 @@
 \alias{pad}
 \title{Pad the datetime column of a data frame.}
 \usage{
-pad(x, interval = NULL, start_val = NULL, end_val = NULL, by = NULL)
+pad(x, interval = NULL, start_val = NULL, end_val = NULL, by = NULL,
+  group = NULL)
 }
 \arguments{
 \item{x}{A data frame containing at least one variable of class \code{Date},
@@ -25,6 +26,9 @@ If NULL it will use the highest value of the input variable.}
 \item{by}{Only needs to be specified when \code{x} contains multiple
 variables of class \code{Date}, class \code{POSIXct} or
 class \code{POSIXlt}. \code{by} indicates which variable to use for padding.}
+
+\item{group}{Optional character vector that specifies the grouping
+variable(s). Padding will take place within the different group values.}
 }
 \value{
 The data frame \code{x} with the datetime variable padded. All other variables
@@ -66,12 +70,13 @@ month_df \%>\% pad \%>\% fill_by_value(y)
 
 # padding a data.frame on group level
 day_var <- seq(as.Date('2016-01-01'), length.out = 12, by = 'month')
-x_df_grp <- data.frame(grp  = rep(LETTERS[1:3], each =4),
+x_df_grp <- data.frame(grp1 = rep(LETTERS[1:3], each =4),
+                       grp2 = letters[1:2],
                        y    = runif(12, 10, 20) \%>\% round(0),
                        date = sample(day_var, 12, TRUE)) \%>\%
- arrange(grp, date)
+ arrange(grp1, grp2, date)
 
-x_df_grp \%>\% group_by(grp) \%>\% do(pad(.)) \%>\% ungroup \%>\%
-tidyr::fill(grp)
+ # pad by one group
+ x_df_grp \%>\% pad(group = 'grp2')
 }
 

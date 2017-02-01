@@ -65,6 +65,35 @@ test_that('gives correct output when end_val and/or start_val are specified', {
                seq(ymd(20160101), by = 'day', length.out = 4))
 })
 
+context("pad_single and pad_multiple, addtions to padr")
+
+test_that("pad_single gives correct output, with no groups", {
+  mnths <- seq(ymd(20160101), length.out = 5, by = 'month')
+  x <- data.frame(m = mnths[c(2, 4)])
+  expect_equal( pad_single(x)$m, mnths[2:4])
+  expect_equal( pad_single(x, start_val = mnths[1])$m, mnths[1:4])
+  expect_equal( pad_single(x, end_val = mnths[5])$m, mnths[2:5])
+})
+
+test_that("pad_multiple pads correctly with one group var", {
+  mnths <- seq(ymd(20160101), length.out = 5, by = 'month')
+  x <- data.frame(m = rep( mnths[c(2, 4)], 2), g = letters[c(1, 1, 2, 2)])
+  expect_equal( pad_multiple(x, group = 'g')$m, rep(mnths[2:4], 2) )
+  expect_equal( pad_multiple(x, group = 'g', start_val = mnths[1])$m, rep(mnths[1:4], 2) )
+  expect_equal( pad_multiple(x, group = 'g', end_val = mnths[5])$m, rep(mnths[2:5], 2) )
+})
+
+test_that("pad_multiple pads correctly with two group vars", {
+  mnths <- seq(ymd(20160101), length.out = 5, by = 'month')
+  x <- data.frame(m  = rep( mnths[c(2, 4)], 4),
+                  g1 = letters[rep(1:2, each = 4)],
+                  g2 = letters[rep(5:8, each = 2)])
+  expect_equal( pad_multiple(x, group = c('g1', 'g2'))$m, rep(mnths[2:4], 4) )
+  expect_equal( pad_multiple(x, group = c('g1', 'g2'), start_val = mnths[1])$m, rep(mnths[1:4], 4) )
+  expect_equal( pad_multiple(x, group = c('g1', 'g2'), end_val = mnths[5])$m, rep(mnths[2:5], 4) )
+})
+
+
 context("pad integration tests")
 test_that("Pad gives correct results", {
   expect_equal(pad(data.frame(x_year, 1)) %>% nrow, 4)
