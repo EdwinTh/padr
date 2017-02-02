@@ -157,8 +157,9 @@ pad_single  <- function(x,
     interval_dt_var <- get_interval(dt_var)
 
     if (int_hierarchy[interval_dt_var] > int_hierarchy[interval]) {
-      stop('The interval of the datetime variable is higher than the interval given,
-            if you wish to pad at this interval you should thicken and aggregate first.')
+      stop(
+'The interval of the datetime variable is lower than the interval given,
+if you wish to pad at this interval you should thicken and aggregate first.') #nolint
     }
   }
 
