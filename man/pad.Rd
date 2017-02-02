@@ -76,7 +76,10 @@ x_df_grp <- data.frame(grp1 = rep(LETTERS[1:3], each =4),
                        date = sample(day_var, 12, TRUE)) \%>\%
  arrange(grp1, grp2, date)
 
- # pad by one group
- x_df_grp \%>\% pad(group = 'grp2')
+# pad by one grouping var
+x_df_grp \%>\% pad(group = 'grp1')
+
+# pad by two groups vars
+x_df_grp \%>\% pad(group = c('grp1', 'grp2'))
 }
 

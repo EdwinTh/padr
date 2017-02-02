@@ -57,8 +57,11 @@
 #'                        date = sample(day_var, 12, TRUE)) %>%
 #'  arrange(grp1, grp2, date)
 #'
-#'  # pad by one group
-#'  x_df_grp %>% pad(group = 'grp2')
+#' # pad by one grouping var
+#' x_df_grp %>% pad(group = 'grp1')
+#'
+#' # pad by two groups vars
+#' x_df_grp %>% pad(group = c('grp1', 'grp2'))
 
 #' @export
 pad <- function(x,
@@ -279,10 +282,10 @@ span_pad <- function(
 check_start_end <- function(dt_var, start_val, end_val, interval){
   int_hierarchy <- 1:8
   names(int_hierarchy) <- c('year', 'quarter', 'month', 'week', 'day', 'hour', 'min', 'sec')
-  all_elements <- list(start_val, dt_var, end_val)
-  all_non_null <- all_elements[sapply(all_elements, function(x) !is.null(x))]
-  all_non_null <- do.call('c', all_non_null)
-  necesarry_interval <- get_interval(all_non_null)
+  all_elements <- rbind(data.frame(total_pad = start_val),
+                        data.frame(total_pad = dt_var),
+                        data.frame(total_pad = end_val))
+  necesarry_interval <- get_interval(all_elements$total_pad)
   if (int_hierarchy[necesarry_interval] > int_hierarchy[interval]) {
     stop ('start_val and/or end_val are invalid for the given combination of interval and the datetime variable') # nolint
   }

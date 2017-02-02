@@ -1,5 +1,5 @@
 
-# padr 0.1.9000
+# padr 0.2.0
 
 ## Bug fixes
 
@@ -7,6 +7,7 @@
 
 * Issue #9: when forgetting to specify at least one column, on which to apply the fill_ function, the fill_ function will now throw a meaningful error.
 
+* Issue #10: pad was broken with an error the interval was quarter, month, or year. This was done by check_start_end, even when neither a start_val nor an end_val was specified. It appeared that when concatenating POSIX vectors, as happened in the check_start_end function, the result is enforced to the timezone of the locale (including daylight savings time). This breaks the interval if the original vectors were not of this timezone. Workaround is implemented. 
 
 ##################################################
 
