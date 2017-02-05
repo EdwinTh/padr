@@ -6,10 +6,13 @@ check_data_frame <- function(x,
 
   if (!is.null(arguments$by)) {
 
-    if (length(arguments$by) > 1) stop(
-'by can indicate one variable only', call. = FALSE)
-    if (sum(colnames(x) == by) == 0) stop(
-'by name not found in the column names', call. = FALSE)
+    if (length(arguments$by) > 1){
+      stop('by can indicate one variable only', call. = FALSE)
+    }
+    if (sum(colnames(x) == by) == 0){
+      stop('by name not found in the column names', call. = FALSE)
+    }
+
     return( x[, colnames(x) == by] )
 
   } else {
