@@ -17,6 +17,6 @@ test_that("check_date_variables works correctly when by is specified", {
 
 test_that("check_date_variables works correctly when by is not specified", {
   expect_equal( check_data_frame( one_dt), ymd(c(20160401, 20160803)))
-  expect_error( check_data_frame( not_dt) )
+  expect_error( check_data_frame( no_dt) )
   expect_error( check_data_frame( two_dt) )
 })

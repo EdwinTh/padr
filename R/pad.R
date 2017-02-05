@@ -120,6 +120,15 @@ pad_single  <- function(x,
     dt_var_name <- get_date_variables(x)
   }
 
+  # When start_val or end_val are of a different time zone, coerce to tz of dt_var
+  if (inherits(start_val, 'POSIXt') & inherits(dt_var, 'POSIXt')) {
+    start_val <- enforce_time_zone(start_val, dt_var)
+  }
+
+  if (inherits(end_val, 'POSIXt') & inherits(dt_var, 'POSIXt')) {
+    start_val <- enforce_time_zone(end_val, dt_var)
+  }
+
   # if we have just one unique dt value we need a number of exceptions, so make
   # a variable for clarity
   just_one_val <- length(unique(dt_var)) == 1
@@ -146,30 +155,21 @@ pad_single  <- function(x,
       # we start with dt_var and then sort, because if start_val = NULL than the
       # and we start with it, all_vals will be coerced to numeric
       all_vals <- sort(c(dt_var, start_val, end_val))
-
       interval <- get_interval( c(all_vals) )
     } else {
+
       interval <- get_interval(dt_var)
     }
 
   } else {
-
-    interval_dt_var <- get_interval(dt_var)
+    all_vals <- sort(c(dt_var, start_val, end_val))
+    interval_dt_var <- get_interval(all_vals)
 
     if (int_hierarchy[interval_dt_var] > int_hierarchy[interval]) {
       stop(
 'The interval of the datetime variable is lower than the interval given,
 if you wish to pad at this interval you should thicken and aggregate first.') #nolint
     }
-  }
-
-  # When start_val or end_val are of a different time zone, coerce to tz of dt_var
-  if (inherits(start_val, 'POSIXt') & inherits(dt_var, 'POSIXt')) {
-    start_val <- enforce_time_zone(start_val, dt_var)
-  }
-
-  if (inherits(end_val, 'POSIXt') & inherits(dt_var, 'POSIXt')) {
-    start_val <- enforce_time_zone(end_val, dt_var)
   }
 
   # if we want to pad a lower level than the dt_interval, we need to make it
@@ -204,7 +204,8 @@ if you wish to pad at this interval you should thicken and aggregate first.') #n
   if (!is.null(group)) {
     stopifnot(is.data.frame(group))
     # cbind gives a warning when row names are unequal with base df's
-    join_frame <- suppressWarnings( cbind(join_frame, group) )
+    join_frame <- suppressWarnings( cbind(join_frame,
+                                          as.data.frame(group)) )
     cols_to_join_on <- c(cols_to_join_on, colnames(group))
   }
 

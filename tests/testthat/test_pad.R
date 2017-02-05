@@ -108,3 +108,6 @@ test_that("Pad gives correct results", {
   expect_equal(pad(data.frame(x_hour, 1), interval = "hour") %>% nrow, 25)
   expect_equal(suppressWarnings(pad(data.frame(x_min, 1))) %>% nrow, 60)
 })
+
+
+
