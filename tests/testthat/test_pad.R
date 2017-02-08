@@ -40,13 +40,6 @@ test_that("Pad works properly on data.table and tbl", {
   expect_equal(class(pad(dplyr::data_frame(x_year, 1)))[1], "tbl_df")
 })
 
-test_that("check_start_end throws error", {
-  expect_error( check_start_end(x_hour, as.POSIXct("2015-01-01 01:01:00"),
-                                NULL, "hour" ))
-  expect_error( check_start_end(x_hour, as.POSIXct("2015-01-01 01:01:00"),
-                                NULL, "min" ), NA)
-})
-
 
 context("pad gives correct output with one datetime value")
 

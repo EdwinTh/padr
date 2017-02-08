@@ -171,8 +171,6 @@ pad_single  <- function(x,
   pos <- which(colnames(original_data_frame) == dt_var_name)
   original_data_frame[, pos] <- dt_var
 
-  check_start_end(dt_var, start_val, end_val, interval)
-
   spanned <- span_pad(dt_var, start_val, end_val, interval)
 
   join_frame <- data.frame(spanned = spanned)
