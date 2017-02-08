@@ -104,6 +104,15 @@ Also `pad` allows for deviations from its default behavior. By default it pads a
 account %>% pad('hour', start_val = as.POSIXct('2016-10-20 22:00:00')) %>% head
 ```
 
+Padding within groups is supported since version 0.2.0, when the `group` parameter was added to `pad`. This parameter takes one or several column names, that indicate the groups. Take the following example of the `emergency` data.
+
+```{r, warning=FALSE}
+padded_groups <- emergency %>% thicken('day') %>%
+  count(time_stamp_day, title) %>% 
+  pad(group = 'title')
+```
+
+
 ### fill functions
 We already saw `tidyr::fill` coming in handy for the filling of missing values after padding. `padr` comes with three more fill functions: `fill_by_value`, `fill_by_function`, and `fill_by_prevalent`. They fill missing values by respectively a single value, a function of the nonmissing values, and the most prevalent value among the nonmissing values.
 
