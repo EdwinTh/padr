@@ -71,20 +71,17 @@ pad <- function(x,
                 by        = NULL,
                 group     = NULL){
 
+  pad_args <- as.list(match.call())[-1]
+
+  # if magrittr is used, the do.call will break, need a workaround
+  if (pad_args$x == '.') {
+    pad_args$x <- x
+  }
+
   if (is.null(group)) {
-    pad_single(x,
-               interval  = interval,
-               start_val = start_val,
-               end_val   = end_val,
-               by        = by,
-               group     = NULL)
+    do.call(pad_single, pad_args)
   } else {
-    pad_multiple(x,
-                 interval  = interval,
-                 start_val = start_val,
-                 end_val   = end_val,
-                 by        = by,
-                 group     = group)
+    do.call(pad_multiple, pad_args)
   }
 }
 
@@ -198,8 +195,8 @@ pad_single  <- function(x,
   return(return_frame)
 }
 
-# This is the wrapper around pad_single, it will apply it on each of the
-# groups using dplyr.
+# This is the wrapper around pad_single
+
 pad_multiple <- function(x,
                          interval  = NULL,
                          start_val = NULL,
@@ -213,7 +210,8 @@ pad_multiple <- function(x,
 
   groupings <- unique(x[, colnames(x) %in% group, drop = FALSE])
   padded_groups <- vector("list", nrow(groupings))
-
+  ### 1
+  pad_args <- as.list(match.call())[-1]
   for (i in 1:nrow(groupings)){
 
     indic_mat <- matrix(0, nrow(x), ncol(groupings))
@@ -225,16 +223,13 @@ pad_multiple <- function(x,
     x_iter <- x[rowSums(indic_mat) == ncol(groupings), ]
 
     # because we span a data frame with the grouping vars included, we want to
-    # remove them from the data frame going into padr
+    # remove them from the data frame going into pad
 
-    padded_groups[[i]] <- pad_single(x_iter,
-                                     interval  = interval,
-                                     start_val = start_val,
-                                     end_val   = end_val,
-                                     by        = by,
-                                     group     = groupings[i, , drop = FALSE]) #nolint
+    pad_args$x     <- x_iter
+    pad_args$group <- groupings[i, , drop = FALSE] #nolint
+    padded_groups[[i]] <- do.call(pad_single, pad_args)
   }
-  do.call("rbind", padded_groups)
+  return(do.call("rbind", padded_groups))
 }
 
 # when spanning for pad we want to allow for an end_val that is (far) after
