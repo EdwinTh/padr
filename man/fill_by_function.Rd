@@ -30,4 +30,3 @@ x_df <- data_frame(x  = x,
 x_df \%>\% pad \%>\% fill_by_function(y1, y2)
 x_df \%>\% pad \%>\% fill_by_function(y1, y2, fun = median)
 }
-

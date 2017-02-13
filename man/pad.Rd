@@ -82,4 +82,3 @@ x_df_grp \%>\% pad(group = 'grp1')
 # pad by two groups vars
 x_df_grp \%>\% pad(group = c('grp1', 'grp2'))
 }
-
