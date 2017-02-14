@@ -71,12 +71,14 @@ pad <- function(x,
                 by        = NULL,
                 group     = NULL){
 
-  pad_args <- as.list(match.call())[-1]
+  # this is preferred over as.list(match.call()) because of magrittr
+  pad_args <- list(x         = x,
+                   interval  = interval,
+                   start_val = start_val,
+                   end_val   = end_val,
+                   by        = by,
+                   group     = group)
 
-  # if magrittr is used, the do.call will break, need a workaround
-  if (pad_args$x == '.') {
-    pad_args$x <- x
-  }
 
   if (is.null(group)) {
     do.call(pad_single, pad_args)
@@ -210,8 +212,8 @@ pad_multiple <- function(x,
 
   groupings <- unique(x[, colnames(x) %in% group, drop = FALSE])
   padded_groups <- vector("list", nrow(groupings))
-  ### 1
-  pad_args <- as.list(match.call())[-1]
+
+
   for (i in 1:nrow(groupings)){
 
     indic_mat <- matrix(0, nrow(x), ncol(groupings))
@@ -225,8 +227,13 @@ pad_multiple <- function(x,
     # because we span a data frame with the grouping vars included, we want to
     # remove them from the data frame going into pad
 
-    pad_args$x     <- x_iter
-    pad_args$group <- groupings[i, , drop = FALSE] #nolint
+    pad_args <- list(x         = x_iter,
+                     interval  = interval,
+                     start_val = start_val,
+                     end_val   = end_val,
+                     by        = by,
+                     group     = groupings[i, , drop = FALSE]) # nolint
+
     padded_groups[[i]] <- do.call(pad_single, pad_args)
   }
   return(do.call("rbind", padded_groups))
