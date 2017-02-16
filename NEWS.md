@@ -1,3 +1,10 @@
+# padr 0.2.1
+
+## Bug fixes
+
+* Issue #11: in the pad function the by argument did not reach the lower function pad_single and pad_multiple. As a result pad broke when using this argument. This bug is fixed by using do.call in both pad and pad_multiple.
+
+##################################################
 
 # padr 0.2.0
 
