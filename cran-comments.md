@@ -1,5 +1,20 @@
 # padr v0.2.1
 
+Fixed the NOTE (as requested by Kurt Hornik):
+
+File 'padr/libs/i386/padr.dll':
+  Found no calls to: 'R_registerRoutines', 'R_useDynamicSymbols'
+File 'padr/libs/x64/padr.dll':
+  Found no calls to: 'R_registerRoutines', 'R_useDynamicSymbols'
+
+By appliying Kevin Ushey's functions to register the routines.
+
+https://github.com/kevinushey/sourcetools/blob/master/R/register.R
+
+No more NOTE on win-builder.
+
+########################################################################################
+
 ## Test environments
 * local OS X install, R 3.3.2
 * ubuntu 12.04 (on travis-ci), R 3.3.2
