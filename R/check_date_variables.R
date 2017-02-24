@@ -32,3 +32,19 @@ please specify which variable to use in the by argument.',
     return(x[, colnames(x) == dt_var_name])
   }
 }
+
+
+check_data_frame_int <- function(x, by) {
+  if (length(by) > 1){
+    stop('by can indicate one variable only', call. = FALSE)
+  }
+  if (sum(colnames(x) == by) == 0){
+    stop('by name not found in the column names', call. = FALSE)
+  }
+  int_var <- x[, colnames(x) == by]
+  if (any( (int_var %% 1) != 0 ) ) {
+    stop('the indicated variable is not an integer', call. = FALSE)
+  }
+
+  return(x[, colnames(x) == by])
+}
