@@ -1,3 +1,14 @@
+# padr 0.3.0
+
+## New features
+
+# pad_int
+
+The new function pad_int does padding of an integer field. Its working is very similar to the general pad. The by argument must alway be specified, since a data.frame would almost alway contain multiple numeric columns. Instead of the interval, one can specify the step size by which the integer increases. 
+
+
+##################################################
+
 # padr 0.2.1
 
 ## Bug fixes
