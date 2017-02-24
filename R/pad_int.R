@@ -130,5 +130,3 @@ set_to_original_type <- function(x,
   return(x)
 }
 
-tmp %>% pad_int('a')
-tmp2 %>% pad_int('a', group = 'g')
