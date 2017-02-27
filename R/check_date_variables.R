@@ -42,8 +42,17 @@ check_data_frame_int <- function(x, by) {
     stop('by name not found in the column names', call. = FALSE)
   }
   int_var <- x[, colnames(x) == by]
+
+  if ( inherits(int_var, "character") | inherits(int_var, "factor")){
+    stop("Indicated variable is character or factor, should be an integer")
+  }
+
+  if ( inherits(int_var, "Date") | inherits(int_var, "POSIXt")){
+    stop("Indicated variable is a datetime variable, use pad instead of pad_int")
+  }
+
   if (any( (int_var %% 1) != 0 ) ) {
-    stop('the indicated variable is not an integer', call. = FALSE)
+    stop('Indicated variable is not an integer', call. = FALSE)
   }
 
   return(x[, colnames(x) == by])
