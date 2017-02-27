@@ -31,7 +31,7 @@
 #'                       val = c(6, 6, 3, 5, 4, 3))
 #' pad_int(int_df3, 'x', group = 'g')
 #' pad_int(int_df3, 'x', group = 'g', start_val = 2005, end_val = 2009)
-
+#' @export
 pad_int <- function(x,
                     by,
                     start_val = NULL,
