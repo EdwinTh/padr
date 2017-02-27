@@ -31,8 +31,9 @@ class \code{POSIXlt}. \code{by} indicates which variable to use for padding.}
 variable(s). Padding will take place within the different group values.}
 }
 \value{
-The data frame \code{x} with the datetime variable padded. All other variables
-in the data frame will have missing values at the rows that are padded.
+The data frame \code{x} with the datetime variable padded. All
+non-grouping variables in the data frame will have missing values at the rows
+that are padded.
 }
 \description{
 \code{pad} will fill the gaps in incomplete datetime variables, by figuring out

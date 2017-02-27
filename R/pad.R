@@ -31,8 +31,9 @@
 #' See \code{vignette("padr_implementation")} for detailed information on
 #' daylight savings time, different timezones, and the implementation of
 #' \code{thicken}.
-#' @return The data frame \code{x} with the datetime variable padded. All other variables
-#' in the data frame will have missing values at the rows that are padded.
+#' @return The data frame \code{x} with the datetime variable padded. All
+#' non-grouping variables in the data frame will have missing values at the rows
+#' that are padded.
 #' @examples
 #' simple_df <- data.frame(day = as.Date(c('2016-04-01', '2016-04-03')),
 #'                         some_value = c(3,4))
