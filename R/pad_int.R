@@ -95,7 +95,7 @@ pad_single_int  <- function(x,
                          all.x = TRUE)
   colnames(return_frame)[colnames(return_frame) == 'spanned'] <- pad_var_name
 
-  # return_frame <- set_to_original_type(return_frame, original_data_frame)
+  return_frame <- set_to_original_type(return_frame, original_data_frame)
   return(return_frame)
 }
 
@@ -133,8 +133,8 @@ pad_multiple_int <- function(x,
                      by        = by,
                      start_val = start_val,
                      end_val   = end_val,
-                     group     = groupings[i, , drop = FALSE],
-                     step      = step) # nolint
+                     group     = groupings[i, , drop = FALSE], # nolint
+                     step      = step)
 
     padded_groups[[i]] <- do.call(pad_single_int, pad_args)
   }
@@ -145,8 +145,8 @@ span_pad_int <- function(pad_var, start_val, end_val, step) {
   if (is.null(start_val)) start_val <- min(pad_var)
   if (is.null(end_val)) end_val <- max(pad_var)
   pad_var_rel <- pad_var[pad_var >= start_val & pad_var <= end_val]
-  if ( any(  ((pad_var_rel- start_val) %% step) != 0 )  ) {
-    stop('step size unvalid for this variable, possibly due to the start_val or end_val') #nolint
+  if ( any( ( (pad_var_rel - start_val) %% step) != 0 ) ) {
+    stop('step size unvalid for this variable, possibly due to the start_val or end_val', call. = FALSE) #nolint
   }
   return( seq(start_val, end_val, by = step))
 }
@@ -161,4 +161,3 @@ set_to_original_type <- function(x,
   }
   return(x)
 }
-
