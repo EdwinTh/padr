@@ -1,4 +1,36 @@
-
+#' Pad the integer column of a data frame.
+#'
+#' \code{pad} will fill the gaps in incomplete integerer variables. It will insert
+#' a record for each of the missing value. For all
+#' other variables in the data frame a missing value will be insterted at the padded rows.
+#'
+#' @param x A data frame.
+#' @param by The column to be padded.
+#' @param start_val The first value of the returned variable. #' If NULL it will
+#' use the lowest value of the input variable.
+#' @param end_val The last value of the returned variable. If NULL it will use
+#' the highest value of the input variable.
+#' @param group Optional character vector that specifies the grouping
+#' variable(s). Padding will take place within the different group values.
+#' @param step The step size of the returned variable.
+#' @return The data frame \code{x} with the specified variable padded. All
+#' non-grouping variables in the data frame will have missing values at the rows
+#' that are padded.
+#' @examples
+#' int_df <- data.frame(x = c(2005, 2007, 2008, 2011),
+#'                      val = c(3, 2, 6, 3))
+#' pad_int(int_df, 'x')
+#' pad_int(int_df, 'x', start_val = 2006, end_val = 2013)
+#'
+#' int_df2 <- data.frame(x = c(2005, 2015), val = c(3, 4))
+#' pad_int(int_df2, 'x', step = 2)
+#' pad_int(int_df2, 'x', step = 5)
+#'
+#' int_df3 <- data.frame(x = c(2005, 2006, 2008, 2006, 2007, 2009),
+#'                       g = rep(LETTERS[1:2], each = 3),
+#'                       val = c(6, 6, 3, 5, 4, 3))
+#' pad_int(int_df3, 'x', group = 'g')
+#' pad_int(int_df3, 'x', group = 'g', start_val = 2005, end_val = 2009)
 
 pad_int <- function(x,
                     by,
