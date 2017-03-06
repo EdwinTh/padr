@@ -276,7 +276,7 @@ check_interval <- function(dt_var,
   if (!is.null(interval)) {
     if (int_hierarchy[necesarry_interval] > int_hierarchy[interval]) {
       stop (
-'The interval of the datetime variable  is higher than the desired interval,
+'The interval of the datetime variable is higher than the desired interval,
 possibly in combination with the start_val and / or end _val.
 Pad only works with intervals that are equal or lower.
 If you wish to pad at this interval you should thicken and aggregate first.')
