@@ -88,7 +88,7 @@ pad_single_custom  <- function(x,
   # a posix first to do proper padding
   # interval needs to be checked before padding, less straigtforward in custom setting
   needs_posix <- check_needs_posix(interval)
-  if (inherits(dt_var, 'Date') & int_hierarchy[interval] > 5) {
+  if (inherits(dt_var, 'Date') & needs_posix) {
     dt_var <- as.POSIXct(as.character(dt_var))
   }
 
@@ -96,8 +96,8 @@ pad_single_custom  <- function(x,
   pos <- which(colnames(original_data_frame) == dt_var_name)
   original_data_frame[, pos] <- dt_var
 
-  spanned <- span_pad_custom(dt_var, start_val, end_val, interval)
-  check_interval_custom(spanned)
+  spanned <- span_pad_custom(dt_var, interval, start_val, end_val)
+  check_interval_custom(dt_var, start_val, end_val, spanned)
 
   join_frame <- data.frame(spanned = spanned)
 
@@ -126,12 +126,12 @@ pad_single_custom  <- function(x,
 
 # This is the wrapper around pad_single
 
-pad_multiple <- function(x,
-                         interval  = NULL,
-                         start_val = NULL,
-                         end_val   = NULL,
-                         by        = NULL,
-                         group     = group){
+pad_multiple_custom <- function(x,
+                                interval  = NULL,
+                                start_val = NULL,
+                                end_val   = NULL,
+                                by        = NULL,
+                                group     = group){
   stopifnot(is.data.frame(x))
   if (!all(group %in% colnames(x))) {
     stop('Not all grouping variables are column names of x.')
@@ -161,7 +161,7 @@ pad_multiple <- function(x,
                      by        = by,
                      group     = groupings[i, , drop = FALSE]) # nolint
 
-    padded_groups[[i]] <- do.call(pad_single, pad_args)
+    padded_groups[[i]] <- do.call(pad_single_custom, pad_args)
   }
   return(do.call("rbind", padded_groups))
 }
@@ -193,8 +193,8 @@ check_interval_custom <- function(dt_var,
     dt_var_sort[dt_var_sort > start_val & dt_var_sort < end_val]
 
   all_elements <- rbind(data.frame(total_pad = start_val),
-                        data.frame(total_pad = dt_var),
-                        data.frame(total_pad = end_val))
+                        data.frame(total_pad = dt_var_between_start_and_end),
+                        data.frame(total_pad = end_val))$total_pad
 
   if (!(all(all_elements %in% spanned))) {
     stop(
@@ -204,4 +204,16 @@ possibly in combination with the start_val and / or end _val."
   }
 }
 
-
+# this function simply checks if we need a posix for the spanned variable and
+# possibly coerce the dt_var to posix if it is date right now.
+check_needs_posix <- function (interval) {
+  span_date_try <- try(
+    seq(as.Date("2016-01-01"), as.Date("2017-01-01"), by = interval),
+    silent = TRUE
+  )
+  if (inherits(span_date_try,  "try-error")) {
+    return(TRUE)
+  } else {
+    return(FALSE)
+  }
+}
