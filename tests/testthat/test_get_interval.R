@@ -95,3 +95,14 @@ test_that("is_day_week gives correct result", {
   expect_true( is_day_week(c("2016-01-01 12:51:16", "2016-01-08 12:51:16")))
   expect_false( is_day_week(c("2016-01-01 12:51:16", "2016-01-09 12:51:16")))
 })
+
+test_that("get_difs helper function", {
+  expect_equal(get_difs(c(1, 5, 6, 8)), c(4, 1, 2))
+})
+
+test_that("get_max_modulo_zero helper function", {
+  expect_equal(get_max_modulo_zero(seq(0, length.out = 10, by = 2)), 2)
+  expect_equal(get_max_modulo_zero(seq(0, length.out = 10, by = 3)), 3)
+  expect_equal(get_max_modulo_zero(seq(0, length.out = 10, by = 11)), 11)
+  expect_equal(get_max_modulo_zero(seq(0, length.out = 10, by = 51)), 51)
+}

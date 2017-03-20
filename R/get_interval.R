@@ -76,3 +76,29 @@ is_day_week <- function(x_char){
   x_posix <- as.POSIXlt(x_char, tz = 'UTC')
   all(as.numeric(x_posix) %in% as.numeric(all_weeks))
 }
+
+
+####################################################################################
+# after finding the "whole" time unit, see if we need a higher level within the unit
+
+nr_of_years <- function(x) {
+  years <- sort( as.numeric(substr(x, 1, 4)) )
+  int_to_add <- get_max_modulo_zero( get_difs(years) )
+  return(sprintf("%d years", int_to_add))
+}
+
+get_difs <- function(x) {
+  n <- length(x)
+  return(x[2:n] - x[1:(n-1)])
+}
+
+get_max_modulo_zero <- function(d, min_t = 2, max_t = 60) {
+  ints_to_check <- min_t:max_t
+  modulos <- sapply(ints_to_check, function(x, y) y %% x, d)
+  zero_modulos <- ints_to_check[colSums(modulos) == 0]
+  if (length(zero_modulos) == 0) {
+    return(NULL)
+  } else {
+    return(max(zero_modulos))
+  }
+}
