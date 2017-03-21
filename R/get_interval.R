@@ -35,7 +35,10 @@ get_interval <- function(x) {
     if (is_day_week(x_char)) differ <- 'week'
   }
 
-  return(differ)
+  # after assessing the differ, we check if we need only need 1 unit
+  step <- get_step(x, differ)
+
+  return(list(interval = differ, step = step))
 }
 
 # change a variable of class Date or POSIXt to a character of length 18
@@ -80,11 +83,44 @@ is_day_week <- function(x_char){
 
 ####################################################################################
 # after finding the "whole" time unit, see if we need a higher level within the unit
+get_step <- function(x, d) {
+  if (d == "year") return(step_of_year(x))
+  if (d == "quarter") return(step_of_quarter(x))
+  if (d == "month") return(step_of_month(x))
+  if (d == "week") return(step_with_difftime(x, "weeks"))
+  if (d == "day") return(step_with_difftime(x, "days"))
+  if (d == "hour") return(step_with_difftime(x), "hours")
+  if (d == "min") return(step_with_difftime(x, "mins"))
+  if (d == "sec") return(step_with_difftime(x, "secs"))
+}
 
-nr_of_years <- function(x) {
+step_of_year <- function(x) {
   years <- sort( as.numeric(substr(x, 1, 4)) )
-  int_to_add <- get_max_modulo_zero( get_difs(years) )
-  return(sprintf("%d years", int_to_add))
+  return( get_max_modulo_zero( get_difs(years) ) )
+}
+
+step_of_quarter <- function(x) {
+  months <- sort( convert_month_to_number(x) )
+  quarters <- months / 3
+  return( get_max_modulo_zero( get_difs(quarters) ) )
+}
+
+step_of_month <- function(x) {
+  months <- sort( convert_month_to_number(x) )
+  return( get_max_modulo_zero( get_difs(months) ) )
+}
+
+step_with_difftime <- function(x, units) {
+  time_dif <- as.numeric ( get_difftime(sort(x), units) )
+  return(get_max_modulo_zero( time_dif))
+}
+
+# count each month as a number from the first
+convert_month_to_number <- function(x) {
+  all_months_in_x <- seq(min(x), to = max(x), by = "month")
+  month_num_lookup <- 0:(length(all_months_in_x) - 1)
+  names(month_num_lookup) <- all_months_in_x
+  month_num_lookup[as.character(x)]
 }
 
 get_difs <- function(x) {
@@ -92,7 +128,7 @@ get_difs <- function(x) {
   return(x[2:n] - x[1:(n-1)])
 }
 
-get_max_modulo_zero <- function(d, min_t = 2, max_t = 60) {
+get_max_modulo_zero <- function(d, min_t = 1, max_t = 60) {
   ints_to_check <- min_t:max_t
   modulos <- sapply(ints_to_check, function(x, y) y %% x, d)
   zero_modulos <- ints_to_check[colSums(modulos) == 0]
@@ -102,3 +138,9 @@ get_max_modulo_zero <- function(d, min_t = 2, max_t = 60) {
     return(max(zero_modulos))
   }
 }
+
+get_difftime <- function(x, units) {
+  n <- length(x)
+  difftime(x[2:n], x[1:(n-1)], units = units)
+}
+
