@@ -56,14 +56,7 @@
 #'   group_by(x_week) %>% summarise(y_avg = mean(y))
 #' @export
 thicken <- function(x,
-                    interval = c('level_up',
-                                 'year',
-                                 'quarter',
-                                 'month',
-                                 'week',
-                                 'day',
-                                 'hour',
-                                 'min'),
+                    interval,
                     colname  = NULL,
                     rounding = c('down',
                                  'up'),
@@ -77,7 +70,6 @@ thicken <- function(x,
   arguments <- as.list(match.call())
   if (!missing(by)) by_val <- as.character(arguments$by) else by_val <- NULL
 
-  # TO DO give original data frame type back
   original_data_frame <- x
   x <- as.data.frame(x)
 
@@ -87,17 +79,12 @@ thicken <- function(x,
     dt_var <- check_data_frame(x)
   }
 
-  interval <- match.arg(interval)
+  check_valid_interval(interval)
   rounding <- match.arg(rounding)
 
-  int_hierarchy <- 1:8
-  names(int_hierarchy) <- c('year', 'quarter', 'month', 'week', 'day', 'hour', 'min', 'sec')
   dt_var_interval <- get_interval(dt_var)
 
-  if (interval == 'level_up'){
-    dt_var_interval_nr <- int_hierarchy[dt_var_interval]
-    interval <- names(int_hierarchy[dt_var_interval_nr - 1])
-  }
+
 
   if (int_hierarchy[dt_var_interval] < int_hierarchy[interval]) {
     stop('The interval in the datetime variable is lower than the interval given,
@@ -139,3 +126,14 @@ set_to_original_type <- function(x,
   }
   return(x)
 }
+
+check_valid_interval <- function(interval) {
+  start_val <- as.POSIXct("2017-01-01 00:00:00")
+  e <- tryCatch(
+    seq(start_val, length.out = 10, by = interval),
+    error = function(e){
+      stop("interval is not valid", call. = FALSE)
+    })
+}
+
+
