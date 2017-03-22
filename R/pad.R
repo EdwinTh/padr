@@ -156,14 +156,19 @@ pad_single  <- function(x,
       dt_var <- sort(dt_var)
       warning('Datetime variable was unsorted, pad result is sorted.')
     }
-
   }
 
-  interval <- check_interval(dt_var, start_val, end_val, interval)
+  if (!is.null(interval)) {
+    interval_converted <- convert_interval(interval)
+  } else {
+    interval_converted <- NULL
+  }
+
+  interval <- check_interval(dt_var, start_val, end_val, interval_converted)
 
   # if we want to pad a lower level than the dt_interval, we need to make it
   # a posix first to do proper padding
-  if (inherits(dt_var, 'Date') & int_hierarchy[interval] > 5) {
+  if (inherits(dt_var, 'Date') & interval$interval %in% c("hour", "min", "sec")) {
     dt_var <- as.POSIXct(as.character(dt_var))
   }
 
@@ -171,7 +176,7 @@ pad_single  <- function(x,
   pos <- which(colnames(original_data_frame) == dt_var_name)
   original_data_frame[, pos] <- dt_var
 
-  spanned <- span_pad(dt_var, start_val, end_val, interval)
+  spanned <- span_pad(dt_var, interval, start_val, end_val)
 
   join_frame <- data.frame(spanned = spanned)
 
@@ -214,7 +219,6 @@ pad_multiple <- function(x,
   groupings <- unique(x[, colnames(x) %in% group, drop = FALSE])
   padded_groups <- vector("list", nrow(groupings))
 
-
   for (i in 1:nrow(groupings)){
 
     indic_mat <- matrix(0, nrow(x), ncol(groupings))
@@ -244,19 +248,17 @@ pad_multiple <- function(x,
 # max(x), when spanning for thicken this is not sensible. Since spanning for
 # pad is simple, rather make a simple span_pad function than adjusting the
 # main span function for it.
-span_pad <- function(
-  x,
-  start_val = NULL,
-  end_val   = NULL,
-  interval  =  c('year', 'quarter', 'month', 'week', 'day', 'hour', 'min', 'sec')
-) {
-
-  interval <- match.arg(interval)
+span_pad <- function(x,
+                     interval,
+                     start_val = NULL,
+                     end_val   = NULL) {
 
   if (is.null(start_val)) start_val <- min(x)
   if (is.null(end_val))   end_val   <- max(x)
 
-  span <- seq(start_val, end_val, interval)
+  interval_str <- paste(interval$step, interval$interval)
+
+  span <- seq(start_val, end_val, interval_str)
   return(span)
 }
 
@@ -267,25 +269,27 @@ check_interval <- function(dt_var,
                            start_val,
                            end_val,
                            interval){
-  int_hierarchy <- get_int_hierarchy()
+
   all_elements <- rbind(data.frame(total_pad = start_val),
                         data.frame(total_pad = dt_var),
                         data.frame(total_pad = end_val))
   necesarry_interval <- get_interval(all_elements$total_pad)
 
+
   if (!is.null(interval)) {
-    if (int_hierarchy[necesarry_interval] > int_hierarchy[interval]) {
-      stop (
-'The interval of the datetime variable is higher than the desired interval,
+    interval_higher <- convert_int_to_hours(interval) >
+      convert_int_to_hours(necesarry_interval)
+
+    if (interval_higher) {
+      stop ('The interval of the datetime variable is higher than the desired interval,
 possibly in combination with the start_val and / or end _val.
 Pad only works with intervals that are equal or lower.
-If you wish to pad at this interval you should thicken and aggregate first.')
+If you wish to pad at this interval you should thicken and aggregate first.', call. = FALSE)
     }
     necesarry_interval <- interval
   }
   return(necesarry_interval)
 }
-
 
 
 # small helper to make an int_hierarchy
