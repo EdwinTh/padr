@@ -79,19 +79,22 @@ thicken <- function(x,
     dt_var <- check_data_frame(x)
   }
 
-  check_valid_interval(interval)
+  interval_converted <- convert_interval(interval)
   rounding <- match.arg(rounding)
 
   dt_var_interval <- get_interval(dt_var)
 
+  interval_higher <- convert_int_to_hours(interval_converted) >
+    convert_int_to_hours(dt_var_interval)
+  interval_equal <- convert_int_to_hours(interval_converted) ==
+    convert_int_to_hours(dt_var_interval)
 
-
-  if (int_hierarchy[dt_var_interval] < int_hierarchy[interval]) {
+  if (!interval_higher) {
     stop('The interval in the datetime variable is lower than the interval given,
-         you might be looking fo pad rather than for thicken.')
-  } else if (int_hierarchy[dt_var_interval] == int_hierarchy[interval]) {
+         you might be looking fo pad rather than for thicken.', call. = FALSE)
+  } else if (interval_equal) {
     stop('The interval in the datetime variable is equal to the interval given,
-         you might be looking for pad rather than for thicken.')
+         you might be looking for pad rather than for thicken.', call. = FALSE)
   }
 
   if (!all(dt_var[1:(length(dt_var) - 1)] <= dt_var[2:length(dt_var)])) {
@@ -102,7 +105,7 @@ thicken <- function(x,
       start_val <- enforce_time_zone(start_val, dt_var)
   }
 
-  spanned <- span(dt_var, interval, start_val)
+  spanned <- span(dt_var, interval_converted, start_val)
 
   thickened <- round_thicken(dt_var, spanned, rounding)
 
@@ -127,13 +130,21 @@ set_to_original_type <- function(x,
   return(x)
 }
 
-check_valid_interval <- function(interval) {
+convert_interval <- function(interval) {
   start_val <- as.POSIXct("2017-01-01 00:00:00")
-  e <- tryCatch(
+  x <- tryCatch(
     seq(start_val, length.out = 10, by = interval),
     error = function(e){
       stop("interval is not valid", call. = FALSE)
     })
+  get_interval(x)
 }
 
+convert_int_to_hours <- function(interval_obj) {
+  # we take # month = # year / 12
+  hours_in_unit <- c(8760, 2190, 730, 168, 24, 1, 1/60, 1/3600)
+  names(hours_in_unit) <- c("year", "quarter", "month", "week", "day",
+                            "hour", "min", "sec")
+  hours_in_unit[interval_obj$interval] * interval_obj$step
+}
 

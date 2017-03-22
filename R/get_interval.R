@@ -89,7 +89,7 @@ get_step <- function(x, d) {
   if (d == "month") return(step_of_month(x))
   if (d == "week") return(step_with_difftime(x, "weeks"))
   if (d == "day") return(step_with_difftime(x, "days"))
-  if (d == "hour") return(step_with_difftime(x), "hours")
+  if (d == "hour") return(step_with_difftime(x, "hours"))
   if (d == "min") return(step_with_difftime(x, "mins"))
   if (d == "sec") return(step_with_difftime(x, "secs"))
 }

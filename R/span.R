@@ -1,22 +1,13 @@
 
 span <- function(x,
-                 interval = c('year',
-                              'quarter',
-                              'month',
-                              'week',
-                              'day',
-                              'hour',
-                              'min',
-                              'sec'),
+                 interval,
                  start_val  = NULL) {
 
   if ( !( inherits(x, 'Date') |  inherits(x, 'POSIXt') ) ){
     break ('x should be of class Date, POSIXlt, or POSIXct')
   }
 
-  interval <- match.arg(interval)
-
-  start_and_end <- get_start_and_end(x, return_interval = interval)
+  start_and_end <- get_start_and_end(x, return_interval = interval$interval)
 
   if ( is.null(start_val) ) {
 
@@ -26,13 +17,14 @@ span <- function(x,
   } else if ( !is.null(start_val) ){
 
     end_val <- shift_end_from_start(start_and_end, start_val)
-    end_val <- assure_greater_than_max_x(max(x), end_val, interval)
+    end_val <- assure_greater_than_max_x(max(x), end_val, interval$interval)
 
   }
 
-  return_values <- seq(start_val, end_val, by = interval)
+  by_val <- paste(interval$step, interval$interval)
+  return_values <- seq(start_val, end_val, by = by_val)
 
-  return_values
+  return(return_values)
 }
 
 # to_val is the end_val as obtained from the get_start_and_end function
@@ -59,6 +51,8 @@ assure_greater_than_max_x <- function(max_x,
                                       interval) {
   if ( inherits(end_val, 'POSIXt') & inherits(max_x, 'Date') ) {
     max_x <- as.POSIXct( as.character(max_x), tz = attr(end_val, 'tzone'))
+  } else if ( inherits(max_x, 'POSIXt') & inherits(end_val, 'Date') ) {
+    max_x <- as.Date( substr(max_x, 1, 10) )
   }
 
   while (end_val <= max_x) {
