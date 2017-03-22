@@ -118,6 +118,8 @@ get_start_and_end <- function(dt_var,
 
   } else if (return_interval == 'sec') {
 
+    start_val <- min_v
+
     end_val <- next_sec ( max_v )
   }
 

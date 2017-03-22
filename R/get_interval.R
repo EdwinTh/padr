@@ -129,11 +129,14 @@ get_difs <- function(x) {
 }
 
 get_max_modulo_zero <- function(d, min_t = 1, max_t = 60) {
+  if (length(d) == 1) {
+    return(d)
+  }
   ints_to_check <- min_t:max_t
   modulos <- sapply(ints_to_check, function(x, y) y %% x, d)
   zero_modulos <- ints_to_check[colSums(modulos) == 0]
   if (length(zero_modulos) == 0) {
-    return(NULL)
+    return(1)
   } else {
     return(max(zero_modulos))
   }

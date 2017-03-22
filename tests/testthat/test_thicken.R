@@ -45,7 +45,7 @@ context("thicken function errors and warnings")
 test_that("thicken only accepts data frames", {
   expect_error(thicken(x_month %>% as.character))
   expect_error(thicken(x_month %>% as.numeric))
-  expect_error(suppressWarnings(thicken(df_with_one_date)), NA)
+  expect_error(suppressWarnings(thicken(df_with_one_date, interval = "quarter")), NA)
 })
 
 test_that("thicken throws error when asked interval is lower", {
@@ -55,24 +55,29 @@ test_that("thicken throws error when asked interval is lower", {
 })
 
 test_that("thicken gives warning when unordered", {
-  expect_warning( thicken(x_month_unordered ) )
-  expect_warning( thicken(x_month ), NA)
+  expect_warning( thicken(x_month_unordered, interval =  "quarter") )
+  expect_warning( thicken(x_month, interval =  "quarter"), NA)
 })
 
 context("thicken integration tests")
 
 test_that("thicken gives correct interval", {
   x_df <- data.frame(x_sec = x_sec)
-  expect_equal(sw(thicken(x_df, interval = "year"))$x_sec_year %>% get_interval, "year") #nolint
-  expect_equal(sw(thicken(x_df, interval = "month"))$x_sec_month %>% get_interval, "month") #nolint
-  expect_equal(sw(thicken(x_df, interval = "day"))$x_sec_day %>% get_interval, "day") #nolint
-  expect_equal(sw(thicken(x_df, interval = "hour"))$x_sec_hour %>% get_interval, "hour") #nolint
-  expect_equal(sw(thicken(x_df, interval = "min"))$x_sec_min %>% get_interval, "min") #nolint
+  expect_equal(sw(thicken(x_df, interval = "year"))$x_sec_year %>% get_interval,
+               generate_interval(1, "year"))
+  expect_equal(sw(thicken(x_df, interval = "month"))$x_sec_month %>% get_interval,
+               generate_interval(1, "month"))
+  expect_equal(sw(thicken(x_df, interval = "day"))$x_sec_day %>% get_interval,
+               generate_interval(1, "day"))
+  expect_equal(sw(thicken(x_df, interval = "hour"))$x_sec_hour %>% get_interval,
+               generate_interval(1, "hour"))
+  expect_equal(sw(thicken(x_df, interval = "min"))$x_sec_min %>% get_interval,
+               generate_interval(1, "min"))
 })
 
 test_that("thicken gives correct output when x is a vector", {
   day_sorted <- sort(x_day)
-  day_to_year <- thicken(day_sorted %>% as.data.frame, "x", interval = "year")$x
+  day_to_year <- thicken(day_sorted %>% as.data.frame, colname = "x", interval = "year")$x
   day_to_year2 <- thicken(day_sorted %>% as.data.frame, "x", interval = "year",
                           rounding = "up")$x
 
@@ -97,17 +102,17 @@ test_that("thicken gives correct ouput when x is a df", {
 test_that("column naming works properly", {
   a <- sort(x_day)
   a_df <- data.frame(a = a, b = 42)
-  expect_equal(colnames(thicken(a_df))[3], "a_week")
-  expect_equal(colnames(thicken(a_df, colname = "jos"))[3], "jos")
+  expect_equal(colnames(thicken(a_df, interval = "week"))[3], "a_week")
+  expect_equal(colnames(thicken(a_df, interval = "2 days", colname = "jos"))[3], "jos")
 })
 
 
 context("test set_to_original_type")
 
 test_that("set_to_original_type returns tbl or data.table", {
-  expect_equal(sw(dplyr::as_data_frame(df_with_one_date) %>% thicken %>% class),
+  expect_equal(sw(dplyr::as_data_frame(df_with_one_date) %>% thicken("2 mon") %>% class),
                c("tbl_df", "tbl", "data.frame"))
-  expect_equal(sw(data.table::as.data.table(df_with_one_date) %>% thicken %>%
+  expect_equal(sw(data.table::as.data.table(df_with_one_date) %>% thicken("2 mon") %>%
                     class),
                c("data.table", "data.frame"))
 })
