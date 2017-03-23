@@ -148,3 +148,6 @@ convert_int_to_hours <- function(interval_obj) {
   hours_in_unit[interval_obj$interval] * interval_obj$step
 }
 
+flatten_interval <- function(int) {
+  paste(int$step, int$interval)
+}
