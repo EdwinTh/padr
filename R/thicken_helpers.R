@@ -29,13 +29,29 @@ round_thicken <- function(a,
 }
 
 # If either of the two variables is of class posix, the other should be posix
-# as well
+# as well. Apparantly it is possible to have tzone that is NULL, therefore
+# we need the extra, not too elegant code.
 to_posix <- function(a, b) {
+
   if ( inherits(a, 'POSIXt') &  inherits(b, 'Date') ) {
-    b <- as.POSIXct(strftime(b), tz = attr(a, 'tzone'))
+
+    if (is.null(attr(a, 'tzone'))) {
+      b <- as.POSIXct(strftime(b))
+      attr(b, "tzone") <- NULL
+    } else {
+      b <- as.POSIXct(strftime(b), tz = attr(a, 'tzone'))
+    }
+
   } else if ( inherits(a, 'Date') & inherits(b, 'POSIXt') ) {
-    a <- as.POSIXct(as.character(a), tz = attr(b, 'tz'))
+
+    if (is.null(attr(b, 'tzone'))) {
+      a <- as.POSIXct(strftime(a))
+      attr(a, "tzone") <- NULL
+    } else {
+      a <- as.POSIXct(as.character(a), tz = attr(b, 'tz'))
+    }
   }
+
   return(list(a = a, b = b))
 }
 
