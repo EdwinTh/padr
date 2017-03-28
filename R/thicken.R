@@ -102,7 +102,7 @@ thicken <- function(x,
   }
 
   if (inherits(start_val, 'POSIXt') & inherits(dt_var, 'POSIXt')) {
-      start_val <- enforce_time_zone(start_val, dt_var)
+    start_val <- enforce_time_zone(start_val, dt_var)
   }
 
   spanned <- span(dt_var, interval_converted, start_val)
@@ -110,18 +110,18 @@ thicken <- function(x,
   thickened <- round_thicken(dt_var, spanned, rounding)
 
   x_name <- get_date_variables(x)
-  if (is.null(colname)) colname <- paste(x_name, interval, sep = '_')
+  colname <- get_colname(x, x_name, colname, interval_converted)
   return_frame <- cbind(x, thickened)
   colnames(return_frame)[ncol(return_frame)] <- colname
 
   return_frame <- set_to_original_type(return_frame, original_data_frame)
 
   return(return_frame)
-}
+  }
 
 # restore to data_frame of data.table if the input data was of this type
 set_to_original_type <- function(x,
-                                  original) {
+                                 original) {
   if (inherits(original, "tbl_df")) {
     x <- dplyr::as_data_frame(x)
   } else if (inherits(original, "data.table")) {
@@ -130,6 +130,8 @@ set_to_original_type <- function(x,
   return(x)
 }
 
+# take the character form of the interval and put it into list form
+# using get_interval, check if valid right away
 convert_interval <- function(interval) {
   start_val <- as.POSIXct("2017-01-01 00:00:00")
   x <- tryCatch(
@@ -140,6 +142,7 @@ convert_interval <- function(interval) {
   get_interval(x)
 }
 
+# in order to compare different intervals we need to set them to the same unit
 convert_int_to_hours <- function(interval_obj) {
   # we take # month = # year / 12
   hours_in_unit <- c(8760, 2190, 730, 168, 24, 1, 1/60, 1/3600)
@@ -148,6 +151,19 @@ convert_int_to_hours <- function(interval_obj) {
   hours_in_unit[interval_obj$interval] * interval_obj$step
 }
 
+# convenience function to go from a list form to a character
 flatten_interval <- function(int) {
   paste(int$step, int$interval)
+}
+
+get_colname <- function(x, x_name, colname, interval_converted) {
+  if (is.null(colname)) {
+    if(interval_converted$step == 1) {
+      colname <- paste(x_name, interval_converted$interval, sep = "_")
+    } else {
+      colname <- paste(x_name, interval_converted$step,
+                       interval_converted$interval, sep = "_")
+    }
+  }
+  return(colname)
 }

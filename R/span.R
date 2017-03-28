@@ -74,7 +74,7 @@ get_start_and_end <- function(dt_var,
   start_val <- eval(parse(text = start_val_func))
   span <- seq(start_val, max_v, by = interval)
   end_min_1 <- span[length(span)]
-  end_val <- seq(end_min_1, length.out = 2, by = interval)[2]
+  end_val <- as.POSIXlt(seq(end_min_1, length.out = 2, by = interval)[2])
 
   to_date <- all( c(start_val$hour, start_val$min, start_val$sec,
                     end_val$hour, end_val$min, end_val$sec) == 0 )
@@ -122,3 +122,80 @@ start_val_sec <- function(min_v) {
   sec_to_0 ( min_v )
 }
 
+
+# this set of functions take a POSIXlt and alter time units as named
+next_year <- function(x) {
+  x$year <- x$year + 1
+  return(x)
+}
+
+next_month <- function(x) {
+  x$mon <- x$mon + 1
+  return(x)
+}
+
+next_day <- function(x) {
+  x$mday <- x$mday + 1
+  return(x)
+}
+
+next_hour <- function(x) {
+  x$hour <- x$hour + 1
+  return(x)
+}
+
+next_min <- function(x) {
+  x$min <- x$min + 1
+  return(x)
+}
+
+next_sec <- function(x) {
+  x$sec <- x$sec + 1
+  return(x)
+}
+
+month_to_1 <- function(x) {
+  # note month ranges from 0 to 11
+  x$mon <- 0
+  return(x)
+}
+
+day_to_1 <- function(x) {
+  x$mday <- 1
+  return(x)
+}
+
+hour_to_0 <- function(x) {
+  x$hour <- 0
+  return(x)
+}
+
+min_to_0 <- function(x) {
+  x$min <- 0
+  return(x)
+}
+
+sec_to_0 <- function(x) {
+  x$sec <- 0
+  return(x)
+}
+
+this_quarter_month <- function(x) {
+  x$mon <- floor(x$mon / 3) * 3
+  return(x)
+}
+
+next_quarter_month <- function(x) {
+  x$mon <- floor( x$mon   / 3) * 3 + 3
+  return(x)
+}
+
+this_week <- function(x) {
+  x$mday <- x$mday - x$wday
+  return(x)
+}
+
+next_week <- function(x) {
+  x$mday   <- x$mday   + (7 - x$wday)
+  return(x)
+}
