@@ -106,8 +106,6 @@ pad_single  <- function(x,
     stop('x should be a data frame.')
   }
 
-  int_hierarchy <- get_int_hierarchy()
-
   arguments <- as.list(match.call())
   if (!is.null(by)) by_val <- as.character(arguments$by)
 
@@ -128,7 +126,7 @@ pad_single  <- function(x,
   }
 
   if (inherits(end_val, 'POSIXt') & inherits(dt_var, 'POSIXt')) {
-    start_val <- enforce_time_zone(end_val, dt_var)
+    end_val <- enforce_time_zone(end_val, dt_var)
   }
 
   if (! is.null(start_val )) {
@@ -192,7 +190,7 @@ pad_single  <- function(x,
   }
 
   colnames(original_data_frame)[colnames(original_data_frame) ==
-                                dt_var_name] <- 'spanned'
+                                  dt_var_name] <- 'spanned'
 
 
   return_frame  <- merge(join_frame, original_data_frame, by = cols_to_join_on,
@@ -282,14 +280,14 @@ check_interval <- function(dt_var,
 
     if (interval_higher) {
       stop ('The interval of the datetime variable is higher than the desired interval,
-possibly in combination with the start_val and / or end _val.
-Pad only works with intervals that are equal or lower.
-If you wish to pad at this interval you should thicken and aggregate first.', call. = FALSE)
+            possibly in combination with the start_val and / or end _val.
+            Pad only works with intervals that are equal or lower.
+            If you wish to pad at this interval you should thicken and aggregate first.', call. = FALSE)
     }
     necesarry_interval <- interval
-  }
+    }
   return(necesarry_interval)
-}
+  }
 
 
 # small helper to make an int_hierarchy

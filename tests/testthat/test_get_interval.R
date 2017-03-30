@@ -107,8 +107,10 @@ test_that("get_max_modulo_zero helper function", {
 })
 
 test_that("convert_month_to_number gives correct output", {
-  mnths <- seq(ymd(20000101), length.out = 100, by = "month")
-  expect_equal()
+  mnths <- seq(ymd(20000101), length.out = 100, by = "month") %>%
+    convert_month_to_number
+  names(mnths) <- NULL
+  expect_equal(mnths, 0:99)
 })
 
 
@@ -150,7 +152,7 @@ test_that("step_of_difftime week gives correct output", {
 })
 
 test_that("step_with_difftime day gives correct output", {
-  unit = "day"
+  unit <- "day"
   x  <- seq(ymd(20160201), length.out = 20, by = unit)
   expect_equal(step_with_difftime(x, unit), 1)
   expect_equal( step_with_difftime(x[seq(1, 20, by = 2)], unit), 2)
@@ -160,7 +162,7 @@ test_that("step_with_difftime day gives correct output", {
 })
 
 test_that("step_with_difftime hour gives correct output", {
-  unit = "hour"
+  unit <- "hour"
   x  <- seq(ymd_hms("20160201 000000" ), length.out = 20, by = unit)
   expect_equal(step_with_difftime(x, unit), 1)
   expect_equal( step_with_difftime(x[seq(1, 20, by = 2)], unit), 2)
@@ -170,7 +172,7 @@ test_that("step_with_difftime hour gives correct output", {
 })
 
 test_that("step_with_difftime hour gives correct output", {
-  unit = "min"
+  unit <- "min"
   x  <- seq(ymd_hms("20160201 000000" ), length.out = 20, by = unit)
   expect_equal(step_with_difftime(x, unit), 1)
   expect_equal( step_with_difftime(x[seq(1, 20, by = 2)], unit), 2)
@@ -180,7 +182,7 @@ test_that("step_with_difftime hour gives correct output", {
 })
 
 test_that("step_with_difftime hour gives correct output", {
-  unit = "sec"
+  unit <- "sec"
   x  <- seq(ymd_hms("20160201 000000" ), length.out = 20, by = unit)
   expect_equal(step_with_difftime(x, unit), 1)
   expect_equal( step_with_difftime(x[seq(1, 20, by = 2)], unit), 2)

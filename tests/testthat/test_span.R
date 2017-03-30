@@ -64,8 +64,8 @@ test_that("week functions give correct output", {
 context("end_val when start_val is specified")
 
 test_that("shift_end_from_start gives correct output", {
-  gsae_year <- get_start_and_end(posix_ct, "year")
-  gsae_week <- get_start_and_end(posix_ct, "week")
+  gsae_year <- get_start_and_end(posix_ct, convert_interval("year"))
+  gsae_week <- get_start_and_end(posix_ct, convert_interval("week"))
   expect_equal(shift_end_from_start(gsae_year, as.Date("2016-02-01")),
                as.Date("2017-02-01"))
   expect_equal(shift_end_from_start(gsae_year, as.POSIXct("2016-02-01 00:04:01")), #nolint

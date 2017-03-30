@@ -5,7 +5,6 @@ source("library.R")
 
 context("Test the get_date_variable function")
 
-library(lubridate)
 no_dt_var <- mtcars
 one_day_var <- data.frame(x = ymd(20160201, 20160301), y = c(1, 2))
 one_dt_var <- data.frame(x = ymd_h("20160201 02", "20160301 03"), y = c(1, 2))
