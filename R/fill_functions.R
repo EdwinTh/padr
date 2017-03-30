@@ -138,7 +138,7 @@ get_the_inds <- function(colnames_x,
   arguments <- args_of_function[-c(1:2)]
 
   if (length(arguments) == 0) {
-    stop("There are no variables specified to fill", call. = FALSE)
+    return(1:length(colnames(x)))
   }
 
   cols <- arguments[ names(arguments) == '' ]
