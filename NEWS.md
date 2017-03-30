@@ -1,5 +1,11 @@
 # padr 0.3.0
 
+## Changes
+
+* Interval behavior reimplemented, no longer the eight standard, but all that are accepted by seq.Date and seq.POSIX
+
+* fill_by functions default behavior is changed. They used to break when no variable names were specified, now they fill all columns when no column name is specified.
+
 ## New features
 
 # pad_int
@@ -8,7 +14,9 @@ The new function pad_int does padding of an integer field. Its working is very s
 
 ## Bug fixes
 
-# Issue #14 When dt_var has NULL as timezone, `to_posix` (helper of `round_thicken`, which itself is a helper of `thicken`) used to break, and thereby `thicken` itself broke. This is now fixed. 
+# Issue #13 When the end_val is specified in `pad`, it would mistakenly update the start_val with its value. This resulted in the return of the only the last line of the padded data.frame, instead of the full padded data.frame.
+
+# Issue #14 When dt_var has NULL as timezone, `to_posix` (helper of `round_thicken`, which itself is a helper of `thicken`) used to break, and thereby `thicken` itself broke.
 
 
 ##################################################
