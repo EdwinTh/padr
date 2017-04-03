@@ -8,18 +8,19 @@
 #'
 #' @param x A data frame containing at least one datetime variable of
 #' class \code{Date}, class \code{POSIXct} or class \code{POSIXlt}.
-#' @param interval The interval of the added datetime variable, which should be higher
-#' than the interval of the input datetime variable. If \code{NULL} it will be one level
-#' higher than the interval of the input datetime variable.
+#' @param interval The interval of the added datetime variable.
+#' Any character string that would be accepted by \code{seq.Date()} or
+#' \code{seq.POSIXt}. It can only be higher than the interval and step size of
+#' the input data.
 #' @param colname The column name of the added variable. If \code{NULL} it will
 #' be the name of the original datetime variable with the interval name added to
-#' it, separeted by an underscore.
+#' it (including the unit), separeted by underscores.
 #' @param rounding Should a value in the input datetime variable be mapped to
 #' the closest value that is lower (\code{down}) or that is higher (\code{up})
 #' than itself.
 #' @param by Only needs to be specified when \code{x} contains multiple
 #' variables of class \code{Date}, class \code{POSIXct} or class \code{POSIXlt}.
-#' \code{by} indicates which to use.
+#' \code{by} indicates which to use for thickening.
 #' @param start_val By default the first instance of \code{interval} that is lower
 #' than the lowest value of the input datetime variable, with all time units on
 #' default value. Specify \code{start_val} as an offset if you want the range
@@ -33,7 +34,7 @@
 #' x_hour <- seq(lubridate::ymd_hms('20160302 000000'), by = 'hour',
 #'               length.out = 200)
 #' some_df <- data.frame(x_hour = x_hour)
-#' thicken(some_df)
+#' thicken(some_df, 'week')
 #' thicken(some_df, 'month')
 #' thicken(some_df, start_val = lubridate::ymd_hms('20160301 120000'))
 #'
@@ -82,7 +83,7 @@ thicken <- function(x,
   interval_converted <- convert_interval(interval)
   rounding <- match.arg(rounding)
 
-  dt_var_interval <- get_interval(dt_var)
+  dt_var_interval <- get_interval_list(dt_var)
 
   interval_higher <- convert_int_to_hours(interval_converted) >
     convert_int_to_hours(dt_var_interval)
@@ -131,7 +132,7 @@ set_to_original_type <- function(x,
 }
 
 # take the character form of the interval and put it into list form
-# using get_interval, check if valid right away
+# using get_interval_list, check if valid right away
 convert_interval <- function(interval) {
   start_val <- as.POSIXct("2017-01-01 00:00:00")
   x <- tryCatch(
@@ -139,7 +140,7 @@ convert_interval <- function(interval) {
     error = function(e){
       stop("interval is not valid", call. = FALSE)
     })
-  get_interval(x)
+  get_interval_list(x)
 }
 
 # in order to compare different intervals we need to set them to the same unit

@@ -7,9 +7,12 @@
 #'
 #' @param x A data frame containing at least one variable of class \code{Date},
 #' class \code{POSIXct} or class \code{POSIXlt}.
-#' @param interval The interval of the returned datetime variable. When NULL the
+#' @param interval The interval of the returned datetime variable.
+#' Any character string that would be accepted by \code{seq.Date()} or
+#' \code{seq.POSIXt}. When NULL the
 #' the interval will be equal to the interval of the datetime variable. When
-#' specified it can only be lower than the interval of the input data. See Details.
+#' specified it can only be lower than the interval and step size of the input data.
+#' See Details.
 #' @param start_val An object of class \code{Date}, class \code{POSIXct} or
 #' class \code{POSIXlt} that specifies the start of the returned datetime variable.
 #' If NULL it will use the lowest value of the input variable.
@@ -24,9 +27,11 @@
 #' @details The interval of a datetime variable is the time unit at which the
 #' observations occur. The eight intervals in \code{padr} are from high to low
 #' \code{year}, \code{quarter}, \code{month}, \code{week}, \code{day},
-#' \code{hour}, \code{min}, and \code{sec}. \code{pad} will figure out
-#' the interval of the input variable and will fill the gaps for the instances that
-#' would be expected from the interval, but are missing in the input data.
+#' \code{hour}, \code{min}, and \code{sec}. Since \code{padr} v.0.3.0 the
+#' interval is no longer limited to be of a single unit.
+#' (Intervals like 5 minutes, 6 hours, 10 days are possible). \code{pad} will figure out
+#' the interval of the input variable and the step size, and will fill the gaps for the instances that
+#' would be expected from the interval and step size, but are missing in the input data.
 #' See \code{vignette("padr")} for more information on \code{pad}.
 #' See \code{vignette("padr_implementation")} for detailed information on
 #' daylight savings time, different timezones, and the implementation of
@@ -38,6 +43,7 @@
 #' simple_df <- data.frame(day = as.Date(c('2016-04-01', '2016-04-03')),
 #'                         some_value = c(3,4))
 #' pad(simple_df)
+#' pad(simple_df, interval = "day")
 #'
 #' library(dplyr) # for the pipe operator
 #' month <- seq(as.Date('2016-04-01'), as.Date('2017-04-01'),
@@ -62,7 +68,10 @@
 #' x_df_grp %>% pad(group = 'grp1')
 #'
 #' # pad by two groups vars
-#' x_df_grp %>% pad(group = c('grp1', 'grp2'))
+#' x_df_grp %>% pad(group = c('grp1', 'grp2'), interval = "month")
+
+# TODO: warning message wanneer er maar twee rijen in zitten >> interval altijd gelijk
+# aan de tussenliggende periode.
 
 #' @export
 pad <- function(x,
@@ -141,20 +150,7 @@ pad_single  <- function(x,
 
 
   # If we have just one value specified it depends on start_val / end_val what to do
-  if (length(unique(dt_var)) == 1 ) {
-
-    if (is.null(start_val) && is.null(end_val) ) {
-      warning ('datetime variable contains one value only and start_val and end_val are not specified,\n  returning x without padding') #nolint
-      return(x)
-    }
-
-  } else {
-
-    if ( !all(dt_var[1:(length(dt_var) - 1)] <= dt_var[2:length(dt_var)] ) ) {
-      dt_var <- sort(dt_var)
-      warning('Datetime variable was unsorted, pad result is sorted.')
-    }
-  }
+  pad_warnings(dt_var, start_val, end_val)
 
   if (!is.null(interval)) {
     interval_converted <- convert_interval(interval)
@@ -271,7 +267,7 @@ check_interval <- function(dt_var,
   all_elements <- rbind(data.frame(total_pad = start_val),
                         data.frame(total_pad = dt_var),
                         data.frame(total_pad = end_val))
-  necesarry_interval <- get_interval(all_elements$total_pad)
+  necesarry_interval <- get_interval_list(all_elements$total_pad)
 
 
   if (!is.null(interval)) {
@@ -296,4 +292,26 @@ get_int_hierarchy <- function(x) {
   names(int_hierarchy) <- c('year', 'quarter', 'month', 'week', 'day', 'hour',
                             'min', 'sec')
   return(int_hierarchy)
+}
+
+
+pad_warnings <- function(dt_var, start_val, end_val) {
+  if (length(unique(dt_var)) == 1 ) {
+
+    if (is.null(start_val) && is.null(end_val) ) {
+      warning ('datetime variable contains one value only and start_val and end_val are not specified.\nReturning x without padding.', call. = FALSE) #nolint
+      return(x)
+    }
+
+  } else {
+
+    if ( !all(dt_var[1:(length(dt_var) - 1)] <= dt_var[2:length(dt_var)] ) ) {
+      dt_var <- sort(dt_var)
+      warning('Datetime variable was unsorted, pad result is sorted.', call. = FALSE)
+    }
+
+    if (length(dt_var) == 2) {
+      warning("The datetime variable is of length 2, interval is equal to the timespan between the observatsions.\nReturning x without padding.", call. = FALSE)
+    }
+  }
 }
