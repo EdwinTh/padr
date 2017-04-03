@@ -64,9 +64,7 @@ thicken <- function(x,
                     by        = NULL,
                     start_val = NULL) {
 
-  if (!is.data.frame(x)) {
-    stop('x should be a data frame.')
-  }
+  is_df(x)
 
   arguments <- as.list(match.call())
   if (!missing(by)) by_val <- as.character(arguments$by) else by_val <- NULL
@@ -99,7 +97,7 @@ thicken <- function(x,
   }
 
   if (!all(dt_var[1:(length(dt_var) - 1)] <= dt_var[2:length(dt_var)])) {
-    warning('Datetime variable was unsorted, result will be unsorted as well.')
+    warning('Datetime variable was unsorted, result will be unsorted as well.', call. = FALSE)
   }
 
   if (inherits(start_val, 'POSIXt') & inherits(dt_var, 'POSIXt')) {

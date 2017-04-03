@@ -25,7 +25,7 @@ get_interval <- function(x) {
 
 get_interval_list <- function(x){
   if ( !( inherits(x, 'Date') |  inherits(x, 'POSIXt')) ) {
-    stop('x should be of class Date, POSIXct, or POSIXlt')
+    stop('x should be of class Date, POSIXct, or POSIXlt.', call. = FALSE)
   }
 
   x_char <- datetime_char(x)

@@ -61,9 +61,7 @@ pad_single_int  <- function(x,
                             group     = NULL,
                             step      = 1){
 
-  if (!is.data.frame(x)) {
-    stop('x should be a data frame.')
-  }
+  is_df(x)
 
   arguments <- as.list(match.call())
   pad_var_name <- as.character(arguments$by)
@@ -109,7 +107,7 @@ pad_multiple_int <- function(x,
                              step      = 1){
   stopifnot(is.data.frame(x))
   if (!all(group %in% colnames(x))) {
-    stop('Not all grouping variables are column names of x.')
+    stop('Not all grouping variables are column names of x.', call. = FALSE)
   }
 
   groupings <- unique(x[, colnames(x) %in% group, drop = FALSE])
@@ -146,7 +144,7 @@ span_pad_int <- function(pad_var, start_val, end_val, step) {
   if (is.null(end_val)) end_val <- max(pad_var)
   pad_var_rel <- pad_var[pad_var >= start_val & pad_var <= end_val]
   if ( any( ( (pad_var_rel - start_val) %% step) != 0 ) ) {
-    stop('step size unvalid for this variable, possibly due to the start_val or end_val', call. = FALSE) #nolint
+    stop('Step size unvalid for this variable, possibly due to the start_val or end_val', call. = FALSE) #nolint
   }
   return( seq(start_val, end_val, by = step))
 }

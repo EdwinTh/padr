@@ -110,10 +110,7 @@ pad_single  <- function(x,
                         end_val   = NULL,
                         by        = NULL,
                         group     = NULL){
-
-  if (!is.data.frame(x)) {
-    stop('x should be a data frame.')
-  }
+  is_df(x)
 
   arguments <- as.list(match.call())
   if (!is.null(by)) by_val <- as.character(arguments$by)
@@ -159,6 +156,7 @@ pad_single  <- function(x,
   }
 
   interval <- check_interval(dt_var, start_val, end_val, interval_converted)
+  print(interval)
 
   # if we want to pad a lower level than the dt_interval, we need to make it
   # a posix first to do proper padding
@@ -205,9 +203,10 @@ pad_multiple <- function(x,
                          end_val   = NULL,
                          by        = NULL,
                          group     = group){
-  stopifnot(is.data.frame(x))
+  is_df(x)
+
   if (!all(group %in% colnames(x))) {
-    stop('Not all grouping variables are column names of x.')
+    stop('Not all grouping variables are column names of x.', call. = FALSE)
   }
 
   groupings <- unique(x[, colnames(x) %in% group, drop = FALSE])
@@ -276,9 +275,9 @@ check_interval <- function(dt_var,
 
     if (interval_higher) {
       stop ('The interval of the datetime variable is higher than the desired interval,
-            possibly in combination with the start_val and / or end _val.
-            Pad only works with intervals that are equal or lower.
-            If you wish to pad at this interval you should thicken and aggregate first.', call. = FALSE)
+  possibly in combination with the start_val and / or end _val.
+  Pad only works when the desired interval is equal or lower than the current interval.
+  If you wish to pad at this interval you should thicken and aggregate first.', call. = FALSE)
     }
     necesarry_interval <- interval
     }

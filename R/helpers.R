@@ -23,6 +23,12 @@ enforce_time_zone <- function(val1, val2) {
   return(val1)
 }
 
+is_df <- function(x){
+  if (!is.data.frame(x)) {
+    stop('x should be a data frame.', call. = FALSE)
+  }
+}
+
 # These two Roxygen tags are required to use Cpp code (they could be anywhere
 # in the package)
 

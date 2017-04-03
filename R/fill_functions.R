@@ -23,9 +23,7 @@ fill_by_value <- function(x,
                           ...,
                           value = 0) {
 
-  if (!is.data.frame(x)) {
-    stop('x should be a data frame')
-  }
+  is_df(x)
 
   fun_args <- as.list(match.call())
   if ('value' %in% names(fun_args)) value <- fun_args$value
@@ -62,12 +60,10 @@ fill_by_function <- function(x,
                              ...,
                              fun = mean) {
   if (! is.function(fun) ) {
-    stop('fun is not a valid function')
+    stop('fun is not a valid function', call. = FALSE)
   }
 
-  if (!is.data.frame(x)) {
-    stop('x should be a data frame')
-  }
+  is_df(x)
 
   inds <- get_the_inds(colnames(x), as.list(match.call()))
 
@@ -77,7 +73,8 @@ fill_by_function <- function(x,
       value <- fun(val_no_na)
 
      if (length(value) > 1){
-       warning('fun does return multiple values, only the first is used')
+       warning('fun does return multiple values, only the first is used',
+               call. = FALSE)
        value <- value[1]
      }
 
@@ -106,9 +103,7 @@ fill_by_function <- function(x,
 fill_by_prevalent <- function(x,
                               ...) {
 
-  if (!is.data.frame(x)) {
-    stop('x should be a data frame')
-  }
+  is_df(x)
 
   inds <- get_the_inds(colnames(x), as.list(match.call()))
 
@@ -119,7 +114,9 @@ fill_by_prevalent <- function(x,
 
     if ( sum(x_count == max(x_count)) > 1 ) {
        tied <- paste(names( which (x_count == max(x_count) ) ), collapse = ', ')
-       stop(paste( tied, 'tie for most prevalent, please select a value and use fill_by_value') )
+       stop(paste( tied,
+                   'tie for most prevalent, please select a value and use fill_by_value', #nolint
+                   call. = FALSE) )
     }
 
   value <- names( which( x_count == max(x_count) ) )

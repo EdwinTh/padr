@@ -4,7 +4,7 @@ span <- function(x,
                  start_val  = NULL) {
 
   if ( !( inherits(x, 'Date') |  inherits(x, 'POSIXt') ) ){
-    break ('x should be of class Date, POSIXlt, or POSIXct')
+    break ('x should be of class Date, POSIXlt, or POSIXct', call. = FALSE)
   }
 
   start_and_end <- get_start_and_end(x, return_interval = interval)
