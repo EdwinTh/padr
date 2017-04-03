@@ -4,21 +4,21 @@
 \alias{thicken}
 \title{Add a variable of a higher interval to a data frame.}
 \usage{
-thicken(x, interval = c("level_up", "year", "quarter", "month", "week", "day",
-  "hour", "min"), colname = NULL, rounding = c("down", "up"), by = NULL,
-  start_val = NULL)
+thicken(x, interval, colname = NULL, rounding = c("down", "up"),
+  by = NULL, start_val = NULL)
 }
 \arguments{
 \item{x}{A data frame containing at least one datetime variable of
 class \code{Date}, class \code{POSIXct} or class \code{POSIXlt}.}
 
-\item{interval}{The interval of the added datetime variable, which should be higher
-than the interval of the input datetime variable. If \code{NULL} it will be one level
-higher than the interval of the input datetime variable.}
+\item{interval}{The interval of the added datetime variable.
+Any character string that would be accepted by \code{seq.Date()} or
+\code{seq.POSIXt}. It can only be higher than the interval and step size of
+the input data.}
 
 \item{colname}{The column name of the added variable. If \code{NULL} it will
 be the name of the original datetime variable with the interval name added to
-it, separeted by an underscore.}
+it (including the unit), separeted by underscores.}
 
 \item{rounding}{Should a value in the input datetime variable be mapped to
 the closest value that is lower (\code{down}) or that is higher (\code{up})
@@ -26,7 +26,7 @@ than itself.}
 
 \item{by}{Only needs to be specified when \code{x} contains multiple
 variables of class \code{Date}, class \code{POSIXct} or class \code{POSIXlt}.
-\code{by} indicates which to use.}
+\code{by} indicates which to use for thickening.}
 
 \item{start_val}{By default the first instance of \code{interval} that is lower
 than the lowest value of the input datetime variable, with all time units on
@@ -53,7 +53,7 @@ daylight savings time, different timezones, and the implementation of
 x_hour <- seq(lubridate::ymd_hms('20160302 000000'), by = 'hour',
               length.out = 200)
 some_df <- data.frame(x_hour = x_hour)
-thicken(some_df)
+thicken(some_df, 'week')
 thicken(some_df, 'month')
 thicken(some_df, start_val = lubridate::ymd_hms('20160301 120000'))
 
