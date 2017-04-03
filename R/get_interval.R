@@ -12,9 +12,18 @@
 #'
 #' x_sec <- seq(as.POSIXct('2016-01-01 00:00:00'), length.out = 100, by = 'sec')
 #' get_interval(x_sec)
+#' get_interval(x_sec[seq(0, length(x_sec), by = 5)])
 #' @export
 get_interval <- function(x) {
+  interval <- get_interval_list(x)
+  if (interval$step == 1) {
+    return(interval$interval)
+  } else {
+    return(paste(interval$step, interval$interval))
+  }
+}
 
+get_interval_list <- function(x){
   if ( !( inherits(x, 'Date') |  inherits(x, 'POSIXt')) ) {
     stop('x should be of class Date, POSIXct, or POSIXlt')
   }
