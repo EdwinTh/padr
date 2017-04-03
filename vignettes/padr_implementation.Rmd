@@ -55,12 +55,13 @@ The blue dots are the values of the input datetime variable. The red dots are th
 
 For all the seven intervals that could be spanned, by default the spanned variable will be as 'tightly' around the input variable as the interval allows. Meaning that the first value of the spanned variable is the latest possible timepoint that is still smaller than the smallest value of the input variable. The last value is the first possible timepoint that is larger than the the largest value of the input variable.
 
-This is the default spanning behavior of the seven intervals. The first five will be of class `Date`, the last two will be of class `POSIXct`.
+As of version 0.3.0 the user can specify units other than one for each of the interval (e.g. 10 minutes, 2 hours). In order to implement this the default spanning behavior had to change from previous versions. This does not change the result, if the desired interval is of unit one. These are the default start values of the seven intervals that we can `thicken` to. The spanning ends after the last observation in the datetime variable. The first five will be of class `Date`, the last two will be of class `POSIXct`.
 
-* **year** will start and end on January 1st
-* **quarter** will start and end on one of the following: January 1st, April 1st, July 1st, or October 1st.
-* **month** will start and end on the first day of a month.
-* **week** will start and end on a Sunday.
+* **year** will start on January 1st of the year of the first value of the datetime variable.
+* **quarter** will start on one of the following: January 1st, April 1st, July 1st, or October 1st.
+* **month** will start on the first day of the month of the first value of the datetime variable.
+* **week** will start on a Sunday.
 * **day** will start and end on any given day.
-* **hour** will start and end on the full hour, with minute and second being zero.
-* **minute** will start and end on the full minute, with second being zero.
+* **hour** will start and end on the beginning of the day.
+* **minute** will start and end on the beginning of the hour.
+

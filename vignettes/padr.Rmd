@@ -47,13 +47,16 @@ coffee2$time_stamp %>% get_interval
 coffee2$time_stamp_day %>% get_interval
 ```
 
-`thicken` does figure out some stuff for you. First it finds the datetime variable in your data frame (given there is only one). Next it will determine the interval of this variable, which is one of the following: year, quarter, month, week, day, hour, minute, or second. Finally it adds a variable to the data frame that is of a higher interval than the interval of the original datetime variable. The user can then use this variable to aggregate to the higher level, for instance using `dplyr`'s `group_by` and `summarise`. By default the interval of the added variable is one level higher than the interval of the original variable, but if you want it to be of a different level you specify the interval argument.
+`thicken` does figure out some stuff for you. First it finds the datetime variable in your data frame (given there is only one). Next it will determine the interval of this variable, which is one of the following: year, quarter, month, week, day, hour, minute, or second. Finally it adds a variable to the data frame that is of a higher interval than the interval of the original datetime variable. The user can then use this variable to aggregate to the higher level, for instance using `dplyr`'s `group_by` and `summarise`. As of v.0.3.0 the user cannot only specify the interval of the desired output variable, but also the units. When no unit is specified, it is treated as a single unit.
 
 ```{r}
-data.frame(day_var = as.Date(c('2016-08-12', '2016-08-29'))) %>% thicken
+to_thicken <- data.frame(day_var = as.Date(c('2016-08-12', '2016-08-13', 
+                                              '2016-08-26', '2016-08-29')))
+to_thicken %>% thicken(interval = "week")
+to_thicken %>% thicken(interval = "4 days")
 ```
 
-So in the above example the interval of "day_var" was *day*. `thicken` than added a variable of one interval higher, which is *week*. We did not specify the beginning of the week, so thicken goes to its default behavior, that is weeks starting on Sundays. In many situations the user will be content with `thicken`'s defaults, however some flexibility is offered.
+We see different default behavior for the different *intervals*. Week intervals start on Sundays, day intervals start on the first day found in the datetime variable. In many situations the user will be content with `thicken`'s defaults, however you can specify the `start_val` as an offset if you would like to start the returned interval on a different day or datetime.
 
 We use the emergency data set for further illustration. It contains 120,450 emergency calls in Montgomery County, PA, between 2015-12-10 and 2016-10-17. It has four columns that contain information about the location of the emergency, a title field indicating the type of the emergency, and a time stamp. The data set was created from a Google Api, thanks to Mike Chirico for maintaining this set. 
 
@@ -77,7 +80,7 @@ Note also that we specified the column name of the added column. If we don't, `t
 
 Two final points on intervals before we are going to `pad`:
 
-* It is about the recurrence pattern, not the time unit. (A yearly observation can take place each year at June 23rd at 9.15 pm).
+* It is about the recurrence pattern, not the moment in time where the observations toke place. (A yearly observation can take place each year at June 23rd at 9.15 pm).
 * It doesn't require an observation at each and every time point where there could be one. It is the highest recurrence level in the hierarchy that can explain all the observations.
 
 ### pad
@@ -108,10 +111,11 @@ Padding within groups is supported since version 0.2.0, when the `group` paramet
 
 ```{r, warning=FALSE}
 padded_groups <- emergency %>% thicken('day') %>%
+  filter(title %in% c("Traffic: VEHICLE ACCIDENT -", 
+                      "Traffic: DISABLED VEHICLE -")) %>% 
   count(time_stamp_day, title) %>% 
   pad(group = 'title')
 ```
-
 
 ### fill functions
 We already saw `tidyr::fill` coming in handy for the filling of missing values after padding. `padr` comes with three more fill functions: `fill_by_value`, `fill_by_function`, and `fill_by_prevalent`. They fill missing values by respectively a single value, a function of the nonmissing values, and the most prevalent value among the nonmissing values.
@@ -120,14 +124,15 @@ We already saw `tidyr::fill` coming in handy for the filling of missing values a
 counts <- data.frame(x = as.Date(c('2016-11-21', '2016-11-23',  '2016-11-24')),
                      y = c(2, 4, 4))
 
+counts %>% pad() %>% fill_by_value()
 counts %>% pad() %>% fill_by_value(y, value = 42)
 counts %>% pad() %>% fill_by_function(y, fun = mean)
 counts %>% pad() %>% fill_by_prevalent(y)
 ```
-
+Note that in the first `fill_by_value` the columns to fill are not specified. In this case the filling is applied on all the columns. The other two functions also have this default behavior.
 
 ### One last example
-`thicken` and `pad` together make a strong pair, as was already seen in the coffee example. Lets go back to the emergency data set and see how many cases of dehydration there are each day. Would there be more cases in summer?
+`thicken` and `pad` together make a strong pair, as already was shown in the coffee example. Lets go back to the emergency data set and see how many cases of dehydration there are each day. Would there be more cases in summer?
 
 ```{r, fig.width = 7}
 dehydration_day <- emergency %>% 
