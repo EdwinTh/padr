@@ -146,7 +146,7 @@ pad_single  <- function(x,
   }
 
 
-  # If we have just one value specified it depends on start_val / end_val what to do
+  # If we have just one value specified it depends on start_val / end_val what to d
   return_x_here <- pad_warnings(dt_var, start_val, end_val)
   if (return_x_here) return(x)
 
@@ -192,7 +192,8 @@ pad_single  <- function(x,
   colnames(return_frame)[colnames(return_frame) == 'spanned'] <- dt_var_name
 
   return_frame <- set_to_original_type(return_frame, original_data_frame)
-  return(return_frame)
+  print(return_frame)
+  interval_message(interval)
 }
 
 # This is the wrapper around pad_single
@@ -313,4 +314,16 @@ pad_warnings <- function(dt_var, start_val, end_val) {
       warning("The datetime variable is of length 2, interval is equal to the timespan between the observatsions.\nReturning x without padding.", call. = FALSE) #nolint
     }
   }
+  return(FALSE)
+}
+
+
+interval_message <- function(int) {
+  if (int$step == 1) {
+    step <- ""
+  } else {
+    step <- paste(int$step, "")
+  }
+  interval <- paste(step, int$interval, sep = "")
+  message(paste("\npad applied on the interval", interval))
 }
