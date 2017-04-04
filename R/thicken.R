@@ -108,7 +108,12 @@ thicken <- function(x,
 
   thickened <- round_thicken(dt_var, spanned, rounding)
 
-  x_name <- get_date_variables(x)
+  if (is.null(by_val)) {
+    x_name <- get_date_variables(x)
+  } else {
+    x_name <- by_val
+  }
+
   colname <- get_colname(x, x_name, colname, interval_converted)
   return_frame <- cbind(x, thickened)
   colnames(return_frame)[ncol(return_frame)] <- colname
@@ -116,7 +121,7 @@ thicken <- function(x,
   return_frame <- set_to_original_type(return_frame, original_data_frame)
 
   return(return_frame)
-  }
+}
 
 # restore to data_frame of data.table if the input data was of this type
 set_to_original_type <- function(x,
