@@ -52,4 +52,3 @@ test_that("posix_to_date gives date when possible", {
   expect_equal( posix_to_date(a_ct) %>% class, c("POSIXct", "POSIXt"))
   expect_equal( posix_to_date(b_ct) %>% class, "Date" )
 })
-

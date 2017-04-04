@@ -134,7 +134,7 @@ convert_month_to_number <- function(x) {
 
 get_difs <- function(x) {
   n <- length(x)
-  return(x[2:n] - x[1:(n-1)])
+  return(x[2:n] - x[1:(n - 1)])
 }
 
 get_max_modulo_zero <- function(d, min_t = 1, max_t = 60) {
@@ -153,6 +153,5 @@ get_max_modulo_zero <- function(d, min_t = 1, max_t = 60) {
 
 get_difftime <- function(x, units) {
   n <- length(x)
-  difftime(x[2:n], x[1:(n-1)], units = units)
+  difftime(x[2:n], x[1:(n - 1)], units = units)
 }
-

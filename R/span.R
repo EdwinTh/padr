@@ -91,7 +91,7 @@ get_start_and_end <- function(dt_var,
 }
 
 start_val_year <- function(min_v) {
-  start_val <- sec_to_0 ( min_to_0 ( hour_to_0 ( day_to_1 ( month_to_1 ( min_v ) ) ) ) )
+  sec_to_0 ( min_to_0 ( hour_to_0 ( day_to_1 ( month_to_1 ( min_v ) ) ) ) )
 }
 
 start_val_quarter <- function(min_v) {
@@ -107,11 +107,11 @@ start_val_week <- function(min_v) {
 }
 
 start_val_day <- function(min_v) {
-  start_val <- sec_to_0 ( min_to_0 ( hour_to_0 ( min_v ) ) )
+  sec_to_0 ( min_to_0 ( hour_to_0 ( min_v ) ) )
 }
 
 start_val_hour <- function(min_v) {
-  start_val <- sec_to_0 ( min_to_0 ( hour_to_0 ( min_v ) ) )
+  sec_to_0 ( min_to_0 ( hour_to_0 ( min_v ) ) )
 }
 
 start_val_min <- function(min_v) {

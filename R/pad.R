@@ -147,7 +147,8 @@ pad_single  <- function(x,
 
 
   # If we have just one value specified it depends on start_val / end_val what to do
-  pad_warnings(dt_var, start_val, end_val)
+  return_x_here <- pad_warnings(dt_var, start_val, end_val)
+  if (return_x_here) return(x)
 
   if (!is.null(interval)) {
     interval_converted <- convert_interval(interval)
@@ -156,7 +157,6 @@ pad_single  <- function(x,
   }
 
   interval <- check_interval(dt_var, start_val, end_val, interval_converted)
-  print(interval)
 
   # if we want to pad a lower level than the dt_interval, we need to make it
   # a posix first to do proper padding
@@ -299,7 +299,7 @@ pad_warnings <- function(dt_var, start_val, end_val) {
 
     if (is.null(start_val) && is.null(end_val) ) {
       warning ('datetime variable contains one value only and start_val and end_val are not specified.\nReturning x without padding.', call. = FALSE) #nolint
-      return(x)
+      return(TRUE)
     }
 
   } else {
@@ -310,7 +310,7 @@ pad_warnings <- function(dt_var, start_val, end_val) {
     }
 
     if (length(dt_var) == 2) {
-      warning("The datetime variable is of length 2, interval is equal to the timespan between the observatsions.\nReturning x without padding.", call. = FALSE)
+      warning("The datetime variable is of length 2, interval is equal to the timespan between the observatsions.\nReturning x without padding.", call. = FALSE) #nolint
     }
   }
 }

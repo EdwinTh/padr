@@ -2,9 +2,24 @@
 
 ## Changes
 
-* Interval behavior reimplemented, no longer the eight standard, but all that are accepted by seq.Date and seq.POSIX
+#### Interval no long required to be of a single unit
 
-* fill_by functions default behavior is changed. They used to break when no variable names were specified, now they fill all columns when no column name is specified.
+The interval is no longer limited to be of a single unit, for each of the eight interval sizes. Every time span accepted by `seq.Date` or `seq.POSIXt` is now accepted. Since the original implementation was fully around single-unit-intervals, some default behavior had to change. Because of it, this version is not entirely backwards compatible with earlier versions of `padr`. The following functions are affected:
+
+* `thicken`: the `interval` argument now has to be specified. In earlier versions it was optional. When it was not specified, the added variable was one interval level higher than that of the input datetime variable. With the widening of the interval definition, there is not longer a natural step up.
+
+* `get_interval`: does no longer only retrieve the interval of a datetime variable, but also its unit (the step size). For instance, the following would have returned "day" in the past, but will now return "2 day":
+
+date_var <- as.Date(c('2017-01-01', '2017-01-03', '2017-01-05'))
+get_interval(date_var)
+
+* `pad`: since the default behavior, when the interval is not specified, depends `get_interval`, its outcome might now be different. When `get_interval` returns a different interval than it used to, `pad` will do the padding at this different interval. Extending the above example, the have resulted in a data frame with two padded rows:
+
+x <- data.frame(date_var, y = 1:3)
+
+Since the interval of `date_var` used be "day", there were missing records for 2017-01-02 and 2017-01-04. These records were inserted, with missing values for y. However, now the interval of `date_var` is "2 day" and on this level there is no need for padding. To get ther original result the interval argument should be specified with "day".
+
+#### fill_by functions default behavior is changed. They used to require specification of all the column names that had to filled. This is annoying when many columns had to filled. The functions no longer break when no variable names are specified, but they fill all columns in the data frame.
 
 ## New features
 

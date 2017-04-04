@@ -135,7 +135,7 @@ get_the_inds <- function(colnames_x,
   arguments <- args_of_function[-c(1:2)]
 
   if (length(arguments) == 0) {
-    return(1:length(colnames(x)))
+    return(1:length(colnames_x))
   }
 
   cols <- arguments[ names(arguments) == '' ]

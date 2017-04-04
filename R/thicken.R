@@ -88,7 +88,7 @@ thicken <- function(x,
   interval_equal <- convert_int_to_hours(interval_converted) ==
     convert_int_to_hours(dt_var_interval)
 
-  if (!interval_higher) {
+  if (!interval_higher & length(dt_var) > 2) {
     stop('The interval in the datetime variable is lower than the interval given,
          you might be looking fo pad rather than for thicken.', call. = FALSE)
   } else if (interval_equal) {
@@ -144,7 +144,7 @@ convert_interval <- function(interval) {
 # in order to compare different intervals we need to set them to the same unit
 convert_int_to_hours <- function(interval_obj) {
   # we take # month = # year / 12
-  hours_in_unit <- c(8760, 2190, 730, 168, 24, 1, 1/60, 1/3600)
+  hours_in_unit <- c(8760, 2190, 730, 168, 24, 1, 1 / 60, 1 / 3600)
   names(hours_in_unit) <- c("year", "quarter", "month", "week", "day",
                             "hour", "min", "sec")
   hours_in_unit[interval_obj$interval] * interval_obj$step
@@ -157,7 +157,7 @@ flatten_interval <- function(int) {
 
 get_colname <- function(x, x_name, colname, interval_converted) {
   if (is.null(colname)) {
-    if(interval_converted$step == 1) {
+    if (interval_converted$step == 1) {
       colname <- paste(x_name, interval_converted$interval, sep = "_")
     } else {
       colname <- paste(x_name, interval_converted$step,
