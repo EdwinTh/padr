@@ -79,7 +79,10 @@ get_start_and_end <- function(dt_var,
   to_date <- all( c(start_val$hour, start_val$min, start_val$sec,
                     end_val$hour, end_val$min, end_val$sec) == 0 )
 
-  if (to_date) {
+  interval_allows_for_date <- !return_interval$inter %in%
+    c("hour", "min", "sec")
+
+  if (to_date & interval_allows_for_date) {
     start_val <- as.Date(strptime(start_val, format = '%Y-%m-%d'))
     end_val   <- as.Date(strptime(end_val, format = '%Y-%m-%d'))
   } else {
