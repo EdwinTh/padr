@@ -193,7 +193,7 @@ pad_single  <- function(x,
 
   return_frame <- set_to_original_type(return_frame, original_data_frame)
   class(return_frame) <- c("padded_df", class(return_frame))
-  attr(return_frame, "interval_message") <- interval_message(interval)
+  attr(return_frame, "interval") <- interval
   return_frame
 }
 
@@ -325,11 +325,11 @@ interval_message <- function(int) {
     step <- paste(int$step, "")
   }
   interval <- paste(step, int$interval, sep = "")
-  paste("pad applied on the interval", interval)
+  message(paste("pad applied on the interval", interval))
 }
 
 #' @export
 print.padded_df <- function(x, ...) {
   NextMethod(x)
-  message(attr(x, "interval_message"))
+  interval_message(attr(x, "interval"))
 }
