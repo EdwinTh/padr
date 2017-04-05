@@ -192,8 +192,8 @@ pad_single  <- function(x,
   colnames(return_frame)[colnames(return_frame) == 'spanned'] <- dt_var_name
 
   return_frame <- set_to_original_type(return_frame, original_data_frame)
-  print(return_frame)
   interval_message(interval)
+  return_frame
 }
 
 # This is the wrapper around pad_single
