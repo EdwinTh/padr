@@ -328,6 +328,8 @@ interval_message <- function(int) {
   message(paste("pad applied on the interval", interval))
 }
 
+setOldClass(c("padded_df", "data.frame"))
+
 #' @export
 print.padded_df <- function(x, ...) {
   NextMethod(x)
