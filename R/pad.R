@@ -192,8 +192,9 @@ pad_single  <- function(x,
   colnames(return_frame)[colnames(return_frame) == 'spanned'] <- dt_var_name
 
   return_frame <- set_to_original_type(return_frame, original_data_frame)
-  print(return_frame)
-  interval_message(interval)
+  class(return_frame) <- c("padded_df", class(return_frame))
+  attr(return_frame, "interval") <- interval
+  return_frame
 }
 
 # This is the wrapper around pad_single
@@ -294,7 +295,6 @@ get_int_hierarchy <- function(x) {
   return(int_hierarchy)
 }
 
-
 pad_warnings <- function(dt_var, start_val, end_val) {
   if (length(unique(dt_var)) == 1 ) {
 
@@ -325,5 +325,13 @@ interval_message <- function(int) {
     step <- paste(int$step, "")
   }
   interval <- paste(step, int$interval, sep = "")
-  message(paste("\npad applied on the interval", interval))
+  message(paste("pad applied on the interval", interval))
+}
+
+setOldClass(c("padded_df", "data.frame"))
+
+#' @export
+print.padded_df <- function(x, ...) {
+  NextMethod(x)
+  interval_message(attr(x, "interval"))
 }
