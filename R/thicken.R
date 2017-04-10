@@ -66,8 +66,6 @@ thicken <- function(x,
 
   is_df(x)
 
-  arguments <- as.list(match.call())
-
   original_data_frame <- x
   x <- as.data.frame(x)
 
@@ -172,4 +170,3 @@ get_colname <- function(x, x_name, colname, interval_converted) {
   }
   return(colname)
 }
-

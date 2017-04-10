@@ -153,4 +153,3 @@ get_the_inds <- function(colnames_x,
 all_containing_nas <- function(x) {
   which(colSums(is.na(x)) > 0)
 }
-

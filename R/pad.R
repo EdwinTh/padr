@@ -112,8 +112,6 @@ pad_single  <- function(x,
                         group     = NULL){
   is_df(x)
 
-  arguments <- as.list(match.call())
-
   original_data_frame <- x
   x <- as.data.frame(x)
 
