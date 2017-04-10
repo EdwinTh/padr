@@ -58,7 +58,7 @@ test_that("get_the_inds works properly", {
   one_col <- make_funargs(x, a)
   two_cols <- make_funargs(x, a, b)
 
-  expect_equal(get_the_inds(cols, 1:3))
+  expect_equal(get_the_inds(cols, no_cols), 1:3)
   expect_equal(get_the_inds(cols, one_col), 2)
   expect_equal(get_the_inds(cols, two_cols), 2:3)
 })

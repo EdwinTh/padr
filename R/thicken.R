@@ -88,7 +88,9 @@ thicken <- function(x,
   interval_equal <- convert_int_to_hours(interval_converted) ==
     convert_int_to_hours(dt_var_interval)
 
-  if (!interval_higher & length(dt_var) > 2) {
+  # here I originally put in "& lenght(dt_var) > 2" but I don't recall why
+  # removed it, but it might break in some situation now.
+  if (!interval_higher) {
     stop('The interval in the datetime variable is lower than the interval given,
          you might be looking fo pad rather than for thicken.', call. = FALSE)
   } else if (interval_equal) {

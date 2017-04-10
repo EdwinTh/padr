@@ -65,7 +65,7 @@ assure_greater_than_max_x <- function(max_x,
 #----------------------------------------------------------------------------#
 get_start_and_end <- function(dt_var,
                               return_interval) {
-  min_v <- as.POSIXlt( min(dt_var) )
+  min_v <- as.POSIXlt( min(dt_var) ) #nolint
   max_v <- as.POSIXlt( max(dt_var) )
 
   interval <- flatten_interval(return_interval)

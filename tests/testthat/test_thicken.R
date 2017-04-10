@@ -64,15 +64,15 @@ context("thicken integration tests")
 test_that("thicken gives correct interval", {
   x_df <- data.frame(x_sec = x_sec)
   expect_equal(sw(thicken(x_df, interval = "year"))$x_sec_year %>% get_interval,
-               generate_interval(1, "year"))
+               "year")
   expect_equal(sw(thicken(x_df, interval = "month"))$x_sec_month %>% get_interval,
-               generate_interval(1, "month"))
+               "month")
   expect_equal(sw(thicken(x_df, interval = "day"))$x_sec_day %>% get_interval,
-               generate_interval(1, "day"))
+               "day")
   expect_equal(sw(thicken(x_df, interval = "hour"))$x_sec_hour %>% get_interval,
-               generate_interval(1, "hour"))
+               "hour")
   expect_equal(sw(thicken(x_df, interval = "min"))$x_sec_min %>% get_interval,
-               generate_interval(1, "min"))
+               "min")
 })
 
 test_that("thicken gives correct output when x is a vector", {

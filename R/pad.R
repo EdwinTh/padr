@@ -310,10 +310,6 @@ pad_warnings <- function(dt_var, start_val, end_val) {
       dt_var <- sort(dt_var)
       warning('Datetime variable was unsorted, pad result is sorted.', call. = FALSE)
     }
-
-    if (length(dt_var) == 2) {
-      warning("The datetime variable is of length 2, interval is equal to the timespan between the observatsions.\nReturning x without padding.", call. = FALSE) #nolint
-    }
   }
   return(FALSE)
 }
