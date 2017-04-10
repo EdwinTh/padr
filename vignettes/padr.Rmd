@@ -122,12 +122,12 @@ We already saw `tidyr::fill` coming in handy for the filling of missing values a
 
 ```{r}
 counts <- data.frame(x = as.Date(c('2016-11-21', '2016-11-23',  '2016-11-24')),
-                     y = c(2, 4, 4))
+                     y = c(2, 4, 4)) %>% pad
 
-counts %>% pad() %>% fill_by_value()
-counts %>% pad() %>% fill_by_value(y, value = 42)
-counts %>% pad() %>% fill_by_function(y, fun = mean)
-counts %>% pad() %>% fill_by_prevalent(y)
+counts %>% fill_by_value()
+counts %>% fill_by_value(value = 42)
+counts %>% fill_by_function(fun = mean)
+counts %>% fill_by_prevalent()
 ```
 Note that in the first `fill_by_value` the columns to fill are not specified. In this case the filling is applied on all the columns. The other two functions also have this default behavior.
 
