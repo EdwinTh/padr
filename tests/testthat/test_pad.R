@@ -22,6 +22,7 @@ x_min   <- seq(lubridate::ymd_hms("2015-01-01 00:00:00"),
     lubridate::ymd_hm("2015-01-01 00:59")) %>%
   unique
 
+sw <- suppressWarnings
 
 context("Test the pad function")
 
@@ -39,7 +40,6 @@ test_that("Pad works properly on data.table and tbl", {
   expect_equal(class(pad(data.table::data.table(x_year, 1)))[1], "data.table")
   expect_equal(class(pad(dplyr::data_frame(x_year, 1)))[1], "tbl_df")
 })
-
 
 context("pad gives correct output with one datetime value")
 
@@ -78,12 +78,14 @@ test_that("pad_single gives correct output, with no groups", {
   expect_equal( pad_single(x, end_val = mnths[6])$m, mnths[2:6])
 })
 
+
 test_that("pad_multiple pads correctly with one group var", {
   mnths <- seq(ymd(20160101), length.out = 6, by = 'month')
   x <- data.frame(m = rep( mnths[c(2, 4, 5)], 2), g = letters[c(1, 1, 1, 2, 2, 2)])
+  expect_warning(pad_multiple(x, group = 'g'))
   expect_equal( pad_multiple(x, group = 'g', interval = "month")$m, rep(mnths[2:5], 2) )
-  expect_equal( pad_multiple(x, group = 'g', start_val = mnths[1])$m, rep(mnths[1:5], 2) )
-  expect_equal( pad_multiple(x, group = 'g', end_val = mnths[6])$m, rep(mnths[2:6], 2) )
+  expect_equal( sw(pad_multiple(x, group = 'g', start_val = mnths[1]))$m, rep(mnths[1:5], 2) )
+  expect_equal( sw(pad_multiple(x, group = 'g', end_val = mnths[6]))$m, rep(mnths[2:6], 2) )
 })
 
 test_that("pad_multiple pads correctly with two group vars", {
@@ -92,8 +94,10 @@ test_that("pad_multiple pads correctly with two group vars", {
                   g1 = letters[rep(1:2, each = 6)],
                   g2 = letters[rep(5:8, each = 3)])
   expect_equal( pad_multiple(x, group = c('g1', 'g2'), interval = "months")$m, rep(mnths[2:5], 4) )
-  expect_equal( pad_multiple(x, group = c('g1', 'g2'), start_val = mnths[1])$m, rep(mnths[1:5], 4) )
-  expect_equal( pad_multiple(x, group = c('g1', 'g2'), end_val = mnths[6])$m, rep(mnths[2:6], 4) )
+  expect_equal( sw(pad_multiple(x, group = c('g1', 'g2'), start_val = mnths[1]))$m,
+                   rep(mnths[1:5], 4) )
+  expect_equal( sw(pad_multiple(x, group = c('g1', 'g2'), end_val = mnths[6]))$m,
+                   rep(mnths[2:6], 4) )
 })
 
 test_that("the by arguments works, both in pad and pad_single", {

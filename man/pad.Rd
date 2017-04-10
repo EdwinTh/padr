@@ -31,7 +31,10 @@ variables of class \code{Date}, class \code{POSIXct} or
 class \code{POSIXlt}. \code{by} indicates which variable to use for padding.}
 
 \item{group}{Optional character vector that specifies the grouping
-variable(s). Padding will take place within the different group values.}
+variable(s). Padding will take place within the different group values. Note
+that when the interval is not specified, `get_interval` will be applied on
+the datetime variable within each group separately. When the incoming intervals
+differ, the output intervals will differ as well.}
 }
 \value{
 The data frame \code{x} with the datetime variable padded. All

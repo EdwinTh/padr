@@ -36,7 +36,7 @@
 #' some_df <- data.frame(x_hour = x_hour)
 #' thicken(some_df, 'week')
 #' thicken(some_df, 'month')
-#' thicken(some_df, start_val = lubridate::ymd_hms('20160301 120000'))
+#' thicken(some_df, 'day', start_val = lubridate::ymd_hms('20160301 120000'))
 #'
 #' library(dplyr)
 #' x_df <- data.frame(
@@ -53,7 +53,7 @@
 #' # instead of Sundays
 #' min_x <- x_df$x %>% min
 #' weekdays(min_x)
-#' x_df %>% thicken(start_val = min_x - 1) %>%
+#' x_df %>% thicken('week', start_val = min_x - 1) %>%
 #'   group_by(x_week) %>% summarise(y_avg = mean(y))
 #' @export
 thicken <- function(x,

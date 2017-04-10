@@ -23,7 +23,10 @@
 #' variables of class \code{Date}, class \code{POSIXct} or
 #' class \code{POSIXlt}. \code{by} indicates which variable to use for padding.
 #' @param group Optional character vector that specifies the grouping
-#' variable(s). Padding will take place within the different group values.
+#' variable(s). Padding will take place within the different group values. Note
+#' that when the interval is not specified, `get_interval` will be applied on
+#' the datetime variable within each group separately. When the incoming intervals
+#' differ, the output intervals will differ as well.
 #' @details The interval of a datetime variable is the time unit at which the
 #' observations occur. The eight intervals in \code{padr} are from high to low
 #' \code{year}, \code{quarter}, \code{month}, \code{week}, \code{day},
@@ -109,7 +112,8 @@ pad_single  <- function(x,
                         start_val = NULL,
                         end_val   = NULL,
                         by        = NULL,
-                        group     = NULL){
+                        group     = NULL,
+                        give_message = TRUE){
   is_df(x)
 
   original_data_frame <- x
@@ -190,7 +194,7 @@ pad_single  <- function(x,
 
   return_frame <- set_to_original_type(return_frame, original_data_frame)
 
-  interval_message(interval)
+  if (give_message) interval_message(interval)
   return(return_frame)
 }
 
@@ -229,9 +233,14 @@ pad_multiple <- function(x,
                      start_val = start_val,
                      end_val   = end_val,
                      by        = by,
-                     group     = groupings[i, , drop = FALSE]) # nolint
+                     group     = groupings[i, , drop = FALSE], # nolint
+                     give_message = FALSE)
 
     padded_groups[[i]] <- do.call(pad_single, pad_args)
+  }
+
+  if (is.null(interval)) {
+    warning("Interval was not supplied when padding groups. Not guaranteed all groups are of the same interval.") #nolint
   }
   return(do.call("rbind", padded_groups))
 }
