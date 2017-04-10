@@ -135,7 +135,7 @@ get_the_inds <- function(colnames_x,
   arguments <- args_of_function[-c(1:2)]
 
   if (length(arguments) == 0) {
-    return(1:length(colnames_x))
+    return(all_containing_nas(x))
   }
 
   cols <- arguments[ names(arguments) == '' ]
@@ -147,3 +147,8 @@ get_the_inds <- function(colnames_x,
   }
   return(inds)
 }
+
+all_containing_nas <- function(x) {
+  which(colSums(is.na(x)) > 0)
+}
+
