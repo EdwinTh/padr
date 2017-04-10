@@ -67,13 +67,12 @@ thicken <- function(x,
   is_df(x)
 
   arguments <- as.list(match.call())
-  if (!missing(by)) by_val <- as.character(arguments$by) else by_val <- NULL
 
   original_data_frame <- x
   x <- as.data.frame(x)
 
-  if ('by' %in% names(arguments)){
-    dt_var <- check_data_frame(x, by = by_val)
+  if (!is.null(by)){
+    dt_var <- check_data_frame(x, by = by)
   } else {
     dt_var <- check_data_frame(x)
   }
@@ -110,10 +109,10 @@ thicken <- function(x,
 
   thickened <- round_thicken(dt_var, spanned, rounding)
 
-  if (is.null(by_val)) {
+  if (is.null(by)) {
     x_name <- get_date_variables(x)
   } else {
-    x_name <- by_val
+    x_name <- by
   }
 
   colname <- get_colname(x, x_name, colname, interval_converted)
@@ -173,3 +172,4 @@ get_colname <- function(x, x_name, colname, interval_converted) {
   }
   return(colname)
 }
+

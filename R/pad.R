@@ -113,14 +113,13 @@ pad_single  <- function(x,
   is_df(x)
 
   arguments <- as.list(match.call())
-  if (!is.null(by)) by_val <- as.character(arguments$by)
 
   original_data_frame <- x
   x <- as.data.frame(x)
 
   if (!is.null(by)){
-    dt_var <- check_data_frame(x, by = by_val)
-    dt_var_name <- by_val
+    dt_var <- check_data_frame(x, by = by)
+    dt_var_name <- by
   } else {
     dt_var <- check_data_frame(x)
     dt_var_name <- get_date_variables(x)
