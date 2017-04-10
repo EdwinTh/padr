@@ -192,8 +192,9 @@ pad_single  <- function(x,
   colnames(return_frame)[colnames(return_frame) == 'spanned'] <- dt_var_name
 
   return_frame <- set_to_original_type(return_frame, original_data_frame)
-  print(return_frame)
+
   interval_message(interval)
+  return(return_frame)
 }
 
 # This is the wrapper around pad_single
@@ -325,5 +326,5 @@ interval_message <- function(int) {
     step <- paste(int$step, "")
   }
   interval <- paste(step, int$interval, sep = "")
-  message(paste("\npad applied on the interval", interval))
+  message(paste("pad applied on the interval", interval))
 }
