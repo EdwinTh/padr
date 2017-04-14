@@ -142,7 +142,18 @@ convert_interval <- function(interval) {
     error = function(e){
       stop("interval is not valid", call. = FALSE)
     })
-  get_interval_list(x)
+  return(make_interval_list_from_string(interval))
+}
+
+make_interval_list_from_string <- function(interval_string) {
+  interval_split <- strsplit(interval_string, " ")[[1]]
+  if (length(interval_split) == 1) {
+    return(list(interval = interval_split,
+                step     = 1))
+  } else {
+    return(list(interval = interval_split[2],
+                step     = as.numeric(interval_split[1])))
+  }
 }
 
 # in order to compare different intervals we need to set them to the same unit
