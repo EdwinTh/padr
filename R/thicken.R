@@ -76,6 +76,7 @@ thicken <- function(x,
   }
 
   interval_converted <- convert_interval(interval)
+  interval_converted$interval <- uniform_interval_name(interval_converted$interval)
   rounding <- match.arg(rounding)
 
   dt_var_interval <- get_interval_list(dt_var)
@@ -181,3 +182,25 @@ get_colname <- function(x, x_name, colname, interval_converted) {
   }
   return(colname)
 }
+
+uniform_interval_name <- function(interval) {
+  if (interval %in% c("y", "ye", "yea", "years")) {
+    interval <- "year"
+  } else if (interval %in% c("q", "qu", "qua", "quar", "quart", "quarte", "quarters")){
+    interval <- "quarter"
+  } else if (interval %in% c("m", "mo", "mon", "mont", "months")) {
+    interval <- "month"
+  } else if (interval %in% c("w", "we", "wee", "weeks")){
+    interval <- "week"
+  } else if (interval %in% c("d", "da", "days")) {
+    interval <- "day"
+  } else if (interval %in% c("h", "ho", "hou", "hours")) {
+    interval <- "hour"
+  } else if (interval %in% c("mi", "mins")) {
+    interval <- "min"
+  } else if (interval %in% c("s", "se", "secs")) {
+    interval <- "sec"
+  }
+  return(interval)
+}
+

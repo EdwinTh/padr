@@ -153,9 +153,12 @@ pad_single  <- function(x,
 
   if (!is.null(interval)) {
     interval_converted <- convert_interval(interval)
+    interval_converted$interval <- uniform_interval_name(interval_converted$interval)
   } else {
     interval_converted <- NULL
   }
+
+
 
   interval <- check_interval(dt_var, start_val, end_val, interval_converted)
 
