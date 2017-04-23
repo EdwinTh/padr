@@ -125,7 +125,7 @@ test_that("step_of_year gives correct output", {
 
 test_that("step_of_quarter gives correct output", {
   x  <- seq(ymd(20100101), length.out = 20, by = "quarter")
-  expect_equal(step_of_quarter(x), 1)
+  expect_equal( step_of_quarter(x), 1)
   expect_equal( step_of_quarter(x[seq(1, 20, by = 2)]), 2)
   expect_equal( step_of_quarter(x[seq(1, 20, by = 3)]), 3)
   expect_equal( step_of_quarter(x[seq(1, 20, by = 5)]), 5)

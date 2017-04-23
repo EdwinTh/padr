@@ -203,4 +203,3 @@ uniform_interval_name <- function(interval) {
   }
   return(interval)
 }
-

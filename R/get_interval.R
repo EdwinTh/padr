@@ -105,23 +105,26 @@ get_step <- function(x, d) {
 
 step_of_year <- function(x) {
   years <- sort( as.numeric(substr(x, 1, 4)) )
-  return( get_max_modulo_zero( get_difs(years) ) )
+  max_val <- smallest_nonzero(years)
+  return( get_max_modulo_zero( get_difs(years), max_t = max_val ) )
 }
 
 step_of_quarter <- function(x) {
   months <- sort( convert_month_to_number(x) )
   quarters <- months / 3
-  return( get_max_modulo_zero( get_difs(quarters) ) )
+  max_val <- smallest_nonzero(quarters)
+  return( get_max_modulo_zero( get_difs(quarters), max_t = max_val ) )
 }
 
 step_of_month <- function(x) {
   months <- sort( convert_month_to_number(x) )
-  return( get_max_modulo_zero( get_difs(months) ) )
+  max_val <- smallest_nonzero(months)
+  return( get_max_modulo_zero( get_difs(months), max_t = max_val) )
 }
 
 step_with_difftime <- function(x, units) {
   time_dif <- as.numeric ( get_difftime(sort(x), units) )
-  return(get_max_modulo_zero( time_dif))
+  return(get_max_modulo_zero( time_dif, max_t = smallest_nonzero(time_dif)) )
 }
 
 # count each month as a number from the first
@@ -154,4 +157,9 @@ get_max_modulo_zero <- function(d, min_t = 1, max_t = 60) {
 get_difftime <- function(x, units) {
   n <- length(x)
   difftime(x[2:n], x[1:(n - 1)], units = units)
+}
+
+smallest_nonzero <- function(x) {
+  nonzero <- x[x > 0]
+  min(nonzero)
 }
