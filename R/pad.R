@@ -146,7 +146,6 @@ pad_single  <- function(x,
     end_val <- to_posix(dt_var, end_val)$b
   }
 
-
   # If we have just one value specified it depends on start_val / end_val what to d
   return_x_here <- pad_warnings(dt_var, start_val, end_val)
   if (return_x_here) return(x)
@@ -157,8 +156,6 @@ pad_single  <- function(x,
   } else {
     interval_converted <- NULL
   }
-
-
 
   interval <- check_interval(dt_var, start_val, end_val, interval_converted)
 
