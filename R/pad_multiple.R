@@ -1,23 +1,20 @@
-# TODO: apply the two ways of determining the interval
-
-# a) over the distinct of all dt_var values
-# b) for each of the groups individual
-
-# TODO: find a uniform way of testing the validity of the interval for each
-# of the groups
+# TODO: interval assurance before joining,
+# - check if all the spanned is in the original data.
 
 pad_multiple <- function(x,
                          interval  = NULL,
                          start_val = NULL,
                          end_val   = NULL,
                          by        = NULL,
-                         group     = NULL,
-                         individual_interval = FALSE){
+                         group     = NULL){
   is_df(x)
 
   if (!all(group %in% colnames(x))) {
     stop('Not all grouping variables are column names of x.', call. = FALSE)
   }
+
+  original_data_frame <- x
+  x <- as.data.frame(x)
 
   if (!is.null(by)){
     dt_var <- check_data_frame(x, by = by)
@@ -46,19 +43,53 @@ pad_multiple <- function(x,
     end_val <- to_posix(dt_var, end_val)$b
   }
 
+  # get the interval of the datetime variable, either single value or a
+  # vector
+  interval_dt_var <- get_interval(unique(dt_var))
+
+  if (!is.null(interval)) {
+    interval_converted <- convert_interval(interval)
+    interval_converted$interval <- uniform_interval_name(interval_converted$interval)
+  } else {
+    interval_converted <- NULL
+  }
+
+  interval <- check_interval(dt_var, start_val, end_val, interval_converted)
+
+  # if we want to pad a lower level than the dt_interval, we need to make it
+  # a posix first to do proper padding
+  if (inherits(dt_var, 'Date') & interval$interval %in% c("hour", "min", "sec")) {
+    dt_var <- as.POSIXct(as.character(dt_var))
+    x[colnames(x) == dt_var_name] <- dt_var
+  }
+
+  # Because dt_var might be changed we need to adjust it in the df to join later
+  pos <- which(colnames(original_data_frame) == dt_var_name)
+  original_data_frame[, pos] <- dt_var
+
+  # do the spanning, either with or without the individual groups
   min_max_frame <- get_min_max(x, dt_var_name, group, start_val, end_val)
   warning_no_padding(min_max_frame)
 
-  spanned <- span_all_groups(min_max_frame, interval)
+  interval_string <- interval_list_to_string(interval)
+
+  spanned <- span_all_groups(min_max_frame, interval_string)
 
   colnames(original_data_frame)[colnames(original_data_frame) ==
-                                  dt_var_name] <- 'spanned'
+                                  dt_var_name] <- 'span'
 
-  return_frame  <- merge(join_frame, original_data_frame, by = cols_to_join_on,
+  return_frame  <- merge(spanned, original_data_frame,
                          all.x = TRUE)
-  colnames(return_frame)[colnames(return_frame) == 'spanned'] <- dt_var_name
-
   return_frame <- set_to_original_type(return_frame, original_data_frame)
+
+  return_frame <- to_original_format(return_frame,
+                                     group,
+                                     dt_var,
+                                     original_data_frame)
+
+  colnames(return_frame)[colnames(return_frame) == 'span'] <- dt_var_name
+
+  interval_message(interval)
   return(return_frame)
 }
 
@@ -101,7 +132,7 @@ span_from_min_max_single <- function(start,
                                      interval,
                                      id_vars) {
   ret <- data_frame(span = seq(start, end, by = interval))
-  as_data_frame(cbind(id_vars, ret))
+  as_data_frame(cbind(ret, id_vars))
 }
 
 # x is the output of get_min_max
@@ -114,4 +145,34 @@ span_all_groups <- function(x, interval) {
                       id_vars = id_vars,
                       SIMPLIFY = FALSE)
   bind_rows(list_span)
+}
+
+get_individual_interval <- function(x, dt_var_name, group_vars) {
+  grpd <- group_by_(x, .dots = group_vars)
+  colnames(grpd)[colnames(grpd) == dt_var_name] <- "dt_var"
+  ret <- summarise(grpd, interval = get_interval(dt_var))
+  return(ungroup(ret))
+}
+
+interval_list_to_string <- function(int) {
+  if (int$step == 1) {
+    step <- ""
+  } else {
+    step <- paste(int$step, "")
+  }
+  return(paste(step, int$interval, sep = ""))
+}
+
+# after joining are the rows sorted on day first. This needs to be on the
+# keys first. Also the columns should be in the same orderas the original
+to_original_format <- function(ret, group_vars, dt_var, original_data_frame){
+  if (!is.null(group_vars)) {
+    ret <- arrange_(ret, .dots = group_vars)
+  }
+  return( select_(ret, .dots = colnames(original_data_frame)) )
+}
+
+interval_message <- function(int) {
+  interval <- interval_list_to_string(int)
+  message(paste("pad applied on the interval:", interval))
 }
