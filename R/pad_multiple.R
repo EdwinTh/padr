@@ -1,12 +1,84 @@
-# TODO: interval assurance before joining,
-# - check if all the spanned is in the original data.
-
-pad_multiple <- function(x,
-                         interval  = NULL,
-                         start_val = NULL,
-                         end_val   = NULL,
-                         by        = NULL,
-                         group     = NULL){
+#' Pad the datetime column of a data frame.
+#'
+#' \code{pad} will fill the gaps in incomplete datetime variables, by figuring out
+#' what the interval of the data is and what instances are missing. It will insert
+#' a record for each of the missing time points. For all
+#' other variables in the data frame a missing value will be insterted at the padded rows.
+#'
+#' @param x A data frame containing at least one variable of class \code{Date},
+#' class \code{POSIXct} or class \code{POSIXlt}.
+#' @param interval The interval of the returned datetime variable.
+#' Any character string that would be accepted by \code{seq.Date()} or
+#' \code{seq.POSIXt}. When NULL the
+#' the interval will be equal to the interval of the datetime variable. When
+#' specified it can only be lower than the interval and step size of the input data.
+#' See Details.
+#' @param start_val An object of class \code{Date}, class \code{POSIXct} or
+#' class \code{POSIXlt} that specifies the start of the returned datetime variable.
+#' If NULL it will use the lowest value of the input variable.
+#' @param end_val An object of class \code{Date}, class \code{POSIXct} or
+#' class \code{POSIXlt} that specifies the end of returned datetime variable.
+#' If NULL it will use the highest value of the input variable.
+#' @param by Only needs to be specified when \code{x} contains multiple
+#' variables of class \code{Date}, class \code{POSIXct} or
+#' class \code{POSIXlt}. \code{by} indicates which variable to use for padding.
+#' @param group Optional character vector that specifies the grouping
+#' variable(s). Padding will take place within the different group values. Note
+#' that when the interval is not specified, `get_interval` will be applied on
+#' the datetime variable within each group separately. When the incoming intervals
+#' differ, the output intervals will differ as well.
+#' @details The interval of a datetime variable is the time unit at which the
+#' observations occur. The eight intervals in \code{padr} are from high to low
+#' \code{year}, \code{quarter}, \code{month}, \code{week}, \code{day},
+#' \code{hour}, \code{min}, and \code{sec}. Since \code{padr} v.0.3.0 the
+#' interval is no longer limited to be of a single unit.
+#' (Intervals like 5 minutes, 6 hours, 10 days are possible). \code{pad} will figure out
+#' the interval of the input variable and the step size, and will fill the gaps for the instances that
+#' would be expected from the interval and step size, but are missing in the input data.
+#' See \code{vignette("padr")} for more information on \code{pad}.
+#' See \code{vignette("padr_implementation")} for detailed information on
+#' daylight savings time, different timezones, and the implementation of
+#' \code{thicken}.
+#' @return The data frame \code{x} with the datetime variable padded. All
+#' non-grouping variables in the data frame will have missing values at the rows
+#' that are padded.
+#' @examples
+#' simple_df <- data.frame(day = as.Date(c('2016-04-01', '2016-04-03')),
+#'                         some_value = c(3,4))
+#' pad(simple_df)
+#' pad(simple_df, interval = "day")
+#'
+#' library(dplyr) # for the pipe operator
+#' month <- seq(as.Date('2016-04-01'), as.Date('2017-04-01'),
+#'               by = 'month')[c(1, 4, 5, 7, 9, 10, 13)]
+#' month_df <- data.frame(month = month,
+#'                        y = runif(length(month), 10, 20) %>% round)
+#' # forward fill the padded values with tidyr's fill
+#' month_df %>% pad %>% tidyr::fill(y)
+#'
+#' # or fill all y with 0
+#' month_df %>% pad %>% fill_by_value(y)
+#'
+#' # padding a data.frame on group level
+#' day_var <- seq(as.Date('2016-01-01'), length.out = 12, by = 'month')
+#' x_df_grp <- data.frame(grp1 = rep(LETTERS[1:3], each =4),
+#'                        grp2 = letters[1:2],
+#'                        y    = runif(12, 10, 20) %>% round(0),
+#'                        date = sample(day_var, 12, TRUE)) %>%
+#'  arrange(grp1, grp2, date)
+#'
+#' # pad by one grouping var
+#' x_df_grp %>% pad(group = 'grp1')
+#'
+#' # pad by two groups vars
+#' x_df_grp %>% pad(group = c('grp1', 'grp2'), interval = "month")
+#' @export
+pad <- function(x,
+                interval  = NULL,
+                start_val = NULL,
+                end_val   = NULL,
+                by        = NULL,
+                group     = NULL){
   is_df(x)
 
   if (!all(group %in% colnames(x))) {
@@ -45,7 +117,7 @@ pad_multiple <- function(x,
 
   # get the interval of the datetime variable, either single value or a
   # vector
-  interval_dt_var <- get_interval(unique(dt_var))
+  interval_dt_var <- get_interval_list(unique(dt_var))
 
   if (!is.null(interval)) {
     interval_converted <- convert_interval(interval)
@@ -54,13 +126,20 @@ pad_multiple <- function(x,
     interval_converted <- NULL
   }
 
-  interval <- check_interval(dt_var, start_val, end_val, interval_converted)
-
   # if we want to pad a lower level than the dt_interval, we need to make it
   # a posix first to do proper padding
-  if (inherits(dt_var, 'Date') & interval$interval %in% c("hour", "min", "sec")) {
-    dt_var <- as.POSIXct(as.character(dt_var))
-    x[colnames(x) == dt_var_name] <- dt_var
+  if (!is.null(interval_converted)) {
+    if (inherits(dt_var, 'Date') &
+        interval_converted$interval %in% c("hour", "min", "sec")) {
+      dt_var <- as.POSIXct(as.character(dt_var))
+      x[colnames(x) == dt_var_name] <- dt_var
+    }
+  }
+
+  if (is.null(interval_converted)) {
+    interval <- interval_list_to_string(interval_dt_var)
+  } else {
+    interval <- interval_list_to_string(interval_converted)
   }
 
   # Because dt_var might be changed we need to adjust it in the df to join later
@@ -71,14 +150,16 @@ pad_multiple <- function(x,
   min_max_frame <- get_min_max(x, dt_var_name, group, start_val, end_val)
   warning_no_padding(min_max_frame)
 
-  interval_string <- interval_list_to_string(interval)
+  spanned <- span_all_groups(min_max_frame, interval)
 
-  spanned <- span_all_groups(min_max_frame, interval_string)
+  if (!is.null(interval)) {
+    check_interval_validity(spanned$span, dt_var)
+  }
 
   colnames(original_data_frame)[colnames(original_data_frame) ==
                                   dt_var_name] <- 'span'
 
-  return_frame  <- merge(spanned, original_data_frame,
+  return_frame <- merge(spanned, original_data_frame,
                          all.x = TRUE)
   return_frame <- set_to_original_type(return_frame, original_data_frame)
 
@@ -88,10 +169,12 @@ pad_multiple <- function(x,
                                      original_data_frame)
 
   colnames(return_frame)[colnames(return_frame) == 'span'] <- dt_var_name
+  return_frame <- arrange_by_keys(return_frame, group, dt_var_name)
 
   interval_message(interval)
   return(return_frame)
 }
+
 
 get_min_max <- function(x,
                         dt_var,
@@ -163,6 +246,7 @@ interval_list_to_string <- function(int) {
   return(paste(step, int$interval, sep = ""))
 }
 
+
 # after joining are the rows sorted on day first. This needs to be on the
 # keys first. Also the columns should be in the same orderas the original
 to_original_format <- function(ret, group_vars, dt_var, original_data_frame){
@@ -173,6 +257,22 @@ to_original_format <- function(ret, group_vars, dt_var, original_data_frame){
 }
 
 interval_message <- function(int) {
-  interval <- interval_list_to_string(int)
-  message(paste("pad applied on the interval:", interval))
+  #interval <- interval_list_to_string(int)
+  message(paste("pad applied on the interval:", int))
+  Sys.sleep(0.5)
+}
+
+check_interval_validity <- function(spanned, dt_var) {
+  # take the unique of both so we don't do redundant stuff
+  spanned_un <- unique(spanned)
+  dt_var_un  <- unique(dt_var)
+  if (!all(dt_var_un %in% spanned_un)) {
+    stop("The specified interval is unvalid for the datetime variable, because not all original observation are in the padding.
+         If you want to pad at this interval, aggregate the data first with thicken.", call. = FALSE)
+  }
+}
+
+arrange_by_keys <- function(x, group, dt_var) {
+  sorting_vars <- c(group, dt_var)
+  return(arrange_(x, sorting_vars))
 }
