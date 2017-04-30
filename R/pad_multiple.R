@@ -159,6 +159,9 @@ pad <- function(x,
   colnames(original_data_frame)[colnames(original_data_frame) ==
                                   dt_var_name] <- 'span'
 
+  return_frame <- suppressMessages(
+    dplyr::inner_join(spanned, original_data_frame)
+  )
   return_frame <- merge(spanned, original_data_frame,
                          all.x = TRUE)
   return_frame <- set_to_original_type(return_frame, original_data_frame)
