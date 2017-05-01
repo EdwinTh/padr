@@ -229,7 +229,8 @@ span_from_min_max_single <- function(start,
 
 # x is the output of get_min_max
 span_all_groups <- function(x, interval) {
-  id_vars <- split( select(x, -mn, -mx), seq(nrow(x))) #nolint
+  select_index <- which(!colnames(x) %in% c("mn", "mx"))
+  id_vars <- split( dplyr::select(x, select_index), seq(nrow(x)))
   list_span <- mapply(span_from_min_max_single,
                       start = x$mn,
                       end   = x$mx,
@@ -260,7 +261,6 @@ to_original_format <- function(ret, group_vars, dt_var_name, original_data_frame
 
 interval_message <- function(int) {
   message(paste("pad applied on the interval:", int))
-  Sys.sleep(0.5)
 }
 
 check_interval_validity <- function(spanned, dt_var) {
