@@ -29,6 +29,20 @@ is_df <- function(x){
   }
 }
 
+check_start_and_end <- function(start_val, end_val) {
+  if (!is.null(start_val)) {
+    if (! (inherits(start_val, "Date") | inherits(start_val, "POSIXt")) ){
+      stop("start_val should be of class Date, POSIXlt, or POSIXct", call. = FALSE)
+    }
+  }
+  if (!is.null(end_val)) {
+    if (! (inherits(end_val, "Date") | inherits(end_val, "POSIXt")) ){
+      stop("end_val should be of class Date, POSIXlt, or POSIXct", call. = FALSE)
+    }
+  }
+}
+
+
 # These two Roxygen tags are required to use Cpp code (they could be anywhere
 # in the package)
 

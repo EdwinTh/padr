@@ -59,6 +59,11 @@ test_that("thicken gives warning when unordered", {
   expect_warning( thicken(x_month, interval =  "quarter"), NA)
 })
 
+test_that("thicken gives informed error when start_val is wrong class", {
+  expect_error(thicken(x_month, start_val = "2017-01-01",
+               "start_val should be of class Date, POSIXlt, or POSIXct"))
+})
+
 context("thicken integration tests")
 
 test_that("thicken gives correct interval", {
@@ -97,7 +102,6 @@ test_that("thicken gives correct ouput when x is a df", {
   expect_error( (thicken(dplyr::as_data_frame(X), interval = "month")), NA)
   expect_error( thicken(data.table::as.data.table(X), interval = "month"), NA)
 })
-
 
 test_that("column naming works properly", {
   a <- sort(x_day)

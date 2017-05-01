@@ -97,6 +97,7 @@ pad <- function(x,
                 group     = NULL,
                 return_large = FALSE){
   is_df(x)
+  check_start_and_end(start_val, end_val)
 
   if (!all(group %in% colnames(x))) {
     stop('Not all grouping variables are column names of x.', call. = FALSE)

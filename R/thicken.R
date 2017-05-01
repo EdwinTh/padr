@@ -65,6 +65,7 @@ thicken <- function(x,
                     start_val = NULL) {
 
   is_df(x)
+  check_start_and_end(start_val, NULL)
 
   original_data_frame <- x
   x <- as.data.frame(x)

@@ -62,6 +62,14 @@ test_that('gives correct output when end_val and/or start_val are specified, dat
                seq(ymd(20160101), by = 'day', length.out = 4))
 })
 
+test_that("pad gives informative error when start_val or end_val is of wrong class", {
+  x <- data.frame(tm = ymd(20160102, 20160103))
+  expect_error(pad(x, start_val = "20160101"),
+               "start_val should be of class Date, POSIXlt, or POSIXct")
+  expect_error(pad(x, end_val = "20160101"),
+               "end_val should be of class Date, POSIXlt, or POSIXct")
+})
+
 test_that('gives correct output when end_val and/or start_val are specified, posix', {
   x <- data.frame(tm = ymd_h('20160102 16'))
   s_val <- ymd_h('20160101 16')
