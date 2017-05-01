@@ -115,9 +115,12 @@ pad <- function(x,
     end_val <- to_posix(dt_var, end_val)$b
   }
 
-  # get the interval of the datetime variable, either single value or a
-  # vector
-  interval_dt_var <- get_interval_list(unique(dt_var))
+  # get the interval over all the groups, this way it is assured all groups
+  # are the same
+  interval_dt_var <- get_interval_start_end(dt_var, start_val, end_val)
+  if (interval_dt_var[[1]] == "return x here") {
+    return(x)
+  }
 
   if (!is.null(interval)) {
     interval_converted <- convert_interval(interval)
@@ -156,14 +159,11 @@ pad <- function(x,
     check_interval_validity(spanned$span, dt_var)
   }
 
-  colnames(x)[colnames(x) ==
-                                  dt_var_name] <- 'span'
+  colnames(x)[colnames(x) == dt_var_name] <- 'span'
 
   return_frame <- suppressMessages(
     dplyr::left_join(spanned, x)
   )
-
-  return_frame <- set_to_original_type(return_frame, original_data_frame)
 
   colnames(return_frame)[colnames(return_frame) == 'span'] <- dt_var_name
 
@@ -172,6 +172,7 @@ pad <- function(x,
                                      dt_var_name,
                                      original_data_frame)
 
+  return_frame <- set_to_original_type(return_frame, original_data_frame)
 
   interval_message(interval)
   return(return_frame)
@@ -198,14 +199,9 @@ get_min_max <- function(x,
 warning_no_padding <- function(x) {
   start_equal_to_end <- x$mn == x$mx
   if (any(start_equal_to_end)){
-    if (length(start_equal_to_end) == 1) {
-      warning("date time variable does not vary, returning x without padding",
-              call. = FALSE)
-    } else {
-      not_varying <- sum(start_equal_to_end)
-      warning(sprintf("date time variable does not vary for %d of the groups, no padding for these groups",
-                      not_varying), call. = FALSE)
-    }
+    not_varying <- sum(start_equal_to_end)
+    warning(sprintf("date time variable does not vary for %d of the groups, no padding applied on this / these groups", #nolint
+                    not_varying), call. = FALSE)
   }
 }
 
@@ -222,7 +218,7 @@ span_from_min_max_single <- function(start,
 
 # x is the output of get_min_max
 span_all_groups <- function(x, interval) {
-  id_vars <- split( select(x, -mn, -mx), seq(nrow(x)))
+  id_vars <- split( select(x, -mn, -mx), seq(nrow(x))) #nolint
   list_span <- mapply(span_from_min_max_single,
                       start = x$mn,
                       end   = x$mx,
@@ -230,13 +226,6 @@ span_all_groups <- function(x, interval) {
                       id_vars = id_vars,
                       SIMPLIFY = FALSE)
   return(do.call("rbind", list_span))
-}
-
-get_individual_interval <- function(x, dt_var_name, group_vars) {
-  grpd <- dplyr::group_by_(x, .dots = group_vars)
-  colnames(grpd)[colnames(grpd) == dt_var_name] <- "dt_var"
-  ret <- summarise(grpd, interval = get_interval(dt_var))
-  return(ungroup(ret))
 }
 
 interval_list_to_string <- function(int) {
@@ -254,7 +243,8 @@ interval_list_to_string <- function(int) {
 to_original_format <- function(ret, group_vars, dt_var_name, original_data_frame){
   sorting_fields <- c(group_vars, dt_var_name)
   ret <- dplyr::arrange_(ret, .dots = sorting_fields)
-  return( dplyr::select_(ret, .dots = colnames(original_data_frame)) )
+  ret <- dplyr::select_(ret, .dots = colnames(original_data_frame))
+  return(as.data.frame(ret))
 }
 
 interval_message <- function(int) {
@@ -267,7 +257,19 @@ check_interval_validity <- function(spanned, dt_var) {
   spanned_un <- unique(spanned)
   dt_var_un  <- unique(dt_var)
   if (!all(dt_var_un %in% spanned_un)) {
-    stop("The specified interval is unvalid for the datetime variable, because not all original observation are in the padding.
-         If you want to pad at this interval, aggregate the data first with thicken.", call. = FALSE)
+    stop("The specified interval is unvalid for the datetime variable,
+because not all original observation are in the padding.
+         If you want to pad at this interval, aggregate the data first with thicken.",
+         call. = FALSE)
+  }
+}
+
+get_interval_start_end <- function(dt_var, start_val, end_val) {
+  dt_var <- c(dt_var, start_val, end_val)
+  if (length(unique(dt_var)) == 1) {
+    warning("Datetime variable does not vary, returning x without padding")
+    return("return x here")
+  } else {
+    return(get_interval_list(dt_var))
   }
 }

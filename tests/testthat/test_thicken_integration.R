@@ -1,7 +1,4 @@
-devtools::load_all()
-library(dplyr)
-library(lubridate)
-library(testthat)
+source("library.R")
 
 coffee$time_stamp <- ymd_hms(coffee$time_stamp, tz = "")
 coffee_2_dts <- coffee
@@ -9,7 +6,7 @@ coffee_2_dts$ts2 <- coffee_2_dts$time_stamp
 
 context("Check all argument combinations in thicken")
 
-testthat("interval: year", {
+test_that("interval: year", {
   coffee_year    <- coffee
   year(coffee_year$time_stamp)[3:4] <- 2017:2018
   coffee_year_2_dts <- coffee_year
@@ -69,7 +66,7 @@ testthat("interval: year", {
                year_thickened_down - 1)
 })
 
-testthat("interval: month", {
+test_that("interval: month", {
   coffee_month    <- coffee
   month(coffee_month$time_stamp)[3:4] <- 8:9
   coffee_month_2_dts <- coffee_month
@@ -129,7 +126,7 @@ testthat("interval: month", {
                month_thickened_down - c(1, 1, 2, 2))
 })
 
-testthat("interval: day", {
+test_that("interval: day", {
   coffee_day       <- coffee
   coffee_day_2_dts <- coffee_day
   coffee_day_2_dts$ts2 <- coffee_day_2_dts$time_stamp
@@ -177,7 +174,7 @@ testthat("interval: day", {
   # rounding up     start_val
   expect_equal(suppressWarnings(thicken(coffee_day, "day", rounding = "up",
                                         start_val = s))$time_stamp_day,
-               day_thickened_down_s + 3600*24)
+               day_thickened_down_s + 3600 * 24)
   # rounding up     interval abbreviation
   expect_equal(thicken(coffee_day, "d", rounding = "up")$time_stamp_day,
                day_thickened_up)
@@ -194,7 +191,7 @@ testthat("interval: day", {
                day_thickened_down_s)
 })
 
-testthat("interval: hour", {
+test_that("interval: hour", {
   hour_thickened <- ymd_h(c("2016-07-07 09", "2016-07-07 09",
                             "2016-07-09 13", "2016-07-10 10"), tz = "")
   s <- ymd_hm("2016-07-07 8:59", tz = "")
@@ -249,8 +246,3 @@ testthat("interval: hour", {
   expect_equal(thicken(coffee, "h", start_val = s)$time_stamp_hour,
                hour_thickened - 60)
 })
-
-
-# warning inbouwen wanneer de start_val achter min(dt_var) ligt of
-# de end_val voor max(dt_var)
-

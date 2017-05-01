@@ -32,9 +32,6 @@ test_that("Correct error handling", {
   expect_error(pad(mtcars))
 })
 
-test_that("Gives warning when unordered", {
-  expect_warning(pad(x_day %>% as.data.frame))
-})
 
 test_that("Pad works properly on data.table and tbl", {
   expect_equal(class(pad(data.table::data.table(x_year, 1)))[1], "data.table")
