@@ -168,11 +168,10 @@ pad <- function(x,
 
   return_frame <- to_original_format(return_frame,
                                      group,
-                                     dt_var,
+                                     dt_var_name,
                                      original_data_frame)
 
   colnames(return_frame)[colnames(return_frame) == 'span'] <- dt_var_name
-  return_frame <- arrange_by_keys(return_frame, group, dt_var_name)
 
   interval_message(interval)
   return(return_frame)
@@ -184,15 +183,15 @@ get_min_max <- function(x,
                         group_vars,
                         start_val,
                         end_val) {
-  grpd <- group_by_(x, .dots = group_vars)
+  grpd <- dplyr::group_by_(x, .dots = group_vars)
 
   funcs <- list(sprintf("min(%s)", dt_var),
                 sprintf("max(%s)", dt_var))
 
-  ret <- summarise_(grpd, .dots = setNames(funcs, c("mn", "mx")))
+  ret <- dplyr::summarise_(grpd, .dots = setNames(funcs, c("mn", "mx")))
   if (!is.null(start_val)) ret$mn <- start_val
   if (!is.null(end_val)) ret$mx <- end_val
-  ret <- ungroup(ret)
+  ret <- dplyr::ungroup(ret)
   return(ret)
 }
 
@@ -217,8 +216,8 @@ span_from_min_max_single <- function(start,
                                      end,
                                      interval,
                                      id_vars) {
-  ret <- data_frame(span = seq(start, end, by = interval))
-  as_data_frame(cbind(ret, id_vars))
+  ret <- data.frame(span = seq(start, end, by = interval))
+  return(as.data.frame(cbind(ret, id_vars)))
 }
 
 # x is the output of get_min_max
@@ -230,11 +229,11 @@ span_all_groups <- function(x, interval) {
                       interval = interval,
                       id_vars = id_vars,
                       SIMPLIFY = FALSE)
-  bind_rows(list_span)
+  return(do.call(list_span, "rbind"))
 }
 
 get_individual_interval <- function(x, dt_var_name, group_vars) {
-  grpd <- group_by_(x, .dots = group_vars)
+  grpd <- dplyr::group_by_(x, .dots = group_vars)
   colnames(grpd)[colnames(grpd) == dt_var_name] <- "dt_var"
   ret <- summarise(grpd, interval = get_interval(dt_var))
   return(ungroup(ret))
@@ -250,17 +249,15 @@ interval_list_to_string <- function(int) {
 }
 
 
-# after joining are the rows sorted on day first. This needs to be on the
-# keys first. Also the columns should be in the same orderas the original
-to_original_format <- function(ret, group_vars, dt_var, original_data_frame){
-  if (!is.null(group_vars)) {
-    ret <- arrange_(ret, .dots = group_vars)
-  }
-  return( select_(ret, .dots = colnames(original_data_frame)) )
+# after joining are the rows sorted on dt_var first. This needs to be on the
+# keys first. Also the columns should be in the same order as the original
+to_original_format <- function(ret, group_vars, dt_var_name, original_data_frame){
+  sorting_fields <- c(group_vars, dt_var_name)
+  ret <- dplyr::arrange_(ret, sorting_fields)
+  return( dplyr::select_(ret, .dots = colnames(original_data_frame)) )
 }
 
 interval_message <- function(int) {
-  #interval <- interval_list_to_string(int)
   message(paste("pad applied on the interval:", int))
   Sys.sleep(0.5)
 }
@@ -273,9 +270,4 @@ check_interval_validity <- function(spanned, dt_var) {
     stop("The specified interval is unvalid for the datetime variable, because not all original observation are in the padding.
          If you want to pad at this interval, aggregate the data first with thicken.", call. = FALSE)
   }
-}
-
-arrange_by_keys <- function(x, group, dt_var) {
-  sorting_vars <- c(group, dt_var)
-  return(arrange_(x, sorting_vars))
 }
