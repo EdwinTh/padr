@@ -200,7 +200,7 @@ get_min_max <- function(x,
   funcs <- list(sprintf("min(%s)", dt_var),
                 sprintf("max(%s)", dt_var))
 
-  ret <- dplyr::summarise_(grpd, .dots = setNames(funcs, c("mn", "mx")))
+  ret <- dplyr::summarise_(grpd, .dots = stats::setNames(funcs, c("mn", "mx")))
   if (!is.null(start_val)) ret$mn <- start_val
   if (!is.null(end_val)) ret$mx <- end_val
   ret <- dplyr::ungroup(ret)

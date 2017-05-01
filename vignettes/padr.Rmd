@@ -9,7 +9,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-When getting time series data ready for analysis, you might be confronted by the following two challenges:
+When getting time series data ready for analysis, you might be confronted with the following two challenges:
 
 * The observations are done on too low a level, e.g. time recorded to the second, where your analysis is on a daily level.
 * There are no records for the time points where obsevations were absent.
@@ -47,7 +47,7 @@ coffee2$time_stamp %>% get_interval
 coffee2$time_stamp_day %>% get_interval
 ```
 
-`thicken` does figure out some stuff for you. First it finds the datetime variable in your data frame (given there is only one). Next it will determine the interval of this variable, which is one of the following: year, quarter, month, week, day, hour, minute, or second. Finally it adds a variable to the data frame that is of a higher interval than the interval of the original datetime variable. The user can then use this variable to aggregate to the higher level, for instance using `dplyr`'s `group_by` and `summarise`. As of v.0.3.0 the user cannot only specify the interval of the desired output variable, but also the units. When no unit is specified, it is treated as a single unit.
+`thicken` does figure out some stuff for you. First it finds the datetime variable in your data frame (given there is only one). Next it will determine the interval of this variable, which is one of the following: year, quarter, month, week, day, hour, minute, or second. Besides the interval, it also finds the interval unit (E.g. 5 minutes, 10 days, 2 months). Finally it adds a variable to the data frame that is of a higher interval than the interval of the original datetime variable. The user can then use this variable to aggregate to the higher level, for instance using `dplyr`'s `group_by` and `summarise`. As of v.0.3.0 the user cannot only specify the interval of the desired output variable, but also the units. When no unit is specified, a single unit is applied.
 
 ```{r}
 to_thicken <- data.frame(day_var = as.Date(c('2016-08-12', '2016-08-13', 
