@@ -39,6 +39,12 @@ The new function pad_int does padding of an integer field. Its working is very s
 
 # Issue #14 When dt_var has NULL as timezone, `to_posix` (helper of `round_thicken`, which itself is a helper of `thicken`) used to break, and thereby `thicken` itself broke.
 
+## Other changes
+
+# For determining the interval in `pad` the `start_val` and/or the `end_val` are taken into account, if specified. They are concatenated to the datetime variable befor the interval is determined. 
+
+# Both `pad` and `thicken` now throw informative errors when the start_val or end_val (`pad` only) are of the wrong class.
+
 
 ##################################################
 
