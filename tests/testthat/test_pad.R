@@ -46,6 +46,13 @@ test_that('gives warning and same result when start_val and end_val are NULL', {
   suppressWarnings(expect_equal(pad(x), x))
 })
 
+test_that("return_large prevents large output", {
+  large_df <- data.frame(x = ymd_h("2000-01-01 01", "2020-01-01 00"), y = 1:2)
+  expect_error( pad(large_df, interval = "min") )
+  expect_equal( nrow(pad(large_df, interval = "min", return_large = TRUE)),
+                10519141)
+})
+
 test_that('gives correct output when end_val and/or start_val are specified, date', {
   x <- data.frame(tm = ymd(20160102))
   expect_equal(pad(x, start_val = ymd(20160101))$tm, c(ymd(20160101), x$tm))
@@ -65,35 +72,50 @@ test_that('gives correct output when end_val and/or start_val are specified, pos
   expect_equal(pad(x, start_val = s_val, end_val = e_val)$tm, compare)
 })
 
+test_that("gives correct output when start or end with datetime range", {
+  x <- data.frame(dt = ymd(20170101, 20180101), x = 1:2)
+  expect_equal(pad(x, start_val = ymd(20170201))$dt,
+               seq(ymd(20170201), ymd(20180101), by = "month"))
+  expect_equal(pad(x, end_val = ymd(20170601))$dt,
+               seq(ymd(20170101), ymd(20170601), by = "month"))
+
+  x_grp <- data.frame(dt = ymd(20170101, 20170601, 20170201, 20170501),
+                      id = c(1, 1, 2, 2),
+                      x  = 1:4)
+  expect_equal(pad(x_grp, group = "id", start_val = ymd(20170401))$dt,
+               ymd(20170401, 20170501, 20170601, 20170401, 20170501))
+  expect_equal(pad(x_grp, group = "id", end_val = ymd(20170301))$dt,
+               ymd(20170101, 20170201, 20170301, 20170201, 20170301))
+})
+
 context("pad_single and pad_multiple, addtions to padr")
 
-test_that("pad_single gives correct output, with no groups", {
+test_that("pad gives correct output, with no groups", {
   mnths <- seq(ymd(20160101), length.out = 6, by = 'month')
   x <- data.frame(m = mnths[c(2, 4, 5)])
-  expect_equal( pad_single(x, "month")$m, mnths[2:5])
-  expect_equal( pad_single(x, start_val = mnths[1])$m, mnths[1:5])
-  expect_equal( pad_single(x, end_val = mnths[6])$m, mnths[2:6])
+  expect_equal( pad(x, "month")$m, mnths[2:5])
+  expect_equal( pad(x, start_val = mnths[1])$m, mnths[1:5])
+  expect_equal( pad(x, end_val = mnths[6])$m, mnths[2:6])
 })
 
 
 test_that("pad_multiple pads correctly with one group var", {
   mnths <- seq(ymd(20160101), length.out = 6, by = 'month')
   x <- data.frame(m = rep( mnths[c(2, 4, 5)], 2), g = letters[c(1, 1, 1, 2, 2, 2)])
-  expect_warning(pad_multiple(x, group = 'g'))
-  expect_equal( pad_multiple(x, group = 'g', interval = "month")$m, rep(mnths[2:5], 2) )
-  expect_equal( sw(pad_multiple(x, group = 'g', start_val = mnths[1]))$m, rep(mnths[1:5], 2) )
-  expect_equal( sw(pad_multiple(x, group = 'g', end_val = mnths[6]))$m, rep(mnths[2:6], 2) )
+  expect_equal( pad(x, group = 'g', interval = "month")$m, rep(mnths[2:5], 2) )
+  expect_equal( sw(pad(x, group = 'g', start_val = mnths[1]))$m, rep(mnths[1:5], 2) )
+  expect_equal( sw(pad(x, group = 'g', end_val = mnths[6]))$m, rep(mnths[2:6], 2) )
 })
 
-test_that("pad_multiple pads correctly with two group vars", {
+test_that("pad pads correctly with two group vars", {
   mnths <- seq(ymd(20160101), length.out = 6, by = 'month')
   x <- data.frame(m  = rep( mnths[c(2, 4, 5)], 4),
                   g1 = letters[rep(1:2, each = 6)],
                   g2 = letters[rep(5:8, each = 3)])
-  expect_equal( pad_multiple(x, group = c('g1', 'g2'), interval = "months")$m, rep(mnths[2:5], 4) )
-  expect_equal( sw(pad_multiple(x, group = c('g1', 'g2'), start_val = mnths[1]))$m,
+  expect_equal( pad(x, group = c('g1', 'g2'), interval = "months")$m, rep(mnths[2:5], 4) )
+  expect_equal( sw(pad(x, group = c('g1', 'g2'), start_val = mnths[1]))$m,
                    rep(mnths[1:5], 4) )
-  expect_equal( sw(pad_multiple(x, group = c('g1', 'g2'), end_val = mnths[6]))$m,
+  expect_equal( sw(pad(x, group = c('g1', 'g2'), end_val = mnths[6]))$m,
                    rep(mnths[2:6], 4) )
 })
 
@@ -107,17 +129,10 @@ test_that("the by arguments works, both in pad and pad_single", {
   check_val <- seq( ymd(20150101), length.out = 4, by = 'year')
 
   expect_equal( pad(one_var, by = "x_year", interval = "year")$x_year, check_val)
-  expect_equal( pad_single(one_var, by = "x_year",  interval = "year")$x_year, check_val)
   expect_equal( pad(one_var_grps, by = "x_year", group = 'grp',  interval = "year")$x_year,
                 rep(check_val, 2) )
-  expect_equal( pad_multiple(one_var_grps, by = "x_year", group = 'grp',
-                             interval = "year")$x_year, rep(check_val, 2) )
-
   expect_equal( pad(two_var, "year", by = "x_year")$x_year, check_val)
-  expect_equal( pad_single(two_var, "year", by = "x_year")$x_year, check_val)
   expect_equal( pad(two_var_grps, "year", by = "x_year", group = 'grp')$x_year,
-                rep(check_val, 2) )
-  expect_equal( pad_multiple(two_var_grps, "year", by = "x_year", group = 'grp')$x_year,
                 rep(check_val, 2) )
 })
 
@@ -136,3 +151,7 @@ test_that("Pad gives correct results", {
   expect_equal(pad(data.frame(x_hour, 1), interval = "hour") %>% nrow, 49)
   expect_equal(suppressWarnings(pad(data.frame(x_min, 1))) %>% nrow, 60)
 })
+
+
+
+

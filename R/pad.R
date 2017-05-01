@@ -37,6 +37,8 @@
 #' (Intervals like 5 minutes, 6 hours, 10 days are possible). \code{pad} will figure out
 #' the interval of the input variable and the step size, and will fill the gaps for the instances that
 #' would be expected from the interval and step size, but are missing in the input data.
+#' Note that when `start_val` and/or `end_val` are specified, they are concatenated
+#' with the datetime variable before the interval is determined.
 #' See \code{vignette("padr")} for more information on \code{pad}.
 #' See \code{vignette("padr_implementation")} for detailed information on
 #' daylight savings time, different timezones, and the implementation of
@@ -309,5 +311,5 @@ get_return_rows <- function(min_max_frame, interval) {
   interval_in_hours <-
     convert_int_to_hours(make_interval_list_from_string(interval))
   interval_in_seconds <- interval_in_hours * 3600
-  return(as.numeric(seconds_to_pad * interval_in_seconds))
+  return(as.numeric(seconds_to_pad / interval_in_seconds))
 }
