@@ -166,11 +166,6 @@ convert_int_to_hours <- function(interval_obj) {
   hours_in_unit[interval_obj$interval] * interval_obj$step
 }
 
-# convenience function to go from a list form to a character
-flatten_interval <- function(int) {
-  paste(int$step, int$interval)
-}
-
 get_colname <- function(x, x_name, colname, interval_converted) {
   if (is.null(colname)) {
     if (interval_converted$step == 1) {

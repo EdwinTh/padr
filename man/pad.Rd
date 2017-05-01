@@ -5,7 +5,7 @@
 \title{Pad the datetime column of a data frame.}
 \usage{
 pad(x, interval = NULL, start_val = NULL, end_val = NULL, by = NULL,
-  group = NULL)
+  group = NULL, return_large = FALSE)
 }
 \arguments{
 \item{x}{A data frame containing at least one variable of class \code{Date},
@@ -34,6 +34,10 @@ class \code{POSIXlt}. \code{by} indicates which variable to use for padding.}
 variable(s). Padding will take place within the different group values. When
 interval is not specified, it will be determined applying `get_interval` on
 the datetime variable as a whole, ignoring groups (see final example).}
+
+\item{return_large}{If FALSE function will break if the estimated result is
+larger than a milion rows. Safety net for situations where the interval
+is different than expected.}
 }
 \value{
 The data frame \code{x} with the datetime variable padded. All

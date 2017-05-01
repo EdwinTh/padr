@@ -26,6 +26,9 @@
 #' variable(s). Padding will take place within the different group values. When
 #' interval is not specified, it will be determined applying `get_interval` on
 #' the datetime variable as a whole, ignoring groups (see final example).
+#' @param return_large If FALSE function will break if the estimated result is
+#' larger than a milion rows. Safety net for situations where the interval
+#' is different than expected.
 #' @details The interval of a datetime variable is the time unit at which the
 #' observations occur. The eight intervals in \code{padr} are from high to low
 #' \code{year}, \code{quarter}, \code{month}, \code{week}, \code{day},
@@ -89,7 +92,8 @@ pad <- function(x,
                 start_val = NULL,
                 end_val   = NULL,
                 by        = NULL,
-                group     = NULL){
+                group     = NULL,
+                return_large = FALSE){
   is_df(x)
 
   if (!all(group %in% colnames(x))) {
@@ -151,9 +155,9 @@ pad <- function(x,
   }
 
   if (is.null(interval_converted)) {
-    interval <- interval_list_to_string(interval_dt_var)
+    interval <- flatten_interval(interval_dt_var)
   } else {
-    interval <- interval_list_to_string(interval_converted)
+    interval <- flatten_interval(interval_converted)
   }
 
   # Because dt_var might be changed we need to adjust it in the df to join later
@@ -162,11 +166,22 @@ pad <- function(x,
 
   # do the spanning, either with or without the individual groups
   min_max_frame <- get_min_max(x, dt_var_name, group, start_val, end_val)
+
+  if (!return_large) {
+    return_rows <- get_return_rows(min_max_frame, interval)
+    if (return_rows > 10^6) {
+      stop(sprintf("Estimated %s returned rows, breaking because return_large is FALSE",
+                   return_rows))
+    }
+  }
+
   warning_no_padding(min_max_frame)
 
   spanned <- span_all_groups(min_max_frame, interval)
 
   if (!is.null(interval)) {
+    if (!is.null(start_val)) dt_var <- dt_var[dt_var >= start_val]
+    if (!is.null(end_val)) dt_var <- dt_var[dt_var <= end_val]
     check_interval_validity(spanned$span, dt_var)
   }
 
@@ -240,7 +255,7 @@ span_all_groups <- function(x, interval) {
   return(do.call("rbind", list_span))
 }
 
-interval_list_to_string <- function(int) {
+flatten_interval <- function(int) {
   if (int$step == 1) {
     step <- ""
   } else {
@@ -268,8 +283,8 @@ check_interval_validity <- function(spanned, dt_var) {
   spanned_un <- unique(spanned)
   dt_var_un  <- unique(dt_var)
   if (!all(dt_var_un %in% spanned_un)) {
-    stop("The specified interval is unvalid for the datetime variable,
-because not all original observation are in the padding.
+    stop("The specified interval is unvalid for the datetime variable.
+         Not all original observation are in the padding.
          If you want to pad at this interval, aggregate the data first with thicken.",
          call. = FALSE)
   }
@@ -283,4 +298,16 @@ get_interval_start_end <- function(dt_var, start_val, end_val) {
   } else {
     return(get_interval_list(dt_var))
   }
+}
+
+get_return_rows <- function(min_max_frame, interval) {
+  diffs <- min_max_frame$mx - min_max_frame$mn
+  if (attributes(diffs)$units %in% c("day", "days")) {
+    diffs <- diffs * 24 * 60 * 60
+  }
+  seconds_to_pad <- sum(diffs)
+  interval_in_hours <-
+    convert_int_to_hours(make_interval_list_from_string(interval))
+  interval_in_seconds <- interval_in_hours * 3600
+  return(as.numeric(seconds_to_pad * interval_in_seconds))
 }
