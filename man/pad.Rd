@@ -31,15 +31,16 @@ variables of class \code{Date}, class \code{POSIXct} or
 class \code{POSIXlt}. \code{by} indicates which variable to use for padding.}
 
 \item{group}{Optional character vector that specifies the grouping
-variable(s). Padding will take place within the different group values. Note
-that when the interval is not specified, `get_interval` will be applied on
-the datetime variable within each group separately. When the incoming intervals
-differ, the output intervals will differ as well.}
+variable(s). Padding will take place within the different group values. When
+interval is not specified, it will be determined applying `get_interval` on
+the datetime variable as a whole, ignoring groups (see final example).}
 }
 \value{
 The data frame \code{x} with the datetime variable padded. All
 non-grouping variables in the data frame will have missing values at the rows
-that are padded.
+that are padded. The result will always be sorted on the datetime variable.
+If `group` is not `NULL` result is sorted on keys first, then on datetime
+variable.
 }
 \description{
 \code{pad} will fill the gaps in incomplete datetime variables, by figuring out
@@ -91,4 +92,13 @@ x_df_grp \%>\% pad(group = 'grp1')
 
 # pad by two groups vars
 x_df_grp \%>\% pad(group = c('grp1', 'grp2'), interval = "month")
+
+# Using group argument the interval is determined over all the observations,
+# ignoring the groups.
+x <- data.frame(dt_var = as.Date(c("2017-01-01", "2017-03-01", "2017-05-01",
+"2017-01-01", "2017-02-01", "2017-04-01")),
+id = rep(1:2, each = 3), val = round(rnorm(6)))
+pad(x, group = "id")
+# applying pad with do, interval is determined individualle for each group
+x \%>\% group_by(id) \%>\% do(pad(.))
 }
