@@ -143,8 +143,8 @@ pad <- function(x,
   }
 
   # Because dt_var might be changed we need to adjust it in the df to join later
-  pos <- which(colnames(original_data_frame) == dt_var_name)
-  original_data_frame[, pos] <- dt_var
+  pos <- which(colnames(x) == dt_var_name)
+  x[, pos] <- dt_var
 
   # do the spanning, either with or without the individual groups
   min_max_frame <- get_min_max(x, dt_var_name, group, start_val, end_val)
@@ -156,22 +156,22 @@ pad <- function(x,
     check_interval_validity(spanned$span, dt_var)
   }
 
-  colnames(original_data_frame)[colnames(original_data_frame) ==
+  colnames(x)[colnames(x) ==
                                   dt_var_name] <- 'span'
 
   return_frame <- suppressMessages(
-    dplyr::inner_join(spanned, original_data_frame)
+    dplyr::left_join(spanned, x)
   )
-  return_frame <- merge(spanned, original_data_frame,
-                         all.x = TRUE)
+
   return_frame <- set_to_original_type(return_frame, original_data_frame)
+
+  colnames(return_frame)[colnames(return_frame) == 'span'] <- dt_var_name
 
   return_frame <- to_original_format(return_frame,
                                      group,
                                      dt_var_name,
                                      original_data_frame)
 
-  colnames(return_frame)[colnames(return_frame) == 'span'] <- dt_var_name
 
   interval_message(interval)
   return(return_frame)
@@ -229,7 +229,7 @@ span_all_groups <- function(x, interval) {
                       interval = interval,
                       id_vars = id_vars,
                       SIMPLIFY = FALSE)
-  return(do.call(list_span, "rbind"))
+  return(do.call("rbind", list_span))
 }
 
 get_individual_interval <- function(x, dt_var_name, group_vars) {
@@ -253,7 +253,7 @@ interval_list_to_string <- function(int) {
 # keys first. Also the columns should be in the same order as the original
 to_original_format <- function(ret, group_vars, dt_var_name, original_data_frame){
   sorting_fields <- c(group_vars, dt_var_name)
-  ret <- dplyr::arrange_(ret, sorting_fields)
+  ret <- dplyr::arrange_(ret, .dots = sorting_fields)
   return( dplyr::select_(ret, .dots = colnames(original_data_frame)) )
 }
 
