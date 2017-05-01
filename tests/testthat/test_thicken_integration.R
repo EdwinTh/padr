@@ -192,6 +192,7 @@ test_that("interval: day", {
 })
 
 test_that("interval: hour", {
+  coffee$time_stamp <- ymd_hms(as.character(coffee$time_stamp), tz = "")
   hour_thickened <- ymd_h(c("2016-07-07 09", "2016-07-07 09",
                             "2016-07-09 13", "2016-07-10 10"), tz = "")
   s <- ymd_hm("2016-07-07 8:59", tz = "")

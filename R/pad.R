@@ -172,7 +172,7 @@ pad <- function(x,
 
   if (!return_large) {
     return_rows <- get_return_rows(min_max_frame, interval)
-    if (return_rows > 10^6) {
+    if (return_rows > 10 ^ 6) {
       stop(sprintf("Estimated %s returned rows, breaking because return_large is FALSE",
                    return_rows))
     }
