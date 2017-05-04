@@ -229,7 +229,7 @@ warning_no_padding <- function(x) {
   start_equal_to_end <- x$mn == x$mx
   if (any(start_equal_to_end)){
     not_varying <- sum(start_equal_to_end)
-    warning(sprintf("date time variable does not vary for %d of the groups, no padding applied on this / these groups", #nolint
+    warning(sprintf("datetime variable does not vary for %d of the groups, no padding applied on this / these group(s)", #nolint
                     not_varying), call. = FALSE)
   }
 }
@@ -313,4 +313,18 @@ get_return_rows <- function(min_max_frame, interval) {
     convert_int_to_hours(make_interval_list_from_string(interval))
   interval_in_seconds <- interval_in_hours * 3600
   return(as.numeric(seconds_to_pad / interval_in_seconds))
+}
+
+get_dplyr_groups <- function(x, groups) {
+  dplyr_groups <- dplyr::groups(x)
+  if (!is.null(dplyr_groups)) {
+    dplyr_groups <- as.character(dplyr_groups)
+  }
+
+  if (!is.null(groups) & !is.null(dplyr_groups)) {
+    if (!all.equal(groups, dplyr_groups)){
+      warning("group argument and dplyr::groups are both present and differ, dplyr::groups are ignored") # nolint
+    }
+  }
+  return(dplyr_groups)
 }
