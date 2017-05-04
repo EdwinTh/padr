@@ -169,6 +169,7 @@ pad <- function(x,
 
   # do the spanning, either with or without the individual groups
   min_max_frame <- get_min_max(x, dt_var_name, group, start_val, end_val)
+  check_invalid_start_and_end(min_max_frame)
 
   if (!return_large) {
     return_rows <- get_return_rows(min_max_frame, interval)
@@ -232,6 +233,29 @@ warning_no_padding <- function(x) {
     warning(sprintf("datetime variable does not vary for %d of the groups, no padding applied on this / these group(s)", #nolint
                     not_varying), call. = FALSE)
   }
+}
+
+# if start_val or end_val are specified, we want omit the cases where the
+# start_val is larger than max(x) and end_val is smaller than min(x)
+# x is the output of get_min_max
+check_invalid_start_and_end <- function(x) {
+  x <- mutate(x, invalid = mn > mx)
+  total_invalid <- sum(x$invalid)
+
+  if (total_invalid == nrow(x)) {
+    if(nrow(x) == 1) {
+      stop("start value is larger than the end value.", call. = FALSE)
+    } else {
+      stop("start value is larger than the end value for all groups.", call. = FALSE)
+    }
+  }
+
+  if (total_invalid > 0) {
+    warning(sprintf("%d group(s) for which the start value is larger than the end value, omitted from return.", #nolint
+                    total_invalid), call. = FALSE)
+  }
+  x <- filter(x, !invalid)
+  return(select(x, -invalid))
 }
 
 # id_vars is a data frame with one row containing the single value,

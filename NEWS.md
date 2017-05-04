@@ -42,9 +42,11 @@ The new function pad_int does padding of an integer field. Its working is very s
 
 ## Bug fixes
 
-# Issue #13 When the end_val is specified in `pad`, it would mistakenly update the start_val with its value. This resulted in the return of the only the last line of the padded data.frame, instead of the full padded data.frame.
+* Issue #13 When the end_val is specified in `pad`, it would mistakenly update the start_val with its value. This resulted in the return of the only the last line of the padded data.frame, instead of the full padded data.frame.
 
-# Issue #14 When dt_var has NULL as timezone, `to_posix` (helper of `round_thicken`, which itself is a helper of `thicken`) used to break, and thereby `thicken` itself broke.
+* Issue #14 When dt_var has NULL as timezone, `to_posix` (helper of `round_thicken`, which itself is a helper of `thicken`) used to break, and thereby `thicken` itself broke.
+
+* Issue #24 In `pad` with grouping, the function will no longer break if for one of the groups the start_val is behind its last observation, or the end_val is before its first observation. Group is omitted and warning is thrown. If all groups are omitted, function breaks with an informative error. The same goes when there is no grouping.
 
 ## Other changes
 
@@ -52,7 +54,7 @@ The new function pad_int does padding of an integer field. Its working is very s
 
 # Both `pad` and `thicken` now throw informative errors when the start_val or end_val (`pad` only) are of the wrong class.
 
-# 
+
 
 
 ##################################################
