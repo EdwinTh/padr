@@ -127,14 +127,19 @@ test_that("pad pads correctly with two group vars", {
                    rep(mnths[2:6], 4) )
 })
 
-test_that("dplyr grouping gives exact same results", {
+test_that("dplyr grouping yields correct results", {
   mnths <- seq(ymd(20160101), length.out = 6, by = 'month')
   x <- data.frame(m  = rep( mnths[c(2, 4, 5)], 4),
                   g1 = letters[rep(1:2, each = 6)],
                   g2 = letters[rep(5:8, each = 3)])
-  expect_equal(pad(x, group = "g1"), pad(dplyr::group_by(x, g1)) )
+  expect_equal(pad(x, group = "g1"),
+               pad(dplyr::group_by(x, g1)) %>% as.data.frame )
   expect_equal(pad(x, group = c("g1", "g2")),
-               pad(dplyr::group_by(x, g1, g2)) )
+               pad(dplyr::group_by(x, g1, g2)) %>% as.data.frame)
+  expect_warning(pad(group_by(x, g2), group = "g1"))
+  expect_equal( sw(pad(group_by(x, g2), group = "g1")) %>% as.data.frame,
+                pad(x, group = "g1"))
+  expect_equal( pad(group_by(x, g1)) %>% groups %>% as.character, "g1")
 
 })
 

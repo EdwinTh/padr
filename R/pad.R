@@ -98,7 +98,7 @@ pad <- function(x,
                 return_large = FALSE){
   is_df(x)
   check_start_and_end(start_val, end_val)
-  group <- get_dplyr_groups()
+  group <- get_dplyr_groups(x, group)
 
   if (!all(group %in% colnames(x))) {
     stop('Not all grouping variables are column names of x.', call. = FALSE)
@@ -340,15 +340,18 @@ get_return_rows <- function(min_max_frame, interval) {
   return(as.numeric(seconds_to_pad / interval_in_seconds))
 }
 
-get_dplyr_groups <- function(x, groups) {
-  dplyr_groups <- dplyr::groups(x)
-  if (!is.null(dplyr_groups)) {
-    dplyr_groups <- as.character(dplyr_groups)
-  }
+get_dplyr_groups <- function(x, group) {
 
-  if (!is.null(groups) & !is.null(dplyr_groups)) {
-    if (!all.equal(groups, dplyr_groups)){
+  dplyr_groups <- dplyr::groups(x)
+
+  if (is.null(dplyr_groups)) {
+    return(group)
+  } else {
+    dplyr_groups <- as.character(dplyr_groups)
+
+    if (!is.null(group) & (!all(dplyr_groups %in% group)) ) {
       warning("group argument and dplyr::groups are both present and differ, dplyr::groups are ignored") # nolint
+      return(group)
     }
   }
   return(dplyr_groups)
