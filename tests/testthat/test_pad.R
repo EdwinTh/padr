@@ -127,6 +127,17 @@ test_that("pad pads correctly with two group vars", {
                    rep(mnths[2:6], 4) )
 })
 
+test_that("dplyr grouping gives exact same results", {
+  mnths <- seq(ymd(20160101), length.out = 6, by = 'month')
+  x <- data.frame(m  = rep( mnths[c(2, 4, 5)], 4),
+                  g1 = letters[rep(1:2, each = 6)],
+                  g2 = letters[rep(5:8, each = 3)])
+  expect_equal(pad(x, group = "g1"), pad(dplyr::group_by(x, g1)) )
+  expect_equal(pad(x, group = c("g1", "g2")),
+               pad(dplyr::group_by(x, g1, g2)) )
+
+})
+
 test_that("the by arguments works, both in pad and pad_single", {
   one_var <- data.frame(x_year = x_year, val = 1)
   two_var <- one_var; two_var$x_year2 <- two_var$x_year
@@ -144,6 +155,30 @@ test_that("the by arguments works, both in pad and pad_single", {
                 rep(check_val, 2) )
 })
 
+test_that("pad works correclty when start is after or end is before range", {
+  x_grp <- data.frame(x   = as.Date(c("2017-04-01", "2017-07-01",
+                                      "2017-09-01", "2017-11-01")),
+                      grp = rep(letters[1:2], each = 2),
+                      y   = 1:4)
+  x_sing_1 <- x_grp[1:2, ]
+  x_sing_2 <- x_grp[3:4, ]
+  expect_error(pad(x_sing_1, start_val = as.Date("2017-08-01")),
+               "start value is larger than the end value.")
+  expect_error(pad(x_sing_1, end_val = as.Date("2017-03-01")),
+               "start value is larger than the end value.")
+  expect_warning(pad(x_grp, group = "grp", start_val = as.Date("2017-08-01")))
+  expect_warning(pad(x_grp, group = "grp", end_val = as.Date("2017-08-01")))
+
+  x_sing_1_pad <- pad(x_sing_1, group = "grp", interval = "month")
+  x_start_val <- sw(pad(x_grp, group = "grp", end_val = as.Date("2017-07-01"),
+                        interval = "month"))
+  expect_equal(x_sing_1_pad, x_start_val)
+
+  x_sing_2_pad <- pad(x_sing_2, group = "grp", interval = "month")
+  x_end_val <- sw(pad(x_grp, group = "grp", start_val = as.Date("2017-09-01"),
+                      interval = "month"))
+  expect_equal(x_sing_2_pad, x_end_val)
+})
 
 context("pad integration tests")
 test_that("Pad gives correct results", {

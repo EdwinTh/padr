@@ -98,6 +98,7 @@ pad <- function(x,
                 return_large = FALSE){
   is_df(x)
   check_start_and_end(start_val, end_val)
+  group <- get_dplyr_groups()
 
   if (!all(group %in% colnames(x))) {
     stop('Not all grouping variables are column names of x.', call. = FALSE)
@@ -169,7 +170,7 @@ pad <- function(x,
 
   # do the spanning, either with or without the individual groups
   min_max_frame <- get_min_max(x, dt_var_name, group, start_val, end_val)
-  check_invalid_start_and_end(min_max_frame)
+  min_max_frame <- check_invalid_start_and_end(min_max_frame)
 
   if (!return_large) {
     return_rows <- get_return_rows(min_max_frame, interval)
