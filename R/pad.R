@@ -173,7 +173,6 @@ pad <- function(x,
   min_max_frame <- get_min_max(x, dt_var_name, group, start_val, end_val)
   min_max_frame <- check_invalid_start_and_end(min_max_frame)
 
-
   return_rows <- get_return_rows(min_max_frame, interval)
   threshold   <- break_above * 10 ^ 6
   if (return_rows > threshold) {
@@ -257,7 +256,7 @@ check_invalid_start_and_end <- function(x) {
                     total_invalid), call. = FALSE)
   }
   x <- x[!x$invalid, ]
-  x <- x[colnames(x) != "invalid", ]
+  x <- x[, colnames(x) != "invalid"]
   return(x)
 }
 
