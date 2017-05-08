@@ -268,7 +268,12 @@ span_from_min_max_single <- function(start,
                                      interval,
                                      id_vars) {
   ret <- data.frame(span = seq(start, end, by = interval))
-  return(as.data.frame(cbind(ret, id_vars)))
+  if (length(id_vars) > 0) {
+    id_vars <- do.call("rbind", replicate(nrow(ret), id_vars, simplify = FALSE))
+    return(as.data.frame(cbind(ret, id_vars)))
+  } else {
+    return(ret)
+  }
 }
 
 # x is the output of get_min_max
