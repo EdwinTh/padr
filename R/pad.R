@@ -26,9 +26,10 @@
 #' variable(s). Padding will take place within the different group values. When
 #' interval is not specified, it will be determined applying `get_interval` on
 #' the datetime variable as a whole, ignoring groups (see final example).
-#' @param return_large If FALSE function will break if the estimated result is
-#' larger than a milion rows. Safety net for situations where the interval
-#' is different than expected.
+#' @param break_above Numeric value that indicates the number of rows in millions
+#' above which the function will break. Safety net for situations where the
+#' interval is different than expected and padding yields a very large
+#' dataframe, possibly overflowing memory.
 #' @details The interval of a datetime variable is the time unit at which the
 #' observations occur. The eight intervals in \code{padr} are from high to low
 #' \code{year}, \code{quarter}, \code{month}, \code{week}, \code{day},
@@ -95,7 +96,7 @@ pad <- function(x,
                 end_val   = NULL,
                 by        = NULL,
                 group     = NULL,
-                return_large = FALSE){
+                break_above = 1){
   is_df(x)
   check_start_and_end(start_val, end_val)
   group <- get_dplyr_groups(x, group)
@@ -172,12 +173,12 @@ pad <- function(x,
   min_max_frame <- get_min_max(x, dt_var_name, group, start_val, end_val)
   min_max_frame <- check_invalid_start_and_end(min_max_frame)
 
-  if (!return_large) {
-    return_rows <- get_return_rows(min_max_frame, interval)
-    if (return_rows > 10 ^ 6) {
-      stop(sprintf("Estimated %s returned rows, breaking because return_large is FALSE",
-                   return_rows))
-    }
+
+  return_rows <- get_return_rows(min_max_frame, interval)
+  threshold   <- break_above * 10 ^ 6
+  if (return_rows > threshold) {
+    stop(sprintf("Estimated %s returned rows, larger than %s milion as indcated in break_above",
+                  return_rows, break_above), call. = FALSE)
   }
 
   warning_no_padding(min_max_frame)
@@ -240,11 +241,11 @@ warning_no_padding <- function(x) {
 # start_val is larger than max(x) and end_val is smaller than min(x)
 # x is the output of get_min_max
 check_invalid_start_and_end <- function(x) {
-  x <- mutate(x, invalid = mn > mx)
+  x$invalid <- x$mn > x$mx
   total_invalid <- sum(x$invalid)
 
   if (total_invalid == nrow(x)) {
-    if(nrow(x) == 1) {
+    if (nrow(x) == 1) {
       stop("start value is larger than the end value.", call. = FALSE)
     } else {
       stop("start value is larger than the end value for all groups.", call. = FALSE)
@@ -255,8 +256,9 @@ check_invalid_start_and_end <- function(x) {
     warning(sprintf("%d group(s) for which the start value is larger than the end value, omitted from return.", #nolint
                     total_invalid), call. = FALSE)
   }
-  x <- filter(x, !invalid)
-  return(select(x, -invalid))
+  x <- x[!x$invalid, ]
+  x <- x[colnames(x) != "invalid", ]
+  return(x)
 }
 
 # id_vars is a data frame with one row containing the single value,

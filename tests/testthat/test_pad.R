@@ -46,11 +46,11 @@ test_that('gives warning and same result when start_val and end_val are NULL', {
   suppressWarnings(expect_equal(pad(x), x))
 })
 
-test_that("return_large prevents large output", {
-  large_df <- data.frame(x = ymd_h("2000-01-01 01", "2020-01-01 00"), y = 1:2)
+test_that("break_above prevents large output", {
+  large_df <- data.frame(x = ymd_h("2000-01-01 01", "2004-01-01 00"), y = 1:2)
   expect_error( pad(large_df, interval = "min") )
-  expect_equal( nrow(pad(large_df, interval = "min", return_large = TRUE)),
-                10519141)
+  expect_equal( nrow(pad(large_df, interval = "min", break_above = 2.2)),
+                2103781)
 })
 
 test_that('gives correct output when end_val and/or start_val are specified, date', {

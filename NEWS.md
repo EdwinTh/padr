@@ -19,11 +19,15 @@ x <- data.frame(date_var, y = 1:3)
 
 Since the interval of `date_var` used be "day", there were missing records for 2017-01-02 and 2017-01-04. These records were inserted, with missing values for y. However, now the interval of `date_var` is "2 day" and on this level there is no need for padding. To get ther original result the interval argument should be specified with "day".
 
-#### pad has been reimplemented
+#### Changes in `pad`
+
+Pad has been reimplemented
 
 The function was slow when applied on many group becuaus looped over them. Function has been reimplemented so it needs only one join to do the padding for all the groups simultaneously. `dplyr` functions are used for this new implementation, both for speed and coding clarity. 
 
 When applying pad to groups the interval is determined differently. It used to determine the interval seperately for each of the groups. With the new interval definition this would often yield undesired results. Now, the interval on the full datetime variable, ignoring the groups. If the user would like to allow for differing intervals over the groups it is advised to use `dplyr::do`. See also the final example of `pad`.
+
+`dplyr::group_by`
 
 Besides its own argument for grouping, `pad` does now also accepts the grouping from `dplyr`. Making the following two results equal:
 
@@ -31,6 +35,10 @@ x %>% group_by(z) %>% pad
 x %>% pad(group = 'z')
 
 Moreover, both `pad` and `thicken` now maintain the grouping of the input data_frame. The return from both functions will have the exact same grouping.
+
+`break_above`
+
+This new argument to `pad` is a safety net for situations where the returned dataframe is much larger than the user anticipated. This would happen when the datetime variable is of a lower interval than the user thought it was. Before doing the actual padding, the function estimates the number of rows in the result. If these are above `break_above` the function will break.
 
 #### fill_by functions default behavior is changed. They used to require specification of all the column names that had to filled. This is annoying when many columns had to filled. The functions no longer break when no variable names are specified, but they fill all columns in the data frame.
 
@@ -53,6 +61,7 @@ The new function pad_int does padding of an integer field. Its working is very s
 # For determining the interval in `pad` the `start_val` and/or the `end_val` are taken into account, if specified. They are concatenated to the datetime variable befor the interval is determined. 
 
 # Both `pad` and `thicken` now throw informative errors when the start_val or end_val (`pad` only) are of the wrong class.
+
 
 
 
