@@ -52,10 +52,12 @@ test_that("break_above prevents large output", {
   large_df_grp$grp <-  rep(letters[1:2], each = 2)
   expect_error( pad(large_df, interval = "min") )
   expect_error( pad(large_df_grp, interval = "min", group = "grp") )
-  expect_equal( nrow(pad(large_df, interval = "min", break_above = 2.2)),
-                2103781)
-  expect_equal( nrow(pad(large_df_grp, interval = "min", break_above = 4.4, group = "grp")),
-                2103781 * 2)
+  expect_error( nrow(pad(large_df, interval = "hour", break_above = 0.035)))
+  expect_error( nrow(pad(large_df_grp, interval = "hour", break_above = 0.07, group = "grp")))
+  expect_equal( nrow(pad(large_df, interval = "hour", break_above = 0.0351)), 35064)
+  expect_equal( nrow(pad(large_df_grp, interval = "hour", group = "grp",
+                         break_above = 0.0702)), 70128)
+
 })
 
 test_that('gives correct output when end_val and/or start_val are specified, date', {
