@@ -106,7 +106,7 @@ thicken <- function(x,
   }
 
   ind_to_keep <- start_val_after_min_dt(start_val, dt_var)
-  x <- x[ind_to_keep, ]
+  x <- x[ind_to_keep, , drop = FALSE]
   dt_var <- dt_var[ind_to_keep]
 
   spanned <- span(dt_var, interval_converted, start_val)
