@@ -252,7 +252,7 @@ check_invalid_start_and_end <- function(x) {
   }
 
   if (total_invalid > 0) {
-    warning(sprintf("%d group(s) for which the start value is larger than the end value, omitted from return.", #nolint
+    warning(sprintf("%d group(s) for which the start value is larger than the end value, removed from return.", #nolint
                     total_invalid), call. = FALSE)
   }
   x <- x[!x$invalid, ]

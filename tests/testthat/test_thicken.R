@@ -30,6 +30,7 @@ x_sec   <- date_seq("sec")
 equal_dist <- c(as.POSIXct("2014-01-01 23:00:00"),
                 as.POSIXct("2014-01-02 01:00:00"))
 
+
 df_with_one_date  <- data.frame(dt_var1 = date_seq("month"),
                                 y = 1:6)
 df_with_one_date_sorted <- df_with_one_date %>% arrange(dt_var1)
@@ -62,6 +63,14 @@ test_that("thicken gives warning when unordered", {
 test_that("thicken gives informed error when start_val is wrong class", {
   expect_error(thicken(x_month, start_val = "2017-01-01",
                "start_val should be of class Date, POSIXlt, or POSIXct"))
+})
+
+test_that("thicken gives warning and removes when start_val is larger than min(dt)", {
+  x <- data.frame(dt = as.Date(c("2016-01-01", "2016-01-03", "2016-01-04")),
+                  y = 1:3)
+  expect_warning(thicken(x, start_val = as.Date("2016-01-02"), interval = "year"))
+  expect_equal( sw( thicken(x, start_val = as.Date("2016-01-02"), interval = "year") ) %>%
+                  nrow, 2)
 })
 
 context("thicken integration tests")
