@@ -275,6 +275,7 @@ span_from_min_max_single <- function(start,
 span_all_groups <- function(x, interval) {
   select_index <- which(!colnames(x) %in% c("mn", "mx"))
   id_vars <- split( dplyr::select(x, select_index), seq(nrow(x)))
+  stop_int64(id_vars)
   list_span <- mapply(span_from_min_max_single,
                       start = x$mn,
                       end   = x$mx,
@@ -282,6 +283,14 @@ span_all_groups <- function(x, interval) {
                       id_vars = id_vars,
                       SIMPLIFY = FALSE)
   return(do.call("rbind", list_span))
+}
+
+# currently int64 gives so much trouble, I chose to just break for now.
+stop_int64 <- function(id_var_df) {
+  classes_id <- unlist(sapply(id_var_df, class))
+  if ("integer64" %in% classes_id) {
+    stop("pad currently does not support group variables of class integer64")
+  }
 }
 
 flatten_interval <- function(int) {
