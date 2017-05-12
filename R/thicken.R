@@ -213,10 +213,6 @@ start_val_after_min_dt <- function(start_val, dt_var) {
     start_val <- to_posix(start_val, dt_var)$a
     dt_var    <- to_posix(start_val, dt_var)$b
     ind <- dt_var > start_val
-    if (any(!ind)) {
-      warning("start_val is greater than first observation, removing rows from return",
-              call. = FALSE)
-    }
     return(ind)
   }
 }

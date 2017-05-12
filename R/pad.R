@@ -176,7 +176,7 @@ pad <- function(x,
   return_rows <- get_return_rows(min_max_frame, interval)
   threshold   <- break_above * 10 ^ 6
   if (return_rows > threshold) {
-    stop(sprintf("Estimated %s returned rows, larger than %s milion as indcated in break_above",
+    stop(sprintf("Estimated %s returned rows, larger than %s milion in break_above",
                   return_rows, break_above), call. = FALSE)
   }
 
@@ -291,7 +291,8 @@ span_all_groups <- function(x, interval) {
 stop_int64 <- function(id_var_df) {
   classes_id <- unlist(sapply(id_var_df, class))
   if ("integer64" %in% classes_id) {
-    stop("pad currently does not support group variables of class integer64")
+    stop("pad currently does not support group variables of class integer64",
+         call. = FALSE)
   }
 }
 
@@ -333,7 +334,8 @@ check_interval_validity <- function(spanned, dt_var) {
 get_interval_start_end <- function(dt_var, start_val, end_val) {
   dt_var <- c(dt_var, start_val, end_val)
   if (length(unique(dt_var)) == 1) {
-    warning("Datetime variable does not vary, returning x without padding")
+    warning("Datetime variable does not vary, returning x without padding",
+            call. = FALSE)
     return("return x here")
   } else {
     return(get_interval_list(dt_var))
@@ -362,7 +364,8 @@ get_dplyr_groups <- function(x, group) {
     dplyr_groups <- as.character(dplyr_groups)
 
     if (!is.null(group) & (!all(dplyr_groups %in% group)) ) {
-      warning("group argument and dplyr::groups are both present and differ, dplyr::groups are ignored") # nolint
+      warning("group argument and dplyr::groups are both present and differ, dplyr::groups are ignored",
+              call. = FALSE) # nolint
       return(group)
     }
   }
