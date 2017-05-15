@@ -192,58 +192,64 @@ test_that("interval: day", {
 })
 
 test_that("interval: hour", {
-  coffee$time_stamp <- ymd_hms(as.character(coffee$time_stamp), tz = "")
+  coffee_hour       <- coffee
+  coffee_hour$time_stamp <- ymd_hms(as.character(coffee_hour$time_stamp))
+  coffee_hour_2_dts <- coffee_hour
+  coffee_hour_2_dts$ts2 <- coffee_hour_2_dts$time_stamp
   hour_thickened <- ymd_h(c("2016-07-07 09", "2016-07-07 09",
-                            "2016-07-09 13", "2016-07-10 10"), tz = "")
-  s <- ymd_hm("2016-07-07 8:59", tz = "")
+                            "2016-07-09 13", "2016-07-10 10"))
+  hour_thickened_up <- ymd_h(c("2016-07-07 10", "2016-07-07 10",
+                               "2016-07-09 13", "2016-07-10 11"))
+  hour_thickened_down_s <- ymd_hm(c("2016-07-07 08:59", "2016-07-07 08:59",
+                            "2016-07-09 12:59", "2016-07-10 09:59"))
+  s <- ymd_hm("2016-07-07 8:59")
   # plain
-  expect_equal(thicken(coffee, "hour")$time_stamp_hour,
+  expect_equal(thicken(coffee_hour, "hour")$time_stamp_hour,
                hour_thickened)
   # specify colname
-  expect_equal(thicken(coffee, "hour", "h")$h,
+  expect_equal(thicken(coffee_hour, "hour", "h")$h,
                hour_thickened)
   # rounding up
-  expect_equal(thicken(coffee, "hour", rounding = "up")$time_stamp_hour,
+  expect_equal(thicken(coffee_hour, "hour", rounding = "up")$time_stamp_hour,
                hour_thickened + 3600)
   # specify by
-  expect_equal(thicken(coffee_2_dts, "hour", by = "ts2")$ts2_hour,
+  expect_equal(thicken(coffee_hour_2_dts, "hour", by = "ts2")$ts2_hour,
                hour_thickened)
   # start_val
-  s <- ymd_hm("2016-07-07 8:59", tz = "")
-  expect_equal(thicken(coffee, "hour", start_val = s)$time_stamp_hour,
+  expect_equal(thicken(coffee_hour, "hour", start_val = s)$time_stamp_hour,
                hour_thickened - 60)
   # interval abbreviation
-  expect_equal(thicken(coffee, "h")$time_stamp_hour,
+  expect_equal(thicken(coffee_hour, "h")$time_stamp_hour,
                hour_thickened)
   # specify by rounding up
-  expect_equal(thicken(coffee_2_dts, "hour", rounding = "up", by = "ts2")$ts2_hour,
+  expect_equal(thicken(coffee_hour_2_dts, "hour", rounding = "up", by = "ts2")$ts2_hour,
                hour_thickened + 3600)
   # specify by specify colname
-  expect_equal(thicken(coffee_2_dts, "hour", colname = "t", by = "ts2")$t,
+  expect_equal(thicken(coffee_hour_2_dts, "hour", colname = "t", by = "ts2")$t,
                hour_thickened)
   # specify by start_val
-  expect_equal(thicken(coffee_2_dts, "hour", by = "ts2", start_val = s)$ts2_hour,
+  expect_equal(thicken(coffee_hour_2_dts, "hour", by = "ts2", start_val = s)$ts2_hour,
                hour_thickened - 60)
 
   # specify by interval abbreviation
-  expect_equal(thicken(coffee_2_dts, "h", by = "ts2", start_val = s)$ts2_hour,
+  expect_equal(thicken(coffee_hour_2_dts, "h", by = "ts2", start_val = s)$ts2_hour,
                hour_thickened - 60)
   # rounding up     specify colname
-  expect_equal(thicken(coffee, "hour", "jos", rounding = "up")$jos,
+  expect_equal(thicken(coffee_hour, "hour", "jos", rounding = "up")$jos,
                hour_thickened + 3600)
   # rounding up     start_val
-  expect_equal(thicken(coffee, "hour", rounding = "up", start_val = s)$time_stamp_hour,
+  expect_equal(thicken(coffee_hour, "hour", rounding = "up", start_val = s)$time_stamp_hour,
                hour_thickened + 3540)
   # rounding up     interval abbreviation
-  expect_equal(thicken(coffee, "h", rounding = "up")$time_stamp_hour,
+  expect_equal(thicken(coffee_hour, "h", rounding = "up")$time_stamp_hour,
                hour_thickened + 3600)
   # specify colname start_val
-  expect_equal(thicken(coffee, "hour", "jos", start_val = s)$jos,
+  expect_equal(thicken(coffee_hour, "hour", "jos", start_val = s)$jos,
                hour_thickened - 60)
   # specify colname interval abbreviation
-  expect_equal(thicken(coffee, "h", "jos")$jos,
+  expect_equal(thicken(coffee_hour, "h", "jos")$jos,
                hour_thickened)
   # start_val       interval abbreviation
-  expect_equal(thicken(coffee, "h", start_val = s)$time_stamp_hour,
+  expect_equal(thicken(coffee_hour, "h", start_val = s)$time_stamp_hour,
                hour_thickened - 60)
 })
