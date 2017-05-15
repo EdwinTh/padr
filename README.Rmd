@@ -31,9 +31,7 @@ coffee %>%
   dplyr::group_by(time_stamp_day) %>%
   dplyr::summarise(day_amount = sum(amount)) %>%
   pad() %>%
-  fill_by_value(day_amount, value = 0) %>%
-  ggplot2::ggplot(ggplot2::aes(time_stamp_day, day_amount)) +
-    ggplot2::geom_line()
+  fill_by_value(day_amount, value = 0)
 ```
 
 # More information

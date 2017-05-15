@@ -28,12 +28,16 @@ coffee %>%
   dplyr::group_by(time_stamp_day) %>%
   dplyr::summarise(day_amount = sum(amount)) %>%
   pad() %>%
-  fill_by_value(day_amount, value = 0) %>%
-  ggplot2::ggplot(ggplot2::aes(time_stamp_day, day_amount)) +
-    ggplot2::geom_line()
+  fill_by_value(day_amount, value = 0)
 ```
 
-![](README_files/figure-markdown_github/unnamed-chunk-1-1.png)
+    ## # A tibble: 4 × 2
+    ##   time_stamp_day day_amount
+    ##           <date>      <dbl>
+    ## 1     2016-07-07       6.12
+    ## 2     2016-07-08       0.00
+    ## 3     2016-07-09       4.11
+    ## 4     2016-07-10       3.14
 
 More information
 ================
