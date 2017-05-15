@@ -1,4 +1,3 @@
-
 round_thicken <- function(a,
                           b,
                           direction = c('down', 'up')) {
@@ -14,6 +13,7 @@ round_thicken <- function(a,
   b_same_level <- sort(b_same_level)
 
   a_df$rounded <- apply_rounding(a_df$a_same_level, b_same_level, direction)
+  sorting_var = NULL # appeases CRAN check note
   a_df <- arrange(a_df, sorting_var)
   rounded <- a_df$rounded
 
