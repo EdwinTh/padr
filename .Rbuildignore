@@ -5,3 +5,5 @@
 ^scripts
 ^readme_plot.png$
 ^cran-comments\.md$
+^README\.Rmd$
+^README-.*\.png$
