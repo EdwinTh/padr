@@ -128,7 +128,7 @@ test_that("interval: day", {
   coffee_day_2_dts$ts2 <- coffee_day_2_dts$time_stamp
   day_thickened_down <- ymd(c(20160707, 20160707, 20160709, 20160710))
   day_thickened_down_s <- ymd_h(c("20160706 23", "20160706 23",
-                                  "20160708 23", "20160709 23"), tz = "")
+                                  "20160708 23", "20160709 23"))
   day_thickened_up   <- ymd(c(20160708, 20160708, 20160710, 20160711))
 
   s <- ymd_h("20160706 23")
@@ -188,7 +188,10 @@ test_that("interval: day", {
 })
 
 test_that("interval: hour", {
-  coffee_hour       <- coffee
+  coffee_hour       <- data.frame(
+    time_stamp = ymd_hms(c("2016-07-07 09:11:21", "2016-07-07 09:46:48",
+                           "2016-07-09 13:25:17", "2016-07-10 10:45:11")),
+    y = c(3.14, 2.98, 4.11, 3.14))
   coffee_hour$time_stamp <- ymd_hms(as.character(coffee_hour$time_stamp))
   coffee_hour_2_dts <- coffee_hour
   coffee_hour_2_dts$ts2 <- coffee_hour_2_dts$time_stamp
