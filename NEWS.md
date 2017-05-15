@@ -31,7 +31,7 @@ When applying pad to groups the interval is determined differently. It used to d
 
 Besides its own argument for grouping, `pad` does now also accepts the grouping from `dplyr`. Making the following two results equal:
 
-x %>% group_by(z) %>% pad
+x %>% dplyr::group_by(z) %>% pad
 x %>% pad(group = 'z')
 
 Moreover, both `pad` and `thicken` now maintain the grouping of the input data_frame. The return from both functions will have the exact same grouping.
@@ -40,7 +40,13 @@ Moreover, both `pad` and `thicken` now maintain the grouping of the input data_f
 
 This new argument to `pad` is a safety net for situations where the returned dataframe is much larger than the user anticipated. This would happen when the datetime variable is of a lower interval than the user thought it was. Before doing the actual padding, the function estimates the number of rows in the result. If these are above `break_above` the function will break.
 
-#### fill_by functions default behavior is changed. They used to require specification of all the column names that had to filled. This is annoying when many columns had to filled. The functions no longer break when no variable names are specified, but they fill all columns in the data frame.
+#### Changes in `thicken`
+
+* Observations before the `start_val` are now removed from the dataset (with a warning). They used to be all mapped to the `start_val`.
+
+#### fill_by functions default behavior is changed. 
+
+They used to require specification of all the column names that had to filled. This is annoying when many columns had to filled. The functions no longer break when no variable names are specified, but they fill all columns in the data frame.
 
 ## New features
 
@@ -54,13 +60,13 @@ The new function pad_int does padding of an integer field. Its working is very s
 
 * Issue #14 When dt_var has NULL as timezone, `to_posix` (helper of `round_thicken`, which itself is a helper of `thicken`) used to break, and thereby `thicken` itself broke.
 
-* Issue #24 In `pad` with grouping, the function will no longer break if for one of the groups the start_val is behind its last observation, or the end_val is before its first observation. Group is omitted and warning is thrown. If all groups are omitted, function breaks with an informative error. The same goes when there is no grouping.
+* Issue #24 In `pad` with grouping, the function will no longer breaks if for one of the groups the start_val is behind its last observation, or the end_val is before its first observation. Group is omitted and warning is thrown. If all groups are omitted, function breaks with an informative error. The same goes when there is no grouping.
 
 ## Other changes
 
-# For determining the interval in `pad` the `start_val` and/or the `end_val` are taken into account, if specified. They are concatenated to the datetime variable befor the interval is determined. 
+* For determining the interval in `pad` the `start_val` and/or the `end_val` are taken into account, if specified. They are concatenated to the datetime variable befor the interval is determined. 
 
-# Both `pad` and `thicken` now throw informative errors when the start_val or end_val (`pad` only) are of the wrong class.
+* Both `pad` and `thicken` now throw informative errors when the start_val or end_val (`pad` only) are of the wrong class.
 
 
 

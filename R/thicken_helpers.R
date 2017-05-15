@@ -30,7 +30,7 @@ round_thicken <- function(a,
 
 # If either of the two variables is of class posix, the other should be posix
 # as well. Apparantly it is possible to have tzone that is NULL, therefore
-# we need the extra, not too elegant code.
+# we need the extra, not too, elegant code.
 to_posix <- function(a, b) {
 
   if ( inherits(a, 'POSIXt') &  inherits(b, 'Date') ) {

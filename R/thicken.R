@@ -105,6 +105,10 @@ thicken <- function(x,
     start_val <- enforce_time_zone(start_val, dt_var)
   }
 
+  ind_to_keep <- start_val_after_min_dt(start_val, dt_var)
+  x <- x[ind_to_keep, , drop = FALSE]
+  dt_var <- dt_var[ind_to_keep]
+
   spanned <- span(dt_var, interval_converted, start_val)
 
   thickened <- round_thicken(dt_var, spanned, rounding)
@@ -130,7 +134,7 @@ set_to_original_type <- function(x,
   if (inherits(original, "tbl_df")) {
     x <- dplyr::as_data_frame(x)
     groups <- as.character(groups(original))
-    x <- group_by_(x, .dots = groups)
+    x <- dplyr::group_by_(x, .dots = groups)
   } else if (inherits(original, "data.table")) {
     x <- data.table::as.data.table(x)
   }
@@ -200,4 +204,15 @@ uniform_interval_name <- function(interval) {
     interval <- "sec"
   }
   return(interval)
+}
+
+start_val_after_min_dt <- function(start_val, dt_var) {
+  if (is.null(start_val)) {
+    return(1:length(dt_var))
+  } else {
+    start_val <- to_posix(start_val, dt_var)$a
+    dt_var    <- to_posix(start_val, dt_var)$b
+    ind <- dt_var > start_val
+    return(ind)
+  }
 }

@@ -27,3 +27,4 @@ x_df <- data_frame(x  = x,
                   y2 = rep(letters[2:5], c(60, 80, 40, 20)) \%>\% sample)
 x_df \%>\% pad \%>\% fill_by_prevalent(y1, y2)
 }
+
