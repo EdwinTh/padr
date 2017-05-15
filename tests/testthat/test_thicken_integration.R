@@ -1,9 +1,5 @@
 source("library.R")
 
-coffee$time_stamp <- ymd_hms(coffee$time_stamp, tz = "")
-coffee_2_dts <- coffee
-coffee_2_dts$ts2 <- coffee_2_dts$time_stamp
-
 context("Check all argument combinations in thicken")
 
 test_that("interval: year", {
