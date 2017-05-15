@@ -40,11 +40,14 @@ pad_int <- function(x,
                     group     = NULL,
                     step      = 1){
   is_df(x)
-  group <- get_dplyr_groups(x, group)
 
+  group <- get_dplyr_groups(x, group)
   if (!all(group %in% colnames(x))) {
     stop('Not all grouping variables are column names of x.', call. = FALSE)
   }
+
+  int_var <- x[, colnames(x) == by]
+  is_valid_int(int_var)
 
   original_data_frame <- x
   x <- as.data.frame(x)
@@ -54,7 +57,14 @@ pad_int <- function(x,
 
   spanned <- span_all_groups(min_max_frame, step)
 
-  check_interval_validity(spanned, x[, colnames(x) == by], FALSE)
+
+  if (!is.null(step)) {
+    if (!is.null(start_val)) int_var <- int_var[int_var >= start_val]
+    if (!is.null(end_val)) int_var <- int_var[int_var <= end_val]
+    check_interval_validity(spanned$span, int_var)
+  }
+
+
 
   colnames(x)[colnames(x) == by] <- 'span'
   return_frame <- suppressMessages(
@@ -71,4 +81,9 @@ check_step <- function(min_max_frame,
   if (any( (min_max_frame$mx - min_max_frame$mn) %% step != 0)){
     stop("step is unvalid for this integer variable", call. = FALSE)
   }
+}
+
+is_valid_int <- function(int_var) {
+  stopifnot(is.numeric(int_var))
+  stopifnot( all(int_var %% 1 == 0))
 }
