@@ -1,5 +1,5 @@
 # padr
-
+<!-- rmarkdown v1 -->
 [![Build Status](https://travis-ci.org/EdwinTh/padr.png?branch=master)](https://travis-ci.org/EdwinTh/padr)
 [![codecov.io](https://codecov.io/github/EdwinTh/padr/coverage.svg?branch=master)](https://codecov.io/github/EdwinTh/padr?branch=master)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/padr)](https://cran.r-project.org/package=padr)
