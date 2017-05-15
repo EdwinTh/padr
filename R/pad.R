@@ -364,7 +364,7 @@ get_dplyr_groups <- function(x, group) {
     dplyr_groups <- as.character(dplyr_groups)
 
     if (!is.null(group) & (!all(dplyr_groups %in% group)) ) {
-      warning("group argument and dplyr::groups are both present and differ, dplyr::groups are ignored",
+      warning("group argument and dplyr::groups are both present and differ, dplyr::groups are ignored", #nolint
               call. = FALSE) # nolint
       return(group)
     }

@@ -123,7 +123,10 @@ test_that("interval: month", {
 })
 
 test_that("interval: day", {
-  coffee_day       <- coffee
+  coffee_day  <- data.frame(
+    time_stamp = ymd_hms(c("2016-07-07 09:11:21", "2016-07-07 09:46:48",
+                           "2016-07-09 13:25:17", "2016-07-10 10:45:11")),
+    y = c(3.14, 2.98, 4.11, 3.14))
   coffee_day_2_dts <- coffee_day
   coffee_day_2_dts$ts2 <- coffee_day_2_dts$time_stamp
   day_thickened_down <- ymd(c(20160707, 20160707, 20160709, 20160710))
