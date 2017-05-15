@@ -71,7 +71,6 @@ The new function pad_int does padding of an integer field. Its working is very s
 
 
 
-
 ##################################################
 
 # padr 0.2.1
