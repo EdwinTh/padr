@@ -319,15 +319,22 @@ interval_message <- function(int) {
   message(paste("pad applied on the interval:", int))
 }
 
-check_interval_validity <- function(spanned, dt_var) {
+check_interval_validity <- function(spanned, dt_var, date_time = TRUE) {
   # take the unique of both so we don't do redundant stuff
   spanned_un <- unique(spanned)
   dt_var_un  <- unique(dt_var)
+
+  if (date_time) {
+    message <- "The specified interval is invalid for the datetime variable.
+  Not all original observation are in the padding.
+  If you want to pad at this interval, aggregate the data first with thicken."
+  } else {
+    message <- "Invalid step size for the given integer variable.
+  Not all original observation are in the padding."
+  }
+
   if (!all(dt_var_un %in% spanned_un)) {
-    stop("The specified interval is unvalid for the datetime variable.
-         Not all original observation are in the padding.
-         If you want to pad at this interval, aggregate the data first with thicken.",
-         call. = FALSE)
+    stop(message, call. = FALSE)
   }
 }
 
@@ -364,7 +371,7 @@ get_dplyr_groups <- function(x, group) {
     dplyr_groups <- as.character(dplyr_groups)
 
     if (!is.null(group) & (!all(dplyr_groups %in% group)) ) {
-      warning("group argument and dplyr::groups are both present and differ, dplyr::groups are ignored",
+      warning("group argument and dplyr::groups are both present and differ, dplyr::groups are ignored", #nolint
               call. = FALSE) # nolint
       return(group)
     }

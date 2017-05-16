@@ -65,11 +65,10 @@ test_that("thicken gives informed error when start_val is wrong class", {
                "start_val should be of class Date, POSIXlt, or POSIXct"))
 })
 
-test_that("thicken gives warning and removes when start_val is larger than min(dt)", {
+test_that("thicken removes when start_val is larger than min(dt)", {
   x <- data.frame(dt = as.Date(c("2016-01-01", "2016-01-03", "2016-01-04")),
                   y = 1:3)
-  expect_warning(thicken(x, start_val = as.Date("2016-01-02"), interval = "year"))
-  expect_equal( sw( thicken(x, start_val = as.Date("2016-01-02"), interval = "year") ) %>%
+  expect_equal(thicken(x, start_val = as.Date("2016-01-02"), interval = "year")  %>%
                   nrow, 2)
 })
 

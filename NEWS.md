@@ -13,7 +13,7 @@ The interval is no longer limited to be of a single unit, for each of the eight 
 date_var <- as.Date(c('2017-01-01', '2017-01-03', '2017-01-05'))
 get_interval(date_var)
 
-* `pad`: since the default behavior, when the interval is not specified, depends `get_interval`, its outcome might now be different. When `get_interval` returns a different interval than it used to, `pad` will do the padding at this different interval. Extending the above example, the have resulted in a data frame with two padded rows:
+* `pad`: when the interval is not specified, `get_interval` is applied on the datetime variable. Its outcome might now be different. When `get_interval` returns a different interval than it used to, `pad` will do the padding at this different interval. Extending the above example, the have resulted in a data frame with two padded rows:
 
 x <- data.frame(date_var, y = 1:3)
 
@@ -56,7 +56,7 @@ The new function pad_int does padding of an integer field. Its working is very s
 
 ## Bug fixes
 
-* Issue #13 When the end_val is specified in `pad`, it would mistakenly update the start_val with its value. This resulted in the return of the only the last line of the padded data.frame, instead of the full padded data.frame.
+* Issue #13 When the `end_val` is specified in `pad`, it would mistakenly update the start_val with its value. This resulted in the return of only the last line of the padded data.frame, instead of the full padded data.frame.
 
 * Issue #14 When dt_var has NULL as timezone, `to_posix` (helper of `round_thicken`, which itself is a helper of `thicken`) used to break, and thereby `thicken` itself broke.
 
@@ -64,10 +64,9 @@ The new function pad_int does padding of an integer field. Its working is very s
 
 ## Other changes
 
-* For determining the interval in `pad` the `start_val` and/or the `end_val` are taken into account, if specified. They are concatenated to the datetime variable befor the interval is determined. 
+* For determining the interval in `pad` the `start_val` and/or the `end_val` are taken into account, if specified. They are concatenated to the datetime variable before the interval is determined. 
 
 * Both `pad` and `thicken` now throw informative errors when the start_val or end_val (`pad` only) are of the wrong class.
-
 
 
 
