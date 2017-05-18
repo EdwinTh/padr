@@ -1,4 +1,3 @@
-
 round_thicken <- function(a,
                           b,
                           direction = c('down', 'up')) {
@@ -9,12 +8,13 @@ round_thicken <- function(a,
   b_same_level <- to_posix(a, b)$b
 
   a_df <- data.frame(a_same_level = a_same_level,
-                     sorting_var = 1:length(a))
-  a_df <- a_df[order(a_df$a), ]
+                     sorting_var = seq_along(a))
+  a_df <- dplyr::arrange(a_df, a)
   b_same_level <- sort(b_same_level)
 
   a_df$rounded <- apply_rounding(a_df$a_same_level, b_same_level, direction)
-  a_df <- a_df[order(a_df$sorting_var), ]
+  sorting_var = NULL # appeases CRAN check note
+  a_df <- dplyr::arrange(a_df, sorting_var)
   rounded <- a_df$rounded
 
   if (inherits(a_same_level, 'Date')){
