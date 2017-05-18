@@ -55,7 +55,6 @@
 #' weekdays(min_x)
 #' x_df %>% thicken('week', start_val = min_x - 1) %>%
 #'   group_by(x_week) %>% summarise(y_avg = mean(y))
-#' @importFrom dplyr arrange
 #' @export
 thicken <- function(x,
                     interval,
