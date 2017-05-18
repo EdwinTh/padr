@@ -24,7 +24,6 @@ round_thicken <- function(a,
                             tz = attr(a_same_level, 'tz'))
   }
   thickened <- posix_to_date(thickened)
-
   return(thickened)
 }
 
@@ -68,9 +67,11 @@ apply_rounding <- function(a, b,  direction = c('up', 'down')) {
 # well can be of class Date
 posix_to_date <- function(x) {
   if ( inherits(x, 'POSIXt')) {
-  check_var <- as.POSIXlt(x)
-  to_date <- all( c(check_var$hour, check_var$min, check_var$sec ) == 0 )
-  if (to_date) x <- as.Date(x, tz = attr(x, 'tzone'))
+    check_var <- as.POSIXlt(x)
+    to_date <- all( c(check_var$hour, check_var$min, check_var$sec ) == 0 )
+    if (to_date) {
+      x <- as.Date(x)
+    }
   }
   return(x)
 }

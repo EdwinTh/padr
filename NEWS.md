@@ -1,3 +1,13 @@
+# padr 0.3.9000
+
+
+## Bug Fixes
+
+* When time variable has NULL as timezone, also `posix_to_date` used to break (related to #14). This made `thicken` break when the desired interval is "day" or higher. This is now fixed by don't regarding the timezone.
+
+
+##################################################
+
 # padr 0.3.0
 
 ## Changes
