@@ -1,30 +1,23 @@
 #' Retrieve the closest given Weekday
 #'
-#' By default weeks start at Sundays when thickening to the interval "week".
-#' For a different week start the offset should be specified at `start_val`.
-#' This function will retrieve the offset for you, by searching the latest
-#' requested weekdy before the first observation in the datetime variabe in `x`.
-#' Function to be used within `thicken` or `pad`.
+#' When applying \code{thicken} with the interval "week", use this function to
+#' automatically start at the first weekday befor \code{min(datetime_var)}.
 #' @param wday Integer in the range 1-7 specifying the desired weekday start
-#' (1 = Sunday, 7 = Saturday).
-#' @param rounding Down or up.
+#' (1 = Sun, 2 = Mon, 3 = Tue, 4 = Wed, 5 = Thu, 6 = Fri, 7 = Sat).
 #' @return Object of class `Date`, specifying the offset.
 #' @examples
 #' library(dplyr)
-#' coffee %>% get_week_start()
-#' thicken(coffee$ti)
+#' coffee %>% thicken("week", start_val = get_week_start())
+#' coffee %>% thicken("week", start_val = get_week_start(3))
+#' @export
 
-get_week_start <- function(wday = 2,
-                           rounding = c("down", "up")) {
-  rounding <- match.arg(rounding)
+get_week_start <- function(wday = 2) {
   stopifnot(wday %in% 1:7)
-  week_start_args <- list(wday, rounding)
-  attributes(week_start_args) <- list(class = "weekstart")
-  return(week_start_args)
+  attributes(wday) <- list(class = "weekstart")
+  return(wday)
 }
 
 get_week_start_internal <- function(wday,
-                                    rounding,
                                     x,
                                     by) {
   is_df(x)
@@ -49,13 +42,8 @@ get_week_start_internal <- function(wday,
     nr_days_back <- nr_days_back + 7
   }
 
-  ret_value <- dt_var_start - nr_days_back
+  ret_value <- dt_var_start - as.numeric(nr_days_back)
   names(ret_value) <- NULL
-  if (rounding == "up") {
-    ret_value <- ret_value + 7
-  }
 
   return(ret_value)
 }
-
-thicken(coffee, "week", start_val = get_week_start(2))

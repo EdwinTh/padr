@@ -109,3 +109,4 @@ pad(x, group = "id")
 # applying pad with do, interval is determined individualle for each group
 x \%>\% group_by(id) \%>\% do(pad(.))
 }
+

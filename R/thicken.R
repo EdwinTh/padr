@@ -51,9 +51,7 @@
 #'
 #' # get the average per week, but you want your week to start on Mondays
 #' # instead of Sundays
-#' min_x <- x_df$x %>% min
-#' weekdays(min_x)
-#' x_df %>% thicken('week', start_val = min_x - 1) %>%
+#' x_df %>% thicken('week', start_val = get_week_start(2)) %>%
 #'   group_by(x_week) %>% summarise(y_avg = mean(y))
 #' @export
 thicken <- function(x,
@@ -79,8 +77,7 @@ thicken <- function(x,
     if (interval != "week") {
       stop("get_week_start can only be used with interval week" ,call. = FALSE)
     }
-    start_val <- get_week_start_internal(start_val[[1]], start_val[[2]],
-                                         x, by)
+    start_val <- get_week_start_internal(start_val, x, by)
   }
 
   check_start_and_end(start_val, NULL)

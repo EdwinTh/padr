@@ -128,3 +128,15 @@ test_that("set_to_original_type returns tbl or data.table", {
                     class),
                c("data.table", "data.frame"))
 })
+
+context("using get_week_start")
+
+test_that("get_week_start", {
+  expect_error(thicken(coffee, "year", start_val = get_week_start()),
+               "get_week_start can only be used with interval week")
+  expect_error(thicken(coffee, "week", start_val = get_week_start()), NA)
+  expect_equal(thicken(coffee, "week", start_val = get_week_start())[1, 3] %>% weekdays,
+               "Monday")
+  expect_equal(thicken(coffee, "week", start_val = get_week_start(5))[1, 3] %>% weekdays,
+               "Thursday")
+})
