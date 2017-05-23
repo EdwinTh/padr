@@ -65,7 +65,6 @@ thicken <- function(x,
                     start_val = NULL) {
 
   is_df(x)
-  check_start_and_end(start_val, NULL)
 
   original_data_frame <- x
   x <- as.data.frame(x)
@@ -75,6 +74,16 @@ thicken <- function(x,
   } else {
     dt_var <- check_data_frame(x)
   }
+
+  if (class(start_val) == "weekstart"){
+    if (interval != "week") {
+      stop("get_week_start can only be used with interval week" ,call. = FALSE)
+    }
+    start_val <- get_week_start_internal(start_val[[1]], start_val[[2]],
+                                         x, by)
+  }
+
+  check_start_and_end(start_val, NULL)
 
   interval_converted <- convert_interval(interval)
   interval_converted$interval <- uniform_interval_name(interval_converted$interval)

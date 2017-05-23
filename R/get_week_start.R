@@ -4,25 +4,31 @@
 #' For a different week start the offset should be specified at `start_val`.
 #' This function will retrieve the offset for you, by searching the latest
 #' requested weekdy before the first observation in the datetime variabe in `x`.
-#'
-#' @param x A dataframe containg a variable of class `Date`, class `POSIXct` or class
-#' `POSIXlt` indicating the moment from which to calculate the offset.
-#' If the length is longer than 1 the `min(x)` will be used.
+#' Function to be used within `thicken` or `pad`.
 #' @param wday Integer in the range 1-7 specifying the desired weekday start
 #' (1 = Sunday, 7 = Saturday).
-#' @param by Only needs to be specified when \code{x} contains multiple
-#' variables of class \code{Date}, class \code{POSIXct} or
-#' class \code{POSIXlt}. \code{by} indicates which variable to use for det.
+#' @param rounding Down or up.
 #' @return Object of class `Date`, specifying the offset.
 #' @examples
 #' library(dplyr)
 #' coffee %>% get_week_start()
 #' thicken(coffee$ti)
 
-get_week_start <- function(x,
-                           wday = 2,
-                           by   = NULL) {
+get_week_start <- function(wday = 2,
+                           rounding = c("down", "up")) {
+  rounding <- match.arg(rounding)
+  stopifnot(wday %in% 1:7)
+  week_start_args <- list(wday, rounding)
+  attributes(week_start_args) <- list(class = "weekstart")
+  return(week_start_args)
+}
+
+get_week_start_internal <- function(wday,
+                                    rounding,
+                                    x,
+                                    by) {
   is_df(x)
+
   stopifnot(wday %in% 1:7)
 
   if (!is.null(by)){
@@ -43,5 +49,13 @@ get_week_start <- function(x,
     nr_days_back <- nr_days_back + 7
   }
 
-  return(dt_var_start - nr_days_back)
+  ret_value <- dt_var_start - nr_days_back
+  names(ret_value) <- NULL
+  if (rounding == "up") {
+    ret_value <- ret_value + 7
+  }
+
+  return(ret_value)
 }
+
+thicken(coffee, "week", start_val = get_week_start(2))
