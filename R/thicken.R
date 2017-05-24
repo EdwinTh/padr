@@ -73,7 +73,7 @@ thicken <- function(x,
     dt_var <- check_data_frame(x)
   }
 
-  if (class(start_val) == "weekstart"){
+  if (inherits(start_val, "weekstart")){
     if (interval != "week") {
       stop("get_week_start can only be used with interval week" ,call. = FALSE)
     }
