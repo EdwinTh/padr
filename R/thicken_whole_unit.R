@@ -1,6 +1,6 @@
 
 whole_unit_thickening <- function(dt_var,
-                                  interval_converted,
+                                  interval,
                                   start_val,
                                   rounding) {
   # step 1: make both dt_var and start_val posix
@@ -9,15 +9,15 @@ whole_unit_thickening <- function(dt_var,
     start_val <- as.POSIXlt(start_val)
   }
 
-  # step 2: determine the offset with start_val
-  offset_val <- get_offset(dt_var, start_val)
-
-  # step 3: round to the new interval
+  # step 2: round to the new interval
   if (rounding == "down") {
-    thickened <- lubridate::floor_date(dt_var, interval_converted$interval)
+    thickened <- lubridate::floor_date(dt_var, interval)
   } else {
-    thickened <- lubridate::ceiling_date(dt_var, interval_converted$interval)
+    thickened <- lubridate::ceiling_date(dt_var, interval)
   }
+
+  # step 2: determine the offset with start_val
+  offset_val <- get_offset(thickened, start_val)
 
   # step 4: adjust by the offset
   thickened <- thickened + offset_val
@@ -26,10 +26,13 @@ whole_unit_thickening <- function(dt_var,
   posix_to_date(thickened)
 }
 
+# the offset calculations are dependent on the interval, this is not as simple
+# I thought it was, get off_set should be elaborated
+
 get_offset <- function(dt_var,
                        start_val) {
   if (!is.null(start_val)) {
-    offset_val <- dt_var - start_val
+    offset_val <- min(dt_var) - start_val
   } else {
     offset_val <- 0
   }

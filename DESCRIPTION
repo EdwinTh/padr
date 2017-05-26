@@ -15,9 +15,9 @@ Depends:
     R (>= 3.0.0)
 Imports:
     Rcpp,
-    dplyr
+    dplyr,
+    lubridate
 Suggests:
-    lubridate,
     ggplot2,
     testthat,
     knitr,
