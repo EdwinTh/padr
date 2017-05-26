@@ -1,5 +1,9 @@
 # padr 0.3.9000
 
+## New Features
+
+* The `get_week_start` function is introduced, which can be used to automatically thicken from a give weekday. It saves the trouble of manually finding the first weekday before the first datetime value in `x`. Use as an argument to `thicken`.
+
 
 ## Bug Fixes
 

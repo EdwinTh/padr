@@ -57,14 +57,11 @@ pad_int <- function(x,
 
   spanned <- span_all_groups(min_max_frame, step)
 
-
   if (!is.null(step)) {
     if (!is.null(start_val)) int_var <- int_var[int_var >= start_val]
     if (!is.null(end_val)) int_var <- int_var[int_var <= end_val]
     check_interval_validity(spanned$span, int_var)
   }
-
-
 
   colnames(x)[colnames(x) == by] <- 'span'
   return_frame <- suppressMessages(
