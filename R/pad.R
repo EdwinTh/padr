@@ -107,6 +107,7 @@ pad <- function(x,
 
   original_data_frame <- x
   x <- as.data.frame(x)
+  original_interval <- interval
 
   if (!is.null(by)){
     dt_var <- check_data_frame(x, by = by)
@@ -205,7 +206,10 @@ pad <- function(x,
 
   return_frame <- set_to_original_type(return_frame, original_data_frame)
 
-  interval_message(interval)
+  if (is.null(original_interval)) {
+    interval_message(interval)
+  }
+
   return(return_frame)
 }
 
