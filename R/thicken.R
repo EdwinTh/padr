@@ -86,23 +86,6 @@ thicken <- function(x,
   interval_converted$interval <- uniform_interval_name(interval_converted$interval)
   rounding <- match.arg(rounding)
 
-  dt_var_interval <- get_interval_list(dt_var)
-
-  interval_higher <- convert_int_to_hours(interval_converted) >
-    convert_int_to_hours(dt_var_interval)
-  interval_equal <- convert_int_to_hours(interval_converted) ==
-    convert_int_to_hours(dt_var_interval)
-
-  # here I originally put in "& lenght(dt_var) > 2" but I don't recall why
-  # removed it, but it might break in some situation now.
-  if (!interval_higher) {
-    stop('The interval in the datetime variable is lower than the interval given,
-         you might be looking fo pad rather than for thicken.', call. = FALSE)
-  } else if (interval_equal) {
-    stop('The interval in the datetime variable is equal to the interval given,
-         you might be looking for pad rather than for thicken.', call. = FALSE)
-  }
-
   if (!all(dt_var[1:(length(dt_var) - 1)] <= dt_var[2:length(dt_var)])) {
     warning('Datetime variable was unsorted, result will be unsorted as well.', call. = FALSE)
   }
@@ -118,6 +101,11 @@ thicken <- function(x,
   spanned <- span(dt_var, interval_converted, start_val)
 
   thickened <- round_thicken(dt_var, spanned, rounding)
+
+  if (all(thickened == dt_var)) {
+    stop("The thickened result is equal to the original datetime variable,
+         the interval specified is too low for the interval of the datetime variable")
+  }
 
   if (is.null(by)) {
     x_name <- get_date_variables(x)

@@ -4,11 +4,13 @@
 
 * The `get_week_start` function is introduced, which can be used to automatically thicken from a give weekday. It saves the trouble of manually finding the first weekday before the first datetime value in `x`. Use as an argument to `thicken`.
 
-
 ## Bug Fixes
 
 * When time variable has NULL as timezone, also `posix_to_date` used to break (related to #14). This made `thicken` break when the desired interval is "day" or higher. This is now fixed by don't regarding the timezone.
 
+## Further Changes
+
+* `pad` no longer throws a message when the interval is specified (#31).
 
 ##################################################
 
