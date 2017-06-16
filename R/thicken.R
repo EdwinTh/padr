@@ -114,7 +114,7 @@ thicken <- function(x,
   }
 
   colname <- get_colname(x, x_name, colname, interval_converted)
-  return_frame <- cbind(x, thickened)
+  #return_frame <- dplyr::bind_cols(x, as.data.frame(thickened))
   colnames(return_frame)[ncol(return_frame)] <- colname
 
   return_frame <- set_to_original_type(return_frame, original_data_frame)
