@@ -102,9 +102,9 @@ thicken <- function(x,
 
   thickened <- round_thicken(dt_var, spanned, rounding)
 
-  if (all(thickened == dt_var)) {
+  if (all(all.equal(thickened, dt_var) == TRUE)) {
     stop("The thickened result is equal to the original datetime variable,
-         the interval specified is too low for the interval of the datetime variable")
+          the interval specified is too low for the interval of the datetime variable", call. = FALSE)
   }
 
   if (is.null(by)) {

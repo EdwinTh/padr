@@ -30,7 +30,6 @@ x_sec   <- date_seq("sec")
 equal_dist <- c(as.POSIXct("2014-01-01 23:00:00"),
                 as.POSIXct("2014-01-02 01:00:00"))
 
-
 df_with_one_date  <- data.frame(dt_var1 = date_seq("month"),
                                 y = 1:6)
 df_with_one_date_sorted <- df_with_one_date %>% arrange(dt_var1)
