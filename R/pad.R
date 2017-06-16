@@ -137,10 +137,12 @@ pad <- function(x,
   }
 
   # get the interval over all the groups, this way it is assured all groups
-  # are the same
-  interval_dt_var <- get_interval_start_end(dt_var, start_val, end_val)
-  if (interval_dt_var[[1]] == "return x here") {
-    return(x)
+  # are the same. Only get the interval when interval is NULL
+  if (is.null(interval)) {
+    interval_dt_var <- get_interval_start_end(dt_var, start_val, end_val)
+    if (interval_dt_var[[1]] == "return x here") {
+      return(x)
+    }
   }
 
   if (!is.null(interval)) {
