@@ -1,5 +1,13 @@
 # padr 0.3.9000
 
+## Improvements
+
+* `thicken` is sped up significantly:
+
+- `get_interval` no longer applied to assess interval validity (its slow on large variables because it converts a POSIX to character). Rather validity is now compared after thickening by checking if results differes frome original. Makes function approximately four times faster.
+
+
+
 ## New Features
 
 * The `get_week_start` function is introduced, which can be used to automatically thicken from a give weekday. It saves the trouble of manually finding the first weekday before the first datetime value in `x`. Use as an argument to `thicken`.
