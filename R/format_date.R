@@ -4,16 +4,17 @@
 #' events toke place.
 
 # four functions: date, quarter, week,  posix
+x <- emergency %>% thicken("month") %>% count(time_stamp_month)
 
-format_date <- function(x,
-                        year_part  = NULL,
-                        month_part = NULL,
-                        day_part   = NULL,
-                        str_sep    = " ",
-                        overlap    = FALSE,
-                        interval   = FALSE,
-                        colname    = NULL,
-                        by         = NULL) {
+interval_format_date <- function(x,
+                                 start_format       = "%Y-%m-%d",
+                                 end_format         = "%Y-%m-%d",
+                                 sep                = " ",
+                                 last_is_first      = TRUE,
+                                 interval           = NULL,
+                                 colname            = NULL,
+                                 by                 = NULL,
+                                 check_completeness = TRUE) {
   is_df(x)
 
   original_data_frame <- x
@@ -25,14 +26,17 @@ format_date <- function(x,
     dt_var <- check_data_frame(x)
   }
 
-  # step 1: determine the from-to
-  dt_var
+  if (is.null(interval)) {
+    interval_dt_var <- get_interval(dt_var)
+    if (interval_dt_var[[1]] == "return x here") {
+      return(x)
+    }
+  }
 
+  if (check_completeness) {
+    check_completeness_func(dt_var, interval)
+  }
   # step 2: format these two dates in the desired way
 
 }
 
-library(dplyr)
-
-emergency %>% thicken("month", start_val = as.Date("2015-11-24")) %>%
-  count(time_stamp_month)
