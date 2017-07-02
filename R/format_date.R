@@ -4,8 +4,6 @@
 #' events toke place.
 
 # four functions: date, quarter, week,  posix
-x <- emergency %>% thicken("month") %>% count(time_stamp_month)
-
 interval_format_date <- function(x,
                                  start_format       = "%Y-%m-%d",
                                  end_format         = "%Y-%m-%d",

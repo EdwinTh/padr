@@ -15,11 +15,18 @@
 #' get_interval(x_sec[seq(0, length(x_sec), by = 5)])
 #' @export
 get_interval <- function(x) {
+  stop_on_NA(x)
   interval <- get_interval_list(x)
   if (interval$step == 1) {
     return(interval$interval)
   } else {
     return(paste(interval$step, interval$interval))
+  }
+}
+
+stop_on_NA <- function(x) {
+  if(any(is.na(x))) {
+    stop("interval cannot be determined when x contains NAs")
   }
 }
 
@@ -163,3 +170,4 @@ smallest_nonzero <- function(x) {
   nonzero <- x[x > 0]
   min(nonzero)
 }
+

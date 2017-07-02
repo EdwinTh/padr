@@ -220,3 +220,5 @@ test_that("gives no message when interval is not NULL", {
   x1 <- coffee %>% thicken("hour") %>% select(-time_stamp)
   expect_message(pad(x1, interval = "hour"), NA)
 })
+
+

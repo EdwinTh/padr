@@ -190,3 +190,14 @@ test_that("step_with_difftime hour gives correct output", {
   expect_equal( step_with_difftime(x[seq(1, 20, by = 5)], unit), 5)
   expect_equal( step_with_difftime(x[seq(1, 20, by = 9)], unit), 9)
 })
+
+context("test stop_on_NA")
+test_that("stop_on_NA breaks the function when x has NAs", {
+  x1 <- coffee$time_stamp
+  x2 <- x1
+  x2[2] <- NA
+  expect_error(stop_on_NA(x1), NA)
+  expect_error(stop_on_NA(x2))
+  expect_error(get_interval(x1), NA)
+  expect_error(get_interval(x2))
+})

@@ -16,6 +16,8 @@
 
 * When time variable has NULL as timezone, also `posix_to_date` used to break (related to #14). This made `thicken` break when the desired interval is "day" or higher. This is now fixed by don't regarding the timezone.
 
+* `get_interval` now throws an informative error when the datetime variable has missing values (#33).
+
 ## Further Changes
 
 * `pad` no longer throws a message when the interval is specified (#31).
