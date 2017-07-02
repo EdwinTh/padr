@@ -107,6 +107,7 @@ pad <- function(x,
 
   original_data_frame <- x
   x <- as.data.frame(x)
+  original_interval <- interval
 
   if (!is.null(by)){
     dt_var <- check_data_frame(x, by = by)
@@ -136,10 +137,12 @@ pad <- function(x,
   }
 
   # get the interval over all the groups, this way it is assured all groups
-  # are the same
-  interval_dt_var <- get_interval_start_end(dt_var, start_val, end_val)
-  if (interval_dt_var[[1]] == "return x here") {
-    return(x)
+  # are the same. Only get the interval when interval is NULL
+  if (is.null(interval)) {
+    interval_dt_var <- get_interval_start_end(dt_var, start_val, end_val)
+    if (interval_dt_var[[1]] == "return x here") {
+      return(x)
+    }
   }
 
   if (!is.null(interval)) {
@@ -205,7 +208,10 @@ pad <- function(x,
 
   return_frame <- set_to_original_type(return_frame, original_data_frame)
 
-  interval_message(interval)
+  if (is.null(original_interval)) {
+    interval_message(interval)
+  }
+
   return(return_frame)
 }
 

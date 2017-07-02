@@ -30,7 +30,6 @@ x_sec   <- date_seq("sec")
 equal_dist <- c(as.POSIXct("2014-01-01 23:00:00"),
                 as.POSIXct("2014-01-02 01:00:00"))
 
-
 df_with_one_date  <- data.frame(dt_var1 = date_seq("month"),
                                 y = 1:6)
 df_with_one_date_sorted <- df_with_one_date %>% arrange(dt_var1)
@@ -127,4 +126,16 @@ test_that("set_to_original_type returns tbl or data.table", {
   expect_equal(sw(data.table::as.data.table(df_with_one_date) %>% thicken("2 mon") %>%
                     class),
                c("data.table", "data.frame"))
+})
+
+context("using get_week_start")
+
+test_that("get_week_start", {
+  expect_error(thicken(coffee, "year", start_val = get_week_start()),
+               "get_week_start can only be used with interval week")
+  expect_error(thicken(coffee, "week", start_val = get_week_start()), NA)
+  expect_equal(thicken(coffee, "week", start_val = get_week_start())[1, 3] %>% weekdays,
+               "Monday")
+  expect_equal(thicken(coffee, "week", start_val = get_week_start(5))[1, 3] %>% weekdays,
+               "Thursday")
 })

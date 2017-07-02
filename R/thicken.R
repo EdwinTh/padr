@@ -51,9 +51,7 @@
 #'
 #' # get the average per week, but you want your week to start on Mondays
 #' # instead of Sundays
-#' min_x <- x_df$x %>% min
-#' weekdays(min_x)
-#' x_df %>% thicken('week', start_val = min_x - 1) %>%
+#' x_df %>% thicken('week', start_val = get_week_start(2)) %>%
 #'   group_by(x_week) %>% summarise(y_avg = mean(y))
 #' @export
 thicken <- function(x,
@@ -65,7 +63,6 @@ thicken <- function(x,
                     start_val = NULL) {
 
   is_df(x)
-  check_start_and_end(start_val, NULL)
 
   original_data_frame <- x
   x <- as.data.frame(x)
@@ -76,26 +73,18 @@ thicken <- function(x,
     dt_var <- check_data_frame(x)
   }
 
+  if (inherits(start_val, "weekstart")){
+    if (interval != "week") {
+      stop("get_week_start can only be used with interval week" ,call. = FALSE)
+    }
+    start_val <- get_week_start_internal(start_val, x, by)
+  }
+
+  check_start_and_end(start_val, NULL)
+
   interval_converted <- convert_interval(interval)
   interval_converted$interval <- uniform_interval_name(interval_converted$interval)
   rounding <- match.arg(rounding)
-
-  dt_var_interval <- get_interval_list(dt_var)
-
-  interval_higher <- convert_int_to_hours(interval_converted) >
-    convert_int_to_hours(dt_var_interval)
-  interval_equal <- convert_int_to_hours(interval_converted) ==
-    convert_int_to_hours(dt_var_interval)
-
-  # here I originally put in "& lenght(dt_var) > 2" but I don't recall why
-  # removed it, but it might break in some situation now.
-  if (!interval_higher) {
-    stop('The interval in the datetime variable is lower than the interval given,
-         you might be looking fo pad rather than for thicken.', call. = FALSE)
-  } else if (interval_equal) {
-    stop('The interval in the datetime variable is equal to the interval given,
-         you might be looking for pad rather than for thicken.', call. = FALSE)
-  }
 
   if (!all(dt_var[1:(length(dt_var) - 1)] <= dt_var[2:length(dt_var)])) {
     warning('Datetime variable was unsorted, result will be unsorted as well.', call. = FALSE)
@@ -113,6 +102,11 @@ thicken <- function(x,
 
   thickened <- round_thicken(dt_var, spanned, rounding)
 
+  if (all(all.equal(thickened, dt_var) == TRUE)) {
+    stop("The thickened result is equal to the original datetime variable,
+          the interval specified is too low for the interval of the datetime variable", call. = FALSE)
+  }
+
   if (is.null(by)) {
     x_name <- get_date_variables(x)
   } else {
@@ -120,7 +114,7 @@ thicken <- function(x,
   }
 
   colname <- get_colname(x, x_name, colname, interval_converted)
-  return_frame <- cbind(x, thickened)
+  return_frame <- dplyr::bind_cols(x, as.data.frame(thickened))
   colnames(return_frame)[ncol(return_frame)] <- colname
 
   return_frame <- set_to_original_type(return_frame, original_data_frame)

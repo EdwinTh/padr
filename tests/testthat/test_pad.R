@@ -206,3 +206,17 @@ test_that("Pad gives correct results", {
   expect_equal(pad(data.frame(x_hour, 1), interval = "hour") %>% nrow, 49)
   expect_equal(suppressWarnings(pad(data.frame(x_min, 1))) %>% nrow, 60)
 })
+
+context("pad shows message about interval")
+test_that("gives message when interval is NULL", {
+  x1 <- coffee %>% thicken("hour") %>% select(-time_stamp)
+  x2 <- coffee %>% thicken("6 hour") %>% select(-time_stamp)
+  expect_message(pad(x1), "pad applied on the interval: hour\n")
+  expect_message(pad(x2), "pad applied on the interval: 18 hour\n")
+})
+
+
+test_that("gives no message when interval is not NULL", {
+  x1 <- coffee %>% thicken("hour") %>% select(-time_stamp)
+  expect_message(pad(x1, interval = "hour"), NA)
+})
