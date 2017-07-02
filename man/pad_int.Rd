@@ -28,9 +28,9 @@ non-grouping variables in the data frame will have missing values at the rows
 that are padded.
 }
 \description{
-\code{pad} will fill the gaps in incomplete integerer variables. It will insert
+\code{pad} will fill the gaps in incomplete integer variables. It will insert
 a record for each of the missing value. For all
-other variables in the data frame a missing value will be insterted at the padded rows.
+other variables in the data frame a missing value will be inserted at the padded rows.
 }
 \examples{
 int_df <- data.frame(x = c(2005, 2007, 2008, 2011),

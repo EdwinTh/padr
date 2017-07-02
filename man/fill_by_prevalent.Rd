@@ -2,7 +2,7 @@
 % Please edit documentation in R/fill_functions.R
 \name{fill_by_prevalent}
 \alias{fill_by_prevalent}
-\title{Fill missing values by the most prevalent nonnmissing value.}
+\title{Fill missing values by the most prevalent nonmissing value.}
 \usage{
 fill_by_prevalent(x, ...)
 }

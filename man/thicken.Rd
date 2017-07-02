@@ -18,7 +18,7 @@ the input data.}
 
 \item{colname}{The column name of the added variable. If \code{NULL} it will
 be the name of the original datetime variable with the interval name added to
-it (including the unit), separeted by underscores.}
+it (including the unit), separated by underscores.}
 
 \item{rounding}{Should a value in the input datetime variable be mapped to
 the closest value that is lower (\code{down}) or that is higher (\code{up})

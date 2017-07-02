@@ -3,7 +3,7 @@
 #'
 #' The emergency calls coming in at Montgomery County, PA since 2015-12-10.
 #' Data set was created at 2016-10-17 16:15:40 CEST from the API and contains
-#' events untill 2016-10-17 09:47:03 EST. From the original set the columns
+#' events until 2016-10-17 09:47:03 EST. From the original set the columns
 #' desc and e are not included.
 #' @format A data frame with 120450 rows and 6 variables:
 #' \describe{

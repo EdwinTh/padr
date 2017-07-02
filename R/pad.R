@@ -3,7 +3,7 @@
 #' \code{pad} will fill the gaps in incomplete datetime variables, by figuring out
 #' what the interval of the data is and what instances are missing. It will insert
 #' a record for each of the missing time points. For all
-#' other variables in the data frame a missing value will be insterted at the padded rows.
+#' other variables in the data frame a missing value will be inserted at the padded rows.
 #'
 #' @param x A data frame containing at least one variable of class \code{Date},
 #' class \code{POSIXct} or class \code{POSIXlt}.

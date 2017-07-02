@@ -84,7 +84,7 @@ fill_by_function <- function(x,
    return(x)
 }
 
-#' Fill missing values by the most prevalent nonnmissing value.
+#' Fill missing values by the most prevalent nonmissing value.
 #'
 #' For each specified column in \code{x} replace the missing values by the most
 #' prevalent nonmissing value.
