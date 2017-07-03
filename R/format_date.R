@@ -36,8 +36,8 @@ interval_format_date <- function(x,
 check_completeness_func <- function(x,
                                     interval) {
   check_df <- data.frame(x = x, ind = 1)
-  check_df_padded <- suppressMessages(pad(check_df),
-                                      interval = interval)
+  check_df_padded <- suppressMessages(pad(check_df,
+                                      interval = interval))
   if (any(is.na(check_df_padded$ind))) {
     nr_na <- length(which(is.na(check_df_padded$ind)))
     show_lines <- pmin(nr_na, 5)
