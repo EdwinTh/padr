@@ -177,11 +177,7 @@ pad <- function(x,
   min_max_frame <- check_invalid_start_and_end(min_max_frame)
 
   return_rows <- get_return_rows(min_max_frame, interval)
-  threshold   <- break_above * 10 ^ 6
-  if (return_rows > threshold) {
-    stop(sprintf("Estimated %s returned rows, larger than %s milion in break_above",
-                  return_rows, break_above), call. = FALSE)
-  }
+  break_above_func(return_rows, break_above)
 
   warning_no_padding(min_max_frame)
 
@@ -383,4 +379,14 @@ get_dplyr_groups <- function(x, group) {
     }
   }
   return(dplyr_groups)
+}
+
+break_above_func <- function(n,
+                             threshold) {
+  threshold   <- threshold * 10 ^ 6
+  if (n > threshold) {
+    stop(sprintf("Estimated %s returned rows, larger than %s milion in break_above",
+                 n, break_above), call. = FALSE)
+  }
+
 }

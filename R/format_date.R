@@ -11,7 +11,9 @@ interval_format_date <- function(x,
                                  last_is_first      = TRUE,
                                  colname            = NULL,
                                  by                 = NULL,
-                                 check_completeness = TRUE) {
+                                 check_completeness = TRUE,
+                                 break_above        = 1
+                                 ) {
   is_df(x)
 
   original_data_frame <- x
@@ -39,8 +41,6 @@ check_completeness_func <- function(x,
   check_df_padded <- suppressMessages(pad(check_df,
                                       interval = interval))
   if (any(is.na(check_df_padded$ind))) {
-    nr_na <- length(which(is.na(check_df_padded$ind)))
-    show_lines <- pmin(nr_na, 5)
     stop_message <-
 sprintf("Datetime variable is incomplete on interval %s.
 If you want to format a complete datetime variable, apply pad first.
