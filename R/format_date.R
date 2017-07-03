@@ -9,7 +9,6 @@ interval_format_date <- function(x,
                                  end_format         = "%Y-%m-%d",
                                  sep                = " ",
                                  last_is_first      = TRUE,
-                                 interval           = NULL,
                                  colname            = NULL,
                                  by                 = NULL,
                                  check_completeness = TRUE) {
@@ -24,17 +23,30 @@ interval_format_date <- function(x,
     dt_var <- check_data_frame(x)
   }
 
-  if (is.null(interval)) {
-    interval_dt_var <- get_interval(dt_var)
-    if (interval_dt_var[[1]] == "return x here") {
-      return(x)
-    }
-  }
+  interval <- get_interval(dt_var)
 
   if (check_completeness) {
     check_completeness_func(dt_var, interval)
   }
-  # step 2: format these two dates in the desired way
 
+
+}
+
+# apply pad on the datetime variable to see if its complete. x is a variable
+check_completeness_func <- function(x,
+                                    interval) {
+  check_df <- data.frame(x = x, ind = 1)
+  check_df_padded <- suppressMessages(pad(check_df),
+                                      interval = interval)
+  if (any(is.na(check_df_padded$ind))) {
+    nr_na <- length(which(is.na(check_df_padded$ind)))
+    show_lines <- pmin(nr_na, 5)
+    stop_message <-
+sprintf("Datetime variable is incomplete on interval %s.
+If you want to format a complete datetime variable, apply pad first.
+Otherwise rerun this function with check_completeness = FALSE.",
+                       interval)
+    stop(cat(stop_message))
+  }
 }
 
