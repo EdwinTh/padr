@@ -222,3 +222,16 @@ test_that("gives no message when interval is not NULL", {
 })
 
 
+context("pad and thickens with a NA values in the datetime variable")
+test_that("pad works properly on with NA values", {
+  coffee_na <- coffee %>% thicken("day", "d") %>% count(d) %>% pad %>%
+    fill_by_value()
+  coffee_na[3, 1] <- NA
+  expect_error(coffee_na %>% pad, NA)
+  expect_equal(coffee_na %>% pad %>% nrow, 5)
+  expect_equal(coffee_na %>% pad %>% filter(is.na(d)) %>% nrow, 1)
+})
+
+thest_that("thicken works properly on NA values", {
+
+})
