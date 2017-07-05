@@ -67,11 +67,9 @@ thicken <- function(x,
   original_data_frame <- x
   x <- as.data.frame(x)
 
-  if (!is.null(by)){
-    dt_var <- check_data_frame(x, by = by)
-  } else {
-    dt_var <- check_data_frame(x)
-  }
+  dt_var_info <- get_dt_var_and_name(x, by)
+  dt_var      <- dt_var_info$dt_var
+  dt_var_name <- dt_var_info$dt_var_name
 
   if (inherits(start_val, "weekstart")){
     if (interval != "week") {
@@ -86,8 +84,9 @@ thicken <- function(x,
   interval_converted$interval <- uniform_interval_name(interval_converted$interval)
   rounding <- match.arg(rounding)
 
-  if (!all(dt_var[1:(length(dt_var) - 1)] <= dt_var[2:length(dt_var)])) {
-    warning('Datetime variable was unsorted, result will be unsorted as well.', call. = FALSE)
+  if (check_for_sorting(dt_var)){
+    warning('Datetime variable was unsorted, result will be unsorted as well.',
+            call. = FALSE)
   }
 
   if (inherits(start_val, 'POSIXt') & inherits(dt_var, 'POSIXt')) {
@@ -98,15 +97,6 @@ thicken <- function(x,
   x <- x[ind_to_keep, , drop = FALSE] #nolint
   dt_var <- dt_var[ind_to_keep]
 
-  spanned <- span(dt_var, interval_converted, start_val)
-
-  thickened <- round_thicken(dt_var, spanned, rounding)
-
-  if (all(all.equal(thickened, dt_var) == TRUE)) {
-    stop("The thickened result is equal to the original datetime variable,
-          the interval specified is too low for the interval of the datetime variable", call. = FALSE)
-  }
-
   if (is.null(by)) {
     x_name <- get_date_variables(x)
   } else {
@@ -114,7 +104,22 @@ thicken <- function(x,
   }
 
   colname <- get_colname(x, x_name, colname, interval_converted)
-  return_frame <- dplyr::bind_cols(x, as.data.frame(thickened))
+
+  dt_var <- check_for_NA(dt_var, dt_var_name, colname)
+
+  spanned <- span(dt_var, interval_converted, start_val)
+
+  thickened <- round_thicken(dt_var, spanned, rounding)
+
+  if (all(all.equal(thickened, dt_var) == TRUE)) {
+    stop("The thickened result is equal to the original datetime variable,
+the interval specified is too low for the interval of the datetime variable", call. = FALSE)
+  }
+
+  thickened_frame <- data.frame(dt_var, thickened)
+  colnames(thickened_frame)[1] <- dt_var_name
+
+  return_frame <- suppressMessages(dplyr::left_join(x, thickened_frame))
   colnames(return_frame)[ncol(return_frame)] <- colname
 
   return_frame <- set_to_original_type(return_frame, original_data_frame)
@@ -209,4 +214,35 @@ start_val_after_min_dt <- function(start_val, dt_var) {
     ind <- dt_var > start_val
     return(ind)
   }
+}
+
+check_for_sorting <- function(dt_var) {
+  # filter out missing values, there will be a warning thrown for them later
+  dt_var <- dt_var[!is.na(dt_var)]
+  !all(dt_var[1:(length(dt_var) - 1)] <= dt_var[2:length(dt_var)])
+}
+
+check_for_NA <- function(dt_var, dt_var_name, colname) {
+  if (sum(is.na(dt_var))  > 0) {
+    dt_var <- dt_var[!is.na(dt_var)]
+
+    if (is.null(colname)) {
+
+      warn_mess <- sprintf(
+"There are NA values in the column %s.
+Returned dataframe contains original observations, with NA values for %s",
+        dt_var_name, dt_var_name
+      )
+
+    } else {
+
+      warn_mess <- sprintf(
+"There are NA values in the column %s.
+Returned dataframe contains original observations, with NA values for %s and %s",
+        dt_var_name, dt_var_name, colname
+      )
+    }
+    warning(warn_mess, call. = FALSE)
+  }
+  dt_var
 }

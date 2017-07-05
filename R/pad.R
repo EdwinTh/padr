@@ -109,13 +109,9 @@ pad <- function(x,
   x <- as.data.frame(x)
   original_interval <- interval
 
-  if (!is.null(by)){
-    dt_var <- check_data_frame(x, by = by)
-    dt_var_name <- by
-  } else {
-    dt_var <- check_data_frame(x)
-    dt_var_name <- get_date_variables(x)
-  }
+  dt_var_info <- get_dt_var_and_name(x, by)
+  dt_var      <- dt_var_info$dt_var
+  dt_var_name <- dt_var_info$dt_var_name
 
   ### Make sure start_val, end_val and dt_var are same data type ####
   if (inherits(start_val, 'POSIXt') & inherits(dt_var, 'POSIXt')) {
@@ -383,10 +379,21 @@ get_dplyr_groups <- function(x, group) {
 
 break_above_func <- function(n,
                              threshold) {
-  threshold   <- threshold * 10 ^ 6
+  threshold <- threshold * 10 ^ 6
   if (n > threshold) {
     stop(sprintf("Estimated %s returned rows, larger than %s milion in break_above",
                  n, break_above), call. = FALSE)
   }
 
+}
+
+get_dt_var_and_name <- function(dt_var, by) {
+  if (!is.null(by)){
+    dt_var <- check_data_frame(x, by = by)
+    dt_var_name <- by
+  } else {
+    dt_var <- check_data_frame(x)
+    dt_var_name <- get_date_variables(x)
+  }
+  list(dt_var = dt_var, dt_var_name = dt_var_name)
 }
