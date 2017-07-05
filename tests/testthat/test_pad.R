@@ -228,10 +228,22 @@ test_that("pad works properly on with NA values", {
     fill_by_value()
   coffee_na[3, 1] <- NA
   expect_error(coffee_na %>% pad, NA)
+  expect_message(coffee_na %>% pad,
+    "There are NA values in the column d.
+    Returned dataframe contains original observations, with NA values for d")
   expect_equal(coffee_na %>% pad %>% nrow, 5)
   expect_equal(coffee_na %>% pad %>% filter(is.na(d)) %>% nrow, 1)
 })
 
 thest_that("thicken works properly on NA values", {
-
+  coffee_na <- coffee %>% thicken("day", "d") %>% count(d) %>% pad %>%
+    fill_by_value()
+  coffee_na[3, 1] <- NA
+  expect_error(coffee_na %>% thicken, NA)
+  expect_message(coffee_na %>% thicken,
+   "There are NA values in the column d.
+    Returned dataframe contains original observations, with NA values for d and d_day")
+  expect_equal(coffee_na %>% thicken %>% nrow, 4)
+  expect_equal(coffee_na %>% thicken %>% filter(is.na(d)) %>% ncol, 1)
+  expect_equal(coffee_na %>% thicken %>% filter(is.na(d_day)) %>% ncol, 1)
 })
