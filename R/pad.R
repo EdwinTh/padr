@@ -387,7 +387,7 @@ break_above_func <- function(n,
 
 }
 
-get_dt_var_and_name <- function(dt_var, by) {
+get_dt_var_and_name <- function(x, by) {
   if (!is.null(by)){
     dt_var <- check_data_frame(x, by = by)
     dt_var_name <- by
