@@ -238,7 +238,7 @@ Returned dataframe contains original observations, with NA values for %s",
 
       warn_mess <- sprintf(
 "There are NA values in the column %s.
-Returned dataframe contains original observations, with NA values for %s and %s",
+Returned dataframe contains original observations, with NA values for %s and %s.",
         dt_var_name, dt_var_name, colname
       )
     }
