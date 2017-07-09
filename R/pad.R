@@ -116,7 +116,7 @@ pad <- function(x,
   # we have to get the dt_var twice, first on the original data. If there are
   # NA values in it, we have to get it again on x with NA values filtered out.
   dt_var_info_original <- get_dt_var_and_name(x, by)
-  dt_var_name <- dt_var_info$dt_var_name
+  dt_var_name <- dt_var_info_original$dt_var_name
   x_NA_list <- check_for_NA_pad(x, dt_var_info_original$dt_var,
                                 dt_var_name)
   x <- x_NA_list$x

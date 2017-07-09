@@ -6,13 +6,12 @@
 # four functions: date, quarter, week,  posix
 interval_format_date <- function(x,
                                  start_format       = "%Y-%m-%d",
-                                 end_format         = "%Y-%m-%d",
+                                 end_format         = start_format,
                                  sep                = " ",
-                                 last_first_offset  = NULL,
+                                 same_day           = TRUE,
                                  colname            = NULL,
                                  by                 = NULL,
-                                 check_completeness = TRUE
-                                 ) {
+                                 check_completeness = TRUE) {
   is_df(x)
 
   original_data_frame <- x
@@ -30,20 +29,20 @@ interval_format_date <- function(x,
     check_completeness_func(dt_var, interval)
   }
 
-  end_vals <- find_ends_dt_var(dt_var, interval)
+  end_vals <- find_ends_dt_var(dt_var, interval) - (1 - same_day)
   start_char <- strftime(dt_var, start_format)
   end_char   <- strftime(end_vals, end_format)
   interval_chars <- data_frame(new = paste(start_char, end_char, sep = sep))
   return_frame   <- dplyr::bind_cols(x, interval_chars)
 
   if (is.null(by)) {
-    x_name <- get_date_variables(x)
+    x_name <- paste(get_date_variables(x), "fmt", sep = "_")
   } else {
     x_name <- by
   }
 
-
-
+  colnames(return_frame)[ncol(return_frame)] <- x_name
+  return(return_frame)
 }
 
 # apply pad on the datetime variable to see if its complete. x is a variable
@@ -56,10 +55,10 @@ check_completeness_func <- function(x,
   if (any(is.na(check_df_padded$ind))) {
     stop_message <-
 sprintf("Datetime variable is incomplete on interval %s.
-If you want to format a complete datetime variable, apply pad first.
-Otherwise rerun this function with check_completeness = FALSE.",
+ If you want to format a complete datetime variable, apply pad first.
+ Otherwise rerun this function with check_completeness = FALSE.",
                        interval)
-    stop(cat(stop_message))
+    stop(stop_message, call. = FALSE)
   }
 }
 
