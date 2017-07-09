@@ -229,12 +229,12 @@ test_that("pad works properly on with NA values", {
   coffee_na[3, 1] <- NA
   coffee_na_padded <- coffee_na %>% pad()
   expect_error(coffee_na %>% pad(), NA)
-  expect_message(coffee %>% pad(),
-    "There are NA values in the column d.
-    Returned dataframe contains original observations, with NA values for d.")
+  expect_warning(coffee_na %>% pad(),
+"There are NA values in the column d. The records with NA values are returned
+in the final rows of the dataframe.")
   expect_equal(coffee_na_padded %>% nrow(), 5)
   expect_equal(coffee_na_padded %>% filter(is.na(d)) %>% nrow, 1)
-  expect_equal(coffee_na_padded$d[4] %>% as.character(), NA_character_)
+  expect_equal(coffee_na_padded$d[5] %>% as.character(), NA_character_)
 })
 
 test_that("thicken works properly on NA values", {

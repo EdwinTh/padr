@@ -109,9 +109,17 @@ pad <- function(x,
   x <- as.data.frame(x)
   original_interval <- interval
 
+  # we have to get the dt_var twice, first on the original data. If there are
+  # NA values in it, we have to get it again on x with NA values filtered out.
+  dt_var_info_original <- get_dt_var_and_name(x, by)
+  dt_var_name <- dt_var_info$dt_var_name
+  x_NA_list <- check_for_NA_pad(x, dt_var_info_original$dt_var,
+                                dt_var_name)
+  x <- x_NA_list$x
+  x_NA <- x_NA_list$x_NA
+
   dt_var_info <- get_dt_var_and_name(x, by)
   dt_var      <- dt_var_info$dt_var
-  dt_var_name <- dt_var_info$dt_var_name
 
   ### Make sure start_val, end_val and dt_var are same data type ####
   if (inherits(start_val, 'POSIXt') & inherits(dt_var, 'POSIXt')) {
@@ -179,8 +187,6 @@ pad <- function(x,
 
   spanned <- span_all_groups(min_max_frame, interval)
 
-  spanned <- insert_NA_records(spanned, dt_var)
-
   if (!is.null(interval)) {
     if (!is.null(start_val)) dt_var <- dt_var[dt_var >= start_val]
     if (!is.null(end_val)) dt_var <- dt_var[dt_var <= end_val]
@@ -205,6 +211,8 @@ pad <- function(x,
   if (is.null(original_interval)) {
     interval_message(interval)
   }
+
+  return_frame <- dplyr::bind_rows(return_frame, x_NA)
 
   return(return_frame)
 }
@@ -400,4 +408,18 @@ get_dt_var_and_name <- function(x, by) {
   list(dt_var = dt_var, dt_var_name = dt_var_name)
 }
 
-
+check_for_NA_pad <- function(x, dt_var, dt_var_name) {
+  x_no_NA <- x
+  x_NA <- NULL
+  if(any(is.na(dt_var))) {
+    x_no_NA <- x[!is.na(dt_var), ]
+    x_NA <- x[is.na(dt_var), ]
+    warn_mess <- sprintf(
+"There are NA values in the column %s. The records with NA values are returned
+in the final rows of the dataframe." ,
+      dt_var_name
+    )
+    warning(warn_mess, call. = FALSE)
+  }
+  list(x = x_no_NA, x_NA = x_NA)
+}

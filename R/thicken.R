@@ -105,7 +105,7 @@ thicken <- function(x,
 
   colname <- get_colname(x, x_name, colname, interval_converted)
 
-  dt_var <- check_for_NA(dt_var, dt_var_name, colname)
+  dt_var <- check_for_NA_thicken(dt_var, dt_var_name, colname)
 
   spanned <- span(dt_var, interval_converted, start_val)
 
@@ -222,26 +222,15 @@ check_for_sorting <- function(dt_var) {
   !all(dt_var[1:(length(dt_var) - 1)] <= dt_var[2:length(dt_var)])
 }
 
-check_for_NA <- function(dt_var, dt_var_name, colname) {
+check_for_NA_thicken <- function(dt_var, dt_var_name, colname) {
   if (sum(is.na(dt_var))  > 0) {
     dt_var <- dt_var[!is.na(dt_var)]
-
-    if (is.null(colname)) {
-
-      warn_mess <- sprintf(
-"There are NA values in the column %s.
-Returned dataframe contains original observations, with NA values for %s.",
-        dt_var_name, dt_var_name
-      )
-
-    } else {
 
       warn_mess <- sprintf(
 "There are NA values in the column %s.
 Returned dataframe contains original observations, with NA values for %s and %s.",
         dt_var_name, dt_var_name, colname
       )
-    }
     warning(warn_mess, call. = FALSE)
   }
   dt_var
