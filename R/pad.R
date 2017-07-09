@@ -179,6 +179,8 @@ pad <- function(x,
 
   spanned <- span_all_groups(min_max_frame, interval)
 
+  spanned <- insert_NA_records(spanned, dt_var)
+
   if (!is.null(interval)) {
     if (!is.null(start_val)) dt_var <- dt_var[dt_var >= start_val]
     if (!is.null(end_val)) dt_var <- dt_var[dt_var <= end_val]
@@ -397,3 +399,5 @@ get_dt_var_and_name <- function(x, by) {
   }
   list(dt_var = dt_var, dt_var_name = dt_var_name)
 }
+
+

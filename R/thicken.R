@@ -230,7 +230,7 @@ check_for_NA <- function(dt_var, dt_var_name, colname) {
 
       warn_mess <- sprintf(
 "There are NA values in the column %s.
-Returned dataframe contains original observations, with NA values for %s",
+Returned dataframe contains original observations, with NA values for %s.",
         dt_var_name, dt_var_name
       )
 

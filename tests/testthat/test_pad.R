@@ -227,13 +227,14 @@ test_that("pad works properly on with NA values", {
   coffee_na <- coffee %>% thicken("day", "d") %>% count(d) %>% pad %>%
     fill_by_value()
   coffee_na[3, 1] <- NA
-  coffee_na_padded <- coffee_na %>% pad
-  expect_error(coffee_na_padded, NA)
-  expect_message(coffee_na_padded,
+  coffee_na_padded <- coffee_na %>% pad()
+  expect_error(coffee_na %>% pad(), NA)
+  expect_message(coffee %>% pad(),
     "There are NA values in the column d.
     Returned dataframe contains original observations, with NA values for d.")
-  expect_equal(coffee_na_padded %>% nrow, 5)
+  expect_equal(coffee_na_padded %>% nrow(), 5)
   expect_equal(coffee_na_padded %>% filter(is.na(d)) %>% nrow, 1)
+  expect_equal(coffee_na_padded$d[4] %>% as.character(), NA_character_)
 })
 
 test_that("thicken works properly on NA values", {
@@ -248,4 +249,5 @@ Returned dataframe contains original observations, with NA values for d and d_we
   expect_equal(coffee_na_thickened %>% nrow, 4)
   expect_equal(coffee_na_thickened %>% filter(is.na(d)) %>% nrow, 1)
   expect_equal(coffee_na_thickened %>% filter(is.na(d_week)) %>% nrow, 1)
+  expect_equal(coffee_na_thickened$d[3] %>% as.character(), NA_character_)
 })
