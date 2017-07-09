@@ -26,4 +26,3 @@ events until 2016-10-17 09:47:03 EST. From the original set the columns
 desc and e are not included.
 }
 \keyword{datasets}
-

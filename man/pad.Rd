@@ -64,6 +64,10 @@ the interval of the input variable and the step size, and will fill the gaps for
 would be expected from the interval and step size, but are missing in the input data.
 Note that when `start_val` and/or `end_val` are specified, they are concatenated
 with the datetime variable before the interval is determined.
+
+Rows with missing values in the datetime variables will be retained.
+However, they will be moved to the end of the returned dateframe.
+
 See \code{vignette("padr")} for more information on \code{pad}.
 See \code{vignette("padr_implementation")} for detailed information on
 daylight savings time, different timezones, and the implementation of
@@ -109,4 +113,3 @@ pad(x, group = "id")
 # applying pad with do, interval is determined individualle for each group
 x \%>\% group_by(id) \%>\% do(pad(.))
 }
-

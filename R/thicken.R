@@ -26,7 +26,11 @@
 #' default value. Specify \code{start_val} as an offset if you want the range
 #' to be nonstandard.
 #' @return The data frame \code{x} with the variable added to it.
-#' @details See \code{vignette("padr")} for more information on \code{thicken}.
+#' @details When the datetime variable contains missing values, they are left
+#' in place in the dataframe. The added column with the new datetime variable,
+#' will have a missing values for these rows as well.
+#'
+#' See \code{vignette("padr")} for more information on \code{thicken}.
 #' See \code{vignette("padr_implementation")} for detailed information on
 #' daylight savings time, different timezones, and the implementation of
 #' \code{thicken}.

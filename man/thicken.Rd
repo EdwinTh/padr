@@ -44,6 +44,10 @@ other variables in the data frame to the higher interval, for instance using
 \code{dplyr}.
 }
 \details{
+When the datetime variable contains missing values, they are left
+in place in the dataframe. The added column with the new datetime variable,
+will have a missing values for these rows as well.
+
 See \code{vignette("padr")} for more information on \code{thicken}.
 See \code{vignette("padr_implementation")} for detailed information on
 daylight savings time, different timezones, and the implementation of
@@ -73,4 +77,3 @@ x_df \%>\% thicken('month') \%>\% group_by(x_month) \%>\%
 x_df \%>\% thicken('week', start_val = get_week_start(2)) \%>\%
   group_by(x_week) \%>\% summarise(y_avg = mean(y))
 }
-
