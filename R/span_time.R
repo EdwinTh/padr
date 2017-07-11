@@ -34,9 +34,8 @@ valid_char_dt <- function(x, name) {
   if (!is.character(x)) {
     stop(sprintf("%s should be a character", name), call. = FALSE)
   }
-
-  if (!nchar(x) %in% c(4, 6, 8)) {
-    stop(sprintf("%s is not of a valid length", name), call. = FALSE)
+  if (!match_date_pattern(x)) {
+    stop(sprintf("%s should be 11, 13, or 15 characters long", name), call. = FALSE)
   }
 }
 
