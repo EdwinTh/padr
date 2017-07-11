@@ -30,7 +30,8 @@
 #' span_date(201101, len_out = 4)
 #' span_date(20110101, len_out = 4)
 #' span_date(20110101, len_out = 4, interval = "month")
-
+#' @export
+#'
 span_date <- function(from, to = NULL, len_out = NULL, interval = NULL) {
   check_two_null(len_out, to)
   check_equal_length(from, to)
