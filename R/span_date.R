@@ -32,7 +32,10 @@
 #' span_date(20110101, len_out = 4, interval = "month")
 #' @export
 #'
-span_date <- function(from, to = NULL, len_out = NULL, interval = NULL) {
+span_date <- function(from,
+                      to = NULL,
+                      len_out = NULL,
+                      interval = NULL) {
   check_two_null(len_out, to)
   check_equal_length(from, to)
   valid_integer_dt(from, name = "from")
@@ -57,7 +60,7 @@ integer_to_date <- function(x, name = "from") {
 
 valid_integer_dt <- function(x, name = name) {
   if (!is.numeric(x)) {
-    stop(sprintf("%s cannot be coerced to integer", name), call. = FALSE)
+    stop(sprintf("%s should be numeric", name), call. = FALSE)
   }
   if (x %% 1 != 0) {
     stop(sprintf("%s is not a valid integer", name), call. = FALSE)
