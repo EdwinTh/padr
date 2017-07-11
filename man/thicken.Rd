@@ -77,3 +77,4 @@ x_df \%>\% thicken('month') \%>\% group_by(x_month) \%>\%
 x_df \%>\% thicken('week', start_val = get_week_start(2)) \%>\%
   group_by(x_week) \%>\% summarise(y_avg = mean(y))
 }
+

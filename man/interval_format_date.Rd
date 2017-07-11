@@ -5,10 +5,11 @@
 \title{From Datetime to Interval character}
 \usage{
 interval_format_date(x, start_format = "\%Y-\%m-\%d",
-  end_format = "\%Y-\%m-\%d", sep = " ", last_first_offset = NULL,
-  colname = NULL, by = NULL, check_completeness = TRUE)
+  end_format = start_format, sep = " ", same_day = TRUE, colname = NULL,
+  by = NULL, check_completeness = TRUE)
 }
 \description{
 Format a date variable to a character string of the interval in which the
 events toke place.
 }
+
