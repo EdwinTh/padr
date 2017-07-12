@@ -25,6 +25,7 @@ span_time <- function(from,
   check_two_null(len_out, to)
   check_equal_length(from, to)
   valid_char_dt(from, name = "from")
+  from_dt <- char_to_datetime(from)
 
 
 
@@ -44,3 +45,9 @@ match_date_pattern <- function(x) {
     grepl("^\\d{8}\\s\\d{4}$", x) |
     grepl("^\\d{8}\\s\\d{6}$", x)
  }
+
+char_to_datetime <- function(x) {
+  x_string <- substr(paste0(x, "0101"), 1, 15)
+
+  as.POSIXct(x_string, "%y-%m-%d %h-%m-%s")
+}

@@ -49,7 +49,7 @@ span_date <- function(from,
   }
 }
 
-integer_to_date <- function(x, name = "from") {
+integer_to_date <- function(x) {
   x <- as.integer(x)
   x_string <- substr(paste0(x, "0101"), 1, 8)
   date_string <- paste(substr(x_string, 1, 4),
