@@ -1,56 +1,9 @@
-#' Wrapper around `seq.POSIXct`
-#'
-#' Quickly create a sequence of datetimes from chararcter values.
-#'
-#' @param from Character of length 11 (ymd h), 13 (ymd hm), or 15 (
-#' ymd hms). Indicating the start value of the sequence.
-#' @param to Character of the same length as `from`.
-#' Indicating the end value of the sequence. Optional.
-#' @param len_out The desired length of the sequence. Optional.
-#' @param interval The desired interval. Optional.
-#' @param tz The desired timezone.
-#'
-#' @details In addition to `from`, `to` or `length` must be specified. If `from`
-#' length is 11, the first minute of that hour will be used and the interval is
-#' hour. If its length is 13, the first second of that minute will be used,
-#' and the interval is minute. If the length is 15, the iterval is second.
-#'
-#' @return An object of class POSIXct.
-#'
-span_time <- function(from,
-                      to       = NULL,
-                      len_out  = NULL,
-                      interval = NULL,
-                      tz       = "UTC") {
-  check_two_null(len_out, to)
-  check_equal_length(from, to)
-  valid_char_dt(from, name = "from")
-  from_dt <- char_to_datetime(from, tz = tz)
-  if (!is.null(to)) to_dt <- char_to_datetime(to, tz = tz)
-  if (is.null(interval)) interval <- interval_from_char(nchar(from))
-  if (!is.null(to)) {
-    return(seq.POSIXt(from_dt, to_dt, by = interval))
-  } else {
-    seq.POSIXt(from_dt, length.out = len_out, by = interval)
-  }
-}
 
-valid_char_dt <- function(x, name) {
-  if (!is.character(x)) {
-    stop(sprintf("%s should be a character", name), call. = FALSE)
-  }
-  if (!match_date_pattern(x)) {
-    stop(sprintf("%s should be 11, 13, or 15 characters long", name), call. = FALSE)
-  }
-}
 
-match_date_pattern <- function(x) {
-  grepl("^\\d{8}\\s\\d{2}$", x) |
-    grepl("^\\d{8}\\s\\d{4}$", x) |
-    grepl("^\\d{8}\\s\\d{6}$", x)
- }
 
-char_to_datetime <- function(x, tz) {
+
+
+char_to_datetime <- function(x, tz = "UTC") {
   x_string <- substr(paste0(x, "0101"), 1, 15)
   x_dt <- paste(substr(x_string, 1, 4),
                 substr(x_string, 5, 6),

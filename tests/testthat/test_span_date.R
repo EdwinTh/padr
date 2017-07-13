@@ -50,6 +50,8 @@ test_that("span_date gives the desired outputs", {
   month_span <- seq.Date(as.Date("2011-01-01"), as.Date("2015-01-01"), by = "month")
   day_span <- seq.Date(as.Date("2011-01-01"), as.Date("2011-02-01"), by = "day")
   expect_equal(span_date(2011, 2015), year_span)
+  expect_equal(span_date("2011", 2015), year_span)
+  expect_equal(span_date("2011", "2015"), year_span)
   expect_equal(span_date(201101, 201501), month_span)
   expect_equal(span_date(2011, 2015, interval = "month"), month_span)
   expect_equal(span_date(20110101, 20110201), day_span)
