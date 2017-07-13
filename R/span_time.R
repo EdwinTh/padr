@@ -25,10 +25,14 @@ span_time <- function(from,
   check_two_null(len_out, to)
   check_equal_length(from, to)
   valid_char_dt(from, name = "from")
-  from_dt <- char_to_datetime(from)
-
-
-
+  from_dt <- char_to_datetime(from, tz = tz)
+  if (!is.null(to)) to_dt <- char_to_datetime(to, tz = tz)
+  if (is.null(interval)) interval <- interval_from_char(nchar(from))
+  if (!is.null(to)) {
+    return(seq.POSIXt(from_dt, to_dt, by = interval))
+  } else {
+    seq.POSIXt(from_dt, length.out = len_out, by = interval)
+  }
 }
 
 valid_char_dt <- function(x, name) {
@@ -46,8 +50,17 @@ match_date_pattern <- function(x) {
     grepl("^\\d{8}\\s\\d{6}$", x)
  }
 
-char_to_datetime <- function(x) {
+char_to_datetime <- function(x, tz) {
   x_string <- substr(paste0(x, "0101"), 1, 15)
+  x_dt <- paste(substr(x_string, 1, 4),
+                substr(x_string, 5, 6),
+                substr(x_string, 7, 11),
+                substr(x_string, 12, 13),
+                substr(x_string, 14, 15), sep = "-")
+  as.POSIXct(x_dt, tz = tz)
+}
 
-  as.POSIXct(x_string, "%y-%m-%d %h-%m-%s")
+interval_from_char <- function(x) {
+  char_string <- c("hour", "min", "sec")
+  char_string[(x-9) / 2]
 }

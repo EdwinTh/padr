@@ -39,8 +39,8 @@ span_date <- function(from,
   check_two_null(len_out, to)
   check_equal_length(from, to)
   valid_integer_dt(from, name = "from")
-  from_dt <- integer_to_date(from, "from")
-  if (!is.null(to)) to_dt <- integer_to_date(to, "to")
+  from_dt <- integer_to_date(from)
+  if (!is.null(to)) to_dt <- integer_to_date(to)
   if (is.null(interval)) interval <- interval_from_int(nchar(from))
   if (!is.null(to)) {
     return(seq.Date(from_dt, to_dt, by = interval))
