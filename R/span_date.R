@@ -80,7 +80,7 @@ span_time <- function(from,
   ## hier doorgaan
   from_dt <- char_to_datetime(from, tz = tz)
   if (!is.null(to)) to_dt <- char_to_datetime(to, tz = tz)
-  if (is.null(interval)) interval <- interval_from_char(nchar(from))
+  if (is.null(interval)) interval <- interval_from_long(nchar(from))
   if (!is.null(to)) {
     return(seq.POSIXt(from_dt, to_dt, by = interval))
   } else {
@@ -165,4 +165,30 @@ convert_short <- function(x, date_or_time = c("date", "time"), tz = "UTC") {
 interval_from_short <- function(x) {
   int_string <- c("year", "month", "day")
   int_string[(x-2) / 2]
+}
+
+char_to_datetime <- function(x, tz = "UTC") {
+  x_string <- substr(paste0(x, "0101"), 1, 15)
+  date_pt <- paste(substr(x_string, 1, 4),
+                   substr(x_string, 5, 6),
+                   substr(x_string, 7, 8), sep = "-")
+  time_pt <- paste(substr(x_string, 10, 11),
+                   substr(x_string, 12, 13),
+                   substr(x_string, 14, 15), sep = ":")
+  as.POSIXct(paste(date_pt, time_pt), tz = tz)
+}
+
+interval_from_char <- function(x) {
+  char_string <- c("hour", "min", "sec")
+  char_string[(x-9) / 2]
+}
+
+interval_from_long <- function(x) {
+  if (x < 9) {
+    interval <- interval_from_short(x)
+  } else {
+    int_string <- c("hour", "min", "sec")
+    interval <- int_string[(x-9) / 2]
+  }
+  interval
 }
