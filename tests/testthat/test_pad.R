@@ -150,6 +150,14 @@ test_that("dplyr grouping yields correct results", {
 
 })
 
+test_that("datetime variable in the grouping throws an error", {
+  coffee$grp = 1:2
+  expect_error(pad(coffee, group = "time_stamp"))
+  expect_error(coffee %>% group_by(time_stamp) %>% pad)
+  expect_error(pad(coffee, group = c("time_stamp", 'grp')))
+  expect_error(coffee %>% group_by(time_stamp, grp) %>% pad)
+})
+
 test_that("the by arguments works, both in pad and pad_single", {
   one_var <- data.frame(x_year = x_year, val = 1)
   two_var <- one_var; two_var$x_year2 <- two_var$x_year

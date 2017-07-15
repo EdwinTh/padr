@@ -125,6 +125,8 @@ pad <- function(x,
   dt_var_info <- get_dt_var_and_name(x, by)
   dt_var      <- dt_var_info$dt_var
 
+  check_dt_var_in_group(dt_var_name, group)
+
   ### Make sure start_val, end_val and dt_var are same data type ####
   if (inherits(start_val, 'POSIXt') & inherits(dt_var, 'POSIXt')) {
     start_val <- enforce_time_zone(start_val, dt_var)
@@ -426,4 +428,11 @@ in the final rows of the dataframe." ,
     warning(warn_mess, call. = FALSE)
   }
   list(x = x_no_NA, x_NA = x_NA)
+}
+
+
+check_dt_var_in_group <- function(dt_var_name, group) {
+  if (dt_var_name %in% group) {
+    stop(sprintf("%s cannot be in de grouping variables", dt_var_name))
+  }
 }
