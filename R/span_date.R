@@ -31,16 +31,15 @@
 #' span_date(20110101, len_out = 4)
 #' span_date(20110101, len_out = 4, interval = "month")
 #' @export
-#'
 span_date <- function(from,
-                      to = NULL,
-                      len_out = NULL,
+                      to       = NULL,
+                      len_out  = NULL,
                       interval = NULL) {
-  check_two_null(len_out, to)
+  check_to_len_out(len_out, to)
   check_equal_length(from, to)
-  check_valid_input(from, name = "from", "date")
-  from_dt <- convert_short(from)
-  if (!is.null(to)) to_dt <- convert_short(to, "date")
+  check_valid_input_span(from, name = "from", "date")
+  from_dt <- convert_to_datetime(from)
+  if (!is.null(to)) to_dt <- convert_to_datetime(to, "date")
   if (is.null(interval)) interval <- interval_from_short(nchar(from))
   if (!is.null(to)) {
     return(seq.Date(from_dt, to_dt, by = interval))
@@ -68,16 +67,15 @@ span_date <- function(from,
 #' and the interval is minute. If the length is 15, the iterval is second.
 #'
 #' @return An object of class POSIXct.
-#'
+#' @export
 span_time <- function(from,
                       to       = NULL,
                       len_out  = NULL,
                       interval = NULL,
                       tz       = "UTC") {
-  check_two_null(len_out, to)
+  check_to_len_out(len_out, to)
   check_equal_length(from, to)
-  check_valid_input(from, name = "from", "time")
-  ## hier doorgaan
+  check_valid_input_span(from, name = "from", "time")
   from_dt <- char_to_datetime(from, tz = tz)
   if (!is.null(to)) to_dt <- char_to_datetime(to, tz = tz)
   if (is.null(interval)) interval <- interval_from_long(nchar(from))
@@ -89,7 +87,7 @@ span_time <- function(from,
 }
 
 
-check_two_null <- function(to, len_out) {
+check_to_len_out <- function(to, len_out) {
   if (is.null(to) && is.null(len_out)) {
     stop("either to or len_out must be specified", call. = FALSE)
   } else if (!is.null(to) && !is.null(len_out)) {
@@ -104,13 +102,15 @@ check_equal_length <- function(from, to) {
   }
 }
 
-check_valid_input <- function(x, name = "from", date_or_time = c("date", "time")) {
+check_valid_input_span <- function(x,
+                                   name         = "from",
+                                   date_or_time = c("date", "time")) {
   if (is.numeric(x)) {
     valid_numeric_dt(x, name = name)
   } else if (is.character(x)) {
     valid_char_dt(x, name = name, date_or_time = date_or_time)
   } else {
-    stop(sprintf("%s is not a character or numeric", name))
+    stop(sprintf("%s is not a character or numeric", name), call. = FALSE)
   }
 }
 
@@ -149,17 +149,12 @@ match_date_time_pattern  <- function(x) {
     grepl("^\\d{8}\\s\\d{6}$", x)
 }
 
-convert_short <- function(x, date_or_time = c("date", "time"), tz = "UTC") {
+convert_to_date <- function(x) {
   x_string <- substr(paste0(x, "0101"), 1, 8)
   date_string <- paste(substr(x_string, 1, 4),
                        substr(x_string, 5, 6),
                        substr(x_string, 7, 8), sep = "-")
-  date_or_time <- match.arg(date_or_time)
-  if (date_or_time == "date") {
-    as.Date(date_string)
-  } else {
-    as.POSIXct(date_string, tz = tz)
-  }
+  as.Date(date_string)
 }
 
 interval_from_short <- function(x) {
@@ -167,7 +162,8 @@ interval_from_short <- function(x) {
   int_string[(x-2) / 2]
 }
 
-char_to_datetime <- function(x, tz = "UTC") {
+convert_to_datetime <- function(x,
+                                tz = "UTC") {
   x_string <- substr(paste0(x, "0101"), 1, 15)
   date_pt <- paste(substr(x_string, 1, 4),
                    substr(x_string, 5, 6),
@@ -178,10 +174,6 @@ char_to_datetime <- function(x, tz = "UTC") {
   as.POSIXct(paste(date_pt, time_pt), tz = tz)
 }
 
-interval_from_char <- function(x) {
-  char_string <- c("hour", "min", "sec")
-  char_string[(x-9) / 2]
-}
 
 interval_from_long <- function(x) {
   if (x < 9) {

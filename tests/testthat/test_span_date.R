@@ -1,40 +1,75 @@
-context("integer_to_date function")
+context("building blocks span_date")
 
-test_that("function only works on the appropriate classes", {
-  expect_error(valid_integer_dt("a", "jos"))
-  expect_error(valid_integer_dt(TRUE,  "jos"))
-  expect_error(valid_integer_dt(2014, "jos"), NA)
-  expect_error(valid_integer_dt(2014.0), NA)
-  expect_error(valid_integer_dt(2014.1, "jos"))
-  expect_error(valid_integer_dt(as.Date("2014-01-01"), "jos"))
-})
-
-test_that("function only works on the appropriate length", {
-  expect_error(valid_integer_dt(201, "jos"), "jos is not of a valid length")
-  expect_error(valid_integer_dt(2011), NA)
-  expect_error(valid_integer_dt(20110, "jos"), "jos is not of a valid length")
-  expect_error(valid_integer_dt(201101), NA)
-  expect_error(valid_integer_dt(2011010, "jos"), "jos is not of a valid length")
-  expect_error(valid_integer_dt(20110101), NA)
-})
-
-test_that("function works correctly on doubles", {
-  expect_error(valid_integer_dt(2014.0), NA)
-  expect_error(valid_integer_dt(2014.1, "jos"), "jos is not a valid integer")
-})
-
-context("general workings span_date")
-
-test_that("check_two_null give right error",{
+test_that("check_to_len_out give right error",{
   jos <- 40
-  expect_error(check_two_null(jos, jos), NA)
-  expect_warning(check_two_null(jos, jos),
+  expect_error(check_to_len_out(jos, jos), NA)
+  expect_warning(check_to_len_out(jos, jos),
                  "both to and len_out are specified, len_out is ignored")
-  expect_error(check_two_null(jos, NULL), NA)
-  expect_error(check_two_null(NULL, jos), NA)
-  expect_error(check_two_null(NULL, NULL),
+  expect_error(check_to_len_out(jos, NULL), NA)
+  expect_error(check_to_len_out(NULL, jos), NA)
+  expect_error(check_to_len_out(NULL, NULL),
                "either to or len_out must be specified")
 })
+
+test_that("check_valid_input_span errors on wrong datatype", {
+  expect_error(check_valid_input_span(2011), NA)
+  expect_error(check_valid_input_span("2011"), NA)
+  expect_error(check_valid_input_span(TRUE),
+               "from is not a character or numeric")
+  expect_error(check_valid_input_span(as.Date("2011-01-01")),
+               "from is not a character or numeric")
+})
+
+test_that("valid_numeric_dt errors on wrong format", {
+  expect_error(valid_numeric_dt(2011.1, "jos"), "jos is not a valid integer")
+  expect_error(valid_numeric_dt(2011.0, "jos"), NA)
+  expect_error(valid_numeric_dt(2011L, "jos"), NA)
+  expect_error(valid_numeric_dt(201, "jos"), "jos is not of a valid length")
+  expect_error(valid_numeric_dt(2011), NA)
+  expect_error(valid_numeric_dt(20110, "jos"), "jos is not of a valid length")
+  expect_error(valid_numeric_dt(201101), NA)
+  expect_error(valid_numeric_dt(2011010, "jos"), "jos is not of a valid length")
+  expect_error(valid_numeric_dt(20110101), NA)
+})
+
+test_that("match_date_pattern only matches the right patterns", {
+  expect_true(match_date_pattern("2016"))
+  expect_true(match_date_pattern("201601"))
+  expect_true(match_date_pattern("20160101"))
+  expect_false(match_date_pattern("20160"))
+  expect_false(match_date_pattern("2016010"))
+  expect_false(match_date_pattern("2016010 0"))
+})
+
+test_that("match_date_time_pattern only matches the right patterns", {
+  expect_true(match_date_time_pattern("20160101 01"))
+  expect_true(match_date_time_pattern("201601 0101"))
+  expect_true(match_date_time_pattern("20160101 010101"))
+  expect_false(match_date_time_pattern("20160101"))
+  expect_false(match_date_time_pattern("20160101 0"))
+  expect_false(match_date_time_pattern("2016010 010"))
+  expect_false(match_date_time_pattern("2016010 01010"))
+})
+
+test_that("convert_to_date gives the correct outputs", {
+  expect_equal(convert_to_date(2011), as.Date("2011-01-01"))
+  expect_equal(convert_to_date(201102), as.Date("2011-02-01"))
+  expect_equal(convert_to_date(20110203), as.Date("2011-02-03"))
+  expect_equal(convert_to_date("2011"), as.Date("2011-01-01"))
+  expect_equal(convert_to_date("201102"), as.Date("2011-02-01"))
+  expect_equal(convert_to_date("20110203"), as.Date("2011-02-03"))
+})
+
+test_that("interval_from_short gives correct outputs", {
+  expect_equal(interval_from_short(4), "year")
+  expect_equal(interval_from_short(6), "month")
+  expect_equal(interval_from_short(8), "day")
+})
+
+
+
+
+context("general workings span_date")
 
 test_that("check_equal_length works properly", {
   expect_error(check_equal_length(1998, 1999), NA)
