@@ -7,11 +7,11 @@
 span_date(from, to = NULL, len_out = NULL, interval = NULL)
 }
 \arguments{
-\item{from}{Integer of length 4 (year only), 6 (year and month), or 8 (
-year, month, and day). Indicating the start value of the sequence.}
+\item{from}{Integer or character of length 4 (yyyy), 6 (yyyymm), or 8 (
+yyymmdd). Indicating the start value of the sequence.}
 
-\item{to}{Integer of the same length as `from`.
-Indicating the end value of the sequence. Optional.}
+\item{to}{Integer or character of length 4 (yyyy), 6 (yyyymm), or 8 (
+yyymmdd). Optional.}
 
 \item{len_out}{The desired length of the sequence. Optional.}
 
@@ -21,22 +21,25 @@ Indicating the end value of the sequence. Optional.}
 An object of class Date.
 }
 \description{
-Quickly create a sequence of dates from integer values.
+Quickly create a sequence of dates from minimal specifications of dates.
 }
 \details{
-In addition to `from`, `to` or `length` must be specified. If `from`
-length is 4, the first day of that year will be used and the interval is
-year. If its length is 6, the first day of that month will be used,
-and the interval is month. If the length is 8, that day will be used and the
-interval is day. Use `interval` to override these defaults.
+Minimal specifications of dates set unspecified date parts to
+default values. These are 01 for both month and day.
+
+In addition to `from`, `to` or `length` must be specified. If the
+interval is not specified, `span_date` will set the interval to the highest
+of the specified date parts in either `from` or `to`. E.g. if they are
+2011 and 2015 it will be "year", if they are 2011 and 201501 it will be
+"month".
 }
 \examples{
 # using to
 span_date(2011, 2015)
 span_date(201101, 201501)
 span_date(2011, 2015, interval = "month")
-span_date(20110101, 20110201)
-span_date(20110101, 20110201, interval = "month")
+span_date(2011, 201501)
+span_date(20111225, 2012)
 
 # using len_out
 span_date(2011, len_out = 4)

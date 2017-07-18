@@ -88,15 +88,6 @@ test_that("interval_from_long gives correct outputs", {
   expect_equal(interval_from_long(15), "sec")
 })
 
-context("general workings span_date")
-
-test_that("check_equal_length works properly", {
-  expect_error(check_equal_length(1998, 1999), NA)
-  expect_error(check_equal_length(1998, NULL), NA)
-  expect_error(check_equal_length(1998, 199901),
-               "from and to should be of equal length")
-})
-
 context("span_date integration tests")
 test_that("span_date gives the desired outputs", {
   year_span <- seq.Date(as.Date("2011-01-01"), as.Date("2015-01-01"), by = "year")
@@ -126,7 +117,9 @@ test_that("span_time gives the desired outputs", {
 
   expect_equal(span_time(20110101, 20110201), day_span)
   expect_equal(span_time("20110101", "20110201"), day_span)
+  expect_equal(span_time("2011", "20110201"), day_span)
   expect_equal(span_time("20110101 00", "20110101 23"), hour_span)
+  expect_equal(span_time("2011", "20110101 23"), hour_span)
   expect_equal(span_time("20110101 00", len_out = 24), hour_span)
   expect_equal(span_time("20110101 0000", "20110101 0025"), min_span)
   expect_equal(span_time("20110101 0000", len_out = 26), min_span)

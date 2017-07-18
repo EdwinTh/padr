@@ -6,11 +6,11 @@
 
 - `get_interval` no longer applied to assess interval validity (its slow on large variables because it converts a POSIX to character). Rather validity is now compared after thickening by checking if results differes frome original. Makes function approximately four times faster.
 
-
-
 ## New Features
 
-* The `get_week_start` function is introduced, which can be used to automatically thicken from a give weekday. It saves the trouble of manually finding the first weekday before the first datetime value in `x`. Use as an argument to `thicken`.
+* `span_date` and `span_time` are wrappers around `seq.Date` and `seq.POSIXt` respectively. Because of their default settings (minimal specification of date and datetimes and interval inference) they require very little inputs for straightforward spanning.
+
+* The `get_week_start` function is introduced, which can be used to automatically thicken from a given weekday. It saves the trouble of manually finding the first weekday before the first datetime value in `x`. Use as an argument to `thicken`.
 
 * Both `pad` and `thicken` will no longer break when there are missing values in the datetime variable. Rows containing missing values will be retained in the returned data frame. In the case of `thicken` they will remain on the same position as the input data frame. The added column will have a missing value as well. For `pad` all the rows with missing values will be moved to the end of the dataframe, since there is no natural position for them in the order of padded rows.
 
