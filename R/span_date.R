@@ -38,11 +38,12 @@ span_date <- function(from,
   check_to_len_out(len_out, to)
   check_equal_length(from, to)
   check_valid_input_span(from, name = "from", "date")
-  from_dt <- convert_to_datetime(from)
-  if (!is.null(to)) to_dt <- convert_to_datetime(to, "date")
+  from_dt <- convert_to_date(from)
   if (is.null(interval)) interval <- interval_from_short(nchar(from))
   if (!is.null(to)) {
-    return(seq.Date(from_dt, to_dt, by = interval))
+    check_valid_input_span(to, name = "to", "date")
+    to_dt <- convert_to_date(to)
+    seq.Date(from_dt, to_dt, by = interval)
   } else {
     seq.Date(from_dt, length.out = len_out, by = interval)
   }
@@ -86,6 +87,15 @@ span_time <- function(from,
   }
 }
 
+span_mother <- function(date_time = c("date", "time")){
+  x <- function(from,
+                to       = NULL,
+                len_out  = NULL,
+                interval = NULL,
+                tz       = "UTC") {
+
+  }
+}
 
 check_to_len_out <- function(to, len_out) {
   if (is.null(to) && is.null(len_out)) {
@@ -164,13 +174,14 @@ interval_from_short <- function(x) {
 
 convert_to_datetime <- function(x,
                                 tz = "UTC") {
-  x_string <- substr(paste0(x, "0101"), 1, 15)
-  date_pt <- paste(substr(x_string, 1, 4),
-                   substr(x_string, 5, 6),
-                   substr(x_string, 7, 8), sep = "-")
-  time_pt <- paste(substr(x_string, 10, 11),
-                   substr(x_string, 12, 13),
-                   substr(x_string, 14, 15), sep = ":")
+  date_string <- substr(paste0(x, "0101"), 1, 8)
+  date_pt <- paste(substr(date_string, 1, 4),
+                   substr(date_string, 5, 6),
+                   substr(date_string, 7, 8), sep = "-")
+  time_string <- substr(paste0(x, "0000000000000000"), 10, 15)
+  time_pt <- paste(substr(time_string, 1, 2),
+                   substr(time_string, 3, 4),
+                   substr(time_string, 5, 6), sep = ":")
   as.POSIXct(paste(date_pt, time_pt), tz = tz)
 }
 

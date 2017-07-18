@@ -66,8 +66,27 @@ test_that("interval_from_short gives correct outputs", {
   expect_equal(interval_from_short(8), "day")
 })
 
+test_that("convert_to_datetime gives the correct outputs", {
+  p <- function(x) as.POSIXct(x, tz = "UTC")
+  expect_equal(convert_to_datetime(2011), p("2011-01-01"))
+  expect_equal(convert_to_datetime(201102), p("2011-02-01"))
+  expect_equal(convert_to_datetime(20110203), p("2011-02-03"))
+  expect_equal(convert_to_datetime("2011"), p("2011-01-01"))
+  expect_equal(convert_to_datetime("201102"), p("2011-02-01"))
+  expect_equal(convert_to_datetime("20110203"), p("2011-02-03"))
+  expect_equal(convert_to_datetime("20110101 01"), p("2011-01-01 01:00:00"))
+  expect_equal(convert_to_datetime("201102"), p("2011-02-01"))
+  expect_equal(convert_to_datetime("20110203"), p("2011-02-03"))
+})
 
-
+test_that("interval_from_long gives correct outputs", {
+  expect_equal(interval_from_long(4), "year")
+  expect_equal(interval_from_long(6), "month")
+  expect_equal(interval_from_long(8), "day")
+  expect_equal(interval_from_long(11), "hour")
+  expect_equal(interval_from_long(13), "min")
+  expect_equal(interval_from_long(15), "sec")
+})
 
 context("general workings span_date")
 
@@ -77,7 +96,6 @@ test_that("check_equal_length works properly", {
   expect_error(check_equal_length(1998, 199901),
                "from and to should be of equal length")
 })
-
 
 context("span_date integration tests")
 test_that("span_date gives the desired outputs", {
@@ -95,4 +113,26 @@ test_that("span_date gives the desired outputs", {
   expect_equal(span_date(201101, len_out = 49), month_span)
   expect_equal(span_date(20110101, len_out = 32), day_span)
   expect_equal(span_date(20110101, len_out = 49, interval = "month"), month_span)
+})
+
+context("span_time integration tests")
+test_that("span_time gives the desired outputs", {
+  year_span <- seq.POSIXt(as.POSIXct("2011-01-01 00-00-00", tz = "UTC"),
+                          as.POSIXct("2015-01-01", tz = "UTC"), by = "year")
+  hour_span <- seq.POSIXt(as.POSIXct("2011-01-01 00-00-00", tz = "UTC"),
+                          as.POSIXct("2011-01-02 00-00-00", tz = "UTC"), by = "hour")
+  min_span <- seq.POSIXt(as.POSIXct("2011-01-01 00-00-00"),
+                         as.POSIXct("2011-01-02 00-00-00"), by = "min")
+  sec_span <- seq.POSIXt(as.POSIXct("2011-01-01 00-00-00"),
+                         as.POSIXct("2011-01-02 00-00-00"), by = "sec")
+
+  expect_equal(span_time("20110101 00", "20110102 00"), hour_span)
+  expect_equal(span_time(201101, 201501), month_span)
+  expect_equal(span_time(2011, 2015, interval = "month"), month_span)
+  expect_equal(span_time(20110101, 20110201), day_span)
+  expect_equal(span_time(20110101, 20150101, interval = "month"), month_span)
+  expect_equal(span_time(2011, len_out = 5), year_span)
+  expect_equal(span_time(201101, len_out = 49), month_span)
+  expect_equal(span_time(20110101, len_out = 32), day_span)
+  expect_equal(span_time(20110101, len_out = 49, interval = "month"), month_span)
 })
