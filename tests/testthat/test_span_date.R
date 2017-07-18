@@ -43,7 +43,7 @@ test_that("match_date_pattern only matches the right patterns", {
 
 test_that("match_date_time_pattern only matches the right patterns", {
   expect_true(match_date_time_pattern("20160101 01"))
-  expect_true(match_date_time_pattern("201601 0101"))
+  expect_true(match_date_time_pattern("20160101 0101"))
   expect_true(match_date_time_pattern("20160101 010101"))
   expect_false(match_date_time_pattern("20160101"))
   expect_false(match_date_time_pattern("20160101 0"))
@@ -117,22 +117,20 @@ test_that("span_date gives the desired outputs", {
 
 context("span_time integration tests")
 test_that("span_time gives the desired outputs", {
-  year_span <- seq.POSIXt(as.POSIXct("2011-01-01 00-00-00", tz = "UTC"),
-                          as.POSIXct("2015-01-01", tz = "UTC"), by = "year")
-  hour_span <- seq.POSIXt(as.POSIXct("2011-01-01 00-00-00", tz = "UTC"),
-                          as.POSIXct("2011-01-02 00-00-00", tz = "UTC"), by = "hour")
-  min_span <- seq.POSIXt(as.POSIXct("2011-01-01 00-00-00"),
-                         as.POSIXct("2011-01-02 00-00-00"), by = "min")
-  sec_span <- seq.POSIXt(as.POSIXct("2011-01-01 00-00-00"),
-                         as.POSIXct("2011-01-02 00-00-00"), by = "sec")
+  p <- function(x) as.POSIXct(x, tz = "UTC")
+  day_span <- seq.POSIXt(p("2011-01-01"), p("2011-02-01"), by = "day")
+  hour_span <- seq.POSIXt(p("2011-01-01 00:00:00"), p("2011-01-01 23:00:00"), by = "hour")
+  min_span <- seq.POSIXt(p("2011-01-01 00:00:00"), p("2011-01-01 00:25:00"), by = "min")
+  sec_span <- seq.POSIXt(p("2011-01-01 00:00:00"),
+                         p("2011-01-01 00:00:25"), by = "sec")
 
-  expect_equal(span_time("20110101 00", "20110102 00"), hour_span)
-  expect_equal(span_time(201101, 201501), month_span)
-  expect_equal(span_time(2011, 2015, interval = "month"), month_span)
   expect_equal(span_time(20110101, 20110201), day_span)
-  expect_equal(span_time(20110101, 20150101, interval = "month"), month_span)
-  expect_equal(span_time(2011, len_out = 5), year_span)
-  expect_equal(span_time(201101, len_out = 49), month_span)
-  expect_equal(span_time(20110101, len_out = 32), day_span)
-  expect_equal(span_time(20110101, len_out = 49, interval = "month"), month_span)
+  expect_equal(span_time("20110101", "20110201"), day_span)
+  expect_equal(span_time("20110101 00", "20110101 23"), hour_span)
+  expect_equal(span_time("20110101 00", len_out = 24), hour_span)
+  expect_equal(span_time("20110101 0000", "20110101 0025"), min_span)
+  expect_equal(span_time("20110101 0000", len_out = 26), min_span)
+  expect_equal(span_time("20110101 000000", "20110101 000025"), sec_span)
+  expect_equal(span_time("20110101 000000", len_out = 26), sec_span)
 })
+

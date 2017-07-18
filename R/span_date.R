@@ -77,23 +77,14 @@ span_time <- function(from,
   check_to_len_out(len_out, to)
   check_equal_length(from, to)
   check_valid_input_span(from, name = "from", "time")
-  from_dt <- char_to_datetime(from, tz = tz)
-  if (!is.null(to)) to_dt <- char_to_datetime(to, tz = tz)
+  from_dt <- convert_to_datetime(from, tz = tz)
   if (is.null(interval)) interval <- interval_from_long(nchar(from))
   if (!is.null(to)) {
-    return(seq.POSIXt(from_dt, to_dt, by = interval))
+    check_valid_input_span(to, name = "to", "time")
+    to_dt <- convert_to_datetime(to, tz = tz)
+    seq.POSIXt(from_dt, to_dt, by = interval)
   } else {
     seq.POSIXt(from_dt, length.out = len_out, by = interval)
-  }
-}
-
-span_mother <- function(date_time = c("date", "time")){
-  x <- function(from,
-                to       = NULL,
-                len_out  = NULL,
-                interval = NULL,
-                tz       = "UTC") {
-
   }
 }
 
