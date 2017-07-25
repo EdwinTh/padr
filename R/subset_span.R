@@ -5,9 +5,20 @@
 #' @param spanned vector of class `Date`, `POSIXct`, or `POSIXlt`
 #' @param pattern_list list with the desired pattern for each of the following
 #' datetime parts: "year", "mon", "mday", "wday", "hour", "min", "sec"
-
+#' @return
+#' Vector of the same class as `spanned`, containing all the data points in
+#' `spanned` indicated by `pattern_list`.
+#'
+#' @examples
+#' date_span <- span_date(20170701, len_out = 100)
+#' subset_span(date_span, list(wday = 1:5))
+#'
+#' time_span <- span_time("20170101 00", 201708)
+#' subset_span(time_span, list(hour = 7:17))
+#' @export
 subset_span <- function(spanned,
                         pattern_list){
+  test_datetime(spanned)
   original_type <- class(spanned)
   spanned_lt    <- as.POSIXlt(spanned)
   parts         <- names(pattern_list)
@@ -56,10 +67,16 @@ filter_one_part <- function(spanned_lt,
   }
 }
 
-filter_subset <- function(spanned,
+filter_subset <- function(spanned_lt,
                           pattern_list) {
   for(prt in names(pattern_list)) {
     spanned_lt <- filter_one_part(spanned_lt, pattern_list, prt)
   }
   spanned_lt
+}
+
+test_datetime <- function(x) {
+  if (!(inherits(x, "POSIXt") | inherits(x, "Date"))){
+    stop("x is not of class POSIXct, POSIXlt, or Date", call. = FALSE)
+  }
 }
