@@ -39,11 +39,6 @@ check_filter_on <- function(x) {
   }
 }
 
-adjust_year <- function(pattern_list) {
-  pattern_list$year <- pattern_list$year - 1900
-  pattern_list
-}
-
 # did not manage to get this to work with a generic function
 # because spanned_lt$ does not seem to accept arguments whatsoever.
 # need help for refactoring this
@@ -51,9 +46,9 @@ filter_one_part <- function(spanned_lt,
                             pattern_list,
                             part) {
   if (part == "year") {
-    spanned_lt[spanned_lt$year %in% pattern_list$year]
+    spanned_lt[(spanned_lt$year  - 1900) %in% pattern_list$year]
   } else if (part == "mon") {
-    spanned_lt[spanned_lt$mon %in% pattern_list$mon]
+    spanned_lt[(spanned_lt$mon + 1) %in% pattern_list$mon]
   } else if (part == "mday") {
     spanned_lt[spanned_lt$mday %in% pattern_list$mday]
   } else if (part == "wday") {
