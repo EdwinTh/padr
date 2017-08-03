@@ -1,0 +1,62 @@
+---
+title: "Ch 4 Functions"
+author: "Edwin Thoen"
+date: "8/1/2017"
+output: html_document
+---
+
+Functions have three parts: body is the code, formals are its argumnets and the environment is its place of creation. Functions can possess any number of attributes, `srcref` attribute points to the source code that also contains all the comments.
+
+"You can also add attributes to a function. For example, you can set the class() and add a custom print() method." This is a strange sentence with the rest of the paragraph. Reread later and PR if still unclear.
+
+Primitive functions are written directly in C and don't have body, formals and environmetn.
+
+## 4.1.2 Exercises
+
+#### 1
+```{r}
+is.function(mean)
+is.primitive(sum)
+```
+
+#### 2
+```{r}
+library(tidyverse)
+objs <- mget(ls("package:base"), inherits = TRUE)
+funs <- Filter(is.function, objs)
+nr_args <- funs %>% map_dbl(function(x) x %>% formals() %>% length())
+# a 
+nr_args %>% sort() %>% rev() %>% head()
+# b
+sum(nr_args == 0)
+# special that they work on the general environment, not specific data object
+# c
+# replace is.function by is.primitive
+```
+
+#### 3
+body, formals, environment
+
+#### 4
+primitives don't have an environment, this might be meant here.
+
+## Lexical scoping
+
+R looks up a variable based on how functions are nested when they were created, not how they were nested when they were called. Functions preserve the environments in which they were created. In the function environment variables can be present, even though they are not present in the environment where the function is called. 
+
+R handles variables with functions stored in them exactly the same as all other variables. One difference is when it is obvious we are referring to a function, other variables are ignored.
+
+```{r}
+some_var <- function(x) 42 + x
+func <- function() {
+  some_var <- 18
+  some_var(4)
+}
+func()
+```
+Here the call to `some_var` can't be a variable, so R will look for functions only and thus find it in the global env.
+
+Each time a function is called it creates a new environment for execution. It has no memory of what happened the last time it was called.
+
+
+

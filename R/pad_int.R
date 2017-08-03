@@ -82,5 +82,5 @@ check_step <- function(min_max_frame,
 
 is_valid_int <- function(int_var) {
   stopifnot(is.numeric(int_var))
-  stopifnot( all(int_var %% 1 == 0))
+  stopifnot(all(int_var %% 1 == 0))
 }
