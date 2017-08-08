@@ -136,8 +136,8 @@ set_to_original_type <- function(x,
                                  original) {
   if (inherits(original, "tbl_df")) {
     x <- dplyr::as_data_frame(x)
-    groups <- as.character(groups(original))
-    x <- dplyr::group_by_(x, .dots = groups)
+    grps <- as.character(dplyr::groups(original))
+    x <- dplyr::group_by_(x, .dots = grps)
   } else if (inherits(original, "data.table")) {
     x <- data.table::as.data.table(x)
   }

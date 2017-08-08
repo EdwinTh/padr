@@ -1,6 +1,7 @@
 spanned <- span_time("20151201 00", 2017)
 spanned_sub <- subset_span(spanned, list(hour = c(6:10, 16:20)))
 spanned = spanned_sub
+x = emergency
 
 thicken_cust <- function(x,
                          spanned,
