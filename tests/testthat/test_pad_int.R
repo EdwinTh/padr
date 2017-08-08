@@ -37,3 +37,12 @@ test_that("pad_int with groups", {
   expect_equal( pad_int(df2, 'y', group = 'g', step = 2) %>% nrow, 6)
   expect_error( pad_int(df2, 'y', group = 'g', step = 3) )
 })
+
+test_that("pad_int works on both tbl and data.table", {
+  df_tbl <- dplyr::as_data_frame(df)
+  df_dt  <- data.table::as.data.table(df)
+  expect_error(pad_int(df_tbl, "y"), NA)
+  expect_error(pad_int(df_dt, "y"), NA)
+  expect_true(inherits(pad_int(df_tbl, "y"), "tbl"))
+  expect_true(inherits(pad_int(df_dt, "y"), "data.table"))
+})
