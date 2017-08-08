@@ -120,10 +120,9 @@ thicken <- function(x,
 the interval specified is too low for the interval of the datetime variable", call. = FALSE)
   }
 
-  thickened_frame <- data.frame(dt_var, thickened)
-  colnames(thickened_frame)[1] <- dt_var_name
+  thickened_frame <- data.frame(thickened)
 
-  return_frame <- suppressMessages(dplyr::left_join(x, thickened_frame))
+  return_frame <- dplyr::bind_cols(x, thickened_frame)
   colnames(return_frame)[ncol(return_frame)] <- colname
 
   return_frame <- set_to_original_type(return_frame, original_data_frame)
