@@ -46,11 +46,11 @@ pad_int <- function(x,
     stop('Not all grouping variables are column names of x.', call. = FALSE)
   }
 
-  int_var <- x[, colnames(x) == by]
-  is_valid_int(int_var)
-
   original_data_frame <- x
   x <- as.data.frame(x)
+
+  int_var <- x[, colnames(x) == by]
+  is_valid_int(int_var)
 
   min_max_frame <- get_min_max(x, by, group, start_val, end_val)
   warning_no_padding(min_max_frame)
