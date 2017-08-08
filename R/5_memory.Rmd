@@ -1,0 +1,26 @@
+---
+title: "Ch 5 Memory"
+author: "Edwin Thoen"
+date: "8/1/2017"
+output: html_document
+---
+
+Every empty object takes 40 bytes
+
+```{r}
+object.size(seq_len(0))
+```
+
+These are metadat(4b), like type. Two pointers (2*8b) one to the next object and one to the previous one. A pointer to the attributes(8b). The length of the vector (4b) and the data are the final parts.
+
+For small vectors are asks for a block of memory at once, because asking for memory is expensive. For larger vectors it will let the memory allocator do it. 
+
+If objects have shared component R points to the other object, it will not copy it.
+
+```{r}
+x <- 1:10
+object.size(x)
+y <- list(x, x, x)
+object.size(y)
+```
+

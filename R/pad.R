@@ -241,14 +241,18 @@ get_min_max <- function(x,
   return(ret)
 }
 
-warning_no_padding <- function(x) {
-  start_equal_to_end <- x$mn == x$mx
-  if (any(start_equal_to_end)){
-    not_varying <- sum(start_equal_to_end)
-    warning(sprintf("datetime variable does not vary for %d of the groups, no padding applied on this / these group(s)", #nolint
-                    not_varying), call. = FALSE)
+warning_no_vary <- function(msg_second_part) {
+  function(x) {
+    start_equal_to_end <- x$mn == x$mx
+    if (any(start_equal_to_end)){
+      not_varying <- sum(start_equal_to_end)
+    warning(sprintf("datetime variable does not vary for %d of the groups, %s", #nolint
+                    not_varying, msg_second_part), call. = FALSE)
+    }
   }
 }
+
+warning_no_padding <- warning_no_vary("no padding applied on this / these group(s)")
 
 # if start_val or end_val are specified, we want omit the cases where the
 # start_val is larger than max(x) and end_val is smaller than min(x)
