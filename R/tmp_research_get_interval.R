@@ -13,8 +13,7 @@
 #' x_sec <- seq(as.POSIXct('2016-01-01 00:00:00'), length.out = 100, by = 'sec')
 #' get_interval(x_sec)
 #' get_interval(x_sec[seq(0, length(x_sec), by = 5)])
-#' @export
-get_interval <- function(x) {
+get_interval_tmp <- function(x) {
   stop_on_NA(x)
   interval <- get_interval_list(x)
   if (interval$step == 1) {
@@ -180,4 +179,31 @@ get_interval_try <- function(x) {
   }
   int
 }
+
+## ----------- new work ----------------##
+# steps:
+# when Date >> go to old way right away.
+# else: see if can get coerced to Date, if yes go to old way.
+# else: determine min_dif_posix: if %% (24 * 3600) == 0, coerce to date and go to
+   # old way (this require new function, that cuts hh:mm:ss and coerces to date)
+# else: seconds to interval
+
+
+interval_on_posix
+
+min_dif_posix <- function(x) {
+  second_difs <- get_difs(as.numeric(x))
+  min(second_difs)
+}
+
+seconds_to_interval <- function(x) {
+  if (x %% 3600 == 0) {
+    glue::glue("{x / 3600} hour")
+  } else if (x %% 60 == 0) {
+    glue::glue("{x / 60} min")
+  } else {
+    glue::glue("{x} sec")
+  }
+}
+
 
