@@ -9,13 +9,10 @@
 #' @param by Only needs to be specified when \code{x} contains multiple
 #' variables of class \code{Date}, class \code{POSIXct} or
 #' class \code{POSIXlt}. \code{by} indicates which variable to summarise.
-#' @param invariant What to do when datetime variable does not vary for one or
-#' more groups.
 
 padr_summarise <- function(x,
                            group = NULL,
-                           by    = NULL,
-                           invariant = c("warning", "silent", "break")) {
+                           by    = NULL) {
   is_df(x)
   group <- get_dplyr_groups(x, group)
   x_grouped <- dplyr::group_by(x, !!!rlang::syms(group))
@@ -31,11 +28,14 @@ padr_summarise <- function(x,
 }
 
 
-
 check_pad_complete <- function(dt_var,
                                interval) {
   if (is.na(interval)) return(NA)
   nr_un_obs_dt_var <- length(unique(dt_var))
+
   length_complete  <- length(seq(min(dt_var), max(dt_var), by = interval))
   nr_un_obs_dt_var == length_complete
 }
+
+?diff.POSIXt
+diff(min(dt_var), 10)
