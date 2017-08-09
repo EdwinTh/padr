@@ -21,9 +21,21 @@ padr_summarise <- function(x,
   x_grouped <- dplyr::group_by(x, !!!rlang::syms(group))
   dt_var_name <- get_dt_var_and_name(x, by)$dt_var_name
   var_enq <- rlang::sym(dt_var_name)
-  return_set <- dplyr::summarise(x_grouped,
-                                 first = min(!!var_enq),
-                                 last  = max(!!var_enq),
-                                 interval = get_interval(!!var_enq))
+  with_interval <- dplyr::mutate(x_grouped,
+                                 interval = get_interval_try(!!var_enq))
+  dplyr::summarise(with_interval,
+                   first = min(!!var_enq),
+                   last  = max(!!var_enq),
+                   interval = min(interval),
+                   complete = check_pad_complete(!!var_enq, interval))
 }
 
+
+
+check_pad_complete <- function(dt_var,
+                               interval) {
+  if (is.na(interval)) return(NA)
+  nr_un_obs_dt_var <- length(unique(dt_var))
+  length_complete  <- length(seq(min(dt_var), max(dt_var), by = interval))
+  nr_un_obs_dt_var == length_complete
+}

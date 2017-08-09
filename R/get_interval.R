@@ -171,3 +171,11 @@ smallest_nonzero <- function(x) {
   min(nonzero)
 }
 
+get_interval_try <- function(x) {
+  int <- try(get_interval(x), silent = TRUE)
+  if (inherits(int, "try-error")) {
+    int <- NA
+  }
+  int
+}
+
