@@ -36,6 +36,3 @@ check_pad_complete <- function(dt_var,
   length_complete  <- length(seq(min(dt_var), max(dt_var), by = interval))
   nr_un_obs_dt_var == length_complete
 }
-
-?diff.POSIXt
-diff(min(dt_var), 10)

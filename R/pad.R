@@ -402,7 +402,7 @@ break_above_func <- function(n,
   threshold <- threshold * 10 ^ 6
   if (n > threshold) {
     stop(sprintf("Estimated %s returned rows, larger than %s milion in break_above",
-                 n, break_above), call. = FALSE)
+                 n, threshold), call. = FALSE)
   }
 
 }
