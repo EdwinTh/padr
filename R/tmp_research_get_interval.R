@@ -15,7 +15,12 @@
 #' get_interval(x_sec[seq(0, length(x_sec), by = 5)])
 get_interval_tmp <- function(x) {
   stop_on_NA(x)
-  interval <- get_interval_list(x)
+  check_datetime(x)
+  if (inherits(x, "POSIXt")) {
+    interval <- get_interval_posix(x)
+  } else {
+    interval <- get_interval_date(x)
+  }
   if (interval$step == 1) {
     return(interval$interval)
   } else {
@@ -23,20 +28,9 @@ get_interval_tmp <- function(x) {
   }
 }
 
-stop_on_NA <- function(x) {
-  if(any(is.na(x))) {
-    stop("interval cannot be determined when x contains NAs")
-  }
-}
+get_interval_date <- function(x){
 
-get_interval_list <- function(x){
-  if ( !( inherits(x, 'Date') |  inherits(x, 'POSIXt')) ) {
-    stop('x should be of class Date, POSIXct, or POSIXlt.', call. = FALSE)
-  }
-
-  x_char <- datetime_char(x)
-
-  differ <- lowest_differ(x_char)
+  differ <- lowest_differ(as.character(x))
 
   if ( length(differ) == 0 ) {
     stop("x does not vary, cannot determine the interval", call. = FALSE)
@@ -56,25 +50,12 @@ get_interval_list <- function(x){
   return(list(interval = differ, step = step))
 }
 
-# change a variable of class Date or POSIXt to a character of length 18
-# as input for the differing
-datetime_char <- function(x) {
-  x_char <- as.character(x)
-  if (unique(nchar(x_char)) == 10){
-    x_char <- paste(x_char, '00:00:00')
-  }
-  return(x_char)
-}
-
 # check what levels of the datetime variable differ, x is the output of datetime_char
 lowest_differ <- function(x_char) {
   differ <- which(c(
     year   = ! length( unique ( substr(x_char, 1, 4) ) ) == 1,
     month  = ! length( unique ( substr(x_char, 6, 7) ) ) == 1,
-    day    = ! length( unique ( substr(x_char, 9, 10) ) ) == 1,
-    hour   = ! length( unique ( substr(x_char, 12, 13) ) ) == 1,
-    min    = ! length( unique ( substr(x_char, 15, 16) ) ) == 1,
-    sec    = ! length( unique ( substr(x_char, 18, 19) ) ) == 1
+    day    = ! length( unique ( substr(x_char, 9, 10) ) ) == 1
   ))
   return( names( differ[length(differ)] ) )
 }
@@ -104,9 +85,6 @@ get_step <- function(x, d) {
   if (d == "month") return(step_of_month(x))
   if (d == "week") return(step_with_difftime(x, "weeks"))
   if (d == "day") return(step_with_difftime(x, "days"))
-  if (d == "hour") return(step_with_difftime(x, "hours"))
-  if (d == "min") return(step_with_difftime(x, "mins"))
-  if (d == "sec") return(step_with_difftime(x, "secs"))
 }
 
 step_of_year <- function(x) {
@@ -170,6 +148,12 @@ smallest_nonzero <- function(x) {
   min(nonzero)
 }
 
+check_datetime <- function(x) {
+  if ( !( inherits(x, 'Date') |  inherits(x, 'POSIXt')) ) {
+    stop('x should be of class Date, POSIXct, or POSIXlt.', call. = FALSE)
+  }
+}
+
 # wrapper around get_interval that returns NA when interval can't be determined
 # instead of breaking.
 get_interval_try <- function(x) {
@@ -187,9 +171,13 @@ get_interval_try <- function(x) {
 # else: determine min_dif_posix: if %% (24 * 3600) == 0, coerce to date and go to
    # old way (this require new function, that cuts hh:mm:ss and coerces to date)
 # else: seconds to interval
+get_interval_posix <- function(x) {
+  x_num <- as.numeric(x)
+  if (length(unique(x)) == 1) {
+    stop("x does not vary, cannot determine the interval", call. = FALSE)
+  }
 
-
-interval_on_posix
+}
 
 min_dif_posix <- function(x) {
   second_difs <- get_difs(as.numeric(x))
