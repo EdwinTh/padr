@@ -35,7 +35,6 @@ get_interval_list <- function(x){
     stop('x should be of class Date, POSIXct, or POSIXlt.', call. = FALSE)
   }
 
-  #x_char <- datetime_char(x)
   x_char <- datetime_char2(x)
   differ <- lowest_differ(x_char)
 
@@ -60,11 +59,11 @@ get_interval_list <- function(x){
 # change a variable of class Date or POSIXt to a character of length 18
 # as input for the differing
 datetime_char <- function(x) {
-  x_char <- as.character(x)
-  if (unique(nchar(x_char)) == 10){
-    x_char <- paste(x_char, '00:00:00')
+  if (inherits(x, "Date")) {
+    paste(format(x, "%F"), "00:00:00")
+  } else {
+    format(x, "%F %T")
   }
-  return(x_char)
 }
 
 # check what levels of the datetime variable differ, x is the output of datetime_char
@@ -181,11 +180,5 @@ get_interval_try <- function(x) {
   int
 }
 
-datetime_char2 <- function(x) {
-  if (inherits(x, "Date")) {
-    paste(format(x, "%F"), "00:00:00")
-  } else {
-    format(x, "%F %T")
-  }
-}
+
 
