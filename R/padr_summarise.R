@@ -37,5 +37,3 @@ check_pad_complete <- function(dt_var,
   nr_un_obs_dt_var == length_complete
 }
 
-?diff.POSIXt
-diff(min(dt_var), 10)

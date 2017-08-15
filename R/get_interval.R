@@ -35,8 +35,8 @@ get_interval_list <- function(x){
     stop('x should be of class Date, POSIXct, or POSIXlt.', call. = FALSE)
   }
 
-  x_char <- datetime_char(x)
-
+  #x_char <- datetime_char(x)
+  x_char <- datetime_char2(x)
   differ <- lowest_differ(x_char)
 
   if ( length(differ) == 0 ) {
@@ -179,5 +179,13 @@ get_interval_try <- function(x) {
     int <- NA
   }
   int
+}
+
+datetime_char2 <- function(x) {
+  if (inherits(x, "Date")) {
+    paste(format(x, "%F"), "00:00:00")
+  } else {
+    format(x, "%F %T")
+  }
 }
 
