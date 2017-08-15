@@ -129,7 +129,11 @@ step_of_month <- function(x) {
 }
 
 step_with_difftime <- function(x, units) {
-  time_dif <- as.numeric ( get_difftime(sort(x), units) )
+  if (inherits(x, "Date")) {
+    time_dif <- numeric_dif_date(x, units = units)
+  } else if (inherits(x, "POSIXt")) {
+    time_dif <- numeric_dif_posix(x, units = units)
+  }
   return(get_max_modulo_zero( time_dif, max_t = smallest_nonzero(time_dif)) )
 }
 
@@ -160,11 +164,6 @@ get_max_modulo_zero <- function(d, min_t = 1, max_t = 60) {
   }
 }
 
-get_difftime <- function(x, units) {
-  n <- length(x)
-  difftime(x[2:n], x[1:(n - 1)], units = units)
-}
-
 smallest_nonzero <- function(x) {
   nonzero <- x[x > 0]
   min(nonzero)
@@ -180,5 +179,32 @@ get_interval_try <- function(x) {
   int
 }
 
+## knowing the interval we can convert to numeric to get the units for
+## everything of a week and lower.
+numeric_dif_date <- function(x, units) {
+  x_num <- sort(unique(as.numeric(x)))
+  difs  <- get_difs(x_num)
+  if (units == "weeks") {
+    difs / 7
+  } else if (units == "days") {
+    difs
+  }
+}
+
+numeric_dif_posix <- function(x, units) {
+  x_num <- sort(unique(as.numeric(x)))
+  difs  <- get_difs(x_num)
+  if (units == "secs") {
+    difs
+  } else if (units == "mins") {
+    difs / 60
+  } else if (units == "hours") {
+    difs / 3600
+  } else if (units == "days") {
+    difs / 86400
+  } else if (units == "weeks") {
+    difs / 604800
+  }
+}
 
 
