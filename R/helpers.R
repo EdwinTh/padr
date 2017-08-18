@@ -43,6 +43,17 @@ check_start_and_end <- function(start_val, end_val) {
 }
 
 
+is_datetime <- function(x) {
+  inherits(x, 'Date') |  inherits(x, 'POSIXt')
+}
+
+stop_not_datetime <- function(x) {
+  if (!is_datetime(x)) {
+    stop('x should be of class Date, POSIXct, or POSIXlt.', call. = FALSE)
+  }
+}
+
+
 # These two Roxygen tags are required to use Cpp code (they could be anywhere
 # in the package)
 

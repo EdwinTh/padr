@@ -1,7 +1,9 @@
 library(dplyr)
 
 # pad and get_inteval are currently broken (fixed in a version that is not yet checked in)
+shift_to_middle <- function(x) {
 
+}
 
 
 # this function assumes that the interval is no higher than hour
