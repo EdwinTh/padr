@@ -1,6 +1,31 @@
+#' Shift to the Middle of the Interval
 #'
-
-shift_to_middle <- function(x) {
+#' After padding and thickening all the values are either
+#' shifted to the first or the last value of the interval.
+#' Function creates a vector that shifts the datetime value to
+#' the (approximate) center of the interval.
+#' @param x A vector of class \code{Date}, class \code{POSIXct} or class \code{POSIXlt}.
+#' @param shift Up or down.
+#' @param return `x` with the values shifted to the (approximate) center.
+#' @details The interval will be translated to number of days when
+#' x is of class `Date``, or number of seconds when x is of class
+#' `POSIXt`. For months and quarters will this be the average
+#' length of the period. The floor of the translated number divided by two
+#' and added by or subtracted from `x`.
+#' @examples
+#' library(tidyverse)
+#' plot_set <- emergency %>%
+#'   thicken("hour", "h") %>%
+#'   count(h) %>%
+#'   head(24)
+#'
+#' ggplot(plot_set, aes(h, n)) + geom_col()
+#'
+#' plot_set %>%
+#'   mutate(h_center = center_interval(h)) %>%
+#'   ggplot(plot_set, aes(h_center, n)) + geom_col()
+#' @export
+center_interval <- function(x) {
   stop_not_datetime(x)
   if (inherits(x, "Date")) {
     shift_to_middle_date(x)
@@ -9,11 +34,11 @@ shift_to_middle <- function(x) {
   }
 }
 
-shift_to_middle_posix <- function(x) {
+center_interval_posix <- function(x) {
   stopifnot(inherits(x, "POSIXt"))
   interval_x <- get_interval_list(x)
   interval_x_secs <- int_to_secs(interval_x)
-  x + interval_x_secs / 2
+  x + interval_x_secs
 }
 
 int_to_secs <- function(x) {
@@ -24,7 +49,7 @@ int_to_secs <- function(x) {
   secs_string[x$interval] * x$step
 }
 
-shift_to_middle_date <- function(x) {
+center_interval_date <- function(x) {
   stopifnot(inherits(x, "Date"))
   interval_x <- list(interval = "day", step = 15)
   interval_x_days <- int_to_days(interval_x)
