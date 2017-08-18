@@ -12,9 +12,14 @@
 
 * The `get_week_start` function is introduced, which can be used to automatically thicken from a given weekday. It saves the trouble of manually finding the first weekday before the first datetime value in `x`. Use as an argument to `thicken`.
 
-* Both `pad` and `thicken` will no longer break when there are missing values in the datetime variable. Rows containing missing values will be retained in the returned data frame. In the case of `thicken` they will remain on the same position as the input data frame. The added column will have a missing value as well. For `pad` all the rows with missing values will be moved to the end of the dataframe, since there is no natural position for them in the order of padded rows.
+* Two new functions are introduced that help with visualising interval data. 
+
+- `center_interval` will shift the datetime variable from either the beginning or the end of the interval, to the center of the interval. This will improve visualisations such as dot plots and bar plots, where the timestamp is still considered to be continuous.
+
 
 ## Bug Fixes / Enhancements
+
+* Both `pad` and `thicken` will no longer break when there are missing values in the datetime variable. Rows containing missing values will be retained in the returned data frame. In the case of `thicken` they will remain on the same position as the input data frame. The added column will have a missing value as well. For `pad` all the rows with missing values will be moved to the end of the dataframe, since there is no natural position for them in the order of padded rows.
 
 * When time variable has NULL as timezone, also `posix_to_date` used to break (related to #14). This made `thicken` break when the desired interval is "day" or higher. This is now fixed by don't regarding the timezone.
 

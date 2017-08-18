@@ -25,20 +25,21 @@
 #'   mutate(h_center = center_interval(h)) %>%
 #'   ggplot(plot_set, aes(h_center, n)) + geom_col()
 #' @export
-center_interval <- function(x) {
+center_interval <- function(x, shift = c("up", "down")) {
   stop_not_datetime(x)
-  if (inherits(x, "Date")) {
-    shift_to_middle_date(x)
-  } else {
-    shift_to_middle_posix(x)
-  }
-}
-
-center_interval_posix <- function(x) {
-  stopifnot(inherits(x, "POSIXt"))
+  shift <- match.arg(shift)
   interval_x <- get_interval_list(x)
-  interval_x_secs <- int_to_secs(interval_x)
-  x + interval_x_secs
+  if (inherits(x, "Date")) {
+    interval_units <- int_to_secs(x)
+  } else {
+    interval_units <- int_to_days(x)
+  }
+
+  if (shift == "up") {
+    x + (interval_units / 2)
+  } else {
+    x - (interval_units / 2)
+  }
 }
 
 int_to_secs <- function(x) {
@@ -47,13 +48,6 @@ int_to_secs <- function(x) {
                    monht = day_secs*365/12, week = day_secs*7,
                    day = day_secs, hour = 3600, min = 60, sec = 1)
   secs_string[x$interval] * x$step
-}
-
-center_interval_date <- function(x) {
-  stopifnot(inherits(x, "Date"))
-  interval_x <- list(interval = "day", step = 15)
-  interval_x_days <- int_to_days(interval_x)
-  x + interval_x_days / 2
 }
 
 int_to_days <- function(x) {
