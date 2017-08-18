@@ -1,6 +1,6 @@
 library(dplyr)
 
-# pad and get_inteval are currently broken (fixed in a eversion)
+# pad and get_inteval are currently broken (fixed in a version that is not yet checked in)
 
 
 
@@ -20,6 +20,16 @@ int_to_secs <- function(x) {
 }
 
 
-emergency %>% thicken("h", "h") %>% count(h) %>% mutate(h = shift_to_middle_posix(h)) %>%
-  head(48) %>%
-  ggplot(aes(h, n)) + geom_col()
+shift_to_middle_date <- function(x) {
+  stopifnot(inherits(x, "Date"))
+  # interval_x <- get_interval_list(x)
+  interval_x <- list(interval = "day", step = 15)
+  interval_x_days <- int_to_days(interval_x)
+  x + interval_x_days / 2
+}
+
+int_to_days <- function(x) {
+  days_string <- c(year = 365, quarter = 91, month = 30, week = 7, day = 1)
+  days_string[x$interval] * x$step
+}
+
