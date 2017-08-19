@@ -33,7 +33,7 @@ stop_on_NA <- function(x) {
 get_interval_list <- function(x){
   stop_not_datetime(x)
 
-  x_char <- datetime_char2(x)
+  x_char <- datetime_char(x)
   differ <- lowest_differ(x_char)
 
   if ( length(differ) == 0 ) {
@@ -54,8 +54,8 @@ get_interval_list <- function(x){
   return(list(interval = differ, step = step))
 }
 
-# change a variable of class Date or POSIXt to a character of length 18
-# as input for the differing
+# change a variable of class Date or POSIXt to a character, use format insteas
+# of as.character for performance
 datetime_char <- function(x) {
   if (inherits(x, "Date")) {
     paste(format(x, "%F"), "00:00:00")
