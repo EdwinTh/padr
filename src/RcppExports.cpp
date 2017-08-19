@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 // round_down_core
 IntegerVector round_down_core(IntegerVector a, IntegerVector b);
-RcppExport SEXP padr_round_down_core(SEXP aSEXP, SEXP bSEXP) {
+RcppExport SEXP _padr_round_down_core(SEXP aSEXP, SEXP bSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -19,7 +19,7 @@ END_RCPP
 }
 // round_up_core
 IntegerVector round_up_core(IntegerVector a, IntegerVector b);
-RcppExport SEXP padr_round_up_core(SEXP aSEXP, SEXP bSEXP) {
+RcppExport SEXP _padr_round_up_core(SEXP aSEXP, SEXP bSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;

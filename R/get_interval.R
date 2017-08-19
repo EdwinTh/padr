@@ -31,9 +31,7 @@ stop_on_NA <- function(x) {
 }
 
 get_interval_list <- function(x){
-  if ( !( inherits(x, 'Date') |  inherits(x, 'POSIXt')) ) {
-    stop('x should be of class Date, POSIXct, or POSIXlt.', call. = FALSE)
-  }
+  stop_not_datetime(x)
 
   x_char <- datetime_char2(x)
   differ <- lowest_differ(x_char)
