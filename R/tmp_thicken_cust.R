@@ -5,7 +5,7 @@
 
 thicken_cust <- function(x,
                          spanned,
-                         colname  = "jos",
+                         colname,
                          rounding = c('down',
                                      'up'),
                          by        = NULL) {
