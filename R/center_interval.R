@@ -11,9 +11,9 @@
 #' @param return `x` with the values shifted to the (approximate) center.
 #' @details The interval will be translated to number of days when
 #' x is of class `Date``, or number of seconds when x is of class
-#' `POSIXt`. For months and quarters will this be the average
-#' length of the period. The floor of the translated number divided by two
-#' and added by or subtracted from `x`.
+#' `POSIXt`. For months and quarters this will be the average
+#' length of the period. The translated number divided by two
+#' will be added by or subtracted from `x`.
 #' @examples
 #' library(tidyverse)
 #' plot_set <- emergency %>%
@@ -35,13 +35,14 @@ center_interval <- function(x,
   if (is.null(interval)) {
     interval_x <- get_interval_list(x)
   } else {
-    interval_x <- interval
+    interval_x <- convert_interval(interval)
+    interval_x$interval <- uniform_interval_name(interval_x$interval)
   }
 
   if (inherits(x, "Date")) {
-    interval_units <- int_to_secs(x)
+    interval_units <- int_to_days(interval_x)
   } else {
-    interval_units <- int_to_days(x)
+    interval_units <- int_to_secs(interval_x)
   }
 
   if (shift == "up") {
