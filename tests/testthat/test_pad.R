@@ -229,6 +229,12 @@ test_that("gives no message when interval is not NULL", {
   expect_message(pad(x1, interval = "hour"), NA)
 })
 
+test_that("pad works when datetime variable is irregular", {
+ irreg <- data.frame(x = span_date(2016, 2018)[c(1, 3)], val = 1:2)
+ colnames(irreg)[1] <- 42
+ expect_error(pad(irreg), NA)
+})
+
 
 context("pad and thickens with a NA values in the datetime variable")
 test_that("pad works properly on with NA values", {
