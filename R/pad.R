@@ -225,16 +225,18 @@ pad <- function(x,
 
 
 get_min_max <- function(x,
-                        dt_var,
+                        dt_var_name,
                         group_vars,
                         start_val,
                         end_val) {
-  grpd <- dplyr::group_by_(x, .dots = group_vars)
+  dt_var_enq <- rlang::sym(dt_var_name)
+  group_vars_enq <- rlang::syms(group_vars)
+  grpd <- dplyr::group_by(x, !!!group_vars)
 
   funcs <- list(sprintf("min(%s)", dt_var),
                 sprintf("max(%s)", dt_var))
 
-  ret <- dplyr::summarise_(grpd, .dots = stats::setNames(funcs, c("mn", "mx")))
+  ret <- dplyr::summarise(grpd, mn = min(!!dt_var_enq), mx = max(!!dt_var_enq))
   if (!is.null(start_val)) ret$mn <- start_val
   if (!is.null(end_val)) ret$mx <- end_val
   ret <- dplyr::ungroup(ret)
@@ -328,8 +330,8 @@ flatten_interval <- function(int) {
 # keys first. Also the columns should be in the same order as the original
 to_original_format <- function(ret, group_vars, dt_var_name, original_data_frame){
   sorting_fields <- c(group_vars, dt_var_name)
-  ret <- dplyr::arrange_(ret, .dots = sorting_fields)
-  ret <- dplyr::select_(ret, .dots = colnames(original_data_frame))
+  ret <- dplyr::arrange(ret, !!!rlang::syms(sorting_fields))
+  ret <- dplyr::select(ret, !!!rlang::syms(colnames(original_data_frame)))
   return(as.data.frame(ret))
 }
 

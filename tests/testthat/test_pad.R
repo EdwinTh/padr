@@ -232,7 +232,9 @@ test_that("gives no message when interval is not NULL", {
 test_that("pad works when datetime variable is irregular", {
  irreg <- data.frame(x = span_date(2016, 2018)[c(1, 3)], val = 1:2)
  colnames(irreg)[1] <- 42
- expect_error(pad(irreg), NA)
+ expect_error(pad(irreg, interval = "year"), NA)
+ colnames(irreg)[1] <- "test_/_hello"
+ expect_error(pad(irreg, interval = "year"), NA)
 })
 
 
