@@ -39,6 +39,8 @@ center_interval <- function(x,
     interval_x$interval <- uniform_interval_name(interval_x$interval)
   }
 
+  interval_units <- int_to_units(x)
+
   if (inherits(x, "Date")) {
     interval_units <- int_to_days(interval_x)
   } else {
@@ -65,6 +67,14 @@ int_to_days <- function(x) {
   days_string <- c(year = 365, quarter = 365/4, month = 365/12, week = 7, day = 1)
   ret <- days_string[x$interval] * x$step
   unname(ret)
+}
+
+int_to_units <- function(x) {
+  if (inherits(x, "Date")) {
+    int_to_days(interval_x)
+  } else {
+    int_to_secs(interval_x)
+  }
 }
 
 unname <- function(x) {
