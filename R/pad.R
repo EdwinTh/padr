@@ -232,6 +232,7 @@ get_min_max <- function(x,
   dt_var_enq <- rlang::sym(dt_var_name)
   group_vars_enq <- rlang::syms(group_vars)
   grpd <- dplyr::group_by(x, !!!group_vars)
+  dt_var <- dplyr::select(x, !!dt_var_enq)
 
   funcs <- list(sprintf("min(%s)", dt_var),
                 sprintf("max(%s)", dt_var))

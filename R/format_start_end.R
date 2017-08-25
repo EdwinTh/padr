@@ -9,7 +9,7 @@
 #' in `strftime`.
 #' @sep Character string that separates the `start_format` and the `end_format`.
 #' @end_is_start If TRUE the start value of the next period, is the end value
-#' of the previous period.
+#' of the previous period. Otherwise it is one unit earlier.
 #' @return `x` with a character column added.
 #' @details The end of the periods will be determined by the next unique value
 #' in `x`. It does so without regarding the interval of `x`. If a specific
@@ -45,7 +45,7 @@ find_ends_dt_var <- function(x,
                              interval) {
 
   map_func <- function(x, i) seq(x, length.out = 2, by = i)[2]
-  x_df <- data.frame(x = x)
+  x_df <- data.frame(x)
   x_df_with_end <- dplyr::mutate(dplyr::rowwise(x_df),
                                  end = map_func(x, interval))
   x_df_with_end$end
