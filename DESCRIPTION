@@ -15,7 +15,7 @@ Depends:
     R (>= 3.0.0)
 Imports:
     Rcpp,
-    dplyr (>=0.6.0),
+    dplyr (>= 0.6.0),
     lubridate,
     rlang
 Suggests:

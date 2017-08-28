@@ -3,7 +3,7 @@
 #' After padding and thickening all the values are either
 #' shifted to the first or the last value of the interval.
 #' Function creates a vector that shifts the datetime value to
-#' the (approximate) center of the interval.
+#' the (approximate) center of the interval. (Experimental in v.0.4.0)
 #' @param x A vector of class \code{Date}, class \code{POSIXct} or class \code{POSIXlt}.
 #' @param shift Up or down.
 #' @param interval The interval to be used for centering. If `NULL`, `get_interval`
