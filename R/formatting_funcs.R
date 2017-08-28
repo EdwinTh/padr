@@ -39,13 +39,7 @@ center_interval <- function(x,
     interval_x$interval <- uniform_interval_name(interval_x$interval)
   }
 
-  interval_units <- int_to_units(x)
-
-  if (inherits(x, "Date")) {
-    interval_units <- int_to_days(interval_x)
-  } else {
-    interval_units <- int_to_secs(interval_x)
-  }
+  interval_units <- int_to_units(x, interval_x)
 
   if (shift == "up") {
     x + (interval_units / 2)
@@ -54,6 +48,7 @@ center_interval <- function(x,
   }
 }
 
+# x an object of class interval
 int_to_secs <- function(x) {
   day_secs <- 3600 * 24
   secs_string <- c(year = day_secs*365, quarter = day_secs*365/4,
@@ -63,13 +58,15 @@ int_to_secs <- function(x) {
   unname(ret)
 }
 
+# x an object of class interval
 int_to_days <- function(x) {
   days_string <- c(year = 365, quarter = 365/4, month = 365/12, week = 7, day = 1)
   ret <- days_string[x$interval] * x$step
   unname(ret)
 }
 
-int_to_units <- function(x) {
+# x an object of class interval
+int_to_units <- function(x, interval_x) {
   if (inherits(x, "Date")) {
     int_to_days(interval_x)
   } else {
@@ -95,9 +92,13 @@ unname <- function(x) {
 #' @end_format String to format the end values of each period, to be used
 #' in `strftime`.
 #' @sep Character string that separates the `start_format` and the `end_format`.
-#' @end_offset The offset for the end of the period. If 0 the end of the last
-#' period is the start of the next period. In days if x is `Date`, in seconds
-#' if x is `POSIXt`.
+#' @end_offset Units in days of `x` is a `Date`, or seconds if `x`  is `POSIXt`.
+#' Will be subtracted from the end of each period.
+#' If 0, the end of the previous period is equal to the start of the next.
+#' @period_to_last To determine the formatting of the last value in `x`, the
+#' length of the last period has to be specified. This can't be derived from
+#' `x` itself. If NULL the function guesses based on the interval of `x`.
+#' Specify in days when `x` is `Date`, or in seconds when `x` is a `POSIXt`.
 #' @return A character vector showing the interval.
 #' @details The end of the periods will be determined by the next unique value
 #' in `x`. It does so without regarding the interval of `x`. If a specific
@@ -122,15 +123,21 @@ format_start_end <- function(x,
                              end_format   = start_format,
                              sep          = " ",
                              end_offset   = 0,
-                             final_value  = get_interval(x)) {
+                             units_to_last = NULL) {
   stop_not_datetime(x)
   stopifnot(length(x) == length(unique(x)))
+  stopifnot(length(x) > 1)
   original_order <- order(x)
-  fin_val_units <- int_to_units(x)
-  end_vals   <- find_next_val(x, fin_val_units) - (end_offset)
+
+  if (is.null(units_to_last)) {
+    units_to_last <- get_units_to_last(x)
+  }
+
+  end_vals   <- find_next_val(x, units_to_last) - (end_offset)
   start_char <- strftime(x, start_format)
   end_char   <- strftime(end_vals, end_format)
-  paste(start_char, end_char, sep = sep)
+  ret <- paste(start_char, end_char, sep = sep)
+  ret[original_order]
 }
 
 # x is a datetime variable of which we need to find the next value of each instance
@@ -139,9 +146,15 @@ find_next_val <- function(x,
   n         <- length(x)
   x_srt     <- sort(x)
   ret       <- x_srt[2:n]
-  fin_val   <- return_vec[n-1] + fin_val_units
+  fin_val   <- ret[n-1] + fin_val_units
   ret_compl <- c(ret, fin_val)
   # by using c() the vector is changed to the tz of the locale! change back
   attr(ret_compl, "tzone") <- attr(ret, "tzone")
   ret_compl
+}
+
+get_units_to_last <- function(x) {
+  interval <- get_interval(x)
+  interval_x <- convert_interval(interval)
+  int_to_units(x, interval_x)
 }
