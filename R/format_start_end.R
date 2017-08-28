@@ -22,17 +22,7 @@ format_start_end <- function(x,
                              sep          = " ",
                              end_is_start = TRUE,
                              final_value  = get_interval(x)) {
-  is_df(x)
-
-  original_data_frame <- x
-  x <- as.data.frame(x)
-
-  if (!is.null(by)){
-    dt_var <- check_data_frame(x, by = by)
-  } else {
-    dt_var <- check_data_frame(x)
-  }
-
+  stop_not_datetime(x)
   end_vals   <- find_ends_dt_var(dt_var, final_value) - (1 - end_is_start)
   start_char <- strftime(dt_var, start_format)
   end_char   <- strftime(end_vals, end_format)
