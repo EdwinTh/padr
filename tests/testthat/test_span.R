@@ -98,3 +98,25 @@ test_that("assure_greater_than_max_x works properly", {
   expect_equal( assure_greater_than_max_x(max_x_posix, end_val_posix, "day"),
                 as.POSIXct("2016-10-21 14:39:04"))
 })
+
+test_that("span integration tests", {
+  x <- coffee$time_stamp[3:4]
+  sp <- function(interval) span(x, list(interval = interval, step = 1))
+  expect_equal(sp("year"), span_date(2016, 2017))
+  expect_equal(sp("quarter"), as.Date(c("2016-07-01", "2016-10-01")))
+  expect_equal(sp("month"), span_date(201607, 201608))
+  expect_equal(sp("week"), as.Date(c("2016-07-03", "2016-07-10", "2016-07-17")))
+  expect_equal(sp("day"), span_date(20160709, 20160711))
+  expect_equal(span_around(x, "hour"), span_time("20160709 13", "20160710 11", tz = ""))
+  expect_equal(span_around(x, "min"), span_time("20160709 1325", "20160710 1046", tz = ""))
+})
+
+context("span_around function integration tests")
+
+test_that("span_around works properly", {
+  x <- coffee$time_stamp[3:4]
+  expect_error(span_around(1:10), "x should be of class Date, POSIXct, or POSIXlt.")
+  expect_error(span_around(x, "day"), NA)
+  expect_equal(span_around(x, "day"), span_date(20160709, 20160711))
+  expect_equal(span_around(x, "hour"),  span_time("20160709 13", "20160710 11", tz = ""))
+})
