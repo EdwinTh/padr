@@ -2,27 +2,54 @@
 % Please edit documentation in R/format_start_end.R
 \name{format_start_end}
 \alias{format_start_end}
-\title{Add a Character of the Interval}
+\title{Make a Period Character vector}
 \usage{
 format_start_end(x, start_format = "\%Y-\%m-\%d", end_format = start_format,
-  sep = " ", end_is_start = TRUE, final_value = get_interval(x))
+  sep = " ", end_offset = 0, final_value = get_interval(x))
 }
 \arguments{
-\item{x}{A vector of class \code{Date}, class \code{POSIXct} or class \code{POSIXlt}.}
+\item{x}{A vector of class \code{Date}, class \code{POSIXct} or class \code{POSIXlt},
+of which the values are unique.}
+
+\item{start_format}{String to format the start values of each period, to be used
+in `strftime`.}
+
+\item{end_format}{String to format the end values of each period, to be used
+in `strftime`.}
+
+\item{sep}{Character string that separates the `start_format` and the `end_format`.}
+
+\item{end_offset}{The offset for the end of the period. If 0 the end of the last
+period is the start of the next period. In days if x is `Date`, in seconds
+if x is `POSIXt`.}
 }
 \value{
-`x` with a character column added.
+A character vector showing the interval.
 }
 \description{
-Format a date variable to a character string of the interval in which the
-events toke place.
+After applying `thicken` all the observations in an interval are mapped
+to a single timepoint. This function will conver a datetime variable to
+a character vector that reflects the full period.
 }
 \details{
 The end of the periods will be determined by the next unique value
 in `x`. It does so without regarding the interval of `x`. If a specific
-interval is desired, `thicken` and / or `pad` should first be applied.
+interval is desired, `thicken` and / or `pad` should first be applied to
+create an equally spaced datetime variable.
 }
 \examples{
+library(dplyr)
+library(ggplot2)
+plot_set <- emergency \%>\%
+  head(500) \%>\%
+  thicken("hour", "h") \%>\%
+  count(h)
 
+# this will show the data on the full hour
+ggplot(plot_set, aes(h, n)) + geom_col()
+
+# adding a character to indicate the hours of the interval.
+plot_set \%>\%
+  mutate(h_int = format_start_end(h, "\%H", sep = "-"))
 }
 

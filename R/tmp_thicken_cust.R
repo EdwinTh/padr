@@ -1,8 +1,27 @@
-# spanned <- span_time("20151201 00", 2017)
-# spanned_sub <- subset_span(spanned, list(hour = c(6:10, 16:20)))
-# spanned = spanned_sub
-# x = emergency
-
+#' Apply thicken with a custom spanning
+#'
+#' Like `thicken` this function will find the datetime variable in `x`, and add
+#' a variable of a higher periodicity to it. However, the variable to which to
+#' map the observation is provided by the user. This enables mapping to
+#' time points that are unequally spaced.
+#'
+#' @param x A data frame containing at least one datetime variable of
+#' class \code{Date}, class \code{POSIXct} or class \code{POSIXlt}.
+#' @param spanned A datetime vector to which the the datetime variable in `x`
+#' should be mapped. See `subset_span` (TODO link) for quickly spanning unequally
+#' spaced variables.
+#' @param colname The column name of the added variable.
+#' @param rounding Should a value in the input datetime variable be mapped to
+#' the closest value that is lower (\code{down}) or that is higher (\code{up})
+#' than itself.
+#' @param by Only needs to be specified when \code{x} contains multiple
+#' variables of class \code{Date}, class \code{POSIXct} or class \code{POSIXlt}.
+#' \code{by} indicates which to use for thickening.
+#' @return The data frame \code{x} with the variable added to it.
+#' @examples
+#' library(dplyr)
+#' accidents <- emergency %>% filter(title == "Traffic: VEHICLE ACCIDENT -")
+#' subset_span()
 thicken_cust <- function(x,
                          spanned,
                          colname,
@@ -26,6 +45,7 @@ thicken_cust <- function(x,
             call. = FALSE)
   }
 
+  is_datetime(spanned)
   start_val <- min(spanned)
   if (inherits(start_val, 'POSIXt') & inherits(dt_var, 'POSIXt')) {
     start_val <- enforce_time_zone(start_val, dt_var)
@@ -52,8 +72,6 @@ thicken_cust <- function(x,
   return_frame <- dplyr::bind_cols(x, thickened_frame)
   colnames(return_frame)[ncol(return_frame)] <- colname
 
-  return_frame <- set_to_original_type(return_frame, original_data_frame)
-
-  return(return_frame)
+  set_to_original_type(return_frame, original_data_frame)
 }
 

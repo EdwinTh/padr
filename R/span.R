@@ -1,11 +1,16 @@
+#' Span
 
+span_around <- function(x,
+                        interval)
+
+
+## this is originally written for thicken, but is now also the body of the
+# exported span_around.
 span <- function(x,
                  interval,
                  start_val  = NULL) {
 
-  if ( !( inherits(x, 'Date') |  inherits(x, 'POSIXt') ) ){
-    break ('x should be of class Date, POSIXlt, or POSIXct', call. = FALSE)
-  }
+  stop_not_datetime(x)
 
   start_and_end <- get_start_and_end(x, return_interval = interval)
 
@@ -22,9 +27,7 @@ span <- function(x,
   }
 
   by_val <- paste(interval$step, interval$interval)
-  return_values <- seq(start_val, end_val, by = by_val)
-
-  return(return_values)
+  seq(start_val, end_val, by = by_val)
 }
 
 shift_end_from_start <- function(start_and_end, start_val){

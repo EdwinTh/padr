@@ -31,7 +31,7 @@ variables of class \code{Date}, class \code{POSIXct} or class \code{POSIXlt}.
 \item{start_val}{By default the first instance of \code{interval} that is lower
 than the lowest value of the input datetime variable, with all time units on
 default value. Specify \code{start_val} as an offset if you want the range
-to be nonstandard.}
+to be nonstandard. Alternatively, use `get_week_start`. (TODO add a link to the function)}
 }
 \value{
 The data frame \code{x} with the variable added to it.

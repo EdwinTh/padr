@@ -5,12 +5,12 @@
 #' a character vector that reflects the full period.
 #' @param x A vector of class \code{Date}, class \code{POSIXct} or class \code{POSIXlt},
 #' of which the values are unique.
-#' @start_format String to format the start values of each period, to be used
+#' @param start_format String to format the start values of each period, to be used
 #' in `strftime`.
-#' @end_format String to format the end values of each period, to be used
+#' @param end_format String to format the end values of each period, to be used
 #' in `strftime`.
-#' @sep Character string that separates the `start_format` and the `end_format`.
-#' @end_offset The offset for the end of the period. If 0 the end of the last
+#' @param sep Character string that separates the `start_format` and the `end_format`.
+#' @param end_offset The offset for the end of the period. If 0 the end of the last
 #' period is the start of the next period. In days if x is `Date`, in seconds
 #' if x is `POSIXt`.
 #' @return A character vector showing the interval.

@@ -1,10 +1,11 @@
 #' Retrieve the closest given Weekday
 #'
 #' When applying \code{thicken} with the interval "week", use this function to
-#' automatically start at the first weekday befor \code{min(datetime_var)}.
+#' automatically start at the first weekday before \code{min(datetime_var)} at
+#' `start_val` argument.
 #' @param wday Integer in the range 1-7 specifying the desired weekday start
 #' (1 = Sun, 2 = Mon, 3 = Tue, 4 = Wed, 5 = Thu, 6 = Fri, 7 = Sat).
-#' @return Object of class `Date`, specifying the offset.
+#' @return Object of class "weekstart", only useful within `thicken`.
 #' @examples
 #' library(dplyr)
 #' coffee %>% thicken("week", start_val = get_week_start())
@@ -17,6 +18,7 @@ get_week_start <- function(wday = 2) {
   return(wday)
 }
 
+# this part is applied in thicken.
 get_week_start_internal <- function(wday,
                                     x,
                                     by) {

@@ -11,11 +11,12 @@ get_week_start(wday = 2)
 (1 = Sun, 2 = Mon, 3 = Tue, 4 = Wed, 5 = Thu, 6 = Fri, 7 = Sat).}
 }
 \value{
-Object of class `Date`, specifying the offset.
+Object of class "weekstart", only useful within `thicken`.
 }
 \description{
 When applying \code{thicken} with the interval "week", use this function to
-automatically start at the first weekday befor \code{min(datetime_var)}.
+automatically start at the first weekday before \code{min(datetime_var)} at
+`start_val` argument.
 }
 \examples{
 library(dplyr)

@@ -24,7 +24,7 @@
 #' @param start_val By default the first instance of \code{interval} that is lower
 #' than the lowest value of the input datetime variable, with all time units on
 #' default value. Specify \code{start_val} as an offset if you want the range
-#' to be nonstandard.
+#' to be nonstandard. Alternatively, use `get_week_start`. (TODO add a link to the function)
 #' @return The data frame \code{x} with the variable added to it.
 #' @details When the datetime variable contains missing values, they are left
 #' in place in the dataframe. The added column with the new datetime variable,
@@ -125,9 +125,7 @@ the interval specified is too low for the interval of the datetime variable", ca
   return_frame <- dplyr::bind_cols(x, thickened_frame)
   colnames(return_frame)[ncol(return_frame)] <- colname
 
-  return_frame <- set_to_original_type(return_frame, original_data_frame)
-
-  return(return_frame)
+  set_to_original_type(return_frame, original_data_frame)
 }
 
 # restore to data_frame of data.table if the input data was of this type
