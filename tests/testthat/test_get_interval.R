@@ -197,7 +197,8 @@ test_that("stop_on_NA breaks the function when x has NAs", {
   x2 <- x1
   x2[2] <- NA
   expect_error(stop_on_NA(x1), NA)
-  expect_error(stop_on_NA(x2))
+  expect_error(stop_on_NA(x2), "interval cannot be determined when x contains NAs")
   expect_error(get_interval(x1), NA)
-  expect_error(get_interval(x2))
+  expect_error(get_interval(x2), "interval cannot be determined when x contains NAs")
 })
+

@@ -234,9 +234,6 @@ get_min_max <- function(x,
   grpd <- dplyr::group_by(x, !!!group_vars)
   dt_var <- dplyr::select(x, !!dt_var_enq)
 
-  funcs <- list(sprintf("min(%s)", dt_var),
-                sprintf("max(%s)", dt_var))
-
   ret <- dplyr::summarise(grpd, mn = min(!!dt_var_enq), mx = max(!!dt_var_enq))
   if (!is.null(start_val)) ret$mn <- start_val
   if (!is.null(end_val)) ret$mx <- end_val

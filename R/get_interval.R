@@ -54,7 +54,7 @@ get_interval_list <- function(x){
   return(list(interval = differ, step = step))
 }
 
-# change a variable of class Date or POSIXt to a character, use format insteas
+# change a variable of class Date or POSIXt to a character, use format instead
 # of as.character for performance
 datetime_char <- function(x) {
   if (inherits(x, "Date")) {
@@ -100,11 +100,11 @@ get_step <- function(x, d) {
   if (d == "year") return(step_of_year(x))
   if (d == "quarter") return(step_of_quarter(x))
   if (d == "month") return(step_of_month(x))
-  if (d == "week") return(step_with_difftime(x, "weeks"))
-  if (d == "day") return(step_with_difftime(x, "days"))
-  if (d == "hour") return(step_with_difftime(x, "hours"))
-  if (d == "min") return(step_with_difftime(x, "mins"))
-  if (d == "sec") return(step_with_difftime(x, "secs"))
+  if (d == "week") return(step_with_difftime(x, "week"))
+  if (d == "day") return(step_with_difftime(x, "day"))
+  if (d == "hour") return(step_with_difftime(x, "hour"))
+  if (d == "min") return(step_with_difftime(x, "min"))
+  if (d == "sec") return(step_with_difftime(x, "sec"))
 }
 
 step_of_year <- function(x) {
@@ -126,11 +126,11 @@ step_of_month <- function(x) {
   return( get_max_modulo_zero( get_difs(months), max_t = max_val) )
 }
 
-step_with_difftime <- function(x, units) {
+step_with_difftime <- function(x, unit) {
   if (inherits(x, "Date")) {
-    time_dif <- numeric_dif_date(x, units = units)
+    time_dif <- numeric_dif_date(x, unit = unit)
   } else if (inherits(x, "POSIXt")) {
-    time_dif <- numeric_dif_posix(x, units = units)
+    time_dif <- numeric_dif_posix(x, unit = unit)
   }
   return(get_max_modulo_zero( time_dif, max_t = smallest_nonzero(time_dif)) )
 }
@@ -179,28 +179,28 @@ get_interval_try <- function(x) {
 
 ## knowing the interval we can convert to numeric to get the units for
 ## everything of a week and lower.
-numeric_dif_date <- function(x, units) {
+numeric_dif_date <- function(x, unit) {
   x_num <- sort(unique(as.numeric(x)))
   difs  <- get_difs(x_num)
-  if (units == "weeks") {
+  if (unit == "week") {
     difs / 7
-  } else if (units == "days") {
+  } else if (unit == "day") {
     difs
   }
 }
 
-numeric_dif_posix <- function(x, units) {
+numeric_dif_posix <- function(x, unit) {
   x_num <- sort(unique(as.numeric(x)))
   difs  <- get_difs(x_num)
-  if (units == "secs") {
+  if (unit == "sec") {
     difs
-  } else if (units == "mins") {
+  } else if (unit == "min") {
     difs / 60
-  } else if (units == "hours") {
+  } else if (unit == "hour") {
     difs / 3600
-  } else if (units == "days") {
+  } else if (unit == "day") {
     difs / 86400
-  } else if (units == "weeks") {
+  } else if (unit == "week") {
     difs / 604800
   }
 }
