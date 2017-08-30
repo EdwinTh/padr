@@ -6,7 +6,7 @@
 #' observatoian in `x`.
 #' @param x A variable of class \code{Date}, class \code{POSIXct}, or class
 #' \code{POSIXct}.
-#' @param interval The desired interval of the returned variabel.
+#' @param interval The desired interval of the returned variable.
 #' @return A variable of the same class as `x`.
 #' @examples
 #' span_around(coffee$time_stamp, "day")
