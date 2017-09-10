@@ -31,6 +31,8 @@
 
 * `pad` no longer throws a message when the interval is specified (#31).
 
+* `span` around hours and minutes now start at the current hour and minute. This to make `span_around` sensible.
+
 ##################################################
 
 # padr 0.3.0

@@ -20,8 +20,12 @@
 #' @return The data frame \code{x} with the variable added to it.
 #' @examples
 #' library(dplyr)
+#' # analysis of accidents in and out traffic jam hours
 #' accidents <- emergency %>% filter(title == "Traffic: VEHICLE ACCIDENT -")
-#' subset_span()
+#' spanning <- span_time("20151210 16", "20161017 17", tz = "EST") %>%
+#'   subset_span(list(hour = c(6, 9, 16, 19)))
+#' thicken_cust(accidents, spanning, "period") %>%
+#'   count(period)
 thicken_cust <- function(x,
                          spanned,
                          colname,
@@ -49,7 +53,7 @@ thicken_cust <- function(x,
   start_val <- min(spanned)
   if (inherits(start_val, 'POSIXt') & inherits(dt_var, 'POSIXt')) {
     start_val <- enforce_time_zone(start_val, dt_var)
-    spanned <- enforce_time_zone(spanned, dt_var)
+    spanned   <- enforce_time_zone(spanned, dt_var)
   }
 
   ind_to_keep <- start_val_after_min_dt(start_val, dt_var)
@@ -61,11 +65,6 @@ thicken_cust <- function(x,
   dt_var <- check_for_NA_thicken(dt_var, dt_var_name, colname)
 
   thickened <- round_thicken(dt_var, spanned, rounding)
-
-  if (all(all.equal(thickened, dt_var) == TRUE)) {
-    stop("The thickened result is equal to the original datetime variable,
-         the interval specified is too low for the interval of the datetime variable", call. = FALSE)
-  }
 
   thickened_frame <- data.frame(thickened)
 
