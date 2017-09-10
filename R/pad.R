@@ -302,7 +302,7 @@ span_all_groups <- function(x, interval) {
                       id_vars = id_vars,
                       SIMPLIFY = FALSE)
 
-  return(dplyr::bind_rows(list_span))
+  dplyr::bind_rows(list_span)
 }
 
 # currently int64 gives so much trouble, I chose to just break for now.
