@@ -1,7 +1,7 @@
-coffee
-span_time("20160707 00", 20160711, tz = "CET") %>%
-  subset_span(list(hour = 0, 9, 16))
-coffee %>% thicken_cust(x, )
+
+span_time("20160707 00", 20160711, tz = "CET") -> spanned
+  subset_span(list(hour = c(0, 9, 16)))
+#coffee %>% thicken_cust(x, )
 
 pad_cust <- function(x,
                      spanned,

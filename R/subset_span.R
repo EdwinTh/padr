@@ -34,7 +34,7 @@ subset_span <- function(spanned,
 }
 
 check_filter_on <- function(x) {
-  if (!any(x %in% c("year", "mon", "mday", "wday", "hour", "min", "sec"))) {
+  if (!all(x %in% c("year", "mon", "mday", "wday", "hour", "min", "sec"))) {
     stop("invalid names in the span_list", call. = FALSE)
   }
 }

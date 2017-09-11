@@ -1,25 +1,7 @@
-#' Span a Vector around a Datetime Variable
-#'
-#' Take a datetime variable and span a variable of the specified interval
-#' around it. First value of the return will be smaller or equal to the first
-#' observation in `x` and the last value will be greater or equal to the last
-#' observatoian in `x`.
-#' @param x A variable of class \code{Date}, class \code{POSIXct}, or class
-#' \code{POSIXct}.
-#' @param interval The desired interval of the returned variable.
-#' @return A variable of the same class as `x`.
-#' @examples
-#' span_around(coffee$time_stamp, "day")
-#' span_around(coffee$time_stamp, "5 hour")
-#' span_around(coffee$time_stamp, "1242 mins")
+#' Span
 
 span_around <- function(x,
-                        interval) {
-  stop_not_datetime(x)
-  interval_list <- convert_interval(interval)
-  interval_list$interval <- uniform_interval_name(interval_list$interval)
-  span(x, interval_list, NULL)
-}
+                        interval)
 
 
 ## this is originally written for thicken, but is now also the body of the
@@ -135,11 +117,11 @@ start_val_day <- function(min_v) {
 }
 
 start_val_hour <- function(min_v) {
-  sec_to_0 ( min_to_0 ( min_v ) )
+  sec_to_0 ( min_to_0 ( hour_to_0 ( min_v ) ) )
 }
 
 start_val_min <- function(min_v) {
-  sec_to_0 ( min_v )
+  sec_to_0 ( min_to_0 ( min_v ) )
 }
 
 start_val_sec <- function(min_v) {
