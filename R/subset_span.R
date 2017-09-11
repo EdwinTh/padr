@@ -2,9 +2,9 @@
 #'
 #' Take a `Date`, `POSIXct`, or `POSIXlt` vector and subset it by
 #' a pattern of date and/or time parts.
-#' @param spanned vector of class `Date`, `POSIXct`, or `POSIXlt`
-#' @param pattern_list list with the desired pattern for each of the following
-#' datetime parts: "year", "mon", "mday", "wday", "hour", "min", "sec"
+#' @param spanned A vector of class `Date`, `POSIXct`, or `POSIXlt`.
+#' @param pattern_list A list with the desired pattern for each of the following
+#' datetime parts: "year", "mon", "mday", "wday", "hour", "min", "sec".
 #' @return
 #' Vector of the same class as `spanned`, containing all the data points in
 #' `spanned` indicated by `pattern_list`.

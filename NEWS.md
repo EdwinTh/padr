@@ -8,6 +8,8 @@
 
 ## New Features
 
+* `span_around` will take a datetime variable, and spans a variable of a desired interval around it. Helper function for `thicken_cust` and `pad_cust`. It saves the trouble of retrieving the min and the max of the variable and manually spanning with these values.
+
 * `span_date` and `span_time` are new functions and they are wrappers around `seq.Date` and `seq.POSIXt` respectively. Because of their default settings (minimal specification of date and datetimes and interval inference) they require very little inputs for straightforward spanning.
 
 * The `get_week_start` function is introduced, which can be used to automatically thicken from a given weekday. It saves the trouble of manually finding the first weekday before the first datetime value in `x`. Use as an argument to `thicken`.

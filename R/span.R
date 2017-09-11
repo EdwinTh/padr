@@ -1,5 +1,19 @@
-#' Span
-
+#' Span one datetime variable another
+#'
+#' Take a `Date`, `POSIXct`, or `POSIXlt` vector and span a datetime variable
+#' of the specified interval around it.
+#' @param x A vector of class `Date`, `POSIXct`, or `POSIXlt`.
+#' @param interval Character string specifying the desired interval.
+#' @return
+#' A datetime vector, with the first observation smaller or equal than `min(x)`
+#' and the last observation larger or equal than `max(x)`. Spaces between points
+#' are equal to `interval`.
+#' @examples
+#' span_around(coffee$time_stamp, "hour")
+#' span_around(coffee$time_stamp, "2 days")
+#'
+#' span_around(emergency$time_stamp, "week")
+#' span_around(emergency$time_stamp, "2 month")
 span_around <- function(x,
                         interval) {
   is_datetime(x)
