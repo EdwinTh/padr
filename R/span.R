@@ -1,7 +1,12 @@
 #' Span
 
 span_around <- function(x,
-                        interval)
+                        interval) {
+  is_datetime(x)
+  interval_list <- convert_interval(interval)
+  interval_list$interval <- uniform_interval_name(interval_list$interval)
+  span(x, interval_list)
+}
 
 
 ## this is originally written for thicken, but is now also the body of the
