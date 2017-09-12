@@ -136,12 +136,12 @@ pad <- function(x,
     end_val <- enforce_time_zone(end_val, dt_var)
   }
 
-  if (! is.null(start_val )) {
+  if (! is.null(start_val)) {
     dt_var <- to_posix(dt_var, start_val)$a
     start_val <- to_posix(dt_var, start_val)$b
   }
 
-  if (! is.null(end_val )) {
+  if (! is.null(end_val)) {
     dt_var <- to_posix(dt_var, end_val)$a
     end_val <- to_posix(dt_var, end_val)$b
   }

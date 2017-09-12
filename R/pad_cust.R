@@ -7,6 +7,7 @@ pad_cust <- function(x,
                      by        = NULL,
                      group     = NULL){
   is_df(x)
+  stop_not_datetime(spanned)
   group <- get_dplyr_groups(x, group)
 
   if (!all(group %in% colnames(x))) {
@@ -19,7 +20,7 @@ pad_cust <- function(x,
   # we have to get the dt_var twice, first on the original data. If there are
   # NA values in it, we have to get it again on x with NA values filtered out.
 
-  ## This part should be refactored!
+  ## This part should be refactored with pad and pad_int
   dt_var_info_original <- get_dt_var_and_name(x, by)
   dt_var_name <- dt_var_info_original$dt_var_name
   x_NA_list <- check_for_NA_pad(x, dt_var_info_original$dt_var,
@@ -31,14 +32,12 @@ pad_cust <- function(x,
   dt_var      <- dt_var_info$dt_var
 
   check_dt_var_in_group(dt_var_name, group)
+  check_same_data_type(dt_var, spanned)
+  check_dt_in_spanned(dt_var, spanned)
 
-  # TODO check if there are no values in dt_var, not in spanned.
-
-  # TODO check if the spanned an the dt_var are of the same type.
-
-  # Because dt_var might be changed we need to adjust it in the df to join later
-  pos <- which(colnames(x) == dt_var_name)
-  x[, pos] <- dt_var
+  if (inherits(spanned, "POSIXt")) {
+    spanned <- enforce_time_zone(spanned, dt_var)
+  }
 
   group_vars_un  <- group_unique_vars(x, group)
   spanned_groups <- pad_cust_group_span(spanned, group_vars_un)
@@ -61,6 +60,24 @@ pad_cust <- function(x,
   dplyr::bind_rows(return_frame, x_NA)
 }
 
+check_same_data_type <- function(dt_var, spanned) {
+  dt_var_time <- inherits(dt_var, "POSIXt")
+  spanned_time <- inherits(spanned, "POSIXt")
+  if ((dt_var_time + spanned_time) == 1) {
+    stop("spanned and the datetime variables of different data types",
+         call. = FALSE)
+  }
+}
+
+
+check_dt_in_spanned <- function(dt_var, spanned) {
+  if (any (!dt_var %in% spanned)) {
+    stop(
+"Observations in the datetime variable, that are not in spanned.
+       Run thicken_cust in combination with aggregation first.", call. = FALSE)
+  }
+}
+
 group_unique_vars <- function(x, group) {
   if (is.null(group)) {
     NULL
@@ -69,11 +86,14 @@ group_unique_vars <- function(x, group) {
   }
 }
 
-pad_cust_group_span <- function(spanned, group_vars) {
-  if (is.null(group)) {
+pad_cust_group_span <- function(spanned, group_vars_un) {
+  if (is.null(group_vars_un)) {
     data_frame(span = spanned)
   } else {
-    spanned <- rep(spanned, nrow(group_vars))
-    ### TO DO complete this data frame
+    spanned_df <- data.frame(span = rep(spanned, nrow(group_vars_un)))
+    ind <- rep(1:nrow(group_vars_un), each = length(spanned))
+    dplyr::bind_cols(spanned_df, group_vars_un[ind, ])
   }
 }
+
+
