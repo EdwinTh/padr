@@ -268,3 +268,9 @@ Returned dataframe contains original observations, with NA values for d and d_we
   expect_equal(coffee_na_thickened %>% filter(is.na(d_week)) %>% nrow, 1)
   expect_equal(coffee_na_thickened$d[3] %>% as.character(), NA_character_)
 })
+
+context("get_min_max helper function")
+test_that("get_min_max with with no groups", {
+
+})
+
