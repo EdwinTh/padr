@@ -25,7 +25,7 @@
 #'
 #' plot_set %>%
 #'   mutate(h_center = center_interval(h)) %>%
-#'   ggplot(plot_set, aes(h_center, n)) + geom_col()
+#'   ggplot(aes(h_center, n)) + geom_col()
 #' @export
 center_interval <- function(x,
                             shift    = c("up", "down"),

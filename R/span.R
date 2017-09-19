@@ -4,6 +4,8 @@
 #' of the specified interval around it.
 #' @param x A vector of class `Date`, `POSIXct`, or `POSIXlt`.
 #' @param interval Character string specifying the desired interval.
+#' @param start_offset Character indicating the time to shift
+#' back from the first observation.
 #' @return
 #' A datetime vector, with the first observation smaller or equal than `min(x)`
 #' and the last observation larger or equal than `max(x)`. Spaces between points
@@ -13,15 +15,30 @@
 #' span_around(coffee$time_stamp, "2 days")
 #'
 #' span_around(emergency$time_stamp, "week")
+
+
 #' span_around(emergency$time_stamp, "2 month")
 span_around <- function(x,
-                        interval) {
+                        interval,
+                        start_offset = NULL) {
   is_datetime(x)
   interval_list <- convert_interval(interval)
   interval_list$interval <- uniform_interval_name(interval_list$interval)
+  start_val <- get_start_val(x, start_offset)
   span(x, interval_list)
 }
 
+get_start_val <- function(x, offset) {
+  if (is.null(offset)) {
+    NULL
+  } else if (inherits(x, "Date")) {
+    offset_in_days <-
+    min(x) - offset_in_days
+  } else {
+    offset_in_secs <-
+    min(x) - offset_in_secs
+  }
+}
 
 ## this is originally written for thicken, but is now also the body of the
 # exported span_around.

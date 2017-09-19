@@ -79,7 +79,7 @@ test_that("get_units_to_last helper function", {
   gutl <- get_units_to_last
   expect_equal(gutl(span_date(2016, len_out = 2)), 365)
   expect_equal(gutl(span_time(2016, len_out = 2)), 365 * 24 * 3600)
-  expect_equal(gutl(span_date(201601, len_out = 2)), 30.41667)
+  expect_equal(gutl(span_date(201601, len_out = 2)), 365 / 12)
   expect_equal(gutl(span_time(201601, len_out = 2)), round(30.41667 * 24 * 3600))
   expect_equal(gutl(span_date(20160101, len_out = 2)), 1)
   expect_equal(gutl(span_date(20160101, len_out = 5)[c(1, 3, 5)]), 2)

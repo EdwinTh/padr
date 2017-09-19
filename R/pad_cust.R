@@ -1,6 +1,20 @@
-#spanned <- span_time("20160707 00", 20160711, tz = "CET") %>%
-#  subset_span(list(hour = c(0, 9, 16)))
-#coffee %>% thicken_cust(x, )
+#' Apply pad with a custom spanning
+#'
+#' Pad the datetime variable after `thicken_cust` is applied, using the same
+#' spanning.
+#' @param x A data frame containing at least one datetime variable of
+#' class \code{Date}, class \code{POSIXct} or class \code{POSIXlt}.
+#' @param spanned A datetime vector to which the the datetime variable in `x`
+#' should be mapped. See `subset_span` (TODO link) for quickly spanning unequally
+#' spaced variables.
+#' @param by Only needs to be specified when \code{x} contains multiple
+#' variables of class \code{Date}, class \code{POSIXct} or class \code{POSIXlt}.
+#' \code{by} indicates which to use for thickening.
+#' @param group Optional character vector that specifies the grouping
+#' variable(s). Padding will take place within the different group values
+#' @return The data frame \code{x} with
+#' @examples
+
 
 pad_cust <- function(x,
                      spanned,

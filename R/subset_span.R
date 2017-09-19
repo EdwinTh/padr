@@ -8,12 +8,11 @@
 #' @return
 #' Vector of the same class as `spanned`, containing all the data points in
 #' `spanned` indicated by `pattern_list`.
-#'
 #' @examples
 #' date_span <- span_date(20170701, len_out = 100)
 #' subset_span(date_span, list(wday = 1:5))
 #'
-#' time_span <- span_time("20170101 00", 201708)
+#' time_span <- span_time("20170101 00", 201702)
 #' subset_span(time_span, list(hour = 7:17))
 #' @export
 subset_span <- function(spanned,
