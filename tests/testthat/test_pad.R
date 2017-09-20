@@ -138,17 +138,21 @@ test_that("dplyr grouping yields correct results", {
   mnths <- seq(ymd(20160101), length.out = 5, by = 'month')
   x_complete <- data.frame(m  = rep( mnths, 4),
                            g1 = letters[rep(1:2, each = 10)],
-                           g2 = letters[rep(5:8, each = 5)])
+                           g2 = letters[rep(5:8, each = 5)],
+                           y  = 1)
   x <- x_complete[-c(3, 8, 13, 18), ]
-  expect_equal(x_complete,
+  x_one_group <- x_complete[-c(3, 13),] %>%
+    arrange(g1, m)
+  x_one_group[c(5, 14), c(3, 4)] <- NA
+  x_complete[c(3, 8, 13, 18), 4] <- NA
+  expect_equal(x_one_group,
                pad(dplyr::group_by(x, g1)) %>% as.data.frame )
   expect_equal(x_complete,
                pad(dplyr::group_by(x, g1, g2)) %>% as.data.frame)
   expect_warning(pad(group_by(x, g2), group = "g1"))
   expect_equal( sw(pad(group_by(x, g2), group = "g1")) %>% as.data.frame,
-                x_complete)
+                x_one_group)
   expect_equal( pad(group_by(x, g1)) %>% groups %>% as.character, "g1")
-
 })
 
 test_that("datetime variable in the grouping throws an error", {
@@ -268,9 +272,3 @@ Returned dataframe contains original observations, with NA values for d and d_we
   expect_equal(coffee_na_thickened %>% filter(is.na(d_week)) %>% nrow, 1)
   expect_equal(coffee_na_thickened$d[3] %>% as.character(), NA_character_)
 })
-
-context("get_min_max helper function")
-test_that("get_min_max with with no groups", {
-
-})
-
