@@ -139,3 +139,20 @@ test_that("get_week_start", {
   expect_equal(thicken(coffee, "week", start_val = get_week_start(5))[1, 3] %>% weekdays,
                "Thursday")
 })
+
+context("thicken with missing values")
+
+test_that("thicken works properly on NA values", {
+  coffee_na <- coffee %>% thicken("day", "d") %>% count(d) %>% pad %>%
+    fill_by_value()
+  coffee_na[3, 1] <- NA
+  coffee_na_thickened <- coffee_na %>% thicken("week")
+  expect_error(coffee_na %>% thicken("week"), NA)
+  expect_warning(coffee_na %>% thicken("week"),
+                 "There are NA values in the column d.
+Returned dataframe contains original observations, with NA values for d and d_week.")
+  expect_equal(coffee_na_thickened %>% nrow, 4)
+  expect_equal(coffee_na_thickened %>% filter(is.na(d)) %>% nrow, 1)
+  expect_equal(coffee_na_thickened %>% filter(is.na(d_week)) %>% nrow, 1)
+  expect_equal(coffee_na_thickened$d[3] %>% as.character(), NA_character_)
+})

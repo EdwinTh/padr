@@ -234,7 +234,7 @@ test_that("gives no message when interval is not NULL", {
   expect_message(pad(x1, interval = "hour"), NA)
 })
 
-test_that("pad works when datetime variable is irregular", {
+test_that("pad works when datetime variable name is irregular", {
  irreg <- data.frame(x = span_date(2016, 2018)[c(1, 3)], val = 1:2)
  colnames(irreg)[1] <- 42
  expect_error(pad(irreg, interval = "year"), NA)
@@ -258,17 +258,3 @@ in the final rows of the dataframe.")
   expect_equal(coffee_na_padded$d[5] %>% as.character(), NA_character_)
 })
 
-test_that("thicken works properly on NA values", {
-  coffee_na <- coffee %>% thicken("day", "d") %>% count(d) %>% pad %>%
-    fill_by_value()
-  coffee_na[3, 1] <- NA
-  coffee_na_thickened <- coffee_na %>% thicken("week")
-  expect_error(coffee_na %>% thicken("week"), NA)
-  expect_warning(coffee_na %>% thicken("week"),
-   "There are NA values in the column d.
-Returned dataframe contains original observations, with NA values for d and d_week.")
-  expect_equal(coffee_na_thickened %>% nrow, 4)
-  expect_equal(coffee_na_thickened %>% filter(is.na(d)) %>% nrow, 1)
-  expect_equal(coffee_na_thickened %>% filter(is.na(d_week)) %>% nrow, 1)
-  expect_equal(coffee_na_thickened$d[3] %>% as.character(), NA_character_)
-})

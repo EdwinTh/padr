@@ -109,6 +109,7 @@ thicken <- function(x,
 
   colname <- get_colname(x, x_name, colname, interval_converted)
 
+  na_ind <- which(is.na(dt_var))
   dt_var <- check_for_NA_thicken(dt_var, dt_var_name, colname)
 
   spanned <- span(dt_var, interval_converted, start_val)
@@ -120,7 +121,8 @@ thicken <- function(x,
 the interval specified is too low for the interval of the datetime variable", call. = FALSE)
   }
 
-  thickened_frame <- data.frame(thickened)
+  thickened_with_na <- add_na_to_thicken(thickened, na_ind)
+  thickened_frame   <- data.frame(thickened_with_na)
 
   return_frame <- dplyr::bind_cols(x, thickened_frame)
   colnames(return_frame)[ncol(return_frame)] <- colname
@@ -235,4 +237,10 @@ Returned dataframe contains original observations, with NA values for %s and %s.
     warning(warn_mess, call. = FALSE)
   }
   dt_var
+}
+
+add_na_to_thicken <- function(thickened, na_ind) {
+  return_var <- c(thickened, rep(NA, length(na_ind)))
+  return_ind <- c(seq_along(thickened), na_ind - .5)
+  return_var[order(return_ind)]
 }
