@@ -22,7 +22,6 @@ subset_span <- function(spanned,
   spanned_lt    <- as.POSIXlt(spanned)
   parts         <- names(pattern_list)
   check_filter_on(parts)
-  if ("year" %in% parts) pattern_list <- adjust_year(pattern_list)
   spanned_subsetted <- filter_subset(spanned_lt, pattern_list)
   if (original_type[1] == "POSIXct") {
     spanned_subsetted <- as.POSIXct(spanned_subsetted)
@@ -45,7 +44,7 @@ filter_one_part <- function(spanned_lt,
                             pattern_list,
                             part) {
   if (part == "year") {
-    spanned_lt[(spanned_lt$year  - 1900) %in% pattern_list$year]
+    spanned_lt[(spanned_lt$year  + 1900) %in% pattern_list$year]
   } else if (part == "mon") {
     spanned_lt[(spanned_lt$mon + 1) %in% pattern_list$mon]
   } else if (part == "mday") {

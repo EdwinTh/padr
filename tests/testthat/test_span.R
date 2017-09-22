@@ -107,16 +107,15 @@ test_that("span integration tests", {
   expect_equal(sp("month"), span_date(201607, 201608))
   expect_equal(sp("week"), as.Date(c("2016-07-03", "2016-07-10", "2016-07-17")))
   expect_equal(sp("day"), span_date(20160709, 20160711))
-  expect_equal(span_around(x, "hour"), span_time("20160709 13", "20160710 11", tz = ""))
-  expect_equal(span_around(x, "min"), span_time("20160709 1325", "20160710 1046", tz = ""))
 })
 
 context("span_around function integration tests")
 
 test_that("span_around works properly", {
   x <- coffee$time_stamp[3:4]
-  expect_error(span_around(1:10), "x should be of class Date, POSIXct, or POSIXlt.")
+  expect_error(span_around(1:10, "day"), "x should be of class Date, POSIXct, or POSIXlt.")
   expect_error(span_around(x, "day"), NA)
   expect_equal(span_around(x, "day"), span_date(20160709, 20160711))
-  expect_equal(span_around(x, "hour"),  span_time("20160709 13", "20160710 11", tz = ""))
+  expect_equal(span_around(x, "hour"),  span_time("20160709 00", "20160710 11", tz = ""))
+  expect_equal(span_around(x, "min"), span_time("20160709 13", "20160710 1046", tz = ""))
 })
