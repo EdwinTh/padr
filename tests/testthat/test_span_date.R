@@ -1,8 +1,8 @@
 context("building blocks span_date")
-
+sw <- suppressWarnings
 test_that("check_to_len_out give right error",{
   jos <- 40
-  expect_error(check_to_len_out(jos, jos), NA)
+  expect_error(sw(check_to_len_out(jos, jos)), NA)
   expect_warning(check_to_len_out(jos, jos),
                  "both to and len_out are specified, len_out is ignored")
   expect_error(check_to_len_out(jos, NULL), NA)

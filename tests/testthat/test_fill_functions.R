@@ -49,8 +49,8 @@ test_that("fill_by_prevalent gives expected outcomes", {
 })
 
 test_that("get_the_inds works properly", {
-  x <- coffee %>% thicken('day') %>% group_by(time_stamp_day) %>%
-    summarise(a = sum(amount)) %>% pad
+  x <- suppressWarnings(coffee %>% thicken('day') %>% group_by(time_stamp_day) %>%
+    summarise(a = sum(amount)) %>% pad)
   x$b <- NA
   cols <- colnames(x)
   make_funargs <- function(x, ...) return(as.list(match.call()))

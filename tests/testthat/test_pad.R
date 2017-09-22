@@ -248,8 +248,8 @@ test_that("pad works properly on with NA values", {
   coffee_na <- coffee %>% thicken("day", "d") %>% count(d) %>% pad %>%
     fill_by_value()
   coffee_na[3, 1] <- NA
-  coffee_na_padded <- coffee_na %>% pad()
-  expect_error(coffee_na %>% pad(), NA)
+  coffee_na_padded <- suppressWarnings(coffee_na %>% pad())
+  expect_error(suppressWarnings(coffee_na %>% pad()), NA)
   expect_warning(coffee_na %>% pad(),
 "There are NA values in the column d. The records with NA values are returned
 in the final rows of the dataframe.")

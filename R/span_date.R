@@ -129,6 +129,8 @@ check_to_len_out <- function(to, len_out) {
 check_valid_input_span <- function(x,
                                    name         = "from",
                                    date_or_time = c("date", "time")) {
+
+  date_or_time <- match.arg(date_or_time)
   if (is.numeric(x)) {
     valid_numeric_dt(x, name = name)
   } else if (is.character(x)) {
