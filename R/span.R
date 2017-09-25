@@ -30,7 +30,6 @@ span_around <- function(x,
   interval_list$interval <- uniform_interval_name(interval_list$interval)
   if (!is.null(start_shift)) x <- shift(x, start_shift, "down")
   if (!is.null(end_shift))   x <- shift(x, end_shift, "up")
-  start_val              <- get_start_val(x, start_offset)
   span(x, interval_list)
 }
 

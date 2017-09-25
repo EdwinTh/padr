@@ -64,7 +64,7 @@ thicken_cust <- function(x,
 
   dt_var <- check_for_NA_thicken(dt_var, dt_var_name, colname)
 
-  check_ecapsulate(dt_var, spanned)
+  check_encapsulate(dt_var, spanned)
 
   thickened <- round_thicken(dt_var, spanned, rounding)
 
@@ -76,3 +76,8 @@ thicken_cust <- function(x,
   set_to_original_type(return_frame, original_data_frame)
 }
 
+check_encapsulate <- function(dt_var, spanned) {
+  if (min(dt_var) < min(spanned) | max(dt_var) > max(spanned)) {
+    stop("spanned is not around the datetime variable", call. = FALSE)
+  }
+}
