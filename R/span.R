@@ -4,8 +4,10 @@
 #' of the specified interval around it.
 #' @param x A vector of class `Date`, `POSIXct`, or `POSIXlt`.
 #' @param interval Character string specifying the desired interval.
-#' @param start_offset Character indicating the time to shift
+#' @param start_shift Character indicating the time to shift
 #' back from the first observation.
+#' @param end_shift Character indicating the time to shift
+#' forward from the last observation.
 #' @return
 #' A datetime vector, with the first observation smaller or equal than `min(x)`
 #' and the last observation larger or equal than `max(x)`. Spaces between points
@@ -18,27 +20,51 @@
 
 
 #' span_around(emergency$time_stamp, "2 month")
+#' @export
 span_around <- function(x,
                         interval,
-                        start_offset = NULL) {
+                        start_shift = NULL,
+                        end_shift   = start_shift) {
   is_datetime(x)
-  interval_list <- convert_interval(interval)
+  interval_list          <- convert_interval(interval)
   interval_list$interval <- uniform_interval_name(interval_list$interval)
-  start_val <- get_start_val(x, start_offset)
+  if (!is.null(start_shift)) x <- shift(x, start_shift, "down")
+  if (!is.null(end_shift))   x <- shift(x, end_shift, "up")
+  start_val              <- get_start_val(x, start_offset)
   span(x, interval_list)
 }
 
-get_start_val <- function(x, offset) {
-  if (is.null(offset)) {
-    NULL
-  } else if (inherits(x, "Date")) {
-    offset_in_days <-
-    min(x) - offset_in_days
+shift <- function(x, offset, down_or_up) {
+ if (inherits(x, "Date")) {
+    offset_conv <- period_to_time(make_interval_list_from_string(offset))
   } else {
-    offset_in_secs <-
-    min(x) - offset_in_secs
+    offset_conv <- period_to_time(make_interval_list_from_string(offset), "sec")
+  }
+  if (down_or_up == "down") {
+    dt_c(min(x) - offset_conv, x)
+  } else {
+    c(min(x) + offset_conv, x)
   }
 }
+
+dt_c <- function(a, b) {
+  ret <- c(a, b)
+  attr(ret, "tzone") <- attr(a, "tzone")
+  ret
+}
+
+
+period_to_time <- function(interval_list,
+                           time_period = c("day", "sec")) {
+  time_period <- match.arg(time_period)
+  int_hours   <- convert_int_to_hours(interval_list)
+  if (time_period == "day") {
+    ceiling(int_hours / 24)
+  } else {
+    ceiling(int_hours * 3600)
+  }
+}
+
 
 ## this is originally written for thicken, but is now also the body of the
 # exported span_around.

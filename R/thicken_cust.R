@@ -64,6 +64,8 @@ thicken_cust <- function(x,
 
   dt_var <- check_for_NA_thicken(dt_var, dt_var_name, colname)
 
+  check_ecapsulate(dt_var, spanned)
+
   thickened <- round_thicken(dt_var, spanned, rounding)
 
   thickened_frame <- data.frame(thickened)
