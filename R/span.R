@@ -42,7 +42,7 @@ shift <- function(x, offset, down_or_up) {
   if (down_or_up == "down") {
     dt_c(min(x) - offset_conv, x)
   } else {
-    c(min(x) + offset_conv, x)
+    dt_c(max(x) + offset_conv, x)
   }
 }
 
