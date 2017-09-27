@@ -95,7 +95,7 @@ unname <- function(x) {
 #' @end_offset Units in days of `x` is a `Date`, or seconds if `x`  is `POSIXt`.
 #' Will be subtracted from the end of each period.
 #' If 0, the end of the previous period is equal to the start of the next.
-#' @period_to_last To determine the formatting of the last value in `x`, the
+#' @units_to_last To determine the formatting of the last value in `x`, the
 #' length of the last period has to be specified. This can't be derived from
 #' `x` itself. If NULL the function guesses based on the interval of `x`.
 #' Specify in days when `x` is `Date`, or in seconds when `x` is a `POSIXt`.
