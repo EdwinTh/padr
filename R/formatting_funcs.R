@@ -134,8 +134,8 @@ format_start_end <- function(x,
   }
 
   end_vals   <- find_next_val(x, units_to_last) - (end_offset)
-  start_char <- strftime(x, start_format)
-  end_char   <- strftime(end_vals, end_format)
+  start_char <- strftime(x, start_format, tz = attr(x, "tzone"))
+  end_char   <- strftime(end_vals, end_format, tz = attr(x, "tzone"))
   ret <- paste(start_char, end_char, sep = sep)
   ret[original_order]
 }
