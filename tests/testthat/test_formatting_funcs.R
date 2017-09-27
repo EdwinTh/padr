@@ -130,3 +130,10 @@ test_that("format_start_end works for non symmetrics", {
   expect_equal(fse(x3, units_to_last = 2),
                c("2016-01-01 2016-01-03", "2016-01-03 2016-01-04", "2016-01-04 2016-01-06"))
 })
+
+test_that("format_start_end works with different timezones", {
+  dt <- span_time("20170801 00", interval = "3 hour", len_out = 3,
+                  tz = "EST")
+  expect_equal(fse(dt, start_format = "%H"),
+               c("00 03", "03 06", "06 09"))
+})
