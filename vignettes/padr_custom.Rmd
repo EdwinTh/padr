@@ -1,0 +1,31 @@
+---
+title: "Custom thickening and padding"
+author: "Edwn Thoen"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Custom thickening and padding}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+This vignette assumes the reader has read the [Introduction to `padr` vignette](link) first. These functions are introduced in version 0.4.0 of the package and should be considered experimental.
+
+The base function `thicken` creates evenly spaced intervals to which observations can be aggregated. `pad` subsequently checks for missing observations and inserts records where needed. This procedure can be largely automated because of the assumption of an easily spaced interval. However, the functions can't deliver when assymetry in the intervals is desired. This might happen when observations are frequent during some moments, and sparse during others. For instance daily hours vs night periods, or working days vs weekends. We might want to perform a single analysis where the intervals are of different widths. 
+
+Lets have a look at all the vehicle incidents in the `emergency` dataset.
+
+```{r}
+# library(padr)
+library(tidyverse)
+veh_acc <- emergency %>% 
+  filter(title == "Traffic: VEHICLE ACCIDENT -") 
+veh_acc %>%
+  thicken("hour", "day_hour") %>% 
+  count(day_hour)
+  mutate(clock_hour = lubridate::hour(day_hour)) %>% 
+  ggplot(aes(hr)) 
+```
+
+
+## Preparing the spanning
