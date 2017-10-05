@@ -26,4 +26,4 @@ rd_tmp <- function(a, b) {
 }
 
 b[1:9]
-rd_tmp(a,b[1:3])
+rd_tmp(a,b[2:10])
