@@ -421,7 +421,7 @@ get_dt_var_and_name <- function(x, by) {
 check_for_NA_pad <- function(x, dt_var, dt_var_name) {
   x_no_NA <- x
   x_NA <- NULL
-  if(any(is.na(dt_var))) {
+  if(anyNA(dt_var)) {
     x_no_NA <- x[!is.na(dt_var), ]
     x_NA <- x[is.na(dt_var), ]
     warn_mess <- sprintf(
