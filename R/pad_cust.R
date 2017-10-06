@@ -12,21 +12,15 @@
 #' \code{by} indicates which to use for thickening.
 #' @param group Optional character vector that specifies the grouping
 #' variable(s). Padding will take place within the different group values.
-#' @param drop_last_span The `spanned` for `thicken_cust` needs to be around the
-#' datetime variable. Typically, you don't want the last value in `spanned` for
-#' padding, because it adds an empty record. When TRUE the last value in `spanned`
-#' is removed before padding.
 #' @return The data frame \code{x} with
 #' @examples
 #' @export
 pad_cust <- function(x,
                      spanned,
                      by        = NULL,
-                     group     = NULL,
-                     drop_last_span = TRUE){
+                     group     = NULL){
   is_df(x)
   stop_not_datetime(spanned)
-  if (drop_last_span) spanned <- spanned[1:(length(spanned) - 1)]
   group <- get_dplyr_groups(x, group)
 
   if (!all(group %in% colnames(x))) {

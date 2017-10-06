@@ -44,8 +44,8 @@ dataframe, possibly overflowing memory.}
 The data frame \code{x} with the datetime variable padded. All
 non-grouping variables in the data frame will have missing values at the rows
 that are padded. The result will always be sorted on the datetime variable.
-If `group` is not `NULL` result is sorted on keys first, then on datetime
-variable.
+If `group` is not `NULL` result is sorted on grouping variable(s) first,
+then on the datetime variable.
 }
 \description{
 \code{pad} will fill the gaps in incomplete datetime variables, by figuring out
@@ -113,4 +113,3 @@ pad(x, group = "id")
 # applying pad with do, interval is determined individualle for each group
 x \%>\% group_by(id) \%>\% do(pad(.))
 }
-

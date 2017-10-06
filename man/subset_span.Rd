@@ -7,10 +7,10 @@
 subset_span(spanned, pattern_list)
 }
 \arguments{
-\item{spanned}{vector of class `Date`, `POSIXct`, or `POSIXlt`}
+\item{spanned}{A vector of class `Date`, `POSIXct`, or `POSIXlt`.}
 
-\item{pattern_list}{list with the desired pattern for each of the following
-datetime parts: "year", "mon", "mday", "wday", "hour", "min", "sec"}
+\item{pattern_list}{A list with the desired pattern for each of the following
+datetime parts: "year", "mon", "mday", "wday", "hour", "min", "sec".}
 }
 \value{
 Vector of the same class as `spanned`, containing all the data points in
@@ -24,7 +24,6 @@ a pattern of date and/or time parts.
 date_span <- span_date(20170701, len_out = 100)
 subset_span(date_span, list(wday = 1:5))
 
-time_span <- span_time("20170101 00", 201708)
+time_span <- span_time("20170101 00", 201702)
 subset_span(time_span, list(hour = 7:17))
 }
-

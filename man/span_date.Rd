@@ -47,4 +47,3 @@ span_date(201101, len_out = 4)
 span_date(20110101, len_out = 4)
 span_date(20110101, len_out = 4, interval = "month")
 }
-

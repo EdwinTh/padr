@@ -23,4 +23,3 @@ library(dplyr)
 coffee \%>\% thicken("week", start_val = get_week_start())
 coffee \%>\% thicken("week", start_val = get_week_start(3))
 }
-

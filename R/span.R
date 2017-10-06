@@ -8,13 +8,18 @@
 #' back from the first observation.
 #' @param end_shift Character indicating the time to shift
 #' forward from the last observation.
+#' @description Note that correct use of the `start_shift` and `end_shift`
+#' arguments change the entire spanning when not in line with the interval.
+#' It is not checked for.
 #' @return
 #' A datetime vector, with the first observation smaller or equal than `min(x)`
 #' and the last observation larger or equal than `max(x)`. Spaces between points
 #' are equal to `interval`.
 #' @examples
 #' span_around(coffee$time_stamp, "hour")
-#' span_around(coffee$time_stamp, "2 days")
+#' span_around(coffee$time_stamp, "hour", end_shift = "2 hour")
+#' span_around(coffee$time_stamp, "2 day")
+#' span_around(coffee$time_stamp, "2 day", "2 day")
 #'
 #' span_around(emergency$time_stamp, "week")
 

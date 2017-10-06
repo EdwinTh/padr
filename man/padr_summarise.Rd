@@ -21,4 +21,3 @@ class \code{POSIXlt}. \code{by} indicates which variable to summarise.}
 For each group reports the first and the last observations, the interval, and
 wether the time series is complete (if not it needs padding).
 }
-

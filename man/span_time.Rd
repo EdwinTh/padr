@@ -57,4 +57,3 @@ span_time("20110101 00", len_out = 10)
 span_time("20110101 002300", len_out = 10)
 
 }
-

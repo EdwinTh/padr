@@ -9,11 +9,11 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-This vignette assumes the reader has read the [Introduction to `padr` vignette](link) first. These functions are introduced in version 0.4.0 of the package and should be considered experimental.
+This vignette assumes the reader has read the [Introduction to `padr` vignette](link). These functions are introduced in version 0.4.0 of the package and should be considered still experimental.
 
-The base function `thicken` creates evenly spaced intervals to which observations can be aggregated. `pad` subsequently checks for missing observations and inserts records where needed. This procedure can be largely automated because of the assumption of an easily spaced interval. However, the functions can't deliver when assymetry in the intervals is desired. This might happen when observations are frequent during some moments, and sparse during others. For instance daily hours vs night periods, or working days vs weekends. We might want to perform a single analysis where the intervals are of different widths. 
+The base function `thicken` creates evenly spaced intervals to which observations can be aggregated. `pad` subsequently checks for missing observations and inserts records where needed. This procedure can be largely automated because of the assumption of an evenly spaced interval. However, the functions can't deliver when assymetry in the intervals is desired. This might happen when observations are frequent during some moments, and sparse during others. For instance daily hours vs night periods, or working days vs weekends. We might want to perform a single analysis where the intervals are of different widths. 
 
-Lets have a look at all the vehicle incidents in the `emergency` dataset. Say you want to monitor the trends of number of accidents in hte second quarter of 2016. You choose a three hour interval to do the analysis.
+Lets have a look at all the vehicle incidents in the `emergency` dataset. Say you want to monitor the trends of number of accidents in the second quarter of 2016. You choose a three hour interval to do the analysis.
 
 ```{r, fig.width = 7}
 # library(padr)
@@ -40,9 +40,11 @@ veh_acc %>%
   facetted_line_plot()
 ```
 
-Accidents are more common around rush hours. During nightly hours there are hardly any accidents, and also in the daytime the number drops slightly.
+Accidents are more common around rush hours. During nightly hours there are hardly any accidents, and also in the daytime the number drops slightly. We would rather aggregate this to morning rush hour, day time, evening rush hour, and night time.
 
 ## Preparing the spanning
+
+`thicken`'s internal work horse is a spanning function. It takes the datetime variable and spans a datetime variable of the desired interval around it. When you want your own asymmetric intervals, you have to build the spanning variable yourself. To help you with that the functions `span_around` and `subset_span` are provided. `span_around` is a wrapper around the internal `span` function. It will return a spanning with an evenly spaced interval. The result of `span_around` is fed to `subset_span`. Here you define the assymetric pattern you are after. Only the records meet this condition are returned and can be used in `thicken_cust` and `pad_cust`.
 
 ```{r}
 veh_acc_span <- span_time("20160331 19", "20160701 07", interval = "hour") %>% 
