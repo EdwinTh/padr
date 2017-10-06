@@ -31,3 +31,4 @@ LinkingTo: Rcpp
 VignetteBuilder: knitr
 URL: https://github.com/EdwinTh/padr
 BugReports: https://github.com/EdwinTh/padr/issues
+ByteCompile: true
