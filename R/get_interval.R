@@ -25,7 +25,7 @@ get_interval <- function(x) {
 }
 
 stop_on_NA <- function(x) {
-  if(any(is.na(x))) {
+  if(anyNA(x)) {
     stop("interval cannot be determined when x contains NAs")
   }
 }
