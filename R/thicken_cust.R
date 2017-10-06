@@ -31,7 +31,7 @@ thicken_cust <- function(x,
                          colname,
                          rounding = c('down',
                                      'up'),
-                         by        = NULL) {
+                         by       = NULL) {
 
   is_df(x)
 
@@ -50,13 +50,18 @@ thicken_cust <- function(x,
   }
 
   is_datetime(spanned)
-  start_val <- min(spanned)
-  if (inherits(start_val, 'POSIXt') & inherits(dt_var, 'POSIXt')) {
-    start_val <- enforce_time_zone(start_val, dt_var)
+  if (inherits(spanned, 'POSIXt') & inherits(dt_var, 'POSIXt')) {
     spanned   <- enforce_time_zone(spanned, dt_var)
   }
 
-  ind_to_keep <- start_val_after_min_dt(start_val, dt_var)
+  ## remove everything out of scope
+  warning_when_filtering(dt_var, spanned, rounding)
+
+  ind_to_keep <- if (rounding == "down") {
+    start_val_after_min_dt(min(spanned), dt_var)
+  } else {
+    end_val_before_max_dt(max(spanned), dt_var)
+  }
   x <- x[ind_to_keep, , drop = FALSE] #nolint
   dt_var <- dt_var[ind_to_keep]
 
@@ -73,3 +78,23 @@ thicken_cust <- function(x,
 
   set_to_original_type(return_frame, original_data_frame)
 }
+
+
+warning_when_filtering <- function(dt_var, spanned, rounding) {
+  if (rounding == "down" & min(dt_var) < min(spanned)) {
+    warning("Dropping all values in the datetime var that are smaller than smallest spanned",
+            call. = FALSE)
+  }
+
+  if (rounding == "up" & max(dt_var) > max(spanned)) {
+    warning("Dropping all values in the datetime var that are larger than largest spanned",
+            call. = FALSE)
+  }
+}
+
+end_val_before_max_dt <- function(end_val, dt_var) {
+  end_val <- to_posix(end_val, dt_var)$a
+  dt_var  <- to_posix(end_val, dt_var)$b
+  dt_var < end_val
+}
+
