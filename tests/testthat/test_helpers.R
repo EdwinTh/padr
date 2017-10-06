@@ -46,8 +46,4 @@ test_that("enforce_timee zone works as expected", {
   expect_equal( attr(different, "tz"), "CET")
   expect_equal( as.character(different),
                 c("2015-12-01 03:00:00", "2016-02-01 03:00:00"))
-
-  a_NULL <- ymd_h(c("20151201 03", "20160201 03"), tz = "")
-  b_NULL <- ymd_hms(c("2015-01-01 00:00:00", "2016-01-01 00:00:00"), tz = "")
-  expect_warning(enforce_time_zone(b_NULL, a_NULL), NA)
 })
