@@ -25,17 +25,14 @@ fill_by_value <- function(x,
 
   is_df(x)
 
-  fun_args <- as.list(match.call())
-  if ('value' %in% names(fun_args)) value <- fun_args$value
-
-  inds <- get_the_inds(colnames(x), fun_args, x)
+  inds <- get_the_inds(x, ...)
 
   for (i in inds) {
     val <- x[, i]
     val[is.na(val)] <- value
     x[, i] <- val
   }
-  return(x)
+  x
 }
 
 #' Fill missing values by a function of the nonmissings.
@@ -65,7 +62,7 @@ fill_by_function <- function(x,
 
   is_df(x)
 
-  inds <- get_the_inds(colnames(x), as.list(match.call()), x)
+  inds <- get_the_inds(x, ...)
 
   for (i in inds) {
       val <- unlist( x[, i] )
@@ -105,7 +102,7 @@ fill_by_prevalent <- function(x,
 
   is_df(x)
 
-  inds <- get_the_inds(colnames(x), as.list(match.call()), x)
+  inds <- get_the_inds(x, ...)
 
   for (i in inds) {
     val <- unlist ( x[, i] )
@@ -129,25 +126,16 @@ fill_by_prevalent <- function(x,
 
 # Get the indicators of the variables on which the function should be applied
 # arguments are the colnames of x and the arguments of the original functiont
-get_the_inds <- function(colnames_x,
-                         args_of_function,
-                         x) {
+get_the_inds <- function(x,
+                         ...) {
 
-  arguments <- args_of_function[-c(1:2)]
-  arguments <- arguments[names(arguments) == '']
+  dots <- rlang::quos(...)
 
-  if (length(arguments) == 0) {
+  if (length(dots) == 0) {
     return(all_containing_nas(x))
   }
 
-  cols <- arguments[ names(arguments) == '' ]
-
-  inds <- numeric(length(cols))
-
-  for (i in 1:length(cols)) {
-    inds[i] <- which( colnames_x == as.character( cols[[i]] ) )
-  }
-  return(inds)
+  which(colnames(x) %in% sapply(dots, quo_name))
 }
 
 all_containing_nas <- function(x) {

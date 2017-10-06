@@ -6,6 +6,10 @@
 
 - `get_interval` no longer applied to assess interval validity (its slow on large variables because it converts a POSIX to character). Rather validity is now compared after thickening by checking if results differes frome original. Makes function approximately four times faster.
 
+* `get_interval` is sped up significantly:
+
+- to convert date to character `format` is used, instead of `as.character`. For large vectors it 4 to 5 times faster.
+
 ## New Features
 
 * `span_around` will take a datetime variable, and spans a variable of a desired interval around it. Helper function for `thicken_cust` and `pad_cust`. It saves the trouble of retrieving the min and the max of the variable and manually spanning with these values.
@@ -28,6 +32,8 @@
 * `get_interval` now throws an informative error when the datetime variable has missing values (#33).
 
 * `pad` now throws an informative error when the datetime variable is used in the grouping (#38)
+
+* added "ByteCompile: true" to DESCRIPTION.
 
 ## Further Changes
 

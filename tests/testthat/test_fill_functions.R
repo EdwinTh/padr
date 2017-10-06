@@ -52,15 +52,9 @@ test_that("get_the_inds works properly", {
   x <- suppressWarnings(coffee %>% thicken('day') %>% group_by(time_stamp_day) %>%
     summarise(a = sum(amount)) %>% pad)
   x$b <- NA
-  cols <- colnames(x)
-  make_funargs <- function(x, ...) return(as.list(match.call()))
-  no_cols <- make_funargs(x)
-  ret_no_cols <- get_the_inds(cols, no_cols, x)
-  names(ret_no_cols) <- NULL
-  one_col <- make_funargs(x, a)
-  two_cols <- make_funargs(x, a, b)
-
-  expect_equal(ret_no_cols, 2:3)
-  expect_equal(get_the_inds(cols, one_col, x), 2)
-  expect_equal(get_the_inds(cols, two_cols, x), 2:3)
+  no_cols <- 2:3
+  names(no_cols) <- c("a", "b")
+  expect_equal(get_the_inds(x), no_cols)
+  expect_equal(get_the_inds(x, a), 2)
+  expect_equal(get_the_inds(x, a, b), 2:3)
 })
