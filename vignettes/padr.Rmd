@@ -11,7 +11,7 @@ vignette: >
 
 When getting time series data ready for analysis, you might be confronted with the following two challenges:
 
-* The observations are done on too low a level, e.g. time recorded to the second, where your analysis is on a daily level.
+* The observations are recorded on too low a level, e.g. time recorded to the second, where your analysis is on a daily level.
 * There are no records for the time points where obsevations were absent.
 
 `padr` aims to make light work of preparing time series data by offering the two main functions `thicken` and `pad`. A small example before we get into detail. Say I want to make a line plot of my daily expenses at the coffee place. The data for a few days might look like.
@@ -31,7 +31,7 @@ coffee %>%
   group_by(time_stamp_day) %>%
   summarise(day_amount = sum(amount)) %>% 
   pad() %>% 
-  fill_by_value(day_amount) %>% 
+  fill_by_value() %>% 
   ggplot(aes(time_stamp_day, day_amount)) + geom_line()
 ```
 
@@ -56,7 +56,7 @@ to_thicken %>% thicken(interval = "week")
 to_thicken %>% thicken(interval = "4 days")
 ```
 
-We see different default behavior for the different *intervals*. Week intervals start on Sundays, day intervals start on the first day found in the datetime variable. In many situations the user will be content with `thicken`'s defaults, however you can specify the `start_val` as an offset if you would like to start the returned interval on a different day or datetime.
+We see different default behavior for the different *intervals*. Week intervals start on Sundays, day intervals start on the first day found in the datetime variable. In many situations the user will be content with `thicken`'s defaults. However, you can specify the `start_val` as an offset if you would like to start the returned interval on a different day or datetime.
 
 We use the emergency data set for further illustration. It contains 120,450 emergency calls in Montgomery County, PA, between 2015-12-10 and 2016-10-17. It has four columns that contain information about the location of the emergency, a title field indicating the type of the emergency, and a time stamp. The data set was created from a Google Api, thanks to Mike Chirico for maintaining this set. 
 
@@ -107,14 +107,27 @@ Also `pad` allows for deviations from its default behavior. By default it pads a
 account %>% pad('hour', start_val = as.POSIXct('2016-10-20 22:00:00')) %>% head
 ```
 
-Padding within groups is supported since version 0.2.0, when the `group` parameter was added to `pad`. This parameter takes one or several column names, that indicate the groups. Take the following example of the `emergency` data.
+### Grouping
 
-```{r, warning=FALSE}
-padded_groups <- emergency %>% thicken('day') %>%
-  filter(title %in% c("Traffic: VEHICLE ACCIDENT -", 
-                      "Traffic: DISABLED VEHICLE -")) %>% 
-  count(time_stamp_day, title) %>% 
-  pad(group = 'title')
+When you want to `thicken` and `pad` within groups there are two options. Either you group the data with `dplyr::group_by()` before applying them, or you specify the `group` argument in `pad`. Note that `thicken` does not have a grouping argument, because thickening with or without grouping would give the same result. However, `thicken` does preserve `dplyr` grouping.
+
+```{r}
+grouping_df <- data.frame(
+  group = rep(c("A", "B"), c(3, 3)),
+  date  = as.Date(c("2017-10-02", "2017-10-04", "2017-10-06", "2017-10-01", 
+                    "2017-10-03", "2017-10-04")),
+  value = rep(2, 6)
+)
+grouping_df %>% 
+  pad(group = "group")
+```
+
+Note in the above that each group is padded from its own start to its end. If you want the starts and ends of each groups to be similar use tht `start_val` and `end_val` arguments. Note further that the interval on which to pad is assessed over the groups. It is assumed that the user wants to bring all observations to the same interval. If you do want each group to have its own interval, use `dplyr::do` in the following way.
+
+```{r}
+grouping_df %>% 
+  group_by(group) %>% 
+  do(pad(.))
 ```
 
 ### fill functions
@@ -150,9 +163,9 @@ ggplot(dehydration_day, aes(time_stamp_day, nr)) +
 ## Further details
 There is a second vignette, called `padr_implementation`. Here you can find more information about how `padr` handles daylight savings time, what it does with different time zones and how `thicken` exactly is implemented.
 
-## Any suggestions?
+## Suggestions?
 Found a bug? Ideas for improving or expandig `padr`. Your input is much appreciated. The code is maintained at https://github.com/EdwinTh/padr and you are most welcome to file an issue or do a pull request.
 
 
-[^1]: Many users that work with date and time variables will be using the `lubridate` package. The definition of an interval in `lubridate` is different from the definition in `padr`. In `lubridate` an interval is a period between two time points and has nothing to do with recurrence. Please keep this in mind.
+[^1]: Many users who work with date and time variables will be using the `lubridate` package. The definition of an interval in `lubridate` is different from the definition in `padr`. In `lubridate` an interval is a period between two time points and has nothing to do with recurrence. Please keep this in mind.
 
