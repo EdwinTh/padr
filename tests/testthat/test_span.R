@@ -109,13 +109,22 @@ test_that("span integration tests", {
   expect_equal(sp("day"), span_date(20160709, 20160711))
 })
 
-context("span_around function integration tests")
+context("span_around function")
 
-test_that("span_around works properly", {
+test_that("span_around integration tests", {
   x <- coffee$time_stamp[3:4]
+  start_shift_one_hour <- span_around(x, "hour", start_shift = "1 hour")
+  end_shift_one_hour <- span_around(x, "hour", end_shift = "1 hour")
   expect_error(span_around(1:10, "day"), "x should be of class Date, POSIXct, or POSIXlt.")
   expect_error(span_around(x, "day"), NA)
   expect_equal(span_around(x, "day"), span_date(20160709, 20160711))
-  expect_equal(span_around(x, "hour"),  span_time("20160709 00", "20160710 11", tz = ""))
+  expect_equal(span_around(x, "hour"),  span_time("20160709 13", "20160710 11", tz = ""))
   expect_equal(span_around(x, "min"), span_time("20160709 13", "20160710 1046", tz = ""))
+  expect_equal(start_shift_one_hour[1], as.POSIXct("2016-07-09 12:00:00", tz = ""))
+  expect_equal(start_shift_one_hour[length(start_shift_one_hour)],
+               as.POSIXct("2016-07-10 12:00:00", tz = ""))
+  expect_equal(end_shift_one_hour[1], as.POSIXct("2016-07-09 13:00:00", tz = ""))
+  expect_equal(end_shift_one_hour[length(end_shift_one_hour)],
+               as.POSIXct("2016-07-10 12:00:00", tz = ""))
+  expect_equal(span_around(x, "day", start_shift = "1 day")[1], as.Date("2016-07-08"))
 })

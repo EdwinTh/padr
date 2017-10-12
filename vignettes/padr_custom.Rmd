@@ -44,16 +44,28 @@ Accidents are more common around rush hours. During nightly hours there are hard
 
 ## Preparing the spanning
 
-`thicken`'s internal work horse is a spanning function. It takes the datetime variable and spans a datetime variable of the desired interval around it. When you want your own asymmetric intervals, you have to build the spanning variable yourself. To help you with that the functions `span_around` and `subset_span` are provided. `span_around` is a wrapper around the internal `span` function. It will return a spanning with an evenly spaced interval. The result of `span_around` is fed to `subset_span`. Here you define the assymetric pattern you are after. Only the records meet this condition are returned and can be used in `thicken_cust` and `pad_cust`.
+`thicken`'s internal work horse is a spanning function. It takes the datetime variable and spans a datetime variable of the desired interval around it. When you want your own asymmetric intervals, you have to build the spanning variable yourself. To help you with that the functions `span_around` and `subset_span` are provided. `span_around` is a wrapper around the internal `span` function. It will return a spanning with an evenly spaced interval. Of course you can also create this yourself. `span_date` and `span_time` are convenient wrappers around `seq.Date` and `seq.POSIXt` for manual spanning. Next, to create an asymmetrical spanning, apply `subset_span` on the evenly spaced span. Together with a list that describes the pattern of points that should be retained.
 
 ```{r}
-veh_acc_span <- span_time("20160331 19", "20160701 07", interval = "hour") %>% 
+veh_acc_span <- 
+  span_around(veh_acc$time_stamp, interval = "hour",
+              start_shift = "40 hour") %>% 
   subset_span(list(hour = c(7, 10, 16, 19)))
-# span_time("20151210 16", "20161017 19", interval = "hour", tz = "EST") %>% 
+```
+
+Note that the argument `start_shift` is used. This will add an extra time period before the first observartion in the datetime variable. We do this to ensure that spanning is still fully around the datetime variable after subsetting. The argument `end_shift` is by default equal to `start_shift`. So we have set this to 7 hours as well, by specifying `start_shift`.
+
+Now we use this spanning to thicken and pad.
+
+```{r}
 veh_acc %>% 
-  thicken_cust(veh_acc_span, "day_hour") %>% 
+  thicken_cust(spanned = veh_acc_span, colname = "day_hour") %>% 
   count(day_hour) %>% 
   pad_cust(veh_acc_span)
+```
+
+
+
 
 
 

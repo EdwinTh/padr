@@ -70,6 +70,16 @@ period_to_time <- function(interval_list,
 }
 
 
+# when using interval = hour span's return will always start at midnight. Not
+# in the hour of the first hour. This because we want intuitive results when we
+# we specify multiples of an hour. This does not bother thicken, because
+# everyhting earlier will be abandoned anyway. However, for span_around this
+# is not a clean result, and we want to remove redundant values.
+closest_hour_to_min_x <- function(start_val, min_v, interval){
+  smaller <- seq(start_val, min_v, interval)
+  as.POSIXlt(smaller[length(smaller)])
+}
+
 ## this is originally written for thicken, but is now also the body of the
 # exported span_around.
 span <- function(x,
@@ -141,6 +151,9 @@ get_start_and_end <- function(dt_var,
 
   start_val_func <- sprintf("start_val_%s(min_v)", return_interval$interval)
   start_val <- eval(parse(text = start_val_func))
+  if (return_interval$interval == "hour") {
+    start_val <- closest_hour_to_min_x(start_val, min_v, interval)
+  }
   span <- seq(start_val, max_v, by = interval)
   end_min_1 <- span[length(span)]
   end_val <- as.POSIXlt(seq(end_min_1, length.out = 2, by = interval)[2])
