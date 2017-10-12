@@ -9,6 +9,10 @@
 #' spaced variables.
 #' @param by Only needs to be specified when \code{x} contains multiple
 #' variables of class \code{Date}, class \code{POSIXct} or class \code{POSIXlt}.
+#' @param drop_last_spanned Logical, indicating wether to drop the last value
+#' from `spanned`. The spanned is typically around the datetime variable. When
+#' thickened down, this would create an empty record after the observations when
+#' padding.
 #' \code{by} indicates which to use for thickening.
 #' @param group Optional character vector that specifies the grouping
 #' variable(s). Padding will take place within the different group values.
@@ -18,7 +22,8 @@
 pad_cust <- function(x,
                      spanned,
                      by        = NULL,
-                     group     = NULL){
+                     group     = NULL,
+                     drop_last_spanned = TRUE){
   is_df(x)
   stop_not_datetime(spanned)
   group <- get_dplyr_groups(x, group)
@@ -29,6 +34,9 @@ pad_cust <- function(x,
 
   original_data_frame <- x
   x <- as.data.frame(x)
+
+  stopifnot(is.logical(drop_last_spanned))
+  spanned <- spanned[1:(length(spanned) - drop_last_spanned)]
 
   # we have to get the dt_var twice, first on the original data. If there are
   # NA values in it, we have to get it again on x with NA values filtered out.

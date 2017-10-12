@@ -48,8 +48,7 @@ Accidents are more common around rush hours. During nightly hours there are hard
 
 ```{r}
 veh_acc_span <- 
-  span_around(veh_acc$time_stamp, interval = "hour",
-              start_shift = "40 hour") %>% 
+  span_around(veh_acc$time_stamp, interval = "hour", start_shift = "7 hour") %>% 
   subset_span(list(hour = c(7, 10, 16, 19)))
 ```
 

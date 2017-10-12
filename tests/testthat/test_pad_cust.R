@@ -21,6 +21,13 @@ test_that("check_same_data_type", {
                "spanned and the datetime variables of different data types")
 })
 
+test_that("pad_cust drop last argument", {
+  x <- data.frame(a = span_date(20160101, len_out = 2, interval = "day"), b = 1)
+  span <- span_date(20160101, len_out = 3, interval = "day")
+  expect_equal(x, pad_cust(x, span, drop_last_spanned = TRUE))
+  expect_equal(pad_cust(x, span, drop_last_spanned = FALSE) %>% nrow(), 3)
+  expect_equal(pad_cust(x, span, drop_last_spanned = FALSE)$a, span)
+})
 
 test_that("pad_cust_group_span", {
   sp  <- span_date(20170101, len_out = 3)
