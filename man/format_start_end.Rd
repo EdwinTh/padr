@@ -10,6 +10,23 @@ format_start_end(x, start_format = "\%Y-\%m-\%d", end_format = start_format,
 \arguments{
 \item{x}{A vector of class \code{Date}, class \code{POSIXct} or class \code{POSIXlt},
 of which the values are unique.}
+
+\item{start_format}{String to format the start values of each period, to be used
+in `strftime`.}
+
+\item{end_format}{String to format the end values of each period, to be used
+in `strftime`.}
+
+\item{sep}{Character string that separates the `start_format` and the `end_format`.}
+
+\item{end_offset}{Units in days of `x` is a `Date`, or seconds if `x`  is `POSIXt`.
+Will be subtracted from the end of each period.
+If 0, the end of the previous period is equal to the start of the next.}
+
+\item{units_to_last}{To determine the formatting of the last value in `x`, the
+length of the last period has to be specified. This can't be derived from
+`x` itself. If NULL the function guesses based on the interval of `x`.
+Specify in days when `x` is `Date`, or in seconds when `x` is a `POSIXt`.}
 }
 \value{
 A character vector showing the interval.

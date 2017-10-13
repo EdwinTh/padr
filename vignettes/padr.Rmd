@@ -144,21 +144,34 @@ counts %>% fill_by_prevalent()
 ```
 Note that in the first `fill_by_value` the columns to fill are not specified. In this case the filling is applied on all the columns. The other two functions also have this default behavior.
 
-### One last example
-`thicken` and `pad` together make a strong pair, as already was shown in the coffee example. Lets go back to the emergency data set and see how many cases of dehydration there are each day. Would there be more cases in summer?
+## Formatting functions
 
-```{r, fig.width = 7}
-dehydration_day <- emergency %>% 
-  filter(title == 'EMS: DEHYDRATION') %>% 
-  thicken(interval = 'day') %>% 
-  group_by(time_stamp_day) %>% 
-  summarise(nr = n()) %>% 
-  pad() %>% 
-  fill_by_value(nr)
-ggplot(dehydration_day, aes(time_stamp_day, nr)) +
-  geom_point() +
-  geom_smooth()
+After aggregating the data to a higher interval, all the observations in an interval are represented by a single point in time. This either the first (rounding down) or the last (rounding up) datetime point of the interval. For the moment is not the aim of `padr` to introduce new S3 classes (as `ts` and `zoo` do), so the datetime variables are left as they are. However, from from v.0.4.0 two functions are offered to reformat the datetime variable. They might give a better representation of the data when presenting them in a table or graph. First of all, `center_interval` will move the time point to the center of the interval. This would give a better representation in point, line and bar graphs.
+
+```{r}
+emergency %>% 
+  thicken("hour", "h") %>% 
+  count(h) %>% 
+  slice(1:24) %>% 
+  mutate(h_center = center_interval(h)) %>% 
+  ggplot(aes(h_center, n)) + geom_bar(stat = "identity")
 ```
+
+The bars are now between the hours, rather than on the ours. More true to the nature of the interval.
+
+Next, there is `format_start_end`. This creates a categorical vector that describes the start and end of the interval. This works great with asymmetric data, as shown in the dedicated vignette, but can also be informative with regular intervals. You can specify the way you want the start and the end to be formatted just like you would in `strftime`. 
+
+```{r}
+emergency %>% 
+  filter(title == "EMS: HEAD INJURY") %>% 
+  thicken("6 hour", "hour6") %>% 
+  count(hour6) %>% 
+  pad() %>% 
+  fill_by_value() %>% 
+  mutate(hour6_fmt = 
+           format_start_end(hour6, start%))
+```
+
 
 ## Further details
 There is a second vignette, called `padr_implementation`. Here you can find more information about how `padr` handles daylight savings time, what it does with different time zones and how `thicken` exactly is implemented.

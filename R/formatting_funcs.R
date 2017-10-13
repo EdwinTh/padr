@@ -87,15 +87,15 @@ unname <- function(x) {
 #' a character vector that reflects the full period.
 #' @param x A vector of class \code{Date}, class \code{POSIXct} or class \code{POSIXlt},
 #' of which the values are unique.
-#' @start_format String to format the start values of each period, to be used
+#' @param start_format String to format the start values of each period, to be used
 #' in `strftime`.
-#' @end_format String to format the end values of each period, to be used
+#' @param end_format String to format the end values of each period, to be used
 #' in `strftime`.
-#' @sep Character string that separates the `start_format` and the `end_format`.
-#' @end_offset Units in days of `x` is a `Date`, or seconds if `x`  is `POSIXt`.
+#' @param sep Character string that separates the `start_format` and the `end_format`.
+#' @param end_offset Units in days of `x` is a `Date`, or seconds if `x`  is `POSIXt`.
 #' Will be subtracted from the end of each period.
 #' If 0, the end of the previous period is equal to the start of the next.
-#' @units_to_last To determine the formatting of the last value in `x`, the
+#' @param units_to_last To determine the formatting of the last value in `x`, the
 #' length of the last period has to be specified. This can't be derived from
 #' `x` itself. If NULL the function guesses based on the interval of `x`.
 #' Specify in days when `x` is `Date`, or in seconds when `x` is a `POSIXt`.

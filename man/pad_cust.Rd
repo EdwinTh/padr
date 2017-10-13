@@ -4,7 +4,7 @@
 \alias{pad_cust}
 \title{Apply pad with a custom spanning}
 \usage{
-pad_cust(x, spanned, by = NULL, group = NULL, drop_last_span = TRUE)
+pad_cust(x, spanned, by = NULL, group = NULL, drop_last_spanned = TRUE)
 }
 \arguments{
 \item{x}{A data frame containing at least one datetime variable of
@@ -15,16 +15,16 @@ should be mapped. See `subset_span` (TODO link) for quickly spanning unequally
 spaced variables.}
 
 \item{by}{Only needs to be specified when \code{x} contains multiple
-variables of class \code{Date}, class \code{POSIXct} or class \code{POSIXlt}.
-\code{by} indicates which to use for thickening.}
+variables of class \code{Date}, class \code{POSIXct} or class \code{POSIXlt}.}
 
 \item{group}{Optional character vector that specifies the grouping
 variable(s). Padding will take place within the different group values.}
 
-\item{drop_last_span}{The `spanned` for `thicken_cust` needs to be around the
-datetime variable. Typically, you don't want the last value in `spanned` for
-padding, because it adds an empty record. When TRUE the last value in `spanned`
-is removed before padding.}
+\item{drop_last_spanned}{Logical, indicating wether to drop the last value
+from `spanned`. The spanned is typically around the datetime variable. When
+thickened down, this would create an empty record after the observations when
+padding.
+\code{by} indicates which to use for thickening.}
 }
 \value{
 The data frame \code{x} with
