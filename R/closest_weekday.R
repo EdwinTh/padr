@@ -21,19 +21,20 @@ closest_weekday <- function(x,
   stopifnot(is_datetime(x))
   direction <- match.arg(direction)
 
-  dt_var_start <- min(as.Date(dt_var))
+  x_start <- min(as.Date(x))
   wday_lookup  <- make_weekdays_lookup()
-  current <- wday_lookup[weekdays(dt_var_start)]
+  current <- wday_lookup[weekdays(x_start)]
 
   if (direction == "down") {
     shift <- current - wday
-    if (shift < 0) shift <- shift + 7
-    ret_value <- dt_var_start - as.numeric(shift)
+    if (shift < 0) shift <- 7 + shift
+    ret_value <- x_start - shift
   } else {
     shift <- wday - current
-    if (shift < 0) shift <- shift + 7
-    ret_value <- dt_var_start + as.numeric(shift)
+    if (shift < 0) shift <- 7 + shift
+    ret_value <- x_start + as.numeric(shift)
   }
+  names(ret_value) <- NULL
   ret_value
 }
 

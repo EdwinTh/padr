@@ -16,7 +16,7 @@
 
 * `span_date` and `span_time` are new functions and they are wrappers around `seq.Date` and `seq.POSIXt` respectively. Because of their default settings (minimal specification of date and datetimes and interval inference) they require very little inputs for straightforward spanning.
 
-* The `get_week_start` function is introduced, which can be used to automatically thicken from a given weekday. It saves the trouble of manually finding the first weekday before the first datetime value in `x`. Use as an argument to `thicken`.
+* The `closest_weekday` function is introduced. It finds the closest requested weekday around the start of a datetime variable. This function helps to find quickly the `start_val` for `thicken` when the interval is "week".
 
 * Two new functions are introduced that help with visualising interval data. 
 
