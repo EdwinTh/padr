@@ -3,49 +3,43 @@
 #' When applying \code{thicken} with the interval "week", use this function to
 #' automatically start at the first weekday before \code{min(datetime_var)} at
 #' `start_val` argument.
-#' @param wday Integer in the range 1-7 specifying the desired weekday start
-#' (1 = Sun, 2 = Mon, 3 = Tue, 4 = Wed, 5 = Thu, 6 = Fri, 7 = Sat).
-#' @return Object of class "weekstart", only useful within `thicken`.
+#' @param x A vector of class \code{Date}, \code{POSIXct}, or \code{POSIXlt}.
+#' @param wday Integer in the range 0-6 specifying the desired weekday start
+#' (0 = Sun, 1 = Mon, 2 = Tue, 3 = Wed, 4 = Thu, 5 = Fri, 6 = Sat).
+#' @param direction Look \code{down} or \code{up}.
+#' @return The closest desired weekday to \code{x}.
 #' @examples
-#' library(dplyr)
-#' coffee %>% thicken("week", start_val = get_week_start())
-#' coffee %>% thicken("week", start_val = get_week_start(3))
+#' closest_weekday(coffee$time_stamp)
+#' closest_weekday(coffee$time_stamp, 4)
+#' closest_weekday(coffee$time_stamp, 4, direction = "up")
 #' @export
-
-get_week_start <- function(wday = 2) {
-  stopifnot(wday %in% 1:7)
-  attributes(wday) <- list(class = "weekstart")
-  return(wday)
-}
-
-# this part is applied in thicken.
-get_week_start_internal <- function(wday,
-                                    x,
-                                    by) {
-  is_df(x)
-
-  stopifnot(wday %in% 1:7)
-
-  if (!is.null(by)){
-    dt_var <- check_data_frame(x, by = by)
-  } else {
-    dt_var <- check_data_frame(x)
-  }
+closest_weekday <- function(x,
+                            wday = 1,
+                            direction = c("down", "up")) {
+  stopifnot(wday %in% 0:6)
+  stopifnot(length(wday) == 1)
+  stopifnot(is_datetime(x))
+  direction <- match.arg(direction)
 
   dt_var_start <- min(as.Date(dt_var))
+  wday_lookup  <- make_weekdays_lookup()
+  current <- wday_lookup[weekdays(dt_var_start)]
 
-  lookup <- 1:7
+  if (direction == "down") {
+    shift <- current - wday
+    if (shift < 0) shift <- shift + 7
+    ret_value <- dt_var_start - as.numeric(shift)
+  } else {
+    shift <- wday - current
+    if (shift < 0) shift <- shift + 7
+    ret_value <- dt_var_start + as.numeric(shift)
+  }
+  ret_value
+}
+
+make_weekdays_lookup <- function() {
+  lookup <- 0:6
   names(lookup) <- weekdays( seq(as.Date("2017-05-21"), length.out = 7,
                                  by = "day"))
-
-  current_wday_nr <- lookup[weekdays(dt_var_start)]
-  nr_days_back    <- current_wday_nr - wday
-  if (nr_days_back < 0) {
-    nr_days_back <- nr_days_back + 7
-  }
-
-  ret_value <- dt_var_start - as.numeric(nr_days_back)
-  names(ret_value) <- NULL
-
-  return(ret_value)
+  lookup
 }
