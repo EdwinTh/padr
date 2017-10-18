@@ -75,13 +75,6 @@ thicken <- function(x,
   dt_var      <- dt_var_info$dt_var
   dt_var_name <- dt_var_info$dt_var_name
 
-  if (inherits(start_val, "weekstart")){
-    if (interval != "week") {
-      stop("get_week_start can only be used with interval week" ,call. = FALSE)
-    }
-    start_val <- get_week_start_internal(start_val, x, by)
-  }
-
   check_start_and_end(start_val, NULL)
 
   interval_converted <- convert_interval(interval)

@@ -30,15 +30,68 @@ test_that("pad_cust drop last argument", {
 })
 
 test_that("pad_cust_group_span", {
-  sp  <- span_date(20170101, len_out = 3)
-  gvu1 <- data_frame(var1 = letters[1:2])
-  gvu2 <- data_frame(var1 = rep(letters[1:2], each = 2),
-                     var2 = rep(letters[3:4], 2))
-  result_null <- data_frame(span = sp)
-  result_gvu1 <- data_frame(span = rep(sp, 2),
-                            var1 = letters[rep(1:2, each = 3)])
-  result_gvu2 <- data_frame(span = rep(sp, 4),
-                            var1 = letters[rep(1:2, each = 6)],
-                            var2 = letters[rep(1:2, each = 6)])
+  sp  <- span_date(20170101, len_out = 4)[c(1, 3, 4)]
+
+  one_group_padded <- data_frame(date = rep(sp, 2),
+                                 grp  = rep(c("a", "b"), each = 3),
+                                 val  = c(1, NA, 1, 1, NA, 1))
+
+  one_group <- one_group_padded[c(1, 3, 4, 6), ]
+
+  og_no_group <- bind_rows(one_group[1:2, ],
+                           data_frame(date = ymd(20170103), grp = NA, val = NA),
+                           one_group[3:4, ])
+
+  two_group_padded <- data_frame(date = rep(sp, 4),
+                                 grp1 = rep(c("a", "b"), each = 6),
+                                 grp2 = rep(c("d", "e"), 6),
+                                 val  = c(1, NA, 1, 1, NA, 1, 1, NA, 1, 1, NA, 1))
+
+  two_group <- two_group_padded[-c(2, 5, 8, 11), ]
+
+  tg_one_group <- two_group_padded[-c(5, 11), ]
+  tg_one_group[c(2, 7), "grp2"] <- NA
+  tg_no_group <- tg_one_group[-7, ]
+  tg_no_group[2, "grp1"] <- NA
+
+  expect_equal(
+    pad_cust(one_group, spanned = sp, drop_last_spanned = FALSE),
+    og_no_group)
+
+  expect_equal(
+    pad_cust(one_group, spanned = sp, group = "grp", drop_last_spanned = FALSE),
+    one_group_padded
+  )
+
+  expect_equal(
+    one_group %>% group_by(grp) %>% pad_cust(spanned = sp, drop_last_spanned = FALSE),
+    one_group_padded
+  )
+
+  expect_equal(
+    pad_cust(two_group, span = sp, drop_last_spanned = FALSE),
+    tg_no_group
+  )
+
+  expect_equal(
+    pad_cust(two_group, span = sp, group = "grp1", drop_last_spanned = FALSE),
+    tg_one_group
+  )
+
+  expect_equal(
+    two_group %>% group_by(grp1) %>% pad_cust(span = sp, drop_last_spanned = FALSE),
+    tg_one_group
+  )
+
+  expect_equal(
+    pad_cust(two_group, span = sp, group = c("grp1", "grp2"), drop_last_spanned = FALSE),
+    two_group_padded
+  )
+
+  expect_equal(
+    two_group %>% group_by(grp1, grp2) %>% pad_cust(span = sp, drop_last_spanned = FALSE),
+    two_group_padded
+  )
+
 
 })
