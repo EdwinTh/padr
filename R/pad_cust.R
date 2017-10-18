@@ -1,6 +1,6 @@
 #' Apply pad with a custom spanning
 #'
-#' Pad the datetime variable after `thicken_cust` is applied, using the same
+#' Pad the datetime variable after thicken_cust` is applied, using the same
 #' spanning.
 #' @param x A data frame containing at least one datetime variable of
 #' class \code{Date}, class \code{POSIXct} or class \code{POSIXlt}.
@@ -103,7 +103,7 @@ group_unique_vars <- function(x, group) {
   if (is.null(group)) {
     NULL
   } else {
-    unique(x[ ,group])
+    unique(x[ ,group, drop = FALSE])
   }
 }
 
@@ -113,7 +113,7 @@ pad_cust_group_span <- function(spanned, group_vars_un) {
   } else {
     spanned_df <- data.frame(span = rep(spanned, nrow(group_vars_un)))
     ind <- rep(1:nrow(group_vars_un), each = length(spanned))
-    dplyr::bind_cols(spanned_df, group_vars_un[ind, ])
+    dplyr::bind_cols(spanned_df, group_vars_un[ind, , drop = FALSE])
   }
 }
 
