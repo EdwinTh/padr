@@ -4,21 +4,17 @@
 \alias{thicken_cust}
 \title{Apply thicken with a custom spanning}
 \usage{
-thicken_cust(x, spanned, colname, rounding = c("down", "up"), by = NULL)
+thicken_cust(x, spanned, colname, by = NULL)
 }
 \arguments{
 \item{x}{A data frame containing at least one datetime variable of
 class \code{Date}, class \code{POSIXct} or class \code{POSIXlt}.}
 
 \item{spanned}{A datetime vector to which the the datetime variable in `x`
-should be mapped. See `subset_span` (TODO link) for quickly spanning unequally
+should be mapped. See \code{subset_span} for quickly spanning unequally
 spaced variables.}
 
-\item{colname}{The column name of the added variable.}
-
-\item{rounding}{Should a value in the input datetime variable be mapped to
-the closest value that is lower (\code{down}) or that is higher (\code{up})
-than itself.}
+\item{colname}{Character of the column name of the added variable.}
 
 \item{by}{Only needs to be specified when \code{x} contains multiple
 variables of class \code{Date}, class \code{POSIXct} or class \code{POSIXlt}.
@@ -28,9 +24,12 @@ variables of class \code{Date}, class \code{POSIXct} or class \code{POSIXlt}.
 The data frame \code{x} with the variable added to it.
 }
 \description{
-Like `thicken` this function will find the datetime variable in `x`, and add
-a variable of a higher periodicity to it. However, the variable to which to
-map the observation is provided by the user. This enables mapping to
+Only rounding down is available for custom thickening.
+}
+\details{
+Like \code{thicken}, this function will find the datetime variable in \code{x},
+and add a variable of a higher periodicity to it. However, the variable to
+which to map the observation is provided by the user. This enables mapping to
 time points that are unequally spaced.
 }
 \examples{

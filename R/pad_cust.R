@@ -1,17 +1,19 @@
 #' Apply pad with a custom spanning
 #'
-#' Pad the datetime variable after `thicken_cust` is applied, using the same
+#' Pad the datetime variable after \code{thicken_cust} is applied, using the same
 #' spanning.
 #' @param x A data frame containing at least one datetime variable of
 #' class \code{Date}, class \code{POSIXct} or class \code{POSIXlt}.
-#' @param spanned A datetime vector to which the the datetime variable in `x`
-#' should be mapped. See `subset_span` (TODO link) for quickly spanning unequally
-#' spaced variables.
+#' @param spanned A datetime vector to which the the datetime variable in
+#' \cdoe{x} should be mapped. See \code{subset_span} for quickly spanning
+#' unequally spaced variables.
 #' @param by Only needs to be specified when \code{x} contains multiple
 #' variables of class \code{Date}, class \code{POSIXct} or class \code{POSIXlt}.
+#' group Optional character vector that specifies the grouping
+#' variable(s). Padding will take place within the different group values.
 #' @param drop_last_spanned Logical, indicating wether to drop the last value
-#' from `spanned`. The spanned is typically around the datetime variable. When
-#' thickened down, this would create an empty record after the observations when
+#' from \code{spanned}. The spanned is typically around the datetime variable. When
+#' thickened, this would create an empty record after the observations when
 #' padding.
 #' \code{by} indicates which to use for thickening.
 #' @param group Optional character vector that specifies the grouping

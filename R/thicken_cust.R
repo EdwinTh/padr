@@ -1,22 +1,21 @@
 #' Apply thicken with a custom spanning
 #'
-#' Like `thicken` this function will find the datetime variable in `x`, and add
-#' a variable of a higher periodicity to it. However, the variable to which to
-#' map the observation is provided by the user. This enables mapping to
+#' Like \code{thicken}, this function will find the datetime variable in \code{x},
+#' and add a variable of a higher periodicity to it. However, the variable to
+#' which to map the observation is provided by the user. This enables mapping to
 #' time points that are unequally spaced.
 #'
 #' @param x A data frame containing at least one datetime variable of
 #' class \code{Date}, class \code{POSIXct} or class \code{POSIXlt}.
 #' @param spanned A datetime vector to which the the datetime variable in `x`
-#' should be mapped. See `subset_span` (TODO link) for quickly spanning unequally
+#' should be mapped. See \code{subset_span} for quickly spanning unequally
 #' spaced variables.
-#' @param colname The column name of the added variable.
-#' @param rounding Should a value in the input datetime variable be mapped to
-#' the closest value that is lower (\code{down}) or that is higher (\code{up})
-#' than itself.
+#' @param colname Character of the column name of the added variable.
 #' @param by Only needs to be specified when \code{x} contains multiple
 #' variables of class \code{Date}, class \code{POSIXct} or class \code{POSIXlt}.
 #' \code{by} indicates which to use for thickening.
+#' @description
+#' Only rounding down is available for custom thickening.
 #' @return The data frame \code{x} with the variable added to it.
 #' @examples
 #' library(dplyr)
@@ -29,9 +28,7 @@
 thicken_cust <- function(x,
                          spanned,
                          colname,
-                         rounding = c('down',
-                                     'up'),
-                         by       = NULL) {
+                         by = NULL) {
 
   is_df(x)
 
@@ -41,8 +38,6 @@ thicken_cust <- function(x,
   dt_var_info <- get_dt_var_and_name(x, by)
   dt_var      <- dt_var_info$dt_var
   dt_var_name <- dt_var_info$dt_var_name
-
-  rounding <- match.arg(rounding)
 
   if (check_for_sorting(dt_var)){
     warning('Datetime variable was unsorted, result will be unsorted as well.',
@@ -55,13 +50,10 @@ thicken_cust <- function(x,
   }
 
   ## remove everything out of scope
-  warning_when_filtering(dt_var, spanned, rounding)
+  warning_when_filtering(dt_var, spanned)
 
-  ind_to_keep <- if (rounding == "down") {
-    start_val_after_min_dt(min(spanned), dt_var)
-  } else {
-    end_val_before_max_dt(max(spanned), dt_var)
-  }
+  ind_to_keep <- start_val_after_min_dt(min(spanned), dt_var)
+
   x <- x[ind_to_keep, , drop = FALSE] #nolint
   dt_var <- dt_var[ind_to_keep]
 
@@ -69,7 +61,7 @@ thicken_cust <- function(x,
 
   dt_var <- check_for_NA_thicken(dt_var, dt_var_name, colname)
 
-  thickened <- round_thicken(dt_var, spanned, rounding)
+  thickened <- round_thicken(dt_var, spanned, "down")
 
   thickened_frame <- data.frame(thickened)
 
@@ -80,14 +72,9 @@ thicken_cust <- function(x,
 }
 
 
-warning_when_filtering <- function(dt_var, spanned, rounding) {
-  if (rounding == "down" & min(dt_var) < min(spanned)) {
+warning_when_filtering <- function(dt_var, spanned) {
+  if (min(dt_var) < min(spanned)) {
     warning("Dropping all values in the datetime var that are smaller than smallest spanned",
-            call. = FALSE)
-  }
-
-  if (rounding == "up" & max(dt_var) > max(spanned)) {
-    warning("Dropping all values in the datetime var that are larger than largest spanned",
             call. = FALSE)
   }
 }

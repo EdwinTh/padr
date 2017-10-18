@@ -146,7 +146,7 @@ Note that in the first `fill_by_value` the columns to fill are not specified. In
 
 ## Formatting functions
 
-After aggregating the data to a higher interval, all the observations in an interval are represented by a single point in time. This either the first (rounding down) or the last (rounding up) datetime point of the interval. For the moment is not the aim of `padr` to introduce new S3 classes (as `ts` and `zoo` do), so the datetime variables are left as they are. However, from from v.0.4.0 two functions are offered to reformat the datetime variable. They might give a better representation of the data when presenting them in a table or graph. First of all, `center_interval` will move the time point to the center of the interval. This would give a better representation in point, line and bar graphs.
+After aggregating the data to a higher interval, all the observations in an interval are represented by a single point in time. This is either the first (rounding down) or the last (rounding up) datetime point of the interval. For the moment is not the aim of `padr` to introduce, so the datetime variables are left as they are. However, from from v.0.4.0 two functions are offered to reformat the datetime variable. They might give a better representation of the data when presenting them in a table or graph. First of all, `center_interval` will move the time point to the center of the interval. This would give a better representation in point, line and bar graphs.
 
 ```{r}
 emergency %>% 
@@ -161,7 +161,7 @@ The bars are now between the hours, rather than on the ours. More true to the na
 
 Next, there is `format_start_end`. This creates a categorical vector that describes the start and end of the interval. This works great with asymmetric data, as shown in the dedicated vignette, but can also be informative with regular intervals. You can specify the way you want the start and the end to be formatted just like you would in `strftime`. 
 
-```{r}
+```{r, message=FALSE}
 emergency %>% 
   filter(title == "EMS: HEAD INJURY") %>% 
   thicken("6 hour", "hour6") %>% 
@@ -169,12 +169,13 @@ emergency %>%
   pad() %>% 
   fill_by_value() %>% 
   mutate(hour6_fmt = 
-           format_start_end(hour6, start%))
+           format_start_end(hour6, start_format = "%Hh", sep = "-")) %>% 
+  ggplot(aes(hour6_fmt, n)) +
+  geom_boxplot()
 ```
 
-
 ## Further details
-There is a second vignette, called `padr_implementation`. Here you can find more information about how `padr` handles daylight savings time, what it does with different time zones and how `thicken` exactly is implemented.
+There are two more vignettes. In `padr_implementation` you can find more information about how `padr` handles daylight savings time, what it does with different time zones and how `thicken` exactly is implemented. `padr_custom` shows you how you can thicken and pad with asymmetric intervals.
 
 ## Suggestions?
 Found a bug? Ideas for improving or expandig `padr`. Your input is much appreciated. The code is maintained at https://github.com/EdwinTh/padr and you are most welcome to file an issue or do a pull request.
