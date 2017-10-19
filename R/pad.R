@@ -6,7 +6,7 @@
 #' other variables in the data frame a missing value will be inserted at the padded rows.
 #'
 #' @param x A data frame containing at least one variable of class \code{Date},
-#' class \code{POSIXct} or class \code{POSIXlt}.
+#' \code{POSIXct} or \code{POSIXlt}.
 #' @param interval The interval of the returned datetime variable.
 #' Any character string that would be accepted by \code{seq.Date()} or
 #' \code{seq.POSIXt}. When NULL the
@@ -21,7 +21,7 @@
 #' If NULL it will use the highest value of the input variable.
 #' @param by Only needs to be specified when \code{x} contains multiple
 #' variables of class \code{Date}, class \code{POSIXct} or
-#' class \code{POSIXlt}. \code{by} indicates which variable to use for padding.
+#' class \code{POSIXlt}. Indicates which variable to use for padding.
 #' @param group Optional character vector that specifies the grouping
 #' variable(s). Padding will take place within the different group values. When
 #' interval is not specified, it will be determined applying `get_interval` on

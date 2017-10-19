@@ -2,34 +2,44 @@
 % Please edit documentation in R/pad_cust.R
 \name{pad_cust}
 \alias{pad_cust}
-\title{Apply pad with a custom spanning}
+\title{Pad with a custom spanning.}
 \usage{
 pad_cust(x, spanned, by = NULL, group = NULL, drop_last_spanned = TRUE)
 }
 \arguments{
 \item{x}{A data frame containing at least one datetime variable of
-class \code{Date}, class \code{POSIXct} or class \code{POSIXlt}.}
+class \code{Date}, \code{POSIXct} or \code{POSIXlt}.}
 
-\item{spanned}{A datetime vector to which the the datetime variable in `x`
-should be mapped. See `subset_span` (TODO link) for quickly spanning unequally
-spaced variables.}
+\item{spanned}{A datetime vector to which the the datetime variable in
+\code{x} should be mapped. See \code{subset_span} for quickly spanning
+unequally spaced variables.}
 
 \item{by}{Only needs to be specified when \code{x} contains multiple
-variables of class \code{Date}, class \code{POSIXct} or class \code{POSIXlt}.}
+variables of class \code{Date}, \code{POSIXct} or \code{POSIXlt}.}
 
 \item{group}{Optional character vector that specifies the grouping
 variable(s). Padding will take place within the different group values.}
 
 \item{drop_last_spanned}{Logical, indicating wether to drop the last value
-from `spanned`. The spanned is typically around the datetime variable. When
-thickened down, this would create an empty record after the observations when
-padding.
-\code{by} indicates which to use for thickening.}
+from \code{spanned}. The spanned is typically around the datetime variable.
+This would create an empty last record when padding. Setting to \code{TRUE}
+will drop the last value in \code{spanned} and will not create an empty
+last record in this situation.}
 }
 \value{
-The data frame \code{x} with
+The data frame \code{x} with the datetime column padded.
 }
 \description{
-Pad the datetime variable after `thicken_cust` is applied, using the same
+Pad the datetime variable after \code{thicken_cust} is applied, using the same
 spanning.
+}
+\examples{
+library(dplyr)
+# analysis of traffic accidents in traffic jam hours and other hours.
+accidents <- emergency \%>\% filter(title == "Traffic: VEHICLE ACCIDENT -")
+spanning <- span_time("20151210 16", "20161017 17", tz = "EST") \%>\%
+  subset_span(list(hour = c(6, 9, 16, 19)))
+thicken_cust(accidents, spanning, "period") \%>\%
+  count(period) \%>\%
+  pad_cust(spanning)
 }

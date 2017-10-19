@@ -2,23 +2,22 @@
 % Please edit documentation in R/thicken_cust.R
 \name{thicken_cust}
 \alias{thicken_cust}
-\title{Apply thicken with a custom spanning}
+\title{Thicken with a custom spanning.}
 \usage{
 thicken_cust(x, spanned, colname, by = NULL)
 }
 \arguments{
 \item{x}{A data frame containing at least one datetime variable of
-class \code{Date}, class \code{POSIXct} or class \code{POSIXlt}.}
+class \code{Date}, \code{POSIXct} or \code{POSIXlt}.}
 
-\item{spanned}{A datetime vector to which the the datetime variable in `x`
-should be mapped. See \code{subset_span} for quickly spanning unequally
-spaced variables.}
+\item{spanned}{A datetime vector to which the the datetime variable in
+\code{x} should be mapped.}
 
 \item{colname}{Character of the column name of the added variable.}
 
 \item{by}{Only needs to be specified when \code{x} contains multiple
-variables of class \code{Date}, class \code{POSIXct} or class \code{POSIXlt}.
-\code{by} indicates which to use for thickening.}
+variables of class \code{Date}, \code{POSIXct} or \code{POSIXlt}.
+Indicates which to use for thickening.}
 }
 \value{
 The data frame \code{x} with the variable added to it.
@@ -27,7 +26,7 @@ The data frame \code{x} with the variable added to it.
 Only rounding down is available for custom thickening.
 }
 \details{
-Like \code{thicken}, this function will find the datetime variable in \code{x},
+Like \code{thicken}, it will find the datetime variable in \code{x}
 and add a variable of a higher periodicity to it. However, the variable to
 which to map the observation is provided by the user. This enables mapping to
 time points that are unequally spaced.
@@ -39,5 +38,6 @@ accidents <- emergency \%>\% filter(title == "Traffic: VEHICLE ACCIDENT -")
 spanning <- span_time("20151210 16", "20161017 17", tz = "EST") \%>\%
   subset_span(list(hour = c(6, 9, 16, 19)))
 thicken_cust(accidents, spanning, "period") \%>\%
-  count(period)
+  count(period) \%>\%
+  pad_cust(spanning)
 }

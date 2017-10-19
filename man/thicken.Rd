@@ -9,7 +9,7 @@ thicken(x, interval, colname = NULL, rounding = c("down", "up"),
 }
 \arguments{
 \item{x}{A data frame containing at least one datetime variable of
-class \code{Date}, class \code{POSIXct} or class \code{POSIXlt}.}
+class \code{Date}, \code{POSIXct} or \code{POSIXlt}.}
 
 \item{interval}{The interval of the added datetime variable.
 Any character string that would be accepted by \code{seq.Date()} or
@@ -26,7 +26,7 @@ than itself.}
 
 \item{by}{Only needs to be specified when \code{x} contains multiple
 variables of class \code{Date}, class \code{POSIXct} or class \code{POSIXlt}.
-\code{by} indicates which to use for thickening.}
+Indicates which to use for thickening.}
 
 \item{start_val}{By default the first instance of \code{interval} that is lower
 than the lowest value of the input datetime variable, with all time units on
