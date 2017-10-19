@@ -2,45 +2,48 @@
 % Please edit documentation in R/formatting_funcs.R
 \name{format_start_end}
 \alias{format_start_end}
-\title{Make a Period Character vector}
+\title{Make a period character vector.}
 \usage{
 format_start_end(x, start_format = "\%Y-\%m-\%d", end_format = start_format,
   sep = " ", end_offset = 0, units_to_last = NULL)
 }
 \arguments{
-\item{x}{A vector of class \code{Date}, class \code{POSIXct} or class \code{POSIXlt},
+\item{x}{A vector of class \code{Date}, \code{POSIXct} or \code{POSIXlt},
 of which the values are unique.}
 
 \item{start_format}{String to format the start values of each period, to be used
-in `strftime`.}
+in \code{strftime}.}
 
 \item{end_format}{String to format the end values of each period, to be used
-in `strftime`.}
+in \code{strftime}.}
 
-\item{sep}{Character string that separates the `start_format` and the `end_format`.}
+\item{sep}{Character string that separates the \code{start_format} and the
+\code{end_format}.}
 
-\item{end_offset}{Units in days of `x` is a `Date`, or seconds if `x`  is `POSIXt`.
+\item{end_offset}{Units in days if \code{x} is \code{Date}, or in seconds if
+\code{x} is \code{POSIXct} ir \code{POSIXlt}.
 Will be subtracted from the end of each period.
 If 0, the end of the previous period is equal to the start of the next.}
 
-\item{units_to_last}{To determine the formatting of the last value in `x`, the
-length of the last period has to be specified. This can't be derived from
-`x` itself. If NULL the function guesses based on the interval of `x`.
-Specify in days when `x` is `Date`, or in seconds when `x` is a `POSIXt`.}
+\item{units_to_last}{To determine the formatting of the last value in \code{x},
+the  length of the last period has to be specified. If \code{NULL} the
+function guesses based on the interval of \code{x}.
+Specify in days when \code{x} is \code{Date}, or in seconds when \code{x} is
+\code{POSIXct} or \code{POSIXlt}.}
 }
 \value{
 A character vector showing the interval.
 }
 \description{
-After applying `thicken` all the observations in an interval are mapped
-to a single timepoint. This function will conver a datetime variable to
+After applying \code{thicken} all the observations in an interval are mapped
+to a single timepoint. This function will convert a datetime variable to
 a character vector that reflects the full period.
 }
 \details{
 The end of the periods will be determined by the next unique value
-in `x`. It does so without regarding the interval of `x`. If a specific
-interval is desired, `thicken` and / or `pad` should first be applied to
-create an equally spaced datetime variable.
+in \code{x}. It does so without regarding the interval of \code{x}. If a specific
+interval is desired, \code{thicken} and / or \code{pad} should first be
+applied to create an equally spaced datetime variable.
 }
 \examples{
 library(dplyr)

@@ -1,19 +1,20 @@
-#' Shift to the Middle of the Interval
+#' Shift to the middle of the interval.
 #'
 #' After padding and thickening all the values are either
 #' shifted to the first or the last value of the interval.
-#' Function creates a vector that shifts the datetime value to
+#' This function creates a vector that shifts the datetime value to
 #' the (approximate) center of the interval.
-#' @param x A vector of class \code{Date}, class \code{POSIXct} or class \code{POSIXlt}.
+#' @param x A vector of class \code{Date}, \code{POSIXct} or \code{POSIXlt}.
 #' @param shift Up or down.
-#' @param interval The interval to be used for centering. If `NULL`, `get_interval`
-#' will be applied on `x`.
-#' @param return `x` with the values shifted to the (approximate) center.
+#' @param interval The interval to be used for centering. If \code{NULL},
+#' \code{get_interval} will be applied on \code{x}.
+#' @return
+#' \code{x} with the values shifted to the (approximate) center.
 #' @details The interval will be translated to number of days when
-#' x is of class `Date``, or number of seconds when x is of class
-#' `POSIXt`. For months and quarters this will be the average
-#' length of the period. The translated number divided by two
-#' will be added by or subtracted from `x`.
+#' x is of class \code{Date}, or number of seconds when x is of class
+#' \code{POSIXt}. For months and quarters this will be the average
+#' length of the period. The translated units divided by two
+#' will be added by or subtracted from \code{x}.
 #' @examples
 #' library(tidyverse)
 #' plot_set <- emergency %>%
@@ -79,31 +80,33 @@ unname <- function(x) {
   x
 }
 
-
-#' Make a Period Character vector
+#' Make a period character vector.
 #'
-#' After applying `thicken` all the observations in an interval are mapped
-#' to a single timepoint. This function will conver a datetime variable to
+#' After applying \code{thicken} all the observations in an interval are mapped
+#' to a single timepoint. This function will convert a datetime variable to
 #' a character vector that reflects the full period.
-#' @param x A vector of class \code{Date}, class \code{POSIXct} or class \code{POSIXlt},
+#' @param x A vector of class \code{Date}, \code{POSIXct} or \code{POSIXlt},
 #' of which the values are unique.
 #' @param start_format String to format the start values of each period, to be used
-#' in `strftime`.
+#' in \code{strftime}.
 #' @param end_format String to format the end values of each period, to be used
-#' in `strftime`.
-#' @param sep Character string that separates the `start_format` and the `end_format`.
-#' @param end_offset Units in days of `x` is a `Date`, or seconds if `x`  is `POSIXt`.
+#' in \code{strftime}.
+#' @param sep Character string that separates the \code{start_format} and the
+#' \code{end_format}.
+#' @param end_offset Units in days if \code{x} is \code{Date}, or in seconds if
+#' \code{x} is \code{POSIXct} ir \code{POSIXlt}.
 #' Will be subtracted from the end of each period.
 #' If 0, the end of the previous period is equal to the start of the next.
-#' @param units_to_last To determine the formatting of the last value in `x`, the
-#' length of the last period has to be specified. This can't be derived from
-#' `x` itself. If NULL the function guesses based on the interval of `x`.
-#' Specify in days when `x` is `Date`, or in seconds when `x` is a `POSIXt`.
+#' @param units_to_last To determine the formatting of the last value in \code{x},
+#' the  length of the last period has to be specified. If \code{NULL} the
+#' function guesses based on the interval of \code{x}.
+#' Specify in days when \code{x} is \code{Date}, or in seconds when \code{x} is
+#' \code{POSIXct} or \code{POSIXlt}.
 #' @return A character vector showing the interval.
 #' @details The end of the periods will be determined by the next unique value
-#' in `x`. It does so without regarding the interval of `x`. If a specific
-#' interval is desired, `thicken` and / or `pad` should first be applied to
-#' create an equally spaced datetime variable.
+#' in \code{x}. It does so without regarding the interval of \code{x}. If a specific
+#' interval is desired, \code{thicken} and / or \code{pad} should first be
+#' applied to create an equally spaced datetime variable.
 #' @examples
 #' library(dplyr)
 #' library(ggplot2)

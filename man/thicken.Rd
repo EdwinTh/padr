@@ -12,7 +12,7 @@ thicken(x, interval, colname = NULL, rounding = c("down", "up"),
 class \code{Date}, \code{POSIXct} or \code{POSIXlt}.}
 
 \item{interval}{The interval of the added datetime variable.
-Any character string that would be accepted by \code{seq.Date()} or
+Any character string that would be accepted by \code{seq.Date} or
 \code{seq.POSIXt}. It can only be higher than the interval and step size of
 the input data.}
 
@@ -25,13 +25,13 @@ the closest value that is lower (\code{down}) or that is higher (\code{up})
 than itself.}
 
 \item{by}{Only needs to be specified when \code{x} contains multiple
-variables of class \code{Date}, class \code{POSIXct} or class \code{POSIXlt}.
+variables of class \code{Date}, \code{POSIXct} or \code{POSIXlt}.
 Indicates which to use for thickening.}
 
 \item{start_val}{By default the first instance of \code{interval} that is lower
 than the lowest value of the input datetime variable, with all time units on
 default value. Specify \code{start_val} as an offset if you want the range
-to be nonstandard. Alternatively, use `get_week_start`. (TODO add a link to the function)}
+to be nonstandard.}
 }
 \value{
 The data frame \code{x} with the variable added to it.

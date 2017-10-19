@@ -18,17 +18,17 @@ the interval will be equal to the interval of the datetime variable. When
 specified it can only be lower than the interval and step size of the input data.
 See Details.}
 
-\item{start_val}{An object of class \code{Date}, class \code{POSIXct} or
-class \code{POSIXlt} that specifies the start of the returned datetime variable.
+\item{start_val}{An object of class \code{Date}, \code{POSIXct} or
+\code{POSIXlt} that specifies the start of the returned datetime variable.
 If NULL it will use the lowest value of the input variable.}
 
-\item{end_val}{An object of class \code{Date}, class \code{POSIXct} or
-class \code{POSIXlt} that specifies the end of returned datetime variable.
+\item{end_val}{An object of class \code{Date}, \code{POSIXct} or
+\code{POSIXlt} that specifies the end of returned datetime variable.
 If NULL it will use the highest value of the input variable.}
 
 \item{by}{Only needs to be specified when \code{x} contains multiple
-variables of class \code{Date}, class \code{POSIXct} or
-class \code{POSIXlt}. Indicates which variable to use for padding.}
+variables of class \code{Date}, \code{POSIXct} or \code{POSIXlt}.
+Indicates which variable to use for padding.}
 
 \item{group}{Optional character vector that specifies the grouping
 variable(s). Padding will take place within the different group values. When

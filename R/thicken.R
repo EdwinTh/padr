@@ -9,7 +9,7 @@
 #' @param x A data frame containing at least one datetime variable of
 #' class \code{Date}, \code{POSIXct} or \code{POSIXlt}.
 #' @param interval The interval of the added datetime variable.
-#' Any character string that would be accepted by \code{seq.Date()} or
+#' Any character string that would be accepted by \code{seq.Date} or
 #' \code{seq.POSIXt}. It can only be higher than the interval and step size of
 #' the input data.
 #' @param colname The column name of the added variable. If \code{NULL} it will
@@ -19,12 +19,12 @@
 #' the closest value that is lower (\code{down}) or that is higher (\code{up})
 #' than itself.
 #' @param by Only needs to be specified when \code{x} contains multiple
-#' variables of class \code{Date}, class \code{POSIXct} or class \code{POSIXlt}.
+#' variables of class \code{Date}, \code{POSIXct} or \code{POSIXlt}.
 #' Indicates which to use for thickening.
 #' @param start_val By default the first instance of \code{interval} that is lower
 #' than the lowest value of the input datetime variable, with all time units on
 #' default value. Specify \code{start_val} as an offset if you want the range
-#' to be nonstandard. Alternatively, use `get_week_start`. (TODO add a link to the function)
+#' to be nonstandard.
 #' @return The data frame \code{x} with the variable added to it.
 #' @details When the datetime variable contains missing values, they are left
 #' in place in the dataframe. The added column with the new datetime variable,

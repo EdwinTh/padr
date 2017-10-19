@@ -1,16 +1,18 @@
 #' Retrieve the closest given Weekday
 #'
 #' When applying \code{thicken} with the interval "week", use this function to
-#' automatically start at the first weekday before \code{min(datetime_var)} at
-#' `start_val` argument.
+#' automatically start at the first weekday before or after
+#'  \code{min(datetime_var)} at \code{start_val} argument.
 #' @param x A vector of class \code{Date}, \code{POSIXct}, or \code{POSIXlt}.
 #' @param wday Integer in the range 0-6 specifying the desired weekday start
 #' (0 = Sun, 1 = Mon, 2 = Tue, 3 = Wed, 4 = Thu, 5 = Fri, 6 = Sat).
-#' @param direction Look \code{down} or \code{up}.
+#' @param direction The first desired weekday before ("down") or after ("up")
+#' the first day in \code{x}.
 #' @return The closest desired weekday to \code{x}.
 #' @examples
 #' closest_weekday(coffee$time_stamp)
 #' closest_weekday(coffee$time_stamp, 4)
+#' closest_weekday(coffee$time_stamp, 1, direction = "up")
 #' closest_weekday(coffee$time_stamp, 4, direction = "up")
 #' @export
 closest_weekday <- function(x,
