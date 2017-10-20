@@ -2,41 +2,40 @@
 % Please edit documentation in R/span.R
 \name{span_around}
 \alias{span_around}
-\title{Span one datetime variable another}
+\title{Span an equally spaced vector around a datetime variable.}
 \usage{
 span_around(x, interval, start_shift = NULL, end_shift = start_shift)
 }
 \arguments{
-\item{x}{A vector of class `Date`, `POSIXct`, or `POSIXlt`.}
+\item{x}{A vector of class \code{Date}, \code{POSIXct}, or \code{POSIXlt}.}
 
-\item{interval}{Character string specifying the desired interval.}
+\item{interval}{Character, specifying the desired interval.}
 
-\item{start_shift}{Character indicating the time to shift
+\item{start_shift}{Character, indicating the time to shift
 back from the first observation.}
 
-\item{end_shift}{Character indicating the time to shift
+\item{end_shift}{Character, indicating the time to shift
 forward from the last observation.}
 }
 \value{
-A datetime vector, with the first observation smaller or equal than `min(x)`
-and the last observation larger or equal than `max(x)`. Spaces between points
-are equal to `interval`.
+A datetime vector, with the first observation smaller or equal than
+\code{min(x)} and the last observation larger or equal than \code{max(x)}.
+Spaces between points are equal to \code{interval}.
 }
 \description{
-Note that correct use of the `start_shift` and `end_shift`
-arguments change the entire spanning when not in line with the interval.
-It is not checked for.
+Span a vector of specified interval around a variable of class \code{Date},
+\code{POSIXct}, or \code{POSIXlt}..
 }
 \details{
-Take a `Date`, `POSIXct`, or `POSIXlt` vector and span a datetime variable
-of the specified interval around it.
+Note that use of the \code{start_shift} and \code{end_shift}
+arguments change the entire spanning when they are not in line with
+the interval. It is not checked for.
 }
 \examples{
 span_around(coffee$time_stamp, "hour")
 span_around(coffee$time_stamp, "hour", end_shift = "2 hour")
 span_around(coffee$time_stamp, "2 day")
-span_around(coffee$time_stamp, "2 day", "2 day")
-
+span_around(coffee$time_stamp, "2 day", start_shift = "2 day")
 span_around(emergency$time_stamp, "week")
 span_around(emergency$time_stamp, "2 month")
 }

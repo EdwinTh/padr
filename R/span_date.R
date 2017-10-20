@@ -1,61 +1,61 @@
-#' Wrapper around `seq.Date`
+#' Wrapper around \code{seq.Date}.
 #'
-#' Quickly create a sequence of dates from minimal specifications of dates.
+#' Quickly create a sequence of dates from minimal specifications.
 #'
 #' @param from Integer or character of length 4 (yyyy), 6 (yyyymm), or 8 (
 #' yyymmdd). Indicating the start value of the sequence.
 #' @param to Integer or character of length 4 (yyyy), 6 (yyyymm), or 8 (
 #' yyymmdd). Optional.
 #' @param len_out The desired length of the sequence. Optional.
-#' @param interval The desired interval. Optional.
+#' @param by The desired interval. Optional.
 #'
-#' @details Minimal specifications of dates set unspecified date parts to
+#' @details Minimal specification of dates, sets unspecified date parts to
 #' default values. These are 01 for both month and day.
 #'
-#' In addition to `from`, `to` or `length` must be specified. If the
-#' interval is not specified, `span_date` will set the interval to the highest
-#' of the specified date parts in either `from` or `to`. E.g. if they are
-#' 2011 and 2015 it will be "year", if they are 2011 and 201501 it will be
-#' "month".
+#' In addition to \code{from}, \code{to} or \code{len_out} must be specified.
+#' If \code{by} is not specified, \code{span_date} will set the interval to the
+#' highest of the specified date parts in either \code{from} or \code{to}.
+#' For example, if they are 2011 and 2015 it will be "year", if they are 2011
+#' and 201501 it will be "month".
 #'
 #' @return An object of class Date.
 #'
 #' @examples
-#' # using to
+#' # using "to" argument
 #' span_date(2011, 2015)
 #' span_date(201101, 201501)
-#' span_date(2011, 2015, interval = "month")
+#' span_date(2011, 2015, by = "month")
 #' span_date(2011, 201501)
 #' span_date(20111225, 2012)
 #'
-#' # using len_out
+#' # using "len_out" argument
 #' span_date(2011, len_out = 4)
 #' span_date(201101, len_out = 4)
 #' span_date(20110101, len_out = 4)
-#' span_date(20110101, len_out = 4, interval = "month")
+#' span_date(20110101, len_out = 4, by = "month")
 #' @export
 span_date <- function(from,
                       to       = NULL,
                       len_out  = NULL,
-                      interval = NULL) {
+                      by       = NULL) {
   check_to_len_out(len_out, to)
   check_valid_input_span(from, name = "from", "date")
   from_dt <- convert_to_date(from)
-  if (is.null(interval)) {
-    interval <- interval_from_short(max(nchar(from), nchar(to)))
+  if (is.null(by)) {
+    by <- interval_from_short(max(nchar(from), nchar(to)))
   }
   if (!is.null(to)) {
     check_valid_input_span(to, name = "to", "date")
     to_dt <- convert_to_date(to)
-    seq.Date(from_dt, to_dt, by = interval)
+    seq.Date(from_dt, to_dt, by = by)
   } else {
-    seq.Date(from_dt, length.out = len_out, by = interval)
+    seq.Date(from_dt, length.out = len_out, by = by)
   }
 }
 
-#' Wrapper around `seq.POSIXct`
+#' Wrapper around \code{seq.POSIXct}.
 #'
-#' Quickly create a sequence of dates from minimal specifications of datetimes.
+#' Quickly create a sequence of datetimes from minimal specifications.
 #'
 #' @param from Integer or character of length 4 (yyyy), 6 (yyyymm), or 8 (
 #' yyymmdd). Character of length 11 (yyyymmdd hh), 13 (yyyymmdd hhmm), or 15 (
@@ -64,18 +64,18 @@ span_date <- function(from,
 #' yyymmdd). Character of length 11 (yyyymmdd hh), 13 (yyyymmdd hhmm), or 15 (
 #' yyyymmdd hhmmss). Indicating the end value of the sequence. Optional.
 #' @param len_out The desired length of the sequence. Optional.
-#' @param interval The desired interval. Optional.
+#' @param by The desired interval. Optional.
 #' @param tz The desired timezone.
 #'
-#' @details Minimal specifications of datetimes set unspecified date parts to
+#' @details Minimal specification of datetimes, sets unspecified date parts to
 #' default values. These are 01 for both month and day and 00 for hour, minute,
 #' and second.
 #'
-#' In addition to `from`, `to` or `length` must be specified. If the
-#' interval is not specified, `span_time` will set the interval to the highest
-#' of the specified datetime parts in either `from` or `to`. E.g. if they are
-#' "20160103 01" and "20160108 05" it will be "day", if they are "2011" and
-#' "20110101 021823" it will be "second".
+#' In addition to \code{from}, \code{to} or \code{length} must be specified.
+#' If the \code{by} is not specified, \code{span_time} will set the interval to
+#' the highest of the specified datetime parts in either \code{from} or
+#' \code{to}. For example, if they are "20160103 01" and "20160108 05" it will
+#' be "hour", if they are "2011" and "20110101 021823" it will be "second".
 #'
 #' @return An object of class POSIXct.
 #' @examples
@@ -90,9 +90,9 @@ span_date <- function(from,
 #' # using len_out
 #' span_time(2011, len_out = 3)
 #' span_time("2011", len_out = 3)
-#' span_time(2011, len_out = 10, interval = "month")
-#' span_time(2011, len_out = 10, interval = "day")
-#' span_time(2011, len_out = 10, interval = "hour")
+#' span_time(2011, len_out = 10, by = "month")
+#' span_time(2011, len_out = 10, by = "day")
+#' span_time(2011, len_out = 10, by = "hour")
 #' span_time("20110101 00", len_out = 10)
 #' span_time("20110101 002300", len_out = 10)
 #'
@@ -100,20 +100,20 @@ span_date <- function(from,
 span_time <- function(from,
                       to       = NULL,
                       len_out  = NULL,
-                      interval = NULL,
+                      by       = NULL,
                       tz       = "UTC") {
   check_to_len_out(len_out, to)
   check_valid_input_span(from, name = "from", "time")
   from_dt <- convert_to_datetime(from, tz = tz)
-  if (is.null(interval)) {
-    interval <- interval_from_long(max(nchar(from), nchar(to)))
+  if (is.null(by)) {
+    by <- interval_from_long(max(nchar(from), nchar(to)))
   }
   if (!is.null(to)) {
     check_valid_input_span(to, name = "to", "time")
     to_dt <- convert_to_datetime(to, tz = tz)
-    seq.POSIXt(from_dt, to_dt, by = interval)
+    seq.POSIXt(from_dt, to_dt, by = by)
   } else {
-    seq.POSIXt(from_dt, length.out = len_out, by = interval)
+    seq.POSIXt(from_dt, length.out = len_out, by = by)
   }
 }
 

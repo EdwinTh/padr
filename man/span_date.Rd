@@ -2,9 +2,9 @@
 % Please edit documentation in R/span_date.R
 \name{span_date}
 \alias{span_date}
-\title{Wrapper around `seq.Date`}
+\title{Wrapper around \code{seq.Date}.}
 \usage{
-span_date(from, to = NULL, len_out = NULL, interval = NULL)
+span_date(from, to = NULL, len_out = NULL, by = NULL)
 }
 \arguments{
 \item{from}{Integer or character of length 4 (yyyy), 6 (yyyymm), or 8 (
@@ -15,35 +15,35 @@ yyymmdd). Optional.}
 
 \item{len_out}{The desired length of the sequence. Optional.}
 
-\item{interval}{The desired interval. Optional.}
+\item{by}{The desired interval. Optional.}
 }
 \value{
 An object of class Date.
 }
 \description{
-Quickly create a sequence of dates from minimal specifications of dates.
+Quickly create a sequence of dates from minimal specifications.
 }
 \details{
-Minimal specifications of dates set unspecified date parts to
+Minimal specification of dates, sets unspecified date parts to
 default values. These are 01 for both month and day.
 
-In addition to `from`, `to` or `length` must be specified. If the
-interval is not specified, `span_date` will set the interval to the highest
-of the specified date parts in either `from` or `to`. E.g. if they are
-2011 and 2015 it will be "year", if they are 2011 and 201501 it will be
-"month".
+In addition to \code{from}, \code{to} or \code{len_out} must be specified.
+If \code{by} is not specified, \code{span_date} will set the interval to the
+highest of the specified date parts in either \code{from} or \code{to}.
+For example, if they are 2011 and 2015 it will be "year", if they are 2011
+and 201501 it will be "month".
 }
 \examples{
-# using to
+# using "to" argument
 span_date(2011, 2015)
 span_date(201101, 201501)
-span_date(2011, 2015, interval = "month")
+span_date(2011, 2015, by = "month")
 span_date(2011, 201501)
 span_date(20111225, 2012)
 
-# using len_out
+# using "len_out" argument
 span_date(2011, len_out = 4)
 span_date(201101, len_out = 4)
 span_date(20110101, len_out = 4)
-span_date(20110101, len_out = 4, interval = "month")
+span_date(20110101, len_out = 4, by = "month")
 }
