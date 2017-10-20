@@ -1,19 +1,21 @@
-#' Subset a Spanned Datetime Vector
+#' Subset a spanned datetime vector.
 #'
-#' Take a `Date`, `POSIXct`, or `POSIXlt` vector and subset it by
+#' Take a \code{Date}, \code{POSIXct}, or \code{POSIXlt} vector and subset it by
 #' a pattern of date and/or time parts.
-#' @param spanned A vector of class `Date`, `POSIXct`, or `POSIXlt`.
+#' @param spanned A vector of class  \code{Date}, \code{POSIXct}, or
+#' \code{POSIXlt}.
 #' @param pattern_list A list with the desired pattern for each of the following
-#' datetime parts: "year", "mon", "mday", "wday", "hour", "min", "sec".
+#' datetime parts: year, mon, mday, wday, hour, min, sec.
 #' @return
-#' Vector of the same class as `spanned`, containing all the data points in
-#' `spanned` indicated by `pattern_list`.
+#' Vector of the same class as \code{spanned}, containing all the data points in
+#' \code{spanned} that meet the requirements in \code{pattern_list}.
 #' @examples
 #' date_span <- span_date(20170701, len_out = 100)
 #' subset_span(date_span, list(wday = 1:5))
 #'
 #' time_span <- span_time("20170101 00", 201702)
 #' subset_span(time_span, list(hour = 7:17))
+#' subset_span(time_span, list(hour = c(10, 16), mday = seq(5, 30, 5)))
 #' @export
 subset_span <- function(spanned,
                         pattern_list){

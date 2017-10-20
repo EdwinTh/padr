@@ -121,6 +121,7 @@ unname <- function(x) {
 #' # adding a character to indicate the hours of the interval.
 #' plot_set %>%
 #'   mutate(h_int = format_start_end(h, "%H", sep = "-"))
+#'@export
 format_start_end <- function(x,
                              start_format = "%Y-%m-%d",
                              end_format   = start_format,
