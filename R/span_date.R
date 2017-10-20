@@ -2,17 +2,17 @@
 #'
 #' Quickly create a sequence of dates from minimal specifications.
 #'
-#' @param from Integer or character of length 4 (yyyy), 6 (yyyymm), or 8 (
-#' yyymmdd). Indicating the start value of the sequence.
-#' @param to Integer or character of length 4 (yyyy), 6 (yyyymm), or 8 (
-#' yyymmdd). Optional.
+#' @param from Integer or character of length 4 (yyyy), 6 (yyyymm), or 8
+#' (yyymmdd). Indicating the start value of the sequence.
+#' @param to Integer or character of length 4 (yyyy), 6 (yyyymm), or 8
+#' (yyymmdd). Optional.
 #' @param len_out The desired length of the sequence. Optional.
 #' @param by The desired interval. Optional.
 #'
 #' @details Minimal specification of dates, sets unspecified date parts to
 #' default values. These are 01 for both month and day.
 #'
-#' In addition to \code{from}, \code{to} or \code{len_out} must be specified.
+#' In addition to \code{from}, either \code{to} or \code{len_out} must be specified.
 #' If \code{by} is not specified, \code{span_date} will set the interval to the
 #' highest of the specified date parts in either \code{from} or \code{to}.
 #' For example, if they are 2011 and 2015 it will be "year", if they are 2011
@@ -71,7 +71,7 @@ span_date <- function(from,
 #' default values. These are 01 for both month and day and 00 for hour, minute,
 #' and second.
 #'
-#' In addition to \code{from}, \code{to} or \code{length} must be specified.
+#' In addition to \code{from}, either \code{to} or \code{length} must be specified.
 #' If the \code{by} is not specified, \code{span_time} will set the interval to
 #' the highest of the specified datetime parts in either \code{from} or
 #' \code{to}. For example, if they are "20160103 01" and "20160108 05" it will

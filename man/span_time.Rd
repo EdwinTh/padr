@@ -32,7 +32,7 @@ Minimal specification of datetimes, sets unspecified date parts to
 default values. These are 01 for both month and day and 00 for hour, minute,
 and second.
 
-In addition to \code{from}, \code{to} or \code{length} must be specified.
+In addition to \code{from}, either \code{to} or \code{length} must be specified.
 If the \code{by} is not specified, \code{span_time} will set the interval to
 the highest of the specified datetime parts in either \code{from} or
 \code{to}. For example, if they are "20160103 01" and "20160108 05" it will

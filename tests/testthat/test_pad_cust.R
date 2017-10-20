@@ -22,8 +22,8 @@ test_that("check_same_data_type", {
 })
 
 test_that("pad_cust drop last argument", {
-  x <- data.frame(a = span_date(20160101, len_out = 2, interval = "day"), b = 1)
-  span <- span_date(20160101, len_out = 3, interval = "day")
+  x <- data.frame(a = span_date(20160101, len_out = 2, by = "day"), b = 1)
+  span <- span_date(20160101, len_out = 3, by = "day")
   expect_equal(x, pad_cust(x, span, drop_last_spanned = TRUE))
   expect_equal(pad_cust(x, span, drop_last_spanned = FALSE) %>% nrow(), 3)
   expect_equal(pad_cust(x, span, drop_last_spanned = FALSE)$a, span)

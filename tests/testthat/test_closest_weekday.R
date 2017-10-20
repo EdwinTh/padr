@@ -1,6 +1,6 @@
 source("library.R")
 
-x <- span_date(20170104, len_out = 7, interval = "day")
+x <- span_date(20170104, len_out = 7, by = "day")
 
 context("closest_weekday function")
 test_that("closest_weekday down", {

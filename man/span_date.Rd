@@ -7,11 +7,11 @@
 span_date(from, to = NULL, len_out = NULL, by = NULL)
 }
 \arguments{
-\item{from}{Integer or character of length 4 (yyyy), 6 (yyyymm), or 8 (
-yyymmdd). Indicating the start value of the sequence.}
+\item{from}{Integer or character of length 4 (yyyy), 6 (yyyymm), or 8
+(yyymmdd). Indicating the start value of the sequence.}
 
-\item{to}{Integer or character of length 4 (yyyy), 6 (yyyymm), or 8 (
-yyymmdd). Optional.}
+\item{to}{Integer or character of length 4 (yyyy), 6 (yyyymm), or 8
+(yyymmdd). Optional.}
 
 \item{len_out}{The desired length of the sequence. Optional.}
 
@@ -27,7 +27,7 @@ Quickly create a sequence of dates from minimal specifications.
 Minimal specification of dates, sets unspecified date parts to
 default values. These are 01 for both month and day.
 
-In addition to \code{from}, \code{to} or \code{len_out} must be specified.
+In addition to \code{from}, either \code{to} or \code{len_out} must be specified.
 If \code{by} is not specified, \code{span_date} will set the interval to the
 highest of the specified date parts in either \code{from} or \code{to}.
 For example, if they are 2011 and 2015 it will be "year", if they are 2011

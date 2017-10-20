@@ -27,13 +27,13 @@ test_that("int_to_days gives the correct result", {
 
 test_that("center_interval integration tests", {
   year_span  <- span_date(2016, len_out = 3)
-  quarter_span <- span_date(201601, len_out = 3, interval = "quarter")
+  quarter_span <- span_date(201601, len_out = 3, by = "quarter")
   month_span <- span_date(201601, len_out = 3)
-  week_span  <- span_date(2016, len_out = 3, interval = "week")
+  week_span  <- span_date(2016, len_out = 3, by = "week")
   day_span   <- span_time(20160101, len_out = 3)
   hour_span  <- span_time("20160101 00", len_out = 3)
   min_span   <- span_time("20160101 0000", len_out = 3)
-  sec_span    <- span_time("20160101 000000", len_out = 3, interval = "5 sec")
+  sec_span    <- span_time("20160101 000000", len_out = 3, by = "5 sec")
   expect_equal(center_interval(year_span), year_span + 182.5)
   expect_equal(center_interval(year_span, "down"), year_span - 182.5)
   expect_equal(center_interval(year_span, interval = "10 days"), year_span + 5)
@@ -65,10 +65,10 @@ test_that("find_next_val helper function", {
                span_date(201602, 201604))
   expect_equal(find_next_val(span_time(201601, 201603), 31 * 24 * 3600),
                span_time(201602, 201604))
-  expect_equal(find_next_val(span_date(201601, len_out = 3, interval = "week"), 7),
-               span_date(20160108, len_out = 3, interval = "week"))
-  expect_equal(find_next_val(span_time(201601, len_out = 3, interval = "week"), 7 * 24 * 3600),
-               span_time(20160108, len_out = 3, interval = "week"))
+  expect_equal(find_next_val(span_date(201601, len_out = 3, by = "week"), 7),
+               span_date(20160108, len_out = 3, by = "week"))
+  expect_equal(find_next_val(span_time(201601, len_out = 3, by = "week"), 7 * 24 * 3600),
+               span_time(20160108, len_out = 3, by = "week"))
   non_eq_days <- span_date(20160101, 20160104)[c(1, 2, 4)]
   expect_equal(find_next_val(non_eq_days, 1),
                c(non_eq_days[c(2,3)], as.Date("2016-01-05")))
@@ -132,7 +132,7 @@ test_that("format_start_end works for non symmetrics", {
 })
 
 test_that("format_start_end works with different timezones", {
-  dt <- span_time("20170801 00", interval = "3 hour", len_out = 3,
+  dt <- span_time("20170801 00", by = "3 hour", len_out = 3,
                   tz = "EST")
   expect_equal(fse(dt, start_format = "%H"),
                c("00 03", "03 06", "06 09"))
