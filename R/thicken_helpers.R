@@ -70,6 +70,9 @@ posix_to_date <- function(x) {
     check_var <- as.POSIXlt(x)
     to_date <- all( c(check_var$hour, check_var$min, check_var$sec ) == 0 )
     if (to_date) {
+      # convert to character first, because otherwise set to the wrong date.
+      # TODO retrieve why this conversion goes wrong and find a better
+      # performing implememntation.
       x <- as.Date(as.character(x))
     }
   }
