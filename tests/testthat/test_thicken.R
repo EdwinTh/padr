@@ -135,7 +135,7 @@ test_that("thicken works properly on NA values", {
   coffee_na <- coffee %>% thicken("day", "d") %>% count(d) %>% pad %>%
     fill_by_value()
   coffee_na[3, 1] <- NA
-  coffee_na_thickened <- coffee_na %>% thicken("week")
+  coffee_na_thickened <- sw(coffee_na %>% thicken("week"))
   expect_error(sw(coffee_na %>% thicken("week")), NA)
   expect_warning(coffee_na %>% thicken("week"),
                  "There are NA values in the column d.
