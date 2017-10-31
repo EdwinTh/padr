@@ -128,17 +128,6 @@ test_that("set_to_original_type returns tbl or data.table", {
                c("data.table", "data.frame"))
 })
 
-context("using get_week_start")
-
-test_that("get_week_start", {
-  expect_error(thicken(coffee, "year", start_val = get_week_start()),
-               "get_week_start can only be used with interval week")
-  expect_error(thicken(coffee, "week", start_val = get_week_start()), NA)
-  expect_equal(thicken(coffee, "week", start_val = get_week_start())[1, 3] %>% weekdays,
-               "Monday")
-  expect_equal(thicken(coffee, "week", start_val = get_week_start(5))[1, 3] %>% weekdays,
-               "Thursday")
-})
 
 context("thicken with missing values")
 
@@ -147,7 +136,7 @@ test_that("thicken works properly on NA values", {
     fill_by_value()
   coffee_na[3, 1] <- NA
   coffee_na_thickened <- coffee_na %>% thicken("week")
-  expect_error(coffee_na %>% thicken("week"), NA)
+  expect_error(sw(coffee_na %>% thicken("week")), NA)
   expect_warning(coffee_na %>% thicken("week"),
                  "There are NA values in the column d.
 Returned dataframe contains original observations, with NA values for d and d_week.")

@@ -1,4 +1,4 @@
-source('./library.R')
+source('library.R')
 dt_var  <- coffee$time_stamp
 spanned <- span_date(20160708, 20160710)
 full_spanned <- span_date(20160707, 20160712)
