@@ -27,7 +27,8 @@ span_around <- function(x,
                         interval,
                         start_shift = NULL,
                         end_shift   = start_shift) {
-  is_datetime(x)
+  stopifnot(is_datetime(x))
+  check_start_end_shift(start_shift, end_shift)
   interval_list          <- convert_interval(interval)
   interval_list$interval <- uniform_interval_name(interval_list$interval)
   if (!is.null(start_shift)) x <- shift(x, start_shift, "down")
@@ -66,6 +67,14 @@ period_to_time <- function(interval_list,
   }
 }
 
+check_start_end_shift <- function(start_shift, end_shift) {
+  if (!is.null(start_shift)) {
+    stopifnot(is.character(start_shift))
+  }
+  if (!is.null(end_shift)) {
+    stopifnot(is.character(end_shift))
+  }
+}
 
 # when using interval = hour span's return will always start at midnight. Not
 # in the hour of the first hour. This because we want intuitive results when we

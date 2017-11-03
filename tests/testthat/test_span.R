@@ -111,6 +111,16 @@ test_that("span integration tests", {
 
 context("span_around function")
 
+test_that("span_around breaks on the wrong input", {
+  expect_error(span_around(coffee, "hour"))
+  expect_error(span_around(coffee$time_stamp, "hour"), NA)
+  expect_error(span_around(coffee$time_stamp, "hour", start_shift = 12))
+  expect_error(span_around(coffee$time_stamp, "hour", start_shift = "12 hour"), NA)
+  expect_error(span_around(coffee$time_stamp, "hour", end_shift = 12))
+  expect_error(span_around(coffee$time_stamp, "hour", end_shift = "12 hour"), NA)
+})
+
+
 test_that("span_around integration tests", {
   x <- coffee$time_stamp[3:4]
   start_shift_one_hour <- span_around(x, "hour", start_shift = "1 hour")
