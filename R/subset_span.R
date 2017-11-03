@@ -8,7 +8,8 @@
 #' datetime parts: year, mon, mday, wday, hour, min, sec.
 #' @return
 #' Vector of the same class as \code{spanned}, containing all the data points in
-#' \code{spanned} that meet the requirements in \code{pattern_list}.
+#' \code{spanned} that meets the requirements in \code{pattern_list}.
+#' @details For subsetting weekdays, they run from 0 (Sunday) to 6 (Saturday).
 #' @examples
 #' date_span <- span_date(20170701, len_out = 100)
 #' subset_span(date_span, list(wday = 1:5))

@@ -103,7 +103,8 @@ check_dt_in_spanned <- function(dt_var, spanned) {
   if (any (!dt_var %in% spanned)) {
     stop(
 "Observations in the datetime variable, that are not in spanned.
-       Run thicken_cust in combination with aggregation first.", call. = FALSE)
+  Either run thicken_cust in combination with aggregation first, or rerun this function
+  with drop_last_spanned = FALSE.", call. = FALSE)
   }
 }
 

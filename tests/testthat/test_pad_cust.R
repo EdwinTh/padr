@@ -6,7 +6,8 @@ test_that("check_dt_in_spanned", {
   expect_error(check_dt_in_spanned(span_date(20170101, len_out = 2), sp), NA)
   expect_error(check_dt_in_spanned(as.Date("2017-01-04"), sp),
                "Observations in the datetime variable, that are not in spanned.
-       Run thicken_cust in combination with aggregation first.")
+  Either run thicken_cust in combination with aggregation first, or rerun this function
+  with drop_last_spanned = FALSE.")
 })
 
 
