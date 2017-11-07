@@ -125,8 +125,9 @@ test_that("span_around integration tests", {
   x <- coffee$time_stamp[3:4]
   start_shift_one_hour <- span_around(x, "hour", start_shift = "1 hour")
   end_shift_one_hour <- span_around(x, "hour", end_shift = "1 hour")
-  expect_error(span_around(1:10, "day"), "x should be of class Date, POSIXct, or POSIXlt.")
+  expect_error(span_around(1:10, "day"))
   expect_error(span_around(x, "day"), NA)
+  expect_error(span_around(x, "2 days"), NA)
   expect_equal(span_around(x, "day"), span_date(20160709, 20160711))
   expect_equal(span_around(x, "hour"),  span_time("20160709 13", "20160710 11", tz = ""))
   expect_equal(span_around(x, "min"), span_time("20160709 13", "20160710 1046", tz = ""))

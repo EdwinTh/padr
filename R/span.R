@@ -37,11 +37,14 @@ span_around <- function(x,
 }
 
 shift <- function(x, offset, down_or_up) {
- if (inherits(x, "Date")) {
-    offset_conv <- period_to_time(make_interval_list_from_string(offset))
+  offset_list <- make_interval_list_from_string(offset)
+  offset_list$interval <- uniform_interval_name(offset_list$interval)
+  if (inherits(x, "Date")) {
+    offset_conv <- period_to_time(offset_list)
   } else {
-    offset_conv <- period_to_time(make_interval_list_from_string(offset), "sec")
+    offset_conv <- period_to_time(offset_list, "sec")
   }
+
   if (down_or_up == "down") {
     dt_c(min(x) - offset_conv, x)
   } else {
