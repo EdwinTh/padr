@@ -2,7 +2,7 @@
 % Please edit documentation in R/fill_functions.R
 \name{fill_by_value}
 \alias{fill_by_value}
-\title{Fill missing values by a single value.}
+\title{Fill missing values by a single value}
 \usage{
 fill_by_value(x, ..., value = 0)
 }

@@ -1,20 +1,22 @@
-#' Shift to the middle of the interval.
+#' Shift to the middle of each interval
 #'
-#' After padding and thickening all the values are either
-#' shifted to the first or the last value of the interval.
-#' This function creates a vector that shifts the datetime value to
-#' the (approximate) center of the interval.
+#' After thickening all the values are either
+#' shifted to the first or the last value of their interval.
+#' This function creates a vector from \code{x}, with the values shifted to
+#' the (approximate) center of the interval. This can give a more accurate
+#' picture of the aggregated data when plotting.
 #' @param x A vector of class \code{Date}, \code{POSIXct} or \code{POSIXlt}.
-#' @param shift Up or down.
+#' @param shift "up" or "down".
 #' @param interval The interval to be used for centering. If \code{NULL},
 #' \code{get_interval} will be applied on \code{x}.
 #' @return
-#' \code{x} with the values shifted to the (approximate) center.
+#' Vector of the same class as \code{x}, with the values shifted to the
+#' (approximate) center.
 #' @details The interval will be translated to number of days when
-#' x is of class \code{Date}, or number of seconds when x is of class
-#' \code{POSIXt}. For months and quarters this will be the average
-#' length of the period. The translated units divided by two
-#' will be added by or subtracted from \code{x}.
+#' \code{x} is of class \code{Date}, or number of seconds when \code{x} is of
+#' class \code{POSIXt}. For months and quarters this will be the average
+#' length of the interval. The translated units divided by two
+#' will be added by or subtracted from each value of \code{x}.
 #' @examples
 #' library(dplyr)
 #' library(ggplot2)
@@ -53,8 +55,8 @@ center_interval <- function(x,
 # x an object of class interval
 int_to_secs <- function(x) {
   day_secs <- 3600 * 24
-  secs_string <- c(year = day_secs*365, quarter = day_secs*365/4,
-                   month = day_secs*365/12, week = day_secs*7,
+  secs_string <- c(year = day_secs * 365, quarter = day_secs * 365 / 4,
+                   month = day_secs * 365 / 12, week = day_secs * 7,
                    day = day_secs, hour = 3600, min = 60, sec = 1)
   ret <- secs_string[x$interval] * x$step
   unname(ret)
@@ -62,7 +64,7 @@ int_to_secs <- function(x) {
 
 # x an object of class interval
 int_to_days <- function(x) {
-  days_string <- c(year = 365, quarter = 365/4, month = 365/12, week = 7, day = 1)
+  days_string <- c(year = 365, quarter = 365 / 4, month = 365 / 12, week = 7, day = 1)
   ret <- days_string[x$interval] * x$step
   unname(ret)
 }
@@ -81,11 +83,11 @@ unname <- function(x) {
   x
 }
 
-#' Make a period character vector.
+#' Make a period character vector
 #'
-#' After applying \code{thicken} all the observations in an interval are mapped
+#' After applying \code{thicken} all the observations of a period are mapped
 #' to a single timepoint. This function will convert a datetime variable to
-#' a character vector that reflects the full period.
+#' a character vector that reflects the period, instead of a single time point.
 #' @param x A vector of class \code{Date}, \code{POSIXct} or \code{POSIXlt},
 #' of which the values are unique.
 #' @param start_format String to format the start values of each period, to be used
@@ -123,12 +125,12 @@ unname <- function(x) {
 #' plot_set %>%
 #'   mutate(h_int = format_start_end(h, "%H", sep = "-"))
 #'@export
-format_start_end <- function(x,
-                             start_format = "%Y-%m-%d",
-                             end_format   = start_format,
-                             sep          = " ",
-                             end_offset   = 0,
-                             units_to_last = NULL) {
+format_interval <- function(x,
+                            start_format  = "%Y-%m-%d",
+                            end_format    = start_format,
+                            sep           = " ",
+                            end_offset    = 0,
+                            units_to_last = NULL) {
   stop_not_datetime(x)
   stopifnot(length(x) == length(unique(x)))
   stopifnot(length(x) > 1)
@@ -151,7 +153,7 @@ find_next_val <- function(x,
   n         <- length(x)
   x_srt     <- sort(x)
   ret       <- x_srt[2:n]
-  fin_val   <- ret[n-1] + fin_val_units
+  fin_val   <- ret[n - 1] + fin_val_units
   ret_compl <- c(ret, fin_val)
   # by using c() the vector is changed to the tz of the locale! change back
   attr(ret_compl, "tzone") <- attr(ret, "tzone")

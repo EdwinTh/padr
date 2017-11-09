@@ -2,7 +2,7 @@
 % Please edit documentation in R/fill_functions.R
 \name{fill_by_function}
 \alias{fill_by_function}
-\title{Fill missing values by a function of the nonmissings.}
+\title{Fill missing values by a function of the nonmissings}
 \usage{
 fill_by_function(x, ..., fun = mean)
 }

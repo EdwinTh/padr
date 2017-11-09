@@ -84,4 +84,3 @@ end_val_before_max_dt <- function(end_val, dt_var) {
   dt_var  <- to_posix(end_val, dt_var)$b
   dt_var < end_val
 }
-

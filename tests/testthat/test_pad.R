@@ -141,7 +141,7 @@ test_that("dplyr grouping yields correct results", {
                            g2 = letters[rep(5:8, each = 5)],
                            y  = 1)
   x <- x_complete[-c(3, 8, 13, 18), ]
-  x_one_group <- x_complete[-c(3, 13),] %>%
+  x_one_group <- x_complete[-c(3, 13), ] %>%
     arrange(g1, m)
   x_one_group[c(5, 14), c(3, 4)] <- NA
   x_complete[c(3, 8, 13, 18), 4] <- NA
@@ -156,7 +156,7 @@ test_that("dplyr grouping yields correct results", {
 })
 
 test_that("datetime variable in the grouping throws an error", {
-  coffee$grp = 1:2
+  coffee$grp <- 1:2
   expect_error(pad(coffee, group = "time_stamp"))
   expect_error(coffee %>% group_by(time_stamp) %>% pad)
   expect_error(pad(coffee, group = c("time_stamp", 'grp')))
@@ -257,4 +257,3 @@ in the final rows of the dataframe.")
   expect_equal(coffee_na_padded %>% filter(is.na(d)) %>% nrow, 1)
   expect_equal(coffee_na_padded$d[5] %>% as.character(), NA_character_)
 })
-

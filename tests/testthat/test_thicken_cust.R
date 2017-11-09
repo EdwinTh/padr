@@ -12,13 +12,13 @@ test_that("warning is thrown by warn_when_filtering", {
 })
 
 test_that("start_val_after_min_dt works in this context", {
-  expect_equal(start_val_after_min_dt(min(spanned), dt_var), c(F,F,T,T))
-  expect_equal(start_val_after_min_dt(min(full_spanned), dt_var), c(T,T,T,T))
+  expect_equal(start_val_after_min_dt(min(spanned), dt_var), c(F, F, T, T))
+  expect_equal(start_val_after_min_dt(min(full_spanned), dt_var), c(T, T, T, T))
 })
 
 test_that("end_val_before_max_dt works in this context", {
-  expect_equal(end_val_before_max_dt(max(spanned), dt_var), c(T,T,T,F))
-  expect_equal(end_val_before_max_dt(max(full_spanned), dt_var), c(T,T,T,T))
+  expect_equal(end_val_before_max_dt(max(spanned), dt_var), c(T, T, T, F))
+  expect_equal(end_val_before_max_dt(max(full_spanned), dt_var), c(T, T, T, T))
 })
 
 context("thicken_cust integration tests")
@@ -28,11 +28,9 @@ sw <- suppressWarnings
 
 test_that("thicken_cust works properly", {
   expect_equal(thicken_cust(coffee, spanned_asym, "jos")$jos,
-               spanned_asym[c(1,1,2,2)])
+               spanned_asym[c(1, 1, 2, 2)])
   expect_warning(thicken_cust(coffee, spanned_asym[-1], "jos"),
                  "Dropping all values in the datetime var that are smaller than smallest spanned")
   expect_equal(sw(thicken_cust(coffee, spanned_asym[-1], "jos")$jos),
-               spanned_asym[c(2,2)])
+               spanned_asym[c(2, 2)])
 })
-
-

@@ -185,7 +185,7 @@ convert_to_date <- function(x) {
 
 interval_from_short <- function(x) {
   int_string <- c("year", "month", "day")
-  int_string[(x-2) / 2]
+  int_string[(x - 2) / 2]
 }
 
 convert_to_datetime <- function(x,
@@ -207,7 +207,7 @@ interval_from_long <- function(x) {
     interval <- interval_from_short(x)
   } else {
     int_string <- c("hour", "min", "sec")
-    interval <- int_string[(x-9) / 2]
+    interval <- int_string[(x - 9) / 2]
   }
   interval
 }
