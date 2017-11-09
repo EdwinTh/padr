@@ -135,7 +135,7 @@ get_the_inds <- function(x,
     return(all_containing_nas(x))
   }
 
-  which(colnames(x) %in% sapply(dots, quo_name))
+  which(colnames(x) %in% sapply(dots, rlang::quo_name))
 }
 
 all_containing_nas <- function(x) {

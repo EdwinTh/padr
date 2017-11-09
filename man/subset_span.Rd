@@ -15,11 +15,14 @@ datetime parts: year, mon, mday, wday, hour, min, sec.}
 }
 \value{
 Vector of the same class as \code{spanned}, containing all the data points in
-\code{spanned} that meet the requirements in \code{pattern_list}.
+\code{spanned} that meets the requirements in \code{pattern_list}.
 }
 \description{
 Take a \code{Date}, \code{POSIXct}, or \code{POSIXlt} vector and subset it by
 a pattern of date and/or time parts.
+}
+\details{
+For subsetting weekdays, they run from 0 (Sunday) to 6 (Saturday).
 }
 \examples{
 date_span <- span_date(20170701, len_out = 100)

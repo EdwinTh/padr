@@ -31,7 +31,8 @@ length of the period. The translated units divided by two
 will be added by or subtracted from \code{x}.
 }
 \examples{
-library(tidyverse)
+library(dplyr)
+library(ggplot2)
 plot_set <- emergency \%>\%
   thicken("hour", "h") \%>\%
   count(h) \%>\%

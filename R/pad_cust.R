@@ -118,7 +118,7 @@ group_unique_vars <- function(x, group) {
 
 pad_cust_group_span <- function(spanned, group_vars_un) {
   if (is.null(group_vars_un)) {
-    data_frame(span = spanned)
+    data.frame(span = spanned)
   } else {
     spanned_df <- data.frame(span = rep(spanned, nrow(group_vars_un)))
     ind <- rep(1:nrow(group_vars_un), each = length(spanned))

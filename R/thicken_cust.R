@@ -25,6 +25,7 @@
 #' thicken_cust(accidents, spanning, "period") %>%
 #'   count(period) %>%
 #'   pad_cust(spanning)
+#'@export
 thicken_cust <- function(x,
                          spanned,
                          colname,
