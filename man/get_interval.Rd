@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_interval.R
 \name{get_interval}
 \alias{get_interval}
-\title{Get the interval of a datetime variable.}
+\title{Get the interval of a datetime variable}
 \usage{
 get_interval(x)
 }
@@ -13,7 +13,7 @@ get_interval(x)
 A character string indicating the interval of \code{x}.
 }
 \description{
-The interval is the highest time unit that can explain all instances of a
+The interval is the highest datetime unit that can explain all instances of a
 variable of class \code{Date}, class \code{POSIXct}, or class \code{POSIXct}.
 This function will determine what the interval of the variable is.
 }

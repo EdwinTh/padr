@@ -1,6 +1,6 @@
-#' Add a variable of a higher interval to a data frame.
+#' Add a variable of a higher interval to a data frame
 #'
-#' \code{thicken} will take the datetime variable in a data frame and map this
+#' Take the datetime variable in a data frame and map this
 #' to a variable of a higher interval. The mapping is added to the data frame
 #' in a new variable. After applying \code{thicken} the user can aggregate the
 #' other variables in the data frame to the higher interval, for instance using

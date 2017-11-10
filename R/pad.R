@@ -1,4 +1,4 @@
-#' Pad the datetime column of a data frame.
+#' Pad the datetime column of a data frame
 #'
 #' \code{pad} will fill the gaps in incomplete datetime variables, by figuring out
 #' what the interval of the data is and what instances are missing. It will insert
@@ -23,9 +23,9 @@
 #' variables of class \code{Date}, \code{POSIXct} or \code{POSIXlt}.
 #' Indicates which variable to use for padding.
 #' @param group Optional character vector that specifies the grouping
-#' variable(s). Padding will take place within the different group values. When
-#' interval is not specified, it will be determined applying `get_interval` on
-#' the datetime variable as a whole, ignoring groups (see final example).
+#' variable(s). Padding will take place within the different groups. When
+#' interval is not specified, it will be determined applying \code{get_interval}
+#' on the datetime variable as a whole, ignoring groups (see last example).
 #' @param break_above Numeric value that indicates the number of rows in millions
 #' above which the function will break. Safety net for situations where the
 #' interval is different than expected and padding yields a very large
@@ -35,24 +35,20 @@
 #' \code{year}, \code{quarter}, \code{month}, \code{week}, \code{day},
 #' \code{hour}, \code{min}, and \code{sec}. Since \code{padr} v.0.3.0 the
 #' interval is no longer limited to be of a single unit.
-#' (Intervals like 5 minutes, 6 hours, 10 days are possible). \code{pad} will figure out
-#' the interval of the input variable and the step size, and will fill the gaps for the instances that
-#' would be expected from the interval and step size, but are missing in the input data.
-#' Note that when `start_val` and/or `end_val` are specified, they are concatenated
-#' with the datetime variable before the interval is determined.
+#' (Intervals like 5 minutes, 6 hours, 10 days are possible). \code{pad} will
+#' figure out the interval of the input variable and the step size, and will
+#' fill the gaps for the instances that would be expected from the interval and
+#' step size, but are missing in the input data.
+#' Note that when \code{start_val} and/or \code{end_val} are specified, they are
+#' concatenated with the datetime variable before the interval is determined.
 #'
 #' Rows with missing values in the datetime variables will be retained.
 #' However, they will be moved to the end of the returned dateframe.
-#'
-#' See \code{vignette("padr")} for more information on \code{pad}.
-#' See \code{vignette("padr_implementation")} for detailed information on
-#' daylight savings time, different timezones, and the implementation of
-#' \code{thicken}.
 #' @return The data frame \code{x} with the datetime variable padded. All
 #' non-grouping variables in the data frame will have missing values at the rows
 #' that are padded. The result will always be sorted on the datetime variable.
-#' If `group` is not `NULL` result is sorted on grouping variable(s) first,
-#' then on the datetime variable.
+#' If \code{group} is not \code{NULL} result is sorted on grouping variable(s)
+#' first, then on the datetime variable.
 #' @examples
 #' simple_df <- data.frame(day = as.Date(c('2016-04-01', '2016-04-03')),
 #'                         some_value = c(3,4))
@@ -92,7 +88,6 @@
 #' pad(x, group = "id")
 #' # applying pad with do, interval is determined individualle for each group
 #' x %>% group_by(id) %>% do(pad(.))
-
 #' @export
 pad <- function(x,
                 interval  = NULL,

@@ -1,4 +1,4 @@
-#' Span an equally spaced vector around a datetime variable.
+#' Span an equally spaced vector around a datetime variable
 #'
 #' Span a vector of specified interval around a variable of class \code{Date},
 #' \code{POSIXct}, or \code{POSIXlt}..

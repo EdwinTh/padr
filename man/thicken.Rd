@@ -2,7 +2,7 @@
 % Please edit documentation in R/thicken.R
 \name{thicken}
 \alias{thicken}
-\title{Add a variable of a higher interval to a data frame.}
+\title{Add a variable of a higher interval to a data frame}
 \usage{
 thicken(x, interval, colname = NULL, rounding = c("down", "up"),
   by = NULL, start_val = NULL)
@@ -37,7 +37,7 @@ to be nonstandard.}
 The data frame \code{x} with the variable added to it.
 }
 \description{
-\code{thicken} will take the datetime variable in a data frame and map this
+Take the datetime variable in a data frame and map this
 to a variable of a higher interval. The mapping is added to the data frame
 in a new variable. After applying \code{thicken} the user can aggregate the
 other variables in the data frame to the higher interval, for instance using

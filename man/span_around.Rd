@@ -2,7 +2,7 @@
 % Please edit documentation in R/span.R
 \name{span_around}
 \alias{span_around}
-\title{Span an equally spaced vector around a datetime variable.}
+\title{Span an equally spaced vector around a datetime variable}
 \usage{
 span_around(x, interval, start_shift = NULL, end_shift = start_shift)
 }
