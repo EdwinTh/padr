@@ -2,36 +2,39 @@
 % Please edit documentation in R/formatting_funcs.R
 \name{center_interval}
 \alias{center_interval}
-\title{Shift to the middle of the interval.}
+\title{Shift to the middle of each interval}
 \usage{
 center_interval(x, shift = c("up", "down"), interval = NULL)
 }
 \arguments{
 \item{x}{A vector of class \code{Date}, \code{POSIXct} or \code{POSIXlt}.}
 
-\item{shift}{Up or down.}
+\item{shift}{"up" or "down".}
 
 \item{interval}{The interval to be used for centering. If \code{NULL},
 \code{get_interval} will be applied on \code{x}.}
 }
 \value{
-\code{x} with the values shifted to the (approximate) center.
+Vector of the same class as \code{x}, with the values shifted to the
+(approximate) center.
 }
 \description{
-After padding and thickening all the values are either
-shifted to the first or the last value of the interval.
-This function creates a vector that shifts the datetime value to
-the (approximate) center of the interval.
+After thickening all the values are either
+shifted to the first or the last value of their interval.
+This function creates a vector from \code{x}, with the values shifted to
+the (approximate) center of the interval. This can give a more accurate
+picture of the aggregated data when plotting.
 }
 \details{
 The interval will be translated to number of days when
-x is of class \code{Date}, or number of seconds when x is of class
-\code{POSIXt}. For months and quarters this will be the average
-length of the period. The translated units divided by two
-will be added by or subtracted from \code{x}.
+\code{x} is of class \code{Date}, or number of seconds when \code{x} is of
+class \code{POSIXt}. For months and quarters this will be the average
+length of the interval. The translated units divided by two
+will be added by or subtracted from each value of \code{x}.
 }
 \examples{
-library(tidyverse)
+library(dplyr)
+library(ggplot2)
 plot_set <- emergency \%>\%
   thicken("hour", "h") \%>\%
   count(h) \%>\%

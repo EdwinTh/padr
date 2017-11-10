@@ -255,6 +255,3 @@ test_that("interval: hour", {
   expect_equal(thicken(coffee_hour, "h", start_val = s)$time_stamp_hour,
                hour_thickened - 60)
 })
-
-
-

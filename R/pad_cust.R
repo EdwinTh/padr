@@ -92,7 +92,7 @@ pad_cust <- function(x,
 check_same_data_type <- function(dt_var, spanned) {
   dt_var_time <- inherits(dt_var, "POSIXt")
   spanned_time <- inherits(spanned, "POSIXt")
-  if ((dt_var_time + spanned_time) == 1) {
+  if ( (dt_var_time + spanned_time) == 1) {
     stop("spanned and the datetime variables of different data types",
          call. = FALSE)
   }
@@ -112,18 +112,16 @@ group_unique_vars <- function(x, group) {
   if (is.null(group)) {
     NULL
   } else {
-    unique(x[ ,group, drop = FALSE])
+    unique(x[, group, drop = FALSE])
   }
 }
 
 pad_cust_group_span <- function(spanned, group_vars_un) {
   if (is.null(group_vars_un)) {
-    data_frame(span = spanned)
+    data.frame(span = spanned)
   } else {
     spanned_df <- data.frame(span = rep(spanned, nrow(group_vars_un)))
     ind <- rep(1:nrow(group_vars_un), each = length(spanned))
-    dplyr::bind_cols(spanned_df, group_vars_un[ind, , drop = FALSE])
+    dplyr::bind_cols(spanned_df, group_vars_un[ind, , drop = FALSE]) #nolint
   }
 }
-
-

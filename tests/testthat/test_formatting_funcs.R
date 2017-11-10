@@ -4,9 +4,9 @@ test_that("int_to_secs gives the correct result", {
   expect_equal(int_to_secs(list(interval = "year", step = 2)),
                sec_day * 365 * 2)
   expect_equal(int_to_secs(list(interval = "quarter", step = 1)),
-               sec_day * 365/4)
+               sec_day * 365 / 4)
   expect_equal(int_to_secs(list(interval = "month", step = 3)),
-               sec_day * 365/12 * 3)
+               sec_day * 365 / 12 * 3)
   expect_equal(int_to_secs(list(interval = "week", step = 8)),
                sec_day * 7  * 8)
   expect_equal(int_to_secs(list(interval = "day", step = 1)),
@@ -71,7 +71,7 @@ test_that("find_next_val helper function", {
                span_time(20160108, len_out = 3, by = "week"))
   non_eq_days <- span_date(20160101, 20160104)[c(1, 2, 4)]
   expect_equal(find_next_val(non_eq_days, 1),
-               c(non_eq_days[c(2,3)], as.Date("2016-01-05")))
+               c(non_eq_days[c(2, 3)], as.Date("2016-01-05")))
 })
 
 
@@ -109,7 +109,7 @@ test_that("format_start_end throws errors", {
   expect_error(fse(lubridate::ymd(20160101)))
 })
 
-test_that("format_start_end formatting" ,{
+test_that("format_start_end formatting", {
   expect_equal(fse(x1), c("2016-01-01 2017-01-01", "2017-01-01 2018-01-01"))
   expect_equal(fse(x1, start_format = "%y", sep = "-"), c("16-17", "17-18"))
   expect_equal(fse(x2, start_format = "%F %H", end_format = "%H", sep = "-"),
@@ -119,7 +119,7 @@ test_that("format_start_end formatting" ,{
 test_that("format_start_end end _offset works", {
   expect_equal(fse(x1, end_offset = 1),
                c("2016-01-01 2016-12-31", "2017-01-01 2017-12-31"))
-  expect_equal(fse(x2, start_format = "%F %T" ,end_offset = 60),
+  expect_equal(fse(x2, start_format = "%F %T", end_offset = 60),
                c("2016-01-01 00:00:00 2016-01-01 00:59:00",
                  "2016-01-01 01:00:00 2016-01-01 01:59:00"))
 })

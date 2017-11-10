@@ -1,6 +1,6 @@
 context("building blocks span_date")
 sw <- suppressWarnings
-test_that("check_to_len_out give right error",{
+test_that("check_to_len_out give right error", {
   jos <- 40
   expect_error(sw(check_to_len_out(jos, jos)), NA)
   expect_warning(check_to_len_out(jos, jos),
@@ -126,4 +126,3 @@ test_that("span_time gives the desired outputs", {
   expect_equal(span_time("20110101 000000", "20110101 000025"), sec_span)
   expect_equal(span_time("20110101 000000", len_out = 26), sec_span)
 })
-

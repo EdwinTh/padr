@@ -1,4 +1,4 @@
-#' Fill missing values by a single value.
+#' Fill missing values by a single value
 #'
 #' Replace all missing values in the specified columns by the same value.
 #' @param x A data frame.
@@ -35,7 +35,7 @@ fill_by_value <- function(x,
   x
 }
 
-#' Fill missing values by a function of the nonmissings.
+#' Fill missing values by a function of the nonmissings
 #'
 #' For each specified column in \code{x} replace the missing values by a
 #' function of the nonmissing values.
@@ -81,7 +81,7 @@ fill_by_function <- function(x,
    return(x)
 }
 
-#' Fill missing values by the most prevalent nonmissing value.
+#' Fill missing values by the most prevalent nonmissing value
 #'
 #' For each specified column in \code{x} replace the missing values by the most
 #' prevalent nonmissing value.
@@ -135,7 +135,7 @@ get_the_inds <- function(x,
     return(all_containing_nas(x))
   }
 
-  which(colnames(x) %in% sapply(dots, quo_name))
+  which(colnames(x) %in% sapply(dots, rlang::quo_name))
 }
 
 all_containing_nas <- function(x) {

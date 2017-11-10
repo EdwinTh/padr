@@ -201,4 +201,3 @@ test_that("stop_on_NA breaks the function when x has NAs", {
   expect_error(get_interval(x1), NA)
   expect_error(get_interval(x2), "interval cannot be determined when x contains NAs")
 })
-

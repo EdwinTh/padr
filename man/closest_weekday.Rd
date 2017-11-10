@@ -2,7 +2,7 @@
 % Please edit documentation in R/closest_weekday.R
 \name{closest_weekday}
 \alias{closest_weekday}
-\title{Retrieve the closest given Weekday}
+\title{Retrieve the closest given weekday}
 \usage{
 closest_weekday(x, wday = 1, direction = c("down", "up"))
 }
@@ -16,16 +16,17 @@ closest_weekday(x, wday = 1, direction = c("down", "up"))
 the first day in \code{x}.}
 }
 \value{
-The closest desired weekday to \code{x}.
+Object of class \code{Date}, reflecting the closest desired weekday
+to \code{x}.
 }
 \description{
-When applying \code{thicken} with the interval "week", use this function to
-automatically start at the first weekday before or after
- \code{min(datetime_var)} at \code{start_val} argument.
+Find the closest instance of the requested weekday to \code{min(x)}.
+Helper function for \code{thicken} with the interval "week", when the user
+desires the start day of the weeks to be different from Sundays.
 }
 \examples{
 closest_weekday(coffee$time_stamp)
-closest_weekday(coffee$time_stamp, 4)
+closest_weekday(coffee$time_stamp, 5)
 closest_weekday(coffee$time_stamp, 1, direction = "up")
-closest_weekday(coffee$time_stamp, 4, direction = "up")
+closest_weekday(coffee$time_stamp, 5, direction = "up")
 }

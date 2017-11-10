@@ -65,7 +65,7 @@ filter_one_part <- function(spanned_lt,
 
 filter_subset <- function(spanned_lt,
                           pattern_list) {
-  for(prt in names(pattern_list)) {
+  for (prt in names(pattern_list)) {
     spanned_lt <- filter_one_part(spanned_lt, pattern_list, prt)
   }
   spanned_lt

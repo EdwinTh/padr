@@ -227,7 +227,6 @@ get_min_max <- function(x,
   dt_var_enq     <- rlang::sym(dt_var_name)
   group_vars_enq <- rlang::syms(group_vars)
   grpd           <- dplyr::group_by(x, !!!group_vars_enq)
-  dt_var         <- dplyr::select(x, !!dt_var_enq)
 
   ret <- dplyr::summarise(grpd, mn = min(!!dt_var_enq), mx = max(!!dt_var_enq))
   if (!is.null(start_val)) ret$mn <- start_val
@@ -416,12 +415,12 @@ get_dt_var_and_name <- function(x, by) {
 check_for_NA_pad <- function(x, dt_var, dt_var_name) {
   x_no_NA <- x
   x_NA <- NULL
-  if(anyNA(dt_var)) {
+  if (anyNA(dt_var)) {
     x_no_NA <- x[!is.na(dt_var), ]
     x_NA <- x[is.na(dt_var), ]
     warn_mess <- sprintf(
 "There are NA values in the column %s. The records with NA values are returned
-in the final rows of the dataframe." ,
+in the final rows of the dataframe.",
       dt_var_name
     )
     warning(warn_mess, call. = FALSE)

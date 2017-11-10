@@ -74,6 +74,7 @@ x_df \%>\% thicken('month') \%>\% group_by(x_month) \%>\%
 
 # get the average per week, but you want your week to start on Mondays
 # instead of Sundays
-x_df \%>\% thicken('week', start_val = get_week_start(2)) \%>\%
+x_df \%>\% thicken('week',
+                 start_val = closest_weekday(x_df$x, 2)) \%>\%
   group_by(x_week) \%>\% summarise(y_avg = mean(y))
 }
