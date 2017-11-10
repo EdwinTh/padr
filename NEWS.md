@@ -1,4 +1,4 @@
-# padr 0.3.9000
+# padr 0.4.0
 
 ## Improvements
 
@@ -12,16 +12,21 @@
 
 ## New Features
 
-* `span_around` will take a datetime variable, and spans a variable of a desired interval around it. Helper function for `thicken_cust` and `pad_cust`. It saves the trouble of retrieving the min and the max of the variable and manually spanning with these values.
-
 * `span_date` and `span_time` are new functions and they are wrappers around `seq.Date` and `seq.POSIXt` respectively. Because of their default settings (minimal specification of date and datetimes and interval inference) they require very little inputs for straightforward spanning.
 
 * The `closest_weekday` function is introduced. It finds the closest requested weekday around the start of a datetime variable. This function helps to find quickly the `start_val` for `thicken` when the interval is "week".
 
 * Two new functions are introduced that help with visualising interval data. 
 
-- `center_interval` will shift the datetime variable from either the beginning or the end of the interval, to the center of the interval. This will improve visualisations such as dot plots and bar plots, where the timestamp is still considered to be continuous.
+- `center_interval` shifts the datetime variable from either the beginning or the end of the interval, to the center of the interval. This will improve visualisations such as dot plots and bar plots, where the timestamp is still considered to be continuous.
 
+- `format_interval` takes the start_value of an interval and infers the end. It uses `strftime` on both the start value and the end value, to create a character vector that reflects the full interval. 
+
+* The `_cust` suite allows for user-specified spanning to use in thickening and padding.
+
+- to create an asymmetric spanning, `subset_span` subsets a datetime vector to the desired date and time points. These are provided in a list.
+
+- `span_around` takes a datetime variable as input and spans a variable around it of a desired interval. This automates finding the min and the man of `x` manually, determining which values are needed to create a span of a desired interval, and do the actual spanning.
 
 ## Bug Fixes / Enhancements
 
