@@ -159,7 +159,7 @@ emergency %>%
 
 The bars are now between the hours, rather than on the ours. More true to the nature of the interval.
 
-Next, there is `format_start_end`. This creates a categorical vector that describes the start and end of the interval. This works great with asymmetric data, as shown in the dedicated vignette, but can also be informative with regular intervals. You can specify the way you want the start and the end to be formatted just like you would in `strftime`. 
+Next, there is `format_interval`. This creates a categorical vector that describes the start and end of the interval. This works great with asymmetric data, as shown in the dedicated vignette, but can also be informative with regular intervals. You can specify the way you want the start and the end to be formatted just like you would in `strftime`. 
 
 ```{r, message=FALSE}
 emergency %>% 
@@ -169,7 +169,7 @@ emergency %>%
   pad() %>% 
   fill_by_value() %>% 
   mutate(hour6_fmt = 
-           format_start_end(hour6, start_format = "%Hh", sep = "-")) %>% 
+           format_interval(hour6, start_format = "%Hh", sep = "-")) %>% 
   ggplot(aes(hour6_fmt, n)) +
   geom_boxplot()
 ```
