@@ -1,4 +1,4 @@
-#' Thicken with a custom spanning.
+#' Thicken with a custom spanning
 #'
 #' Like \code{thicken}, it will find the datetime variable in \code{x}
 #' and add a variable of a higher periodicity to it. However, the variable to
@@ -9,11 +9,11 @@
 #' class \code{Date}, \code{POSIXct} or \code{POSIXlt}.
 #' @param spanned A datetime vector to which the the datetime variable in
 #' \code{x} should be mapped.
-#' @param colname Character of the column name of the added variable.
+#' @param colname Character, the column name of the added variable.
 #' @param by Only needs to be specified when \code{x} contains multiple
 #' variables of class \code{Date}, \code{POSIXct} or \code{POSIXlt}.
 #' Indicates which to use for thickening.
-#' @description
+#' @details
 #' Only rounding down is available for custom thickening.
 #' @return The data frame \code{x} with the variable added to it.
 #' @examples

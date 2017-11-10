@@ -2,7 +2,7 @@
 % Please edit documentation in R/thicken_cust.R
 \name{thicken_cust}
 \alias{thicken_cust}
-\title{Thicken with a custom spanning.}
+\title{Thicken with a custom spanning}
 \usage{
 thicken_cust(x, spanned, colname, by = NULL)
 }
@@ -23,13 +23,13 @@ Indicates which to use for thickening.}
 The data frame \code{x} with the variable added to it.
 }
 \description{
-Only rounding down is available for custom thickening.
-}
-\details{
 Like \code{thicken}, it will find the datetime variable in \code{x}
 and add a variable of a higher periodicity to it. However, the variable to
 which to map the observation is provided by the user. This enables mapping to
 time points that are unequally spaced.
+}
+\details{
+Only rounding down is available for custom thickening.
 }
 \examples{
 library(dplyr)
