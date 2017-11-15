@@ -54,7 +54,7 @@ test_that("center_interval integration tests", {
 })
 
 
-context("Parts of format_start_end")
+context("Parts of format_interval")
 
 test_that("find_next_val helper function", {
   expect_equal(find_next_val(span_date(2016, 2018), 365),
@@ -94,13 +94,13 @@ test_that("get_units_to_last helper function", {
 })
 
 
-context("format_start_end integration tests")
-fse <- format_start_end
+context("format_interval integration tests")
+fse <- format_interval
 x1 <- span_date(2016, 2017)
 x2 <- span_time("20160101 00", len_out = 2, tz = "CET")
 x3 <- lubridate::ymd(c(20160101, 20160103, 20160104))
 
-test_that("format_start_end throws errors", {
+test_that("format_interval throws errors", {
   expect_error(fse(1:10))
   expect_error(fse(c("20160101", "20160101")))
   expect_error(fse(span_date(2016, 2018)), NA)
@@ -109,14 +109,14 @@ test_that("format_start_end throws errors", {
   expect_error(fse(lubridate::ymd(20160101)))
 })
 
-test_that("format_start_end formatting", {
+test_that("format_interval formatting", {
   expect_equal(fse(x1), c("2016-01-01 2017-01-01", "2017-01-01 2018-01-01"))
   expect_equal(fse(x1, start_format = "%y", sep = "-"), c("16-17", "17-18"))
   expect_equal(fse(x2, start_format = "%F %H", end_format = "%H", sep = "-"),
                c("2016-01-01 00-01", "2016-01-01 01-02"))
 })
 
-test_that("format_start_end end _offset works", {
+test_that("format_interval end _offset works", {
   expect_equal(fse(x1, end_offset = 1),
                c("2016-01-01 2016-12-31", "2017-01-01 2017-12-31"))
   expect_equal(fse(x2, start_format = "%F %T", end_offset = 60),
@@ -124,14 +124,14 @@ test_that("format_start_end end _offset works", {
                  "2016-01-01 01:00:00 2016-01-01 01:59:00"))
 })
 
-test_that("format_start_end works for non symmetrics", {
+test_that("format_interval works for non symmetrics", {
   expect_equal(fse(x3),
                c("2016-01-01 2016-01-03", "2016-01-03 2016-01-04", "2016-01-04 2016-01-05"))
   expect_equal(fse(x3, units_to_last = 2),
                c("2016-01-01 2016-01-03", "2016-01-03 2016-01-04", "2016-01-04 2016-01-06"))
 })
 
-test_that("format_start_end works with different timezones", {
+test_that("format_interval works with different timezones", {
   dt <- span_time("20170801 00", by = "3 hour", len_out = 3,
                   tz = "EST")
   expect_equal(fse(dt, start_format = "%H"),

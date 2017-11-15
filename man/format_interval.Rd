@@ -58,5 +58,5 @@ ggplot(plot_set, aes(h, n)) + geom_col()
 
 # adding a character to indicate the hours of the interval.
 plot_set \%>\%
-  mutate(h_int = format_start_end(h, "\%H", sep = "-"))
+  mutate(h_int = format_interval(h, "\%H", sep = "-"))
 }
