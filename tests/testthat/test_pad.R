@@ -224,6 +224,8 @@ context("pad shows message about interval")
 test_that("gives message when interval is NULL", {
   x1 <- coffee %>% thicken("hour") %>% select(-time_stamp)
   x2 <- coffee %>% thicken("6 hour") %>% select(-time_stamp)
+  attr(x1$time_stamp_hour, "tz") <- "CET"
+  attr(x2$time_stamp_6_hour, "tz") <- "CET"
   expect_message(pad(x1), "pad applied on the interval: hour\n")
   expect_message(pad(x2), "pad applied on the interval: 18 hour\n")
 })
