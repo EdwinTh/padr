@@ -67,7 +67,7 @@ veh_acc_cust <- veh_acc %>%
 
 Now we have our data aggregated to an asymmetric spanning, we can rebuild the plot.
 
-```{r}
+```{r, fig.width=7}
 veh_acc_line_plot(veh_acc_cust, units_to_last = 12 * 3600)
 ```
 
