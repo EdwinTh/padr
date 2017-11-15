@@ -1,4 +1,4 @@
-#' Subset a spanned datetime vector.
+#' Subset a spanned datetime vector
 #'
 #' Take a \code{Date}, \code{POSIXct}, or \code{POSIXlt} vector and subset it by
 #' a pattern of date and/or time parts.

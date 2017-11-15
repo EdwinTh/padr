@@ -2,7 +2,7 @@
 % Please edit documentation in R/pad_cust.R
 \name{pad_cust}
 \alias{pad_cust}
-\title{Pad with a custom spanning.}
+\title{Pad with a custom spanning}
 \usage{
 pad_cust(x, spanned, by = NULL, group = NULL, drop_last_spanned = TRUE)
 }

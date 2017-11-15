@@ -88,6 +88,7 @@ unname <- function(x) {
 #' After applying \code{thicken} all the observations of a period are mapped
 #' to a single timepoint. This function will convert a datetime variable to
 #' a character vector that reflects the period, instead of a single time point.
+#' \code{strftime} is used to format the start and the end of the interval.
 #' @param x A vector of class \code{Date}, \code{POSIXct} or \code{POSIXlt},
 #' of which the values are unique.
 #' @param start_format String to format the start values of each period, to be used
@@ -101,7 +102,7 @@ unname <- function(x) {
 #' Will be subtracted from the end of each period.
 #' If 0, the end of the previous period is equal to the start of the next.
 #' @param units_to_last To determine the formatting of the last value in \code{x},
-#' the  length of the last period has to be specified. If \code{NULL} the
+#' the length of the last period has to be specified. If \code{NULL} the
 #' function guesses based on the interval of \code{x}.
 #' Specify in days when \code{x} is \code{Date}, or in seconds when \code{x} is
 #' \code{POSIXct} or \code{POSIXlt}.

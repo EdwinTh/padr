@@ -1,6 +1,6 @@
-#' Get the interval of a datetime variable.
+#' Get the interval of a datetime variable
 #'
-#' The interval is the highest time unit that can explain all instances of a
+#' The interval is the highest datetime unit that can explain all instances of a
 #' variable of class \code{Date}, class \code{POSIXct}, or class \code{POSIXct}.
 #' This function will determine what the interval of the variable is.
 #' @param x A variable of class of class \code{Date} or of class \code{POSIXt}.

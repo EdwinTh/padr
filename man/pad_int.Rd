@@ -2,7 +2,7 @@
 % Please edit documentation in R/pad_int.R
 \name{pad_int}
 \alias{pad_int}
-\title{Pad the integer column of a data frame.}
+\title{Pad the integer column of a data frame}
 \usage{
 pad_int(x, by, start_val = NULL, end_val = NULL, group = NULL, step = 1)
 }
@@ -11,7 +11,7 @@ pad_int(x, by, start_val = NULL, end_val = NULL, group = NULL, step = 1)
 
 \item{by}{The column to be padded.}
 
-\item{start_val}{The first value of the returned variable. #' If NULL it will
+\item{start_val}{The first value of the returned variable. If NULL it will
 use the lowest value of the input variable.}
 
 \item{end_val}{The last value of the returned variable. If NULL it will use
@@ -28,9 +28,10 @@ non-grouping variables in the data frame will have missing values at the rows
 that are padded.
 }
 \description{
-\code{pad} will fill the gaps in incomplete integer variables. It will insert
+\code{pad_int} fills the gaps in incomplete integer variables. It will insert
 a record for each of the missing value. For all
-other variables in the data frame a missing value will be inserted at the padded rows.
+other variables in the data frame a missing value will be inserted at the
+padded rows.
 }
 \examples{
 int_df <- data.frame(x = c(2005, 2007, 2008, 2011),

@@ -1,4 +1,4 @@
-#' Pad with a custom spanning.
+#' Pad with a custom spanning
 #'
 #' Pad the datetime variable after \code{thicken_cust} is applied, using the same
 #' spanning.

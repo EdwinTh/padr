@@ -2,7 +2,7 @@
 % Please edit documentation in R/subset_span.R
 \name{subset_span}
 \alias{subset_span}
-\title{Subset a spanned datetime vector.}
+\title{Subset a spanned datetime vector}
 \usage{
 subset_span(spanned, pattern_list)
 }

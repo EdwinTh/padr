@@ -1,12 +1,13 @@
-#' Pad the integer column of a data frame.
+#' Pad the integer column of a data frame
 #'
-#' \code{pad} will fill the gaps in incomplete integer variables. It will insert
+#' \code{pad_int} fills the gaps in incomplete integer variables. It will insert
 #' a record for each of the missing value. For all
-#' other variables in the data frame a missing value will be inserted at the padded rows.
+#' other variables in the data frame a missing value will be inserted at the
+#' padded rows.
 #'
 #' @param x A data frame.
 #' @param by The column to be padded.
-#' @param start_val The first value of the returned variable. #' If NULL it will
+#' @param start_val The first value of the returned variable. If NULL it will
 #' use the lowest value of the input variable.
 #' @param end_val The last value of the returned variable. If NULL it will use
 #' the highest value of the input variable.
