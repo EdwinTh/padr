@@ -43,11 +43,11 @@ Quite some stuff going on here, let's go through the functions one by one to see
 
 ```{r}
 coffee2 <- coffee %>% thicken('day')
-coffee2$time_stamp %>% get_interval
-coffee2$time_stamp_day %>% get_interval
+coffee2$time_stamp %>% get_interval()
+coffee2$time_stamp_day %>% get_interval()
 ```
 
-`thicken` does figure out some stuff for you. First it finds the datetime variable in your data frame (given there is only one). Next it will determine the interval of this variable, which is one of the following: year, quarter, month, week, day, hour, minute, or second. Besides the interval, it also finds the interval unit (E.g. 5 minutes, 10 days, 2 months). Finally it adds a variable to the data frame that is of a higher interval than the interval of the original datetime variable. The user can then use this variable to aggregate to the higher level, for instance using `dplyr`'s `group_by` and `summarise`. As of v.0.3.0 the user cannot only specify the interval of the desired output variable, but also the units. When no unit is specified, a single unit is applied.
+`thicken` does figure out some stuff for you. First it finds the datetime variable in your data frame (given there is only one). Next it will determine the interval of this variable, which is one of the following: year, quarter, month, week, day, hour, minute, or second. Besides the interval, it also finds the interval unit (E.g. 5 minutes, 10 days, 2 months). Finally, it adds a variable to the data frame that is of a higher interval than the interval of the original datetime variable. The user can then use this variable to aggregate to the higher level, for instance using `dplyr`'s `group_by` and `summarise`. Besides the interval, the user can also specify the units. When no unit is specified, a single unit is applied.
 
 ```{r}
 to_thicken <- data.frame(day_var = as.Date(c('2016-08-12', '2016-08-13', 
@@ -73,7 +73,7 @@ emergency %>% filter(title == 'EMS: OVERDOSE') %>%
           colname = 'daystart') %>% 
   group_by(daystart) %>% 
   summarise(nr_od = n()) %>% 
-  head
+  head()
 ```
 
 Note also that we specified the column name of the added column. If we don't, `thicken` takes the column name of the original datetime variable and appends it with the interval of the thickened variable, separated by an underscore. 
@@ -90,21 +90,21 @@ The second workhorse of `padr` is `pad`. It does date padding:
 ```{r}
 account <- data.frame(day     = as.Date(c('2016-10-21', '2016-10-23', '2016-10-26')),
                       balance = c(304.46, 414.76, 378.98))
-account %>% pad
+account %>% pad()
 ```
 
-The account dataframe has three observations on different days. Like `thicken` the `pad` function figured out what the datetime variable in the data frame is, and then assessed its interval. Next it noticed that within the interval, *day* in this case, rows are lacking between the first and last observation. It inserts a row in the data frame for every time point that is lacking from the data set. All non-datetime values will get missing values at the padded rows. 
+The account dataframe has three observations on different days. Like `thicken`, the `pad` function figures out what the datetime variable in the data frame is, and then assesses its interval. Next it notices that within the interval, *day* in this case, rows are lacking between the first and last observation. It inserts a row in the data frame for every time point that is lacking from the data set. All non-datetime values will get missing values at the padded rows. 
 
 It is up to the user what to do with the missing records. In the case of the balance of an account we want to carry the last observation forward. It needs `tidyr::fill` to arrive at the tidy data set.
 
 ```{r}
-account %>% pad %>% tidyr::fill(balance)
+account %>% pad() %>% tidyr::fill(balance)
 ```
 
 Also `pad` allows for deviations from its default behavior. By default it pads all observations between the first and the last observation, but you can use `start_val` and `end_val` to deviate from this. You can also specify a lower interval than the one of the variable, using `pad` as the inverse of `thicken`.
 
 ```{r}
-account %>% pad('hour', start_val = as.POSIXct('2016-10-20 22:00:00')) %>% head
+account %>% pad('hour', start_val = as.POSIXct('2016-10-20 22:00:00')) %>% head()
 ```
 
 ### Grouping
@@ -146,9 +146,9 @@ Note that in the first `fill_by_value` the columns to fill are not specified. In
 
 ## Formatting functions
 
-After aggregating the data to a higher interval, all the observations in an interval are represented by a single point in time. This is either the first (rounding down) or the last (rounding up) datetime point of the interval. For the moment is not the aim of `padr` to introduce, so the datetime variables are left as they are. However, from from v.0.4.0 two functions are offered to reformat the datetime variable. They might give a better representation of the data when presenting them in a table or graph. First of all, `center_interval` will move the time point to the center of the interval. This would give a better representation in point, line and bar graphs.
+After aggregating the data to a higher interval, all the observations in an interval are represented by a single point in time. This is either the first (rounding down) or the last (rounding up) datetime point of the interval. Two functions are offered to reformat the datetime variable, so the data might be better represented a table or a graph. First of all, `center_interval` will move the time point to the center of the interval. This would give a better representation in point, line and bar graphs.
 
-```{r}
+```{r, fig.width=7}
 emergency %>% 
   thicken("hour", "h") %>% 
   count(h) %>% 
@@ -157,9 +157,9 @@ emergency %>%
   ggplot(aes(h_center, n)) + geom_bar(stat = "identity")
 ```
 
-The bars are now between the hours, rather than on the ours. More true to the nature of the interval.
+The bars are now between the hours, rather than on the hours. More true to the nature of the interval.
 
-Next, there is `format_interval`. This creates a categorical vector that describes the start and end of the interval. This works great with asymmetric data, as shown in the dedicated vignette, but can also be informative with regular intervals. You can specify the way you want the start and the end to be formatted just like you would in `strftime`. 
+Next, there is `format_interval`. This creates a categorical variable that describes the start and end of the interval. This works great with asymmetric data, as shown in the dedicated vignette, but can also be informative with regular intervals. You can specify the way you want the start and the end to be formatted just like you would in `strftime`. 
 
 ```{r, message=FALSE}
 emergency %>% 
