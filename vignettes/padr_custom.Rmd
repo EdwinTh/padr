@@ -9,9 +9,9 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-This vignette assumes the reader has read the [Introduction to `padr` vignette](link). These functions are introduced in version 0.4.0 of the package and should be considered still experimental.
+This vignette assumes the reader has read the [Introduction to `padr` vignette](https://cran.r-project.org/web/packages/padr/vignettes/padr.html). These functions are introduced in version 0.4.0 of the package and should be considered experimental for the moment.
 
-The base function `thicken` creates evenly spaced intervals to which observations can be aggregated. `pad` subsequently checks for missing observations and inserts records where needed. This procedure can be largely automated because of the assumption of an evenly spaced interval. However, the functions can't deliver when assymetry in the intervals is desired. This might happen when observations are frequent during some moments, and sparse during others. For instance daily hours vs night periods, or working days vs weekends. We might want to perform a single analysis where the intervals between observations are of different widths. 
+`thicken` creates evenly spaced intervals to which observations can be aggregated. `pad` subsequently checks for missing observations and inserts records where needed. This procedure can be largely automated because of the assumption of an evenly spaced interval. However, the functions can't deliver when asymmetry between the datetime points is desired. This might occur when observations are frequent during some moments, and sparse during others. For instance daily hours vs night periods, or working days vs weekends. We might want to perform a single analysis where the datetime spaces between observations are of different lengths. 
 
 Lets have a look at all the vehicle incidents in the `emergency` dataset. Say you want to monitor the trends of number of accidents in the second quarter of 2016. You choose a three hour interval to do the analysis.
 
@@ -44,7 +44,7 @@ Accidents are more common around rush hours. During nightly hours there are hard
 
 ## Preparing the spanning
 
-`thicken`'s internal work horse is a spanning function. It takes the datetime variable and spans a datetime variable of the desired interval around it. When you want your own asymmetric intervals, you have to build the spanning variable yourself. To help you with that the functions `span_around` and `subset_span` are provided. `span_around` is a wrapper around the internal `span` function. It will return a spanning with an evenly spaced interval. Of course you can also create this yourself. `span_date` and `span_time` are convenient wrappers around `seq.Date` and `seq.POSIXt` for manual spanning. Next, to create an asymmetrical spanning, apply `subset_span` on the evenly spaced span. Together with a list that describes the pattern of points that should be retained.
+`thicken`'s internal work horse is a spanning function. It takes the datetime variable and spans a datetime variable of the desired interval around it. When you want your own asymmetric intervals, you have to build the spanning variable yourself. To help with that, the functions `span_around` and `subset_span` are provided. `span_around` is a wrapper around the internal `span` function. It will return a spanning with an evenly spaced interval. Of course you can also create this yourself. `span_date` and `span_time` are convenient wrappers around `seq.Date` and `seq.POSIXt` for manual spanning. Next, to create an asymmetrical spanning, apply `subset_span` on the evenly spaced span. Together with a list that describes the pattern of points that should be retained.
 
 ```{r}
 veh_acc_span <- 
@@ -52,11 +52,11 @@ veh_acc_span <-
   subset_span(list(hour = c(7, 10, 16, 19)))
 ```
 
-Note that the argument `start_shift` is used. This will add an extra time period before the first observartion in the datetime variable. We do this to ensure that spanning is still fully around the datetime variable after subsetting. The argument `end_shift` is by default equal to `start_shift`. So we have set this to 7 hours as well, by specifying `start_shift`.
+Note that the argument `start_shift` is used. This will add an extra time period before the first observation in the datetime variable. We do this to ensure that spanning is still fully around the datetime variable after subsetting. The argument `end_shift` is by default equal to `start_shift`. So we have set this to 7 hours as well in the example.
 
 ## Thickening and padding
 
-The `thicken_cust` and `pad_cust` functions both take the spanned object as an argument. `thicken_cust` will assign each observation to the closest value in the spanned object. Note that `thicken_cust` only does round down at the moment. This seems the mostly choses option in the regular `thicken`, the argument was omitted from `thicken_cust` for simplicity. `pad_cust` also needs the spanned_object, because it can no longer infer which observations are lacking from a time series object. By default `pad_cust` drops the last value in the spanned object. If the original spanning was around the datetime variable, leaving the last value in would create an empty record after all the observations.
+The `thicken_cust` and `pad_cust` functions both take the spanned object as an argument. `thicken_cust` will assign each observation to the closest value in the spanned object. Note that `thicken_cust` only does round down, whereas in the regular `thicken` there is also the option to round up. This seems the mostly choses option in the regular `thicken`, the argument was omitted from `thicken_cust` for simplicity. `pad_cust` also needs the spanned object, because it can no longer infer which observations are lacking from the datetime variable. By default, `pad_cust` drops the last value in the spanned object. If the original spanning was around the datetime variable, leaving the last value in would create an empty record after all the observations.
 
 ```{r}
 veh_acc_cust <- veh_acc %>% 
@@ -65,7 +65,7 @@ veh_acc_cust <- veh_acc %>%
   pad_cust(veh_acc_span)
 ```
 
-Now we have our data aggregated to an assymmetric spanning, we can rebuild the plot.
+Now we have our data aggregated to an asymmetric spanning, we can rebuild the plot.
 
 ```{r}
 veh_acc_line_plot(veh_acc_cust, units_to_last = 12 * 3600)
