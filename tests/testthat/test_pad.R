@@ -222,10 +222,13 @@ test_that("Pad gives correct results", {
 
 context("pad shows message about interval")
 test_that("gives message when interval is NULL", {
+  # Manually setting the ts var in coffee, so test passes on systems with
+  # a different time zone
+  coffee$time_stamp <- as.POSIXct(c(
+    "2016-07-07 09:11:21", "2016-07-07 09:46:48", "2016-07-09 13:25:17", "2016-07-10 10:45:11"
+  ))
   x1 <- coffee %>% thicken("hour") %>% select(-time_stamp)
   x2 <- coffee %>% thicken("6 hour") %>% select(-time_stamp)
-  attr(x1$time_stamp_hour, "tz") <- "CET"
-  attr(x2$time_stamp_6_hour, "tz") <- "CET"
   expect_message(pad(x1), "pad applied on the interval: hour\n")
   expect_message(pad(x2), "pad applied on the interval: 18 hour\n")
 })

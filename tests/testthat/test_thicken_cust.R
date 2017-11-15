@@ -28,20 +28,19 @@ spanned_asym <- ymd_h(c("2016-07-07 09", "2016-07-09 12", "2016-07-11 00"),
 sw <- suppressWarnings
 
 test_that("thicken_cust works properly", {
-  # the cumbersome setting of tz's is needed for passing the test on systems
-  # with a different local than CET
+  # Manually setting the ts var in coffee, so test passes on systems with
+  # a different time zone
+  coffee$time_stamp <- as.POSIXct(c(
+    "2016-07-07 09:11:21", "2016-07-07 09:46:48", "2016-07-09 13:25:17", "2016-07-10 10:45:11"
+  ))
   thicken_cust_1 <- thicken_cust(coffee, spanned_asym, "jos")$jos
-  attr(thicken_cust_1, "tz") <- "CET"
   spanned_1 <- spanned_asym[c(1, 1, 2, 2)]
-  attr(spanned_1, "tz") <- "CET"
   expect_equal(thicken_cust_1, spanned_1)
 
   expect_warning(thicken_cust(coffee, spanned_asym[-1], "jos"),
                  "Dropping all values in the datetime var that are smaller than smallest spanned")
 
   thicken_cust_2 <- sw(thicken_cust(coffee, spanned_asym[-1], "jos")$jos)
-  attr(thicken_cust_2, "tz") <- "CET"
   spanned_2 <- spanned_asym[c(2, 2)]
-  attr(spanned_2, "tz") <- "CET"
   expect_equal(thicken_cust_2, spanned_2)
 })
