@@ -36,7 +36,8 @@ subset_span <- function(spanned,
 
 check_filter_on <- function(x) {
   if (!all(x %in% c("year", "mon", "mday", "wday", "hour", "min", "sec"))) {
-    stop("invalid names in the span_list", call. = FALSE)
+    stop("invalid name(s) in the pattern_list, the following are valid:
+       year, mon, mday, wday, hour, min, sec", call. = FALSE)
   }
 }
 

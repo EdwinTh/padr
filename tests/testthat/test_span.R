@@ -129,15 +129,15 @@ test_that("span_around integration tests", {
   expect_error(span_around(x, "day"), NA)
   expect_error(span_around(x, "2 days"), NA)
   expect_equal(span_around(x, "day"), span_date(20160709, 20160711))
-  expect_equal(span_around(x, "hour"),  
+  expect_equal(span_around(x, "hour"),
                span_time("20160709 13", "20160710 11", tz = "CET"))
-  expect_equal(span_around(x, "min"), 
+  expect_equal(span_around(x, "min"),
                span_time("20160709 13", "20160710 1046", tz = "CET"))
-  expect_equal(start_shift_one_hour[1], 
+  expect_equal(start_shift_one_hour[1],
                as.POSIXct("2016-07-09 12:00:00", tz = "CET"))
   expect_equal(start_shift_one_hour[length(start_shift_one_hour)],
                as.POSIXct("2016-07-10 12:00:00", tz = "CET"))
-  expect_equal(end_shift_one_hour[1], 
+  expect_equal(end_shift_one_hour[1],
                as.POSIXct("2016-07-09 13:00:00", tz = "CET"))
   expect_equal(end_shift_one_hour[length(end_shift_one_hour)],
                as.POSIXct("2016-07-10 12:00:00", tz = "CET"))

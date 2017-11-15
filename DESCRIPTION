@@ -5,9 +5,8 @@ Version: 0.4
 Author: Edwin Thoen
 Maintainer: Edwin Thoen <edwinthoen@gmail.com>
 Description: Transforms datetime data into a format ready for analysis.
-    It offers two functionalities; aggregating data to a higher level interval
-    (thicken) and imputing records where observations were absent (pad). It also
-    offers a few functions that assist with filling missing values after padding.
+    It offers two core functionalities; aggregating data to a higher level interval
+    (thicken) and imputing records where observations were absent (pad). 
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
