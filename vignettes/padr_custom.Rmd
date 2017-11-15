@@ -26,8 +26,8 @@ veh_acc_line_plot <- function(padded_df,
   padded_df %>% 
   fill_by_value() %>% 
   thicken("day", "day") %>% 
-  mutate(interval = format_start_end(day_hour, "%H", sep = "-" , 
-                                     units_to_last = units_to_last)) %>% 
+  mutate(interval = format_interval(day_hour, "%H", sep = "-" , 
+                                    units_to_last = units_to_last)) %>% 
   ggplot(aes(day, n)) + 
   facet_wrap(~interval) +
   geom_line() 
