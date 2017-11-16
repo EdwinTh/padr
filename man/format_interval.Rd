@@ -21,7 +21,7 @@ in \code{strftime}.}
 \code{end_format}.}
 
 \item{end_offset}{Units in days if \code{x} is \code{Date}, or in seconds if
-\code{x} is \code{POSIXct} ir \code{POSIXlt}.
+\code{x} is \code{POSIXct} or \code{POSIXlt}.
 Will be subtracted from the end of each period.
 If 0, the end of the previous period is equal to the start of the next.}
 
@@ -36,7 +36,7 @@ A character vector showing the interval.
 }
 \description{
 After applying \code{thicken} all the observations of a period are mapped
-to a single timepoint. This function will convert a datetime variable to
+to a single time point. This function will convert a datetime variable to
 a character vector that reflects the period, instead of a single time point.
 \code{strftime} is used to format the start and the end of the interval.
 }
