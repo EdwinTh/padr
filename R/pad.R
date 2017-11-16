@@ -43,7 +43,7 @@
 #' concatenated with the datetime variable before the interval is determined.
 #'
 #' Rows with missing values in the datetime variables will be retained.
-#' However, they will be moved to the end of the returned dateframe.
+#' However, they will be moved to the end of the returned data frame.
 #' @return The data frame \code{x} with the datetime variable padded. All
 #' non-grouping variables in the data frame will have missing values at the rows
 #' that are padded. The result will always be sorted on the datetime variable.

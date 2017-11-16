@@ -11,7 +11,7 @@
 #' variables of class \code{Date}, \code{POSIXct} or \code{POSIXlt}.
 #' @param group Optional character vector that specifies the grouping
 #' variable(s). Padding will take place within the different group values.
-#' @param drop_last_spanned Logical, indicating wether to drop the last value
+#' @param drop_last_spanned Logical, indicating whether to drop the last value
 #' from \code{spanned}. The spanned is typically around the datetime variable.
 #' This would create an empty last record when padding. Setting to \code{TRUE}
 #' will drop the last value in \code{spanned} and will not create an empty

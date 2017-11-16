@@ -67,7 +67,7 @@ Note that when \code{start_val} and/or \code{end_val} are specified, they are
 concatenated with the datetime variable before the interval is determined.
 
 Rows with missing values in the datetime variables will be retained.
-However, they will be moved to the end of the returned dateframe.
+However, they will be moved to the end of the returned data frame.
 }
 \examples{
 simple_df <- data.frame(day = as.Date(c('2016-04-01', '2016-04-03')),
