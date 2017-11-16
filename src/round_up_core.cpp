@@ -24,5 +24,3 @@ IntegerVector round_up_core(IntegerVector a, IntegerVector b){
   }
   return ret;
 }
-
-
