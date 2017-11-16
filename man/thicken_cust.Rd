@@ -13,7 +13,7 @@ class \code{Date}, \code{POSIXct} or \code{POSIXlt}.}
 \item{spanned}{A datetime vector to which the the datetime variable in
 \code{x} should be mapped.}
 
-\item{colname}{Character of the column name of the added variable.}
+\item{colname}{Character, the column name of the added variable.}
 
 \item{by}{Only needs to be specified when \code{x} contains multiple
 variables of class \code{Date}, \code{POSIXct} or \code{POSIXlt}.

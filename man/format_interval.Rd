@@ -26,7 +26,7 @@ Will be subtracted from the end of each period.
 If 0, the end of the previous period is equal to the start of the next.}
 
 \item{units_to_last}{To determine the formatting of the last value in \code{x},
-the  length of the last period has to be specified. If \code{NULL} the
+the length of the last period has to be specified. If \code{NULL} the
 function guesses based on the interval of \code{x}.
 Specify in days when \code{x} is \code{Date}, or in seconds when \code{x} is
 \code{POSIXct} or \code{POSIXlt}.}
@@ -38,6 +38,7 @@ A character vector showing the interval.
 After applying \code{thicken} all the observations of a period are mapped
 to a single timepoint. This function will convert a datetime variable to
 a character vector that reflects the period, instead of a single time point.
+\code{strftime} is used to format the start and the end of the interval.
 }
 \details{
 The end of the periods will be determined by the next unique value
