@@ -393,7 +393,6 @@ get_dplyr_groups <- function(x, group) {
 
 break_above_func <- function(n,
                              threshold) {
-  threshold <- threshold * 10 ^ 6
   if (n > threshold) {
     stop(sprintf("Estimated %s returned rows, larger than %s million in break_above",
                  n, threshold), call. = FALSE)
