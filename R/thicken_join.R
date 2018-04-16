@@ -1,7 +1,7 @@
 library(padr)
 library(dplyr)
 library(lubridate)
-gelfandize <- function(df_x, 
+thicken_join <- function(df_x, 
                        df_y, 
                        interval, 
                        join_type = c("inner", 
@@ -21,10 +21,3 @@ gelfandize <- function(df_x,
   select(ret, -join_me)
 }
 
-x <- data_frame(time_x = ymd_hms("20180314 073133", "20180314 073151", "20180314 073312", "20180314 081221"),
-                val_x  = 5:8)
-y <- data_frame(time_y = ymd_hms("20180314 073151", "20180314 080433"),
-                val_y  = c("a", "b"))
-gelfandize(x, y, "min", "left")
-gelfandize(x, y, "hour", "left")
-gelfandize(x, y, "day", "left")
