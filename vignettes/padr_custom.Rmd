@@ -9,7 +9,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-This vignette assumes the reader has read the [Introduction to `padr` vignette](https://cran.r-project.org/web/packages/padr/vignettes/padr.html). These functions are introduced in version 0.4.0 of the package and should be considered experimental for the moment.
+This vignette assumes the reader has read the [Introduction to `padr` vignette](https://CRAN.R-project.org/package=padr). These functions are introduced in version 0.4.0 of the package and should be considered experimental for the moment.
 
 `thicken` creates evenly spaced intervals to which observations can be aggregated. `pad` subsequently checks for missing observations and inserts records where needed. This procedure can be largely automated because of the assumption of an evenly spaced interval. However, the functions can't deliver when asymmetry between the datetime points is desired. This might occur when observations are frequent during some moments, and sparse during others. For instance daily hours vs night periods, or working days vs weekends. We might want to perform a single analysis where the datetime spaces between observations are of different lengths. 
 

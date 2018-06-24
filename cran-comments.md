@@ -1,3 +1,17 @@
+Resubmission
+
+As requested by Uwe Ligges changed link to other vignette in padr_custom.Rmd from
+
+https://cran.r-project.org/web/packages/padr/vignettes/padr.html
+
+to 
+
+https://CRAN.R-project.org/package=padr
+
+so it is in CRAN URL canonical form.
+
+################################################
+
 # padr v0.4.0
 
 ## Test environments
