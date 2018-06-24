@@ -1,7 +1,7 @@
 Package: padr
 Type: Package
 Title: Quickly Get Datetime Data Ready for Analysis
-Version: 0.4.0
+Version: 0.4.1
 Author: Edwin Thoen
 Maintainer: Edwin Thoen <edwinthoen@gmail.com>
 Description: Transforms datetime data into a format ready for analysis.
@@ -24,7 +24,8 @@ Suggests:
     rmarkdown,
     lazyeval,
     tidyr,
-    data.table
+    data.table,
+    lintr
 RoxygenNote: 6.0.1
 LinkingTo: Rcpp
 VignetteBuilder: knitr
