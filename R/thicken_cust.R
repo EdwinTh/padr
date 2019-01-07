@@ -40,11 +40,6 @@ thicken_cust <- function(x,
   dt_var      <- dt_var_info$dt_var
   dt_var_name <- dt_var_info$dt_var_name
 
-  if (check_for_sorting(dt_var)){
-    warning('Datetime variable was unsorted, result will be unsorted as well.',
-            call. = FALSE)
-  }
-
   is_datetime(spanned)
   if (inherits(spanned, 'POSIXt') & inherits(dt_var, 'POSIXt')) {
     spanned   <- enforce_time_zone(spanned, dt_var)

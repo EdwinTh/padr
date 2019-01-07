@@ -1,8 +1,10 @@
 # padr 0.4.9000
 
-## Bug Fixes / Enhancements
+## Minor changes
 
 - Error within `padr` for `break_above` error message is corrected. No longer prints the number of millions in millions (HT Sharla Gelfand).
+
+- The functions `thicken` and `thicken_cust` no longer throw a warning when the input datetime variable is unsorted. The functions now silently return the a data frame with the same row order as the input data frame.
 
 ##################################################
 
@@ -16,7 +18,7 @@
 
 * `get_interval` is sped up significantly:
 
-- to convert date to character `format` is used, instead of `as.character`. For large vectors it 4 to 5 times faster.
+- to convert date to character `format` is used, instead of `as.character`. For large vectors it is 4 to 5 times faster.
 
 ## New Features
 

@@ -82,11 +82,6 @@ thicken <- function(x,
   interval_converted$interval <- uniform_interval_name(interval_converted$interval)
   rounding <- match.arg(rounding)
 
-  if (check_for_sorting(dt_var)){
-    warning('Datetime variable was unsorted, result will be unsorted as well.',
-            call. = FALSE)
-  }
-
   if (inherits(start_val, 'POSIXt') & inherits(dt_var, 'POSIXt')) {
     start_val <- enforce_time_zone(start_val, dt_var)
   }
@@ -211,12 +206,6 @@ start_val_after_min_dt <- function(start_val, dt_var) {
     ind <- dt_var > start_val
     return(ind)
   }
-}
-
-check_for_sorting <- function(dt_var) {
-  # filter out missing values, there will be a warning thrown for them later
-  dt_var <- dt_var[!is.na(dt_var)]
-  !all(dt_var[1:(length(dt_var) - 1)] <= dt_var[2:length(dt_var)])
 }
 
 check_for_NA_thicken <- function(dt_var, dt_var_name, colname) {
