@@ -152,6 +152,6 @@ test_that("the drop argument gives the desired result", {
   no_drop <- coffee_hour
   with_drop <- coffee_hour %>% select(-time_stamp)
   expect_equal(thicken(coffee, "hour"), no_drop)
-  expect_equal(thicken(coffee, "hour", drop = TRUE), no_drop)
-  expect_equal(thicken(coffee, "hour", drop = FALSE), with_drop)
+  expect_equal(thicken(coffee, "hour", drop = FALSE), no_drop)
+  expect_equal(thicken(coffee, "hour", drop = TRUE), with_drop)
 })
