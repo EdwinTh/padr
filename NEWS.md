@@ -1,9 +1,12 @@
+# padr 0.4.2
+
+- Patch release requested by CRAN maintainers. Removed `sample` function from unit test.
+
+##################################################
+
 # padr 0.4.1
-## Bug Fixes / Enhancements
 
 - Patch release requested by CRAN maintainers. Declaring `lintr` as a dependency in tests.
-
-- Error within `padr` for `break_above` error message is corrected. No longer prints the number of millions in millions (HT Sharla Gelfand).
 
 ##################################################
 
@@ -17,7 +20,7 @@
 
 * `get_interval` is sped up significantly:
 
-- to convert date to character `format` is used, instead of `as.character`. For large vectors it 4 to 5 times faster.
+- to convert date to character `format` is used, instead of `as.character`. For large vectors it is 4 to 5 times faster.
 
 ## New Features
 

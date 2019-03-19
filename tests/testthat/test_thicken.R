@@ -54,10 +54,6 @@ test_that("thicken throws error when asked interval is lower", {
   expect_error( thicken(x_month, interval = "year"), NA)
 })
 
-test_that("thicken gives warning when unordered", {
-  expect_warning( thicken(x_month_unordered, interval =  "quarter") )
-  expect_warning( thicken(x_month, interval =  "quarter"), NA)
-})
 
 test_that("thicken gives informed error when start_val is wrong class", {
   expect_error(thicken(x_month, start_val = "2017-01-01",
@@ -144,4 +140,18 @@ Returned dataframe contains original observations, with NA values for d and d_we
   expect_equal(coffee_na_thickened %>% filter(is.na(d)) %>% nrow, 1)
   expect_equal(coffee_na_thickened %>% filter(is.na(d_week)) %>% nrow, 1)
   expect_equal(coffee_na_thickened$d[3] %>% as.character(), NA_character_)
+})
+
+context("thicken drop argument")
+test_that("the drop argument gives the desired result", {
+  hourly <- ymd_h(c("20160707 09",
+                    "20160707 09",
+                    "20160709 13",
+                    "20160710 10"), tz = "CET")
+  coffee_hour <- coffee %>% mutate(time_stamp_hour = hourly)
+  no_drop <- coffee_hour
+  with_drop <- coffee_hour %>% select(-time_stamp)
+  expect_equal(thicken(coffee, "hour"), no_drop)
+  expect_equal(thicken(coffee, "hour", drop = FALSE), no_drop)
+  expect_equal(thicken(coffee, "hour", drop = TRUE), with_drop)
 })

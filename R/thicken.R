@@ -25,6 +25,8 @@
 #' than the lowest value of the input datetime variable, with all time units on
 #' default value. Specify \code{start_val} as an offset if you want the range
 #' to be nonstandard.
+#' @param drop Should the original datetime variable be dropped from the
+#' returned data frame? Defaults to \code{FALSE}.
 #' @return The data frame \code{x} with the variable added to it.
 #' @details When the datetime variable contains missing values, they are left
 #' in place in the dataframe. The added column with the new datetime variable,
@@ -65,9 +67,11 @@ thicken <- function(x,
                     rounding = c('down',
                                  'up'),
                     by        = NULL,
-                    start_val = NULL) {
+                    start_val = NULL,
+                    drop      = FALSE) {
 
   is_df(x)
+  has_rows(x)
 
   original_data_frame <- x
   x <- as.data.frame(x)
@@ -81,11 +85,6 @@ thicken <- function(x,
   interval_converted <- convert_interval(interval)
   interval_converted$interval <- uniform_interval_name(interval_converted$interval)
   rounding <- match.arg(rounding)
-
-  if (check_for_sorting(dt_var)){
-    warning('Datetime variable was unsorted, result will be unsorted as well.',
-            call. = FALSE)
-  }
 
   if (inherits(start_val, 'POSIXt') & inherits(dt_var, 'POSIXt')) {
     start_val <- enforce_time_zone(start_val, dt_var)
@@ -120,6 +119,8 @@ the interval specified is too low for the interval of the datetime variable", ca
 
   return_frame <- dplyr::bind_cols(x, thickened_frame)
   colnames(return_frame)[ncol(return_frame)] <- colname
+
+  if (drop) return_frame <- remove_original_var(return_frame, dt_var_name)
 
   set_to_original_type(return_frame, original_data_frame)
 }
@@ -213,12 +214,6 @@ start_val_after_min_dt <- function(start_val, dt_var) {
   }
 }
 
-check_for_sorting <- function(dt_var) {
-  # filter out missing values, there will be a warning thrown for them later
-  dt_var <- dt_var[!is.na(dt_var)]
-  !all(dt_var[1:(length(dt_var) - 1)] <= dt_var[2:length(dt_var)])
-}
-
 check_for_NA_thicken <- function(dt_var, dt_var_name, colname) {
   if (sum(is.na(dt_var))  > 0) {
     dt_var <- dt_var[!is.na(dt_var)]
@@ -239,4 +234,8 @@ add_na_to_thicken <- function(thickened, na_ind) {
   return_var_ord <- return_var[order(return_ind)]
   attr(return_var_ord, "tzone") <- attr(thickened, "tzone")
   return(return_var_ord)
+}
+
+remove_original_var <- function(x, var_name) {
+  x[, colnames(x) != var_name]
 }

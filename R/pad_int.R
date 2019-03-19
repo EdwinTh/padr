@@ -39,8 +39,9 @@ pad_int <- function(x,
                     start_val = NULL,
                     end_val   = NULL,
                     group     = NULL,
-                    step      = 1){
+                    step      = 1) {
   is_df(x)
+  has_rows(x)
 
   group <- get_dplyr_groups(x, group)
   if (!all(group %in% colnames(x))) {

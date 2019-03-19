@@ -97,6 +97,8 @@ pad <- function(x,
                 group     = NULL,
                 break_above = 1){
   is_df(x)
+  has_rows(x)
+
   check_start_and_end(start_val, end_val)
   group <- get_dplyr_groups(x, group)
 
