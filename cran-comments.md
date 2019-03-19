@@ -1,29 +1,19 @@
-Resubmission
+Submissing patch release
 
-As requested by Uwe Ligges changed link to other vignette in padr_custom.Rmd from
-
-https://cran.r-project.org/web/packages/padr/vignettes/padr.html
-
-to 
-
-https://CRAN.R-project.org/package=padr
-
-so it is in CRAN URL canonical form.
+As requested by Kurt Hornik, the behavior of sample() will be changed from R 3.6 onwards. Making some unit tests fail. The sampled data are replaced by hard coded values so this should be evaded now.
 
 ################################################
 
-# padr v0.4.0
+# padr v0.4.2
 
 ## Test environments
-* local OS X install, R 3.4.2
-* ubuntu 14.04.5 (on travis-ci), R 3.4.2
-* win-builder (devel and release)
+* local OS X install, R 3.5
+* ubuntu 14.04.5 (on travis-ci), R 3.5
+* win-builder
 
 ## R CMD check results
 
-0 errors | 0 warnings | 0 notes
+All tests passed without Errors, Warnings, or Notes on all platforms (including "checking for unstated dependencies in 'tests'").
 
-On win-builder only there was the standard NOTE
-* checking CRAN incoming feasibility
 
-There is one reverse dependency timetk. Its maintainer Matt Dancho has received a personal email and assured me the new version works with timetk.
+There is one reverse dependency timetk. Since this is patch release the maintainers are not informed, changes cannot break dependencies.
