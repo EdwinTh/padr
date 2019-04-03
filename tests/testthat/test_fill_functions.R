@@ -1,12 +1,10 @@
 source("library.R")
-set.seed(543)
-x <- seq(as.Date("2016-01-01"), by = "day", length.out = 366)
-x <- x[sample(1:366, 200)] %>% sort
-x_df <- data_frame(x  = x,
-                   y1 = runif(200, 10, 20) %>% round,
-                   y2 = runif(200, 1, 50) %>% round,
-                   y3 = rep(10, 200) %>% round,
-                   y4 = rep(letters[1:4], c(80, 60, 40, 20))) %>% pad
+
+x_df <- data_frame(x = as.Date(c("2019-01-01", "2019-01-04", "2019-01-06")),
+                   y1 = c(3, 5, 6),
+                   y2 = c(11, 14, 14),
+                   y3 = rep(10, 3),
+                   y4 = c("A", "A", "B")) %>% pad()
 
 context("Test the fill functions")
 
@@ -33,17 +31,17 @@ test_that("fill_by_value gives expected outcomes", {
 
 test_that("fill_by_function gives expected outcomes", {
   expect_error( fill_by_function(x_df, y1, fun = y2) )
-  expect_equal( fill_by_function(x_df, y1)$y1 %>% median, 14.77)
-  expect_equal( fill_by_function(x_df, y1, y2)$y1 %>% median, 14.77)
-  expect_equal( fill_by_function(x_df, y1, y2)$y2 %>% median, 22.765)
-  expect_equal( fill_by_function(x_df, y1, fun = median)$y1 %>% median, 15)
-  expect_equal( fill_by_function(x_df, y1, y2, fun = median)$y1 %>% median, 15)
+  expect_equal( fill_by_function(x_df, y1)$y1 %>% median, 4 + 2 / 3)
+  expect_equal( fill_by_function(x_df, y1, y2)$y1 %>% median, 4 + 2 / 3)
+  expect_equal( fill_by_function(x_df, y1, y2)$y2 %>% median, 13)
+  expect_equal( fill_by_function(x_df, y1, fun = median)$y1 %>% median, 5)
+  expect_equal( fill_by_function(x_df, y1, y2, fun = median)$y1 %>% median, 5)
 })
 
 test_that("fill_by_prevalent gives expected outcomes", {
-  expect_equal( fill_by_prevalent(x_df, y4)$y4[2], "a")
+  expect_equal( fill_by_prevalent(x_df, y4)$y4[2], "A")
   expect_equal( fill_by_prevalent(x_df, y3)$y3[2], 10)
-  expect_equal( fill_by_prevalent(x_df, y3, y4)$y4[2], "a")
+  expect_equal( fill_by_prevalent(x_df, y3, y4)$y4[2], "A")
   expect_equal( fill_by_prevalent(x_df, y3, y4)$y3[2], 10)
   expect_error( fill_by_prevalent(x_df, y1))
 })
