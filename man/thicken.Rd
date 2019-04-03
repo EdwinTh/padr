@@ -5,7 +5,7 @@
 \title{Add a variable of a higher interval to a data frame}
 \usage{
 thicken(x, interval, colname = NULL, rounding = c("down", "up"),
-  by = NULL, start_val = NULL, drop = FALSE)
+  by = NULL, start_val = NULL)
 }
 \arguments{
 \item{x}{A data frame containing at least one datetime variable of
@@ -32,9 +32,6 @@ Indicates which to use for thickening.}
 than the lowest value of the input datetime variable, with all time units on
 default value. Specify \code{start_val} as an offset if you want the range
 to be nonstandard.}
-
-\item{drop}{Should the original datetime variable be dropped from the
-returned data frame? Defaults to \code{FALSE}.}
 }
 \value{
 The data frame \code{x} with the variable added to it.

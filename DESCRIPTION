@@ -1,7 +1,7 @@
 Package: padr
 Type: Package
 Title: Quickly Get Datetime Data Ready for Analysis
-Version: 0.4.2
+Version: 0.4.1
 Author: Edwin Thoen
 Maintainer: Edwin Thoen <edwinthoen@gmail.com>
 Description: Transforms datetime data into a format ready for analysis.
