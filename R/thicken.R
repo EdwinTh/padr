@@ -25,6 +25,8 @@
 #' than the lowest value of the input datetime variable, with all time units on
 #' default value. Specify \code{start_val} as an offset if you want the range
 #' to be nonstandard.
+#' @param drop Should the original datetime variable be dropped from the
+#' returned data frame? Defaults to \code{FALSE}.
 #' @return The data frame \code{x} with the variable added to it.
 #' @details When the datetime variable contains missing values, they are left
 #' in place in the dataframe. The added column with the new datetime variable,
@@ -65,7 +67,8 @@ thicken <- function(x,
                     rounding = c('down',
                                  'up'),
                     by        = NULL,
-                    start_val = NULL) {
+                    start_val = NULL,
+                    drop      = FALSE) {
 
   is_df(x)
 
@@ -115,6 +118,8 @@ the interval specified is too low for the interval of the datetime variable", ca
 
   return_frame <- dplyr::bind_cols(x, thickened_frame)
   colnames(return_frame)[ncol(return_frame)] <- colname
+
+  if (drop) return_frame <- remove_original_var(return_frame, dt_var_name)
 
   set_to_original_type(return_frame, original_data_frame)
 }
@@ -228,4 +233,8 @@ add_na_to_thicken <- function(thickened, na_ind) {
   return_var_ord <- return_var[order(return_ind)]
   attr(return_var_ord, "tzone") <- attr(thickened, "tzone")
   return(return_var_ord)
+}
+
+remove_original_var <- function(x, var_name) {
+  x[, colnames(x) != var_name]
 }

@@ -1,5 +1,9 @@
 # padr 0.5.9000
 
+## New Features
+
+* `thicken` has gained a `drop` argument. Logical with `FALSE` as default value. If `TRUE` the thickened datetime value is dropped from the data frame. 
+
 ## Minor changes
 
 * The functions `thicken` and `thicken_cust` no longer throw a warning when the input datetime variable is unsorted. The functions now silently return the a data frame with the same row order as the input data frame.

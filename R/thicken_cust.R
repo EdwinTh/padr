@@ -13,6 +13,8 @@
 #' @param by Only needs to be specified when \code{x} contains multiple
 #' variables of class \code{Date}, \code{POSIXct} or \code{POSIXlt}.
 #' Indicates which to use for thickening.
+#' @param drop Should the original datetime variable be dropped from the
+#' returned data frame? Defaults to \code{FALSE}.
 #' @details
 #' Only rounding down is available for custom thickening.
 #' @return The data frame \code{x} with the variable added to it.
@@ -29,7 +31,8 @@
 thicken_cust <- function(x,
                          spanned,
                          colname,
-                         by = NULL) {
+                         by   = NULL,
+                         drop = FALSE) {
 
   is_df(x)
 
@@ -62,6 +65,8 @@ thicken_cust <- function(x,
 
   return_frame <- dplyr::bind_cols(x, thickened_frame)
   colnames(return_frame)[ncol(return_frame)] <- colname
+
+  if (drop) return_frame <- remove_original_var(return_frame, dt_var_name)
 
   set_to_original_type(return_frame, original_data_frame)
 }
