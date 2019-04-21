@@ -71,6 +71,7 @@ thicken <- function(x,
                     drop      = FALSE) {
 
   is_df(x)
+  has_rows(x)
 
   original_data_frame <- x
   x <- as.data.frame(x)
