@@ -54,11 +54,6 @@ test_that("thicken throws error when asked interval is lower", {
   expect_error( thicken(x_month, interval = "year"), NA)
 })
 
-test_that("thicken gives warning when unordered", {
-  expect_warning( thicken(x_month_unordered, interval =  "quarter") )
-  expect_warning( thicken(x_month, interval =  "quarter"), NA)
-})
-
 test_that("thicken gives informed error when start_val is wrong class", {
   expect_error(thicken(x_month, start_val = "2017-01-01",
                "start_val should be of class Date, POSIXlt, or POSIXct"))

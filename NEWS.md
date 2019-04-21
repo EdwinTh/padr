@@ -1,9 +1,8 @@
 # padr 0.5.9000
 
-
 ## Minor changes
 
-
+* The functions `thicken` and `thicken_cust` no longer throw a warning when the input datetime variable is unsorted. The functions now silently return the a data frame with the same row order as the input data frame.
 
 * Error within `padr` for `break_above` error message is corrected. No longer prints the number of millions in millions (HT Sharla Gelfand).
 
