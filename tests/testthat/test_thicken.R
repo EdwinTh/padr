@@ -127,7 +127,7 @@ test_that("set_to_original_type returns tbl or data.table", {
 context("thicken with missing values")
 
 test_that("thicken works properly on NA values", {
-  coffee_na <- coffee %>% thicken("day", "d") %>% count(d) %>% pad %>%
+  coffee_na <- coffee %>% thicken("day", "d") %>% count(d) %>% pad() %>%
     fill_by_value()
   coffee_na[3, 1] <- NA
   coffee_na_thickened <- sw(coffee_na %>% thicken("week"))
@@ -139,6 +139,14 @@ Returned dataframe contains original observations, with NA values for d and d_we
   expect_equal(coffee_na_thickened %>% filter(is.na(d)) %>% nrow, 1)
   expect_equal(coffee_na_thickened %>% filter(is.na(d_week)) %>% nrow, 1)
   expect_equal(coffee_na_thickened$d[3] %>% as.character(), NA_character_)
+
+  coffee_two_nas <-  coffee %>% thicken("day", "d") %>% count(d) %>% pad() %>%
+    fill_by_value()
+  coffee_two_nas[c(2, 3), 1] <- NA
+
+  expect_equal(sw(thicken(coffee_two_nas, "week"))$d_week,
+               c(as.Date("2016-07-03"), NA, NA, as.Date("2016-07-10")))
+
 })
 
 context("thicken drop argument")
