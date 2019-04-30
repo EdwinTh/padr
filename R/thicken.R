@@ -229,11 +229,11 @@ Returned dataframe contains original observations, with NA values for %s and %s.
 }
 
 add_na_to_thicken <- function(thickened, na_ind) {
-  return_var <- c(thickened, rep(NA, length(na_ind)))
-  return_ind <- c(seq_along(thickened), na_ind - .5)
-  return_var_ord <- return_var[order(return_ind)]
-  attr(return_var_ord, "tzone") <- attr(thickened, "tzone")
-  return(return_var_ord)
+  return_var <- rep(NA, length(thickened) + length(na_ind))
+  attributes(return_var) <- attributes(thickened)
+  ind <- seq_along(return_var)
+  return_var[!ind %in% na_ind] <- thickened
+  return_var
 }
 
 remove_original_var <- function(x, var_name) {

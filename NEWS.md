@@ -1,5 +1,9 @@
 # padr 0.5.9000
 
+## Major Bug fixes
+
+* `thicken` preserves missing values in the datetime column and adds them to the added column. The missing values were placed on the wrong position. They were placed on NA position + nr of NAs earlier in the datetime variable, instead of the NA position. Only the first missing value was on the correct position. Bug reported by github user levi-nagy.
+
 ## New Features
 
 * `thicken` has gained a `drop` argument. Logical with `FALSE` as default value. If `TRUE` the thickened datetime value is dropped from the data frame. Idea by Adam Stone.
@@ -10,7 +14,7 @@
 
 * The functions `thicken` and `thicken_cust` no longer throw a warning when the input datetime variable is unsorted. The functions now silently return the a data frame with the same row order as the input data frame.
 
-* Error within `padr` for `break_above` error message is corrected. No longer prints the number of millions in millions (HT Sharla Gelfand).
+* Error within `padr` for `break_above` error message is corrected. No longer prints the number of millions in millions. Bug found by Sharla Gelfand.
 
 ##################################################
 

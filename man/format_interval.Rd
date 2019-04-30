@@ -4,8 +4,9 @@
 \alias{format_interval}
 \title{Make a period character vector}
 \usage{
-format_interval(x, start_format = "\%Y-\%m-\%d", end_format = start_format,
-  sep = " ", end_offset = 0, units_to_last = NULL)
+format_interval(x, start_format = "\%Y-\%m-\%d",
+  end_format = start_format, sep = " ", end_offset = 0,
+  units_to_last = NULL)
 }
 \arguments{
 \item{x}{A vector of class \code{Date}, \code{POSIXct} or \code{POSIXlt},
