@@ -1,6 +1,7 @@
 round_thicken <- function(a,
                           b,
-                          direction = c('down', 'up')) {
+                          direction = c('down', 'up'),
+                          ties_to_earlier) {
 
   direction <- match.arg(direction)
 
@@ -12,7 +13,10 @@ round_thicken <- function(a,
   a_df <- dplyr::arrange(a_df, a)
   b_same_level <- sort(b_same_level)
 
-  a_df$rounded <- apply_rounding(a_df$a_same_level, b_same_level, direction)
+  a_df$rounded <- apply_rounding(a_df$a_same_level,
+                                 b_same_level,
+                                 direction,
+                                 ties_to_earlier)
   sorting_var  <- NULL # appeases CRAN check note
   a_df <- dplyr::arrange(a_df, sorting_var)
   rounded <- a_df$rounded
@@ -55,11 +59,19 @@ to_posix <- function(a, b) {
 }
 
 # apply the correct rounding function, based on the direction
-apply_rounding <- function(a, b,  direction = c('up', 'down')) {
+apply_rounding <- function(a, b,  direction = c('up', 'down'), ties_to_earlier = FALSE) {
   if (direction == 'up') {
-    round_up_core(a, b)
+    if (ties_to_earlier) {
+      round_up_core_prev(a, b)
+    } else {
+      round_up_core(a, b)
+    }
   } else {
-    round_down_core(a, b)
+    if (ties_to_earlier) {
+      round_down_core_prev(a, b)
+    } else {
+      round_down_core(a, b)
+    }
   }
 }
 

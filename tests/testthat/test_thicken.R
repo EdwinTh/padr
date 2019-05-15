@@ -180,3 +180,23 @@ test_that("the drop argument gives the desired result", {
   expect_equal(thicken(coffee, "hour", drop = FALSE), no_drop)
   expect_equal(thicken(coffee, "hour", drop = TRUE), with_drop)
 })
+
+context("ties_to_earlier argument to thicken")
+x <- data.frame(
+  dt = ymd_hm("20171021 1631", "20171021 1700", "20171021 1731"))
+
+test_that("ties_to_earlier works with rounding down regular")
+expect_equal(thicken(x, "hour", ties_to_earlier = TRUE)$dt_hour,
+             ymd_h("20171021 16", "20171021 16", "20171021 17"))
+
+test_that("ties_to_earlier works with rounding up regular")
+expect_equal(thicken(x, "hour", rounding = "up", ties_to_earlier = TRUE)$dt_hour,
+             ymd_h("20171021 17", "20171021 17", "20171021 18"))
+
+test_that("ties_to_earlier works with rounding down ties on edges")
+expect_equal(thicken(x[2:3, ,drop = FALSE], "hour", ties_to_earlier = TRUE)$dt_hour,
+             ymd_h("20171021 16", "20171021 17"))
+
+test_that("ties_to_earlier works with rounding up ties on edges")
+expect_equal(thicken(x[1:2, ,drop = FALSE], "hour", rounding = "up", ties_to_earlier = TRUE)$dt_hour,
+             ymd_h("20171021 17", "20171021 17"))

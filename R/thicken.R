@@ -27,6 +27,11 @@
 #' to be nonstandard.
 #' @param drop Should the original datetime variable be dropped from the
 #' returned data frame? Defaults to \code{FALSE}.
+#' @param ties_to_earlier By default when the original datetime observations is
+#' tied with a value in the added datetime variable, it is assigned to the
+#' current value when rounding is down or to the next value when rounding
+#' is up. When \code{TRUE} the ties will be assigned to the previous observation
+#' of the new variable instead.
 #' @return The data frame \code{x} with the variable added to it.
 #' @details When the datetime variable contains missing values, they are left
 #' in place in the dataframe. The added column with the new datetime variable,
@@ -60,6 +65,12 @@
 #' x_df %>% thicken('week',
 #'                  start_val = closest_weekday(x_df$x, 2)) %>%
 #'   group_by(x_week) %>% summarise(y_avg = mean(y))
+#'
+#' # rounding up instead of down
+#' x <- data.frame(dt = lubridate::ymd_hms('20171021 160000',
+#'                                         '20171021 163100'))
+#' thicken(x, interval = "hour", rounding = "up")
+#' thicken(x, interval = "hour", rounding = "up", ties_to_earlier = TRUE)
 #' @export
 thicken <- function(x,
                     interval,
@@ -69,12 +80,12 @@ thicken <- function(x,
                     by        = NULL,
                     start_val = NULL,
                     drop      = FALSE,
-                    ties_to_prev = FALSE) {
+                    ties_to_earlier = FALSE) {
 
   is_df(x)
   has_rows(x)
 
-  stopifnot(is.logical(drop), is.logical(ties_to_prev))
+  stopifnot(is.logical(drop), is.logical(ties_to_earlier))
 
   original_data_frame <- x
   x <- as.data.frame(x)
@@ -110,7 +121,7 @@ thicken <- function(x,
 
   spanned <- span(dt_var, interval_converted, start_val)
 
-  thickened <- round_thicken(dt_var, spanned, rounding)
+  thickened <- round_thicken(dt_var, spanned, rounding, ties_to_earlier)
 
   if (all(all.equal(thickened, dt_var) == TRUE)) {
     stop("The thickened result is equal to the original datetime variable,
