@@ -64,14 +64,17 @@
 thicken <- function(x,
                     interval,
                     colname  = NULL,
-                    rounding = c('down',
-                                 'up'),
+                    rounding = c("down",
+                                 "up"),
                     by        = NULL,
                     start_val = NULL,
-                    drop      = FALSE) {
+                    drop      = FALSE,
+                    ties_to_prev = FALSE) {
 
   is_df(x)
   has_rows(x)
+
+  stopifnot(is.logical(drop), is.logical(ties_to_prev))
 
   original_data_frame <- x
   x <- as.data.frame(x)
