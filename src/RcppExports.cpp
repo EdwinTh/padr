@@ -6,13 +6,13 @@
 using namespace Rcpp;
 
 // round_down_core
-IntegerVector round_down_core(IntegerVector a, IntegerVector b);
+NumericVector round_down_core(NumericVector a, NumericVector b);
 RcppExport SEXP _padr_round_down_core(SEXP aSEXP, SEXP bSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type a(aSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type b(bSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type a(aSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type b(bSEXP);
     rcpp_result_gen = Rcpp::wrap(round_down_core(a, b));
     return rcpp_result_gen;
 END_RCPP

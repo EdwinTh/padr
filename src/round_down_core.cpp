@@ -2,10 +2,10 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-IntegerVector round_down_core(IntegerVector a, IntegerVector b){
+NumericVector round_down_core(NumericVector a, NumericVector b){
 
   int n = a.size();
-  IntegerVector ret(n);
+  NumericVector ret(n);
   int current_b = b[0];
   int next_b    = b[1];
   int current_b_index = 0;
