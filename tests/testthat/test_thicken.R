@@ -205,3 +205,23 @@ test_that("ties_to_earlier works with rounding up ties on edges", {
                ymd_h("20171021 17", "20171021 17"))
 })
 
+context("thicken should not suffer from the YEAR2038 problem")
+a <- as.numeric(ymd_h(c("20380601 00", "20390601 00")))
+b <- as.numeric(ymd_h(c("20380101 00", "20390101 00", "20400101 00")))
+
+test_that("round_down_core works after 2038 in posix", {
+  expect_equal(round_down_core(a, b), b[1:2])
+})
+
+test_that("round_down_core_prev works after 2038 in posix", {
+  expect_equal(round_down_core_prev(a, b), b[1:2])
+})
+
+test_that("round_up_core works after 2038 in posix", {
+  expect_equal(round_up_core(a, b), b[2:3])
+})
+
+test_that("round_down_core_prev works after 2038 in posix", {
+  expect_equal(round_up_core_prev(a, b), b[2:3])
+})
+
