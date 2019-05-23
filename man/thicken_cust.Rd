@@ -4,7 +4,7 @@
 \alias{thicken_cust}
 \title{Thicken with a custom spanning}
 \usage{
-thicken_cust(x, spanned, colname, by = NULL)
+thicken_cust(x, spanned, colname, by = NULL, drop = FALSE)
 }
 \arguments{
 \item{x}{A data frame containing at least one datetime variable of
@@ -18,6 +18,9 @@ class \code{Date}, \code{POSIXct} or \code{POSIXlt}.}
 \item{by}{Only needs to be specified when \code{x} contains multiple
 variables of class \code{Date}, \code{POSIXct} or \code{POSIXlt}.
 Indicates which to use for thickening.}
+
+\item{drop}{Should the original datetime variable be dropped from the
+returned data frame? Defaults to \code{FALSE}.}
 }
 \value{
 The data frame \code{x} with the variable added to it.

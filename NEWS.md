@@ -1,3 +1,27 @@
+# padr 0.5.0
+
+## Major Bug fixes
+
+* `thicken` preserves missing values in the datetime column and adds them to the added column. The missing values were placed on the wrong position. They were placed on NA position + nr of NAs earlier in the datetime variable, instead of the NA position. Only the first missing value was on the correct position. Bug reported by github user levi-nagy.
+
+## New Features
+
+* `thicken` has gained the `ties_to_earlier` argument. Logical with `FALSE` as default value. By default when the `rounding` argument in `thicken` is set to "up" and the original observation is equal to a value in the higher interval variable, the observation is mapped to the next value in the new variable. (For example 2019-04-14 13:00:00 would be mapped to 2019-04-14 14:00:00 when rounding is "up" and interval is "hour".) This can be undesired. When this argument is set to `TRUE` tied observations are mapped to their own value (thus to one value earlier in the new variable). For completeness this argument also works when `rounding` is "down". Then, when original and new value are tied, the original value is mapped to the previous value of the higher level interval variable. (For example 2019-04-14 13:00:00 will be mapped to 2019-04-14 12:00:00 when the interval is hour). Feature request by github user stribstrib.
+
+* `thicken` has gained a `drop` argument. Logical with `FALSE` as default value. If `TRUE` the thickened datetime value is dropped from the data frame. Idea by Adam Stone.
+
+## Minor changes
+
+* It was brought to my attention by github users dareneiri and Blundys that `thicken` suffers from the year 2038 bug. This is an integer overflow when trying to convert POSIXt objects to a 32-bit integer. Research did not result in a satisfactory solution (yet). Therefore, it was decided to throw an informative error instead of returning missing values.
+
+* An informative error is now thrown in `pad`, `pad_cust`, `thicken`, `thicken_cust` when a data frame does not have any rows. Reported by Julian During.
+
+* The functions `thicken` and `thicken_cust` no longer throw a warning when the input datetime variable is unsorted. The functions now silently return the a data frame with the same row order as the input data frame.
+
+* Error within `padr` for `break_above` error message is corrected. No longer prints the number of millions in millions. Error found by Sharla Gelfand.
+
+##################################################
+
 # padr 0.4.1 - 0.4.2
 
 Patch releases with no impact for the user of the software.

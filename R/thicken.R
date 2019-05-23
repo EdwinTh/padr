@@ -25,6 +25,13 @@
 #' than the lowest value of the input datetime variable, with all time units on
 #' default value. Specify \code{start_val} as an offset if you want the range
 #' to be nonstandard.
+#' @param drop Should the original datetime variable be dropped from the
+#' returned data frame? Defaults to \code{FALSE}.
+#' @param ties_to_earlier By default when the original datetime observations is
+#' tied with a value in the added datetime variable, it is assigned to the
+#' current value when rounding is down or to the next value when rounding
+#' is up. When \code{TRUE} the ties will be assigned to the previous observation
+#' of the new variable instead.
 #' @return The data frame \code{x} with the variable added to it.
 #' @details When the datetime variable contains missing values, they are left
 #' in place in the dataframe. The added column with the new datetime variable,
@@ -58,16 +65,27 @@
 #' x_df %>% thicken('week',
 #'                  start_val = closest_weekday(x_df$x, 2)) %>%
 #'   group_by(x_week) %>% summarise(y_avg = mean(y))
+#'
+#' # rounding up instead of down
+#' x <- data.frame(dt = lubridate::ymd_hms('20171021 160000',
+#'                                         '20171021 163100'))
+#' thicken(x, interval = "hour", rounding = "up")
+#' thicken(x, interval = "hour", rounding = "up", ties_to_earlier = TRUE)
 #' @export
 thicken <- function(x,
                     interval,
                     colname  = NULL,
-                    rounding = c('down',
-                                 'up'),
+                    rounding = c("down",
+                                 "up"),
                     by        = NULL,
-                    start_val = NULL) {
+                    start_val = NULL,
+                    drop      = FALSE,
+                    ties_to_earlier = FALSE) {
 
   is_df(x)
+  has_rows(x)
+
+  stopifnot(is.logical(drop), is.logical(ties_to_earlier))
 
   original_data_frame <- x
   x <- as.data.frame(x)
@@ -76,16 +94,12 @@ thicken <- function(x,
   dt_var      <- dt_var_info$dt_var
   dt_var_name <- dt_var_info$dt_var_name
 
+  check_year_2038_problem(dt_var)
   check_start_and_end(start_val, NULL)
 
   interval_converted <- convert_interval(interval)
   interval_converted$interval <- uniform_interval_name(interval_converted$interval)
   rounding <- match.arg(rounding)
-
-  if (check_for_sorting(dt_var)){
-    warning('Datetime variable was unsorted, result will be unsorted as well.',
-            call. = FALSE)
-  }
 
   if (inherits(start_val, 'POSIXt') & inherits(dt_var, 'POSIXt')) {
     start_val <- enforce_time_zone(start_val, dt_var)
@@ -108,7 +122,7 @@ thicken <- function(x,
 
   spanned <- span(dt_var, interval_converted, start_val)
 
-  thickened <- round_thicken(dt_var, spanned, rounding)
+  thickened <- round_thicken(dt_var, spanned, rounding, ties_to_earlier)
 
   if (all(all.equal(thickened, dt_var) == TRUE)) {
     stop("The thickened result is equal to the original datetime variable,
@@ -120,6 +134,8 @@ the interval specified is too low for the interval of the datetime variable", ca
 
   return_frame <- dplyr::bind_cols(x, thickened_frame)
   colnames(return_frame)[ncol(return_frame)] <- colname
+
+  if (drop) return_frame <- remove_original_var(return_frame, dt_var_name)
 
   set_to_original_type(return_frame, original_data_frame)
 }
@@ -213,12 +229,6 @@ start_val_after_min_dt <- function(start_val, dt_var) {
   }
 }
 
-check_for_sorting <- function(dt_var) {
-  # filter out missing values, there will be a warning thrown for them later
-  dt_var <- dt_var[!is.na(dt_var)]
-  !all(dt_var[1:(length(dt_var) - 1)] <= dt_var[2:length(dt_var)])
-}
-
 check_for_NA_thicken <- function(dt_var, dt_var_name, colname) {
   if (sum(is.na(dt_var))  > 0) {
     dt_var <- dt_var[!is.na(dt_var)]
@@ -234,9 +244,26 @@ Returned dataframe contains original observations, with NA values for %s and %s.
 }
 
 add_na_to_thicken <- function(thickened, na_ind) {
-  return_var <- c(thickened, rep(NA, length(na_ind)))
-  return_ind <- c(seq_along(thickened), na_ind - .5)
-  return_var_ord <- return_var[order(return_ind)]
-  attr(return_var_ord, "tzone") <- attr(thickened, "tzone")
-  return(return_var_ord)
+  return_var <- rep(NA, length(thickened) + length(na_ind))
+  attributes(return_var) <- attributes(thickened)
+  ind <- seq_along(return_var)
+  return_var[!ind %in% na_ind] <- thickened
+  return_var
 }
+
+remove_original_var <- function(x, var_name) {
+  x[, colnames(x) != var_name]
+}
+
+check_year_2038_problem <- function(dt_var) {
+  if (inherits(dt_var, "POSIXt")) {
+    if (lubridate::year(max(dt_var)) > 2037) {
+      stop(cat(
+        "The datetime variable is of class POSIXt and contains a year that is 2038 or higher.
+        Currently it is not possible to apply thicken to this setting, due to the year 2038 problem.
+        See also https://github.com/EdwinTh/padr/issues/51"
+      ))
+      }
+  }
+}
+

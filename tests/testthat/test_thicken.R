@@ -54,11 +54,6 @@ test_that("thicken throws error when asked interval is lower", {
   expect_error( thicken(x_month, interval = "year"), NA)
 })
 
-test_that("thicken gives warning when unordered", {
-  expect_warning( thicken(x_month_unordered, interval =  "quarter") )
-  expect_warning( thicken(x_month, interval =  "quarter"), NA)
-})
-
 test_that("thicken gives informed error when start_val is wrong class", {
   expect_error(thicken(x_month, start_val = "2017-01-01",
                "start_val should be of class Date, POSIXlt, or POSIXct"))
@@ -132,7 +127,7 @@ test_that("set_to_original_type returns tbl or data.table", {
 context("thicken with missing values")
 
 test_that("thicken works properly on NA values", {
-  coffee_na <- coffee %>% thicken("day", "d") %>% count(d) %>% pad %>%
+  coffee_na <- coffee %>% thicken("day", "d") %>% count(d) %>% pad() %>%
     fill_by_value()
   coffee_na[3, 1] <- NA
   coffee_na_thickened <- sw(coffee_na %>% thicken("week"))
@@ -144,4 +139,87 @@ Returned dataframe contains original observations, with NA values for d and d_we
   expect_equal(coffee_na_thickened %>% filter(is.na(d)) %>% nrow, 1)
   expect_equal(coffee_na_thickened %>% filter(is.na(d_week)) %>% nrow, 1)
   expect_equal(coffee_na_thickened$d[3] %>% as.character(), NA_character_)
+
+  coffee_two_nas <-  coffee %>% thicken("day", "d") %>% count(d) %>% pad() %>%
+    fill_by_value()
+  coffee_two_nas[c(2, 3), 1] <- NA
+
+  expect_equal(sw(thicken(coffee_two_nas, "week"))$d_week,
+               c(as.Date("2016-07-03"), NA, NA, as.Date("2016-07-10")))
 })
+
+test_that("add_na_to_thicken unit tests", {
+  thickened_date     <- ymd(c(20180101, 20180101))
+  thickened_datetime <- ymd_h(c("20180101 01", "20180101 04"))
+  thickened_datetime_CET <- as.POSIXct(as.character(thickened_datetime), tz = "CET")
+
+
+  expect_equal(add_na_to_thicken(thickened_date, 2),
+               ymd(c(20180101, NA, 20180101)))
+  expect_equal(add_na_to_thicken(thickened_datetime, 2),
+               ymd_h(c("20180101 01", NA, "20180101 04")))
+  expect_equal(add_na_to_thicken(thickened_date, c(2, 4)),
+               ymd(c(20180101, NA, 20180101, NA)))
+  expect_equal(add_na_to_thicken(thickened_datetime, c(2, 4)),
+               ymd_h(c("20180101 01", NA, "20180101 04", NA)))
+
+  expect_equal(add_na_to_thicken(thickened_datetime_CET, c(2, 4)),
+               ymd_h(c("20180101 01", NA, "20180101 04", NA), tz = "CET"))
+})
+
+context("thicken drop argument")
+test_that("the drop argument gives the desired result", {
+  hourly <- ymd_h(c("20160707 09",
+                    "20160707 09",
+                    "20160709 13",
+                    "20160710 10"), tz = "CET")
+  coffee_hour <- coffee %>% mutate(time_stamp_hour = hourly)
+  no_drop <- coffee_hour
+  with_drop <- coffee_hour %>% select(-time_stamp)
+  expect_equal(thicken(coffee, "hour"), no_drop)
+  expect_equal(thicken(coffee, "hour", drop = FALSE), no_drop)
+  expect_equal(thicken(coffee, "hour", drop = TRUE), with_drop)
+})
+
+context("ties_to_earlier argument to thicken")
+x <- data.frame(
+  dt = ymd_hm("20171021 1631", "20171021 1700", "20171021 1731"))
+
+test_that("ties_to_earlier works with rounding down regular",{
+  expect_equal(thicken(x, "hour", ties_to_earlier = TRUE)$dt_hour,
+               ymd_h("20171021 16", "20171021 16", "20171021 17"))
+})
+
+test_that("ties_to_earlier works with rounding up regular", {
+  expect_equal(thicken(x, "hour", rounding = "up", ties_to_earlier = TRUE)$dt_hour,
+               ymd_h("20171021 17", "20171021 17", "20171021 18"))
+})
+
+test_that("ties_to_earlier works with rounding down ties on edges", {
+  expect_equal(thicken(x[2:3, ,drop = FALSE], "hour", ties_to_earlier = TRUE)$dt_hour,
+               ymd_h("20171021 16", "20171021 17"))
+})
+
+test_that("ties_to_earlier works with rounding up ties on edges", {
+  expect_equal(thicken(x[1:2, ,drop = FALSE], "hour", rounding = "up", ties_to_earlier = TRUE)$dt_hour,
+               ymd_h("20171021 17", "20171021 17"))
+})
+
+context("the YEAR2038 problem")
+
+test_that("an informative error is thrown when POSIXt year is 2038 or higher", {
+
+  x <- data.frame(a = ymd_h(c("2036-12-12 00", "2037-12-12 00", "2038-12-12 00")))
+  expect_error(thicken(x, "day"))
+  expect_error(thicken(x[1:2, , drop = FALSE], "day"), NA)
+})
+
+test_that("year 2038 problem does not occur for dates", {
+  x <- data.frame(a = ymd(c(20370804, 20390421)))
+  expect_error(thicken(x, "month"), NA)
+  expect_equal(thicken(x, "month")$a_month, ymd(c(20370801, 20390401)))
+})
+
+
+
+

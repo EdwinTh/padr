@@ -33,6 +33,8 @@ pad_cust <- function(x,
                      group     = NULL,
                      drop_last_spanned = TRUE){
   is_df(x)
+  has_rows(x)
+
   stop_not_datetime(spanned)
   group <- get_dplyr_groups(x, group)
 

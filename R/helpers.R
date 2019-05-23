@@ -29,6 +29,12 @@ is_df <- function(x){
   }
 }
 
+has_rows <- function(x) {
+  if (nrow(x) == 0) {
+    stop("x has no rows", call. = FALSE)
+  }
+}
+
 check_start_and_end <- function(start_val, end_val) {
   if (!is.null(start_val)) {
     if (! (inherits(start_val, "Date") | inherits(start_val, "POSIXt")) ){

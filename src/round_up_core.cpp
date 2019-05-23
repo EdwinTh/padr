@@ -1,8 +1,6 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-// Core of the round_up function
-
 // [[Rcpp::export]]
 IntegerVector round_up_core(IntegerVector a, IntegerVector b){
 

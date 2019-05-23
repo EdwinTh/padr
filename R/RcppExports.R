@@ -5,7 +5,15 @@ round_down_core <- function(a, b) {
     .Call('_padr_round_down_core', PACKAGE = 'padr', a, b)
 }
 
+round_down_core_prev <- function(a, b) {
+    .Call('_padr_round_down_core_prev', PACKAGE = 'padr', a, b)
+}
+
 round_up_core <- function(a, b) {
     .Call('_padr_round_up_core', PACKAGE = 'padr', a, b)
+}
+
+round_up_core_prev <- function(a, b) {
+    .Call('_padr_round_up_core_prev', PACKAGE = 'padr', a, b)
 }
 

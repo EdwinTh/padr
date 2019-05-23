@@ -97,6 +97,9 @@ span <- function(x,
 
   stop_not_datetime(x)
 
+  # workaround for rounding is down and ties_to_earlier is TRUE
+  # (otherwise the first value to map to be is missing from spanned)
+  x[1] <- x[1] - 1
   start_and_end <- get_start_and_end(x, return_interval = interval)
 
   if ( is.null(start_val) ) {
