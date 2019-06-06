@@ -5,7 +5,7 @@
 \title{Add a variable of a higher interval to a data frame}
 \usage{
 thicken(x, interval, colname = NULL, rounding = c("down", "up"),
-  by = NULL, start_val = NULL, drop = FALSE)
+  by = NULL, start_val = NULL, drop = FALSE, ties_to_earlier = FALSE)
 }
 \arguments{
 \item{x}{A data frame containing at least one datetime variable of
@@ -35,6 +35,12 @@ to be nonstandard.}
 
 \item{drop}{Should the original datetime variable be dropped from the
 returned data frame? Defaults to \code{FALSE}.}
+
+\item{ties_to_earlier}{By default when the original datetime observations is
+tied with a value in the added datetime variable, it is assigned to the
+current value when rounding is down or to the next value when rounding
+is up. When \code{TRUE} the ties will be assigned to the previous observation
+of the new variable instead.}
 }
 \value{
 The data frame \code{x} with the variable added to it.
@@ -80,4 +86,10 @@ x_df \%>\% thicken('month') \%>\% group_by(x_month) \%>\%
 x_df \%>\% thicken('week',
                  start_val = closest_weekday(x_df$x, 2)) \%>\%
   group_by(x_week) \%>\% summarise(y_avg = mean(y))
+
+# rounding up instead of down
+x <- data.frame(dt = lubridate::ymd_hms('20171021 160000',
+                                        '20171021 163100'))
+thicken(x, interval = "hour", rounding = "up")
+thicken(x, interval = "hour", rounding = "up", ties_to_earlier = TRUE)
 }

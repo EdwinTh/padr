@@ -4,8 +4,7 @@
 \alias{pad_int}
 \title{Pad the integer column of a data frame}
 \usage{
-pad_int(x, by, start_val = NULL, end_val = NULL, group = NULL,
-  step = 1)
+pad_int(x, by, start_val = NULL, end_val = NULL, group = NULL, step = 1)
 }
 \arguments{
 \item{x}{A data frame.}
