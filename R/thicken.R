@@ -94,7 +94,6 @@ thicken <- function(x,
   dt_var      <- dt_var_info$dt_var
   dt_var_name <- dt_var_info$dt_var_name
 
-  check_year_2038_problem(dt_var)
   check_start_and_end(start_val, NULL)
 
   interval_converted <- convert_interval(interval)
@@ -254,16 +253,3 @@ add_na_to_thicken <- function(thickened, na_ind) {
 remove_original_var <- function(x, var_name) {
   x[, colnames(x) != var_name]
 }
-
-check_year_2038_problem <- function(dt_var) {
-  if (inherits(dt_var, "POSIXt")) {
-    if (lubridate::year(max(dt_var)) > 2037) {
-      stop(cat(
-        "The datetime variable is of class POSIXt and contains a year that is 2038 or higher.
-        Currently it is not possible to apply thicken to this setting, due to the year 2038 problem.
-        See also https://github.com/EdwinTh/padr/issues/51"
-      ))
-      }
-  }
-}
-

@@ -205,21 +205,3 @@ test_that("ties_to_earlier works with rounding up ties on edges", {
                ymd_h("20171021 17", "20171021 17"))
 })
 
-context("the YEAR2038 problem")
-
-test_that("an informative error is thrown when POSIXt year is 2038 or higher", {
-
-  x <- data.frame(a = ymd_h(c("2036-12-12 00", "2037-12-12 00", "2038-12-12 00")))
-  expect_error(thicken(x, "day"))
-  expect_error(thicken(x[1:2, , drop = FALSE], "day"), NA)
-})
-
-test_that("year 2038 problem does not occur for dates", {
-  x <- data.frame(a = ymd(c(20370804, 20390421)))
-  expect_error(thicken(x, "month"), NA)
-  expect_equal(thicken(x, "month")$a_month, ymd(c(20370801, 20390401)))
-})
-
-
-
-

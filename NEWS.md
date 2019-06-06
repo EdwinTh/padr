@@ -2,7 +2,7 @@
 
 ## Major Bug fixes
 
-* `thicken` preserves missing values in the datetime column and adds them to the added column. The missing values were placed on the wrong position. They were placed on NA position + nr of NAs earlier in the datetime variable, instead of the NA position. Only the first missing value was on the correct position. Bug reported by github user levi-nagy.
+* `thicken` preserves missing values in the datetime column and adds them to the added column. The missing values were placed on the wrong position. They were placed on NA position + nr of NAs earlier in the datetime variable, instead of the NA position. Only the first missing value was on the correct position. Bug reported by github user github user levi-nagy.
 
 ## New Features
 
@@ -12,13 +12,13 @@
 
 ## Minor changes
 
-* It was brought to my attention by github users dareneiri and Blundys that `thicken` suffers from the year 2038 bug. This is an integer overflow when trying to convert POSIXt objects to a 32-bit integer. Research did not result in a satisfactory solution (yet). Therefore, it was decided to throw an informative error instead of returning missing values.
+* `thicken` converts datatime values to integers to match values to the higher interval. Because of this the function suffers from the YEAR2038 problem, meaning that it will not give output if a POSIXct is higher than 2038-01-19 03:14:07 because of integer overflow. The problem needs to be addressed in the future, for now a meaningful error is raised when a POSIXt with year 2038 or higher is fed to `thicken`. Problem detected by github users darneiri and Blundys.
 
-* An informative error is now thrown in `pad`, `pad_cust`, `thicken`, `thicken_cust` when a data frame does not have any rows. Reported by Julian During.
+* An informative error is now thrown in `pad`, `pad_cust`, `thicken`, `thicken_cust` when a data frame does not have any rows. Requested by Julian During.
 
 * The functions `thicken` and `thicken_cust` no longer throw a warning when the input datetime variable is unsorted. The functions now silently return the a data frame with the same row order as the input data frame.
 
-* Error within `padr` for `break_above` error message is corrected. No longer prints the number of millions in millions. Error found by Sharla Gelfand.
+* Error within `padr` for `break_above` error message is corrected. No longer prints the number of millions in millions. Bug found by Sharla Gelfand.
 
 ##################################################
 
