@@ -47,10 +47,11 @@ test_that("thicken_cust works properly", {
 
 context("thicken_cust drop argument")
 test_that("the drop argument gives the desired result", {
-  hourly <- ymd_h(c("20160707 09",
-                    "20160707 09",
-                    "20160709 13",
-                    "20160710 10"), tz = "CET")
+  attr(coffee$time_stamp, "tzone") <- "UTC"
+  hourly <- ymd_h(c("20160707 07",
+                    "20160707 07",
+                    "20160709 11",
+                    "20160710 08"), tz = "UTC")
   coffee_hour <- coffee %>% mutate(time_stamp_hour = hourly)
   no_drop <- coffee_hour
   with_drop <- coffee_hour %>% select(-time_stamp)
