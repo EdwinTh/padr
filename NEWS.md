@@ -12,7 +12,7 @@
 
 ## Minor changes
 
-* `thicken` converts datatime values to integers to match values to the higher interval. Because of this the function suffers from the YEAR2038 problem, meaning that it will not give output if a POSIXct is higher than 2038-01-19 03:14:07 because of integer overflow. The problem needs to be addressed in the future, for now a meaningful error is raised when a POSIXt with year 2038 or higher is fed to `thicken`. Problem detected by github users darneiri and Blundys.
+* `thicken` converts datetime values to integers to match values to the higher interval. Because of this the function suffers from the YEAR2038 problem, meaning that it will not give output if a POSIXct is higher than 2038-01-19 03:14:07 because of integer overflow. The problem needs to be addressed in the future, for now a meaningful error is raised when a POSIXt with year 2038 or higher is fed to `thicken`. Problem detected by github users darneiri and Blundys.
 
 * An informative error is now thrown in `pad`, `pad_cust`, `thicken`, `thicken_cust` when a data frame does not have any rows. Requested by Julian During.
 
@@ -34,7 +34,7 @@ Patch releases with no impact for the user of the software.
 
 * `thicken` is sped up significantly:
 
-- `get_interval` no longer applied to assess interval validity (its slow on large variables because it converts a POSIX to character). Rather validity is now compared after thickening by checking if results differes frome original. Makes function approximately four times faster.
+- `get_interval` no longer applied to assess interval validity (its slow on large variables because it converts a POSIX to character). Rather validity is now compared after thickening by checking if results differs from original. Makes function approximately four times faster.
 
 * `get_interval` is sped up significantly:
 
@@ -97,15 +97,15 @@ get_interval(date_var)
 
 x <- data.frame(date_var, y = 1:3)
 
-Since the interval of `date_var` used be "day", there were missing records for 2017-01-02 and 2017-01-04. These records were inserted, with missing values for y. However, now the interval of `date_var` is "2 day" and on this level there is no need for padding. To get ther original result the interval argument should be specified with "day".
+Since the interval of `date_var` used be "day", there were missing records for 2017-01-02 and 2017-01-04. These records were inserted, with missing values for y. However, now the interval of `date_var` is "2 day" and on this level there is no need for padding. To get the original result the interval argument should be specified with "day".
 
 #### Changes in `pad`
 
 Pad has been reimplemented
 
-The function was slow when applied on many group becuaus looped over them. Function has been reimplemented so it needs only one join to do the padding for all the groups simultaneously. `dplyr` functions are used for this new implementation, both for speed and coding clarity.
+The function was slow when applied on many groups becuause it looped over them. Function has been reimplemented so it needs only one join to do the padding for all the groups simultaneously. `dplyr` functions are used for this new implementation, both for speed and coding clarity.
 
-When applying pad to groups the interval is determined differently. It used to determine the interval seperately for each of the groups. With the new interval definition this would often yield undesired results. Now, the interval on the full datetime variable, ignoring the groups. If the user would like to allow for differing intervals over the groups it is advised to use `dplyr::do`. See also the final example of `pad`.
+When applying pad to groups the interval is determined differently. It used to determine the interval separately for each of the groups. With the new interval definition this would often yield undesired results. Now, the interval on the full datetime variable, ignoring the groups. If the user would like to allow for differing intervals over the groups it is advised to use `dplyr::do`. See also the final example of `pad`.
 
 `dplyr::group_by`
 
@@ -132,7 +132,7 @@ They used to require specification of all the column names that had to filled. T
 
 # pad_int
 
-The new function pad_int does padding of an integer field. Its working is very similar to the general pad. The by argument must alway be specified, since a data.frame would almost alway contain multiple numeric columns. Instead of the interval, one can specify the step size by which the integer increases.
+The new function pad_int does padding of an integer field. Its working is very similar to the general pad. The by argument must always be specified, since a data.frame would almost alway contain multiple numeric columns. Instead of the interval, one can specify the step size by which the integer increases.
 
 ## Bug fixes
 

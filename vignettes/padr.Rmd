@@ -12,7 +12,7 @@ vignette: >
 When getting time series data ready for analysis, you might be confronted with the following two challenges:
 
 * The observations are recorded on too low a level, e.g. time recorded to the second, where your analysis is on a daily level.
-* There are no records for the time points where obsevations were absent.
+* There are no records for the time points where observations were absent.
 
 `padr` aims to make light work of preparing time series data by offering the two main functions `thicken` and `pad`. A small example before we get into detail. Say I want to make a line plot of my daily expenses at the coffee place. The data for a few days might look like.
 
@@ -64,7 +64,7 @@ We use the emergency data set for further illustration. It contains 120,450 emer
 head(emergency)
 ```
 
-Say we are interested in the number of overdoses that occured daily. However, we don't want incidents during the same night to be split into two days, what would have happened when we use the default behavior. Rather, we reset the count at 8 am, grouping all nightly cases to the same day. The interval is still *day*, but each new day starts at 8 am instead of midnight. The `start_val` serves as an offset. 
+Say we are interested in the number of overdoses that occurred daily. However, we don't want incidents during the same night to be split into two days, what would have happened when we use the default behavior. Rather, we reset the count at 8 am, grouping all nightly cases to the same day. The interval is still *day*, but each new day starts at 8 am instead of midnight. The `start_val` serves as an offset. 
 
 ```{r}
 emergency %>% filter(title == 'EMS: OVERDOSE') %>% 
@@ -122,7 +122,7 @@ grouping_df %>%
   pad(group = "group")
 ```
 
-Note in the above that each group is padded from its own start to its end. If you want the starts and ends of each groups to be similar use tht `start_val` and `end_val` arguments. Note further that the interval on which to pad is assessed over the groups. It is assumed that the user wants to bring all observations to the same interval. If you do want each group to have its own interval, use `dplyr::do` in the following way.
+Note in the above that each group is padded from its own start to its end. If you want the starts and ends of each groups to be similar use the `start_val` and `end_val` arguments. Note further that the interval on which to pad is assessed over the groups. It is assumed that the user wants to bring all observations to the same interval. If you do want each group to have its own interval, use `dplyr::do` in the following way.
 
 ```{r}
 grouping_df %>% 
@@ -178,7 +178,7 @@ emergency %>%
 There are two more vignettes. In `padr_implementation` you can find more information about how `padr` handles daylight savings time, what it does with different time zones and how `thicken` exactly is implemented. `padr_custom` shows you how you can thicken and pad with asymmetric intervals.
 
 ## Suggestions?
-Found a bug? Ideas for improving or expandig `padr`. Your input is much appreciated. The code is maintained at https://github.com/EdwinTh/padr and you are most welcome to file an issue or do a pull request.
+Found a bug? Ideas for improving or expanding `padr`. Your input is much appreciated. The code is maintained at https://github.com/EdwinTh/padr and you are most welcome to file an issue or do a pull request.
 
 
 [^1]: Many users who work with date and time variables will be using the `lubridate` package. The definition of an interval in `lubridate` is different from the definition in `padr`. In `lubridate` an interval is a period between two time points and has nothing to do with recurrence. Please keep this in mind.

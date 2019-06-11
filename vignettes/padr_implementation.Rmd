@@ -42,7 +42,7 @@ to_pad <- data.frame(dt = seq(as.POSIXct('2016-02-02 14:53:12', tz = 'CET'),
 pad(to_pad, start_val = as.POSIXct('2016-02-01 14:53:12', tz = 'EST'))
 ```
 
-This behavior was chosen over throwing an error or converting to the other time zone with adjusting the clock time, because it is assumed that the user did not use two time zones on purpose. Time zone differences are more likely due to different object sources, rather than being created intentional. For instance using `as.POSIXct` without specifying the time zone, will use the time zone from the System's locale. When creating a datetime variable with `lubridate` on the ohter hand, it will use *UTC* as the default time zone. 
+This behavior was chosen over throwing an error or converting to the other time zone with adjusting the clock time, because it is assumed that the user did not use two time zones on purpose. Time zone differences are more likely due to different object sources, rather than being created intentional. For instance using `as.POSIXct` without specifying the time zone, will use the time zone from the System's locale. When creating a datetime variable with `lubridate` on the other hand, it will use *UTC* as the default time zone. 
 
 ## Details working `thicken`
 

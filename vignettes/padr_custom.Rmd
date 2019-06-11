@@ -56,7 +56,7 @@ Note that the argument `start_shift` is used. This will add an extra time period
 
 ## Thickening and padding
 
-The `thicken_cust` and `pad_cust` functions both take the spanned object as an argument. `thicken_cust` will assign each observation to the closest value in the spanned object. Note that `thicken_cust` only does round down, whereas in the regular `thicken` there is also the option to round up. This seems the mostly choses option in the regular `thicken`, the argument was omitted from `thicken_cust` for simplicity. `pad_cust` also needs the spanned object, because it can no longer infer which observations are lacking from the datetime variable. By default, `pad_cust` drops the last value in the spanned object. If the original spanning was around the datetime variable, leaving the last value in would create an empty record after all the observations.
+The `thicken_cust` and `pad_cust` functions both take the spanned object as an argument. `thicken_cust` will assign each observation to the closest value in the spanned object. Note that `thicken_cust` only does round down, whereas in the regular `thicken` there is also the option to round up. This seems the mostly chooses option in the regular `thicken`, the argument was omitted from `thicken_cust` for simplicity. `pad_cust` also needs the spanned object, because it can no longer infer which observations are lacking from the datetime variable. By default, `pad_cust` drops the last value in the spanned object. If the original spanning was around the datetime variable, leaving the last value in would create an empty record after all the observations.
 
 ```{r}
 veh_acc_cust <- veh_acc %>% 
