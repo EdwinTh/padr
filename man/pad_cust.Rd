@@ -4,7 +4,8 @@
 \alias{pad_cust}
 \title{Pad with a custom spanning}
 \usage{
-pad_cust(x, spanned, by = NULL, group = NULL, drop_last_spanned = TRUE)
+pad_cust(x, spanned, by = NULL, group = NULL,
+  drop_last_spanned = TRUE)
 }
 \arguments{
 \item{x}{A data frame containing at least one datetime variable of
