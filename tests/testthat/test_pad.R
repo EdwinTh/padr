@@ -35,7 +35,7 @@ test_that("Correct error handling", {
 
 test_that("Pad works properly on data.table and tbl", {
   expect_equal(class(pad(data.table::data.table(x_year, 1)))[1], "data.table")
-  expect_equal(class(pad(dplyr::data_frame(x_year, 1)))[1], "tbl_df")
+  expect_equal(class(pad(dplyr::tibble(x_year, 1)))[1], "tbl_df")
 })
 
 context("pad gives correct output with one datetime value")

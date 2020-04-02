@@ -101,7 +101,7 @@ test_that("thicken gives correct ouput when x is a df", {
 
   expect_equal(thicken(X, interval = "month") %>% nrow, 366)
   expect_equal( lubridate::month(thicken(X, interval = "month")$day_var_month) %>% max, 12) #nolint
-  expect_error( (thicken(dplyr::as_data_frame(X), interval = "month")), NA)
+  expect_error( (thicken(dplyr::as_tibble(X), interval = "month")), NA)
   expect_error( thicken(data.table::as.data.table(X), interval = "month"), NA)
 })
 
@@ -116,7 +116,7 @@ test_that("column naming works properly", {
 context("test set_to_original_type")
 
 test_that("set_to_original_type returns tbl or data.table", {
-  expect_equal(sw(dplyr::as_data_frame(df_with_one_date) %>% thicken("2 mon") %>% class),
+  expect_equal(sw(dplyr::as_tibble(df_with_one_date) %>% thicken("2 mon") %>% class),
                c("tbl_df", "tbl", "data.frame"))
   expect_equal(sw(data.table::as.data.table(df_with_one_date) %>% thicken("2 mon") %>%
                     class),

@@ -46,3 +46,4 @@ test_that("subset_span gives the correct output", {
   expect_equal(subset_span(sec_span, list(sec = 0:4)),
                sec_span[1:5])
 })
+

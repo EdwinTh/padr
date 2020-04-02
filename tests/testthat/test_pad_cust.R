@@ -33,20 +33,20 @@ test_that("pad_cust drop last argument", {
 test_that("pad_cust_group_span", {
   sp  <- span_date(20170101, len_out = 4)[c(1, 3, 4)]
 
-  one_group_padded <- data_frame(date = rep(sp, 2),
-                                 grp  = rep(c("a", "b"), each = 3),
-                                 val  = c(1, NA, 1, 1, NA, 1))
+  one_group_padded <- tibble(date = rep(sp, 2),
+                             grp  = rep(c("a", "b"), each = 3),
+                             val  = c(1, NA, 1, 1, NA, 1))
 
   one_group <- one_group_padded[c(1, 3, 4, 6), ]
 
   og_no_group <- bind_rows(one_group[1:2, ],
-                           data_frame(date = ymd(20170103), grp = NA, val = NA),
+                           tibble(date = ymd(20170103), grp = NA, val = NA),
                            one_group[3:4, ])
 
-  two_group_padded <- data_frame(date = rep(sp, 4),
-                                 grp1 = rep(c("a", "b"), each = 6),
-                                 grp2 = rep(c("d", "e"), 6),
-                                 val  = c(1, NA, 1, 1, NA, 1, 1, NA, 1, 1, NA, 1))
+  two_group_padded <- tibble(date = rep(sp, 4),
+                             grp1 = rep(c("a", "b"), each = 6),
+                             grp2 = rep(c("d", "e"), 6),
+                             val  = c(1, NA, 1, 1, NA, 1, 1, NA, 1, 1, NA, 1))
 
   two_group <- two_group_padded[-c(2, 5, 8, 11), ]
 
