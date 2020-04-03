@@ -1,3 +1,7 @@
+# padr 0.5.1
+
+Patch release requested by CRAN maintainers, so package is up-to-date with lates version of `tibble`.
+
 # padr 0.5.0
 
 ## Major Bug fixes
