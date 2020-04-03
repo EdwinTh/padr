@@ -3,9 +3,9 @@
 Patch release as requested by Kurt Hornik. To make `padr` work well again with the `tibble` package.
 
 ## Test environments
-* local OS X install, R 3.6.0
-* Ubuntu 14.04.5 (on travis-ci), R 3.6.0
-* win-builder (devel and release) R 3.6.0
+* OS X 10.14.6 (local install), R 3.6.0
+* Ubuntu 16.04 (on travis-ci), R 3.6.0
+* win-builder (devel and release) R 4.0.0 alpha 
 
 ## R CMD check results
 
