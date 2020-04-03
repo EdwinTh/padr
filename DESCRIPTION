@@ -24,8 +24,7 @@ Suggests:
     rmarkdown,
     lazyeval,
     tidyr,
-    data.table,
-    lintr
+    data.table
 RoxygenNote: 6.1.1
 LinkingTo: Rcpp
 VignetteBuilder: knitr
