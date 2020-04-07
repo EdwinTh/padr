@@ -143,9 +143,9 @@ the interval specified is too low for the interval of the datetime variable", ca
 set_to_original_type <- function(x,
                                  original) {
   if (inherits(original, "tbl_df")) {
-    x <- dplyr::as_data_frame(x)
+    x <- dplyr::as_tibble(x)
     grps <- as.character(dplyr::groups(original))
-    x <- dplyr::group_by_(x, .dots = grps)
+    x <- dplyr::group_by(x, .dots = grps)
   } else if (inherits(original, "data.table")) {
     x <- data.table::as.data.table(x)
   }

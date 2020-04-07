@@ -39,7 +39,7 @@ test_that("pad_int with groups", {
 })
 
 test_that("pad_int works on both tbl and data.table", {
-  df_tbl <- dplyr::as_data_frame(df)
+  df_tbl <- dplyr::as_tibble(df)
   df_dt  <- data.table::as.data.table(df)
   expect_error(pad_int(df_tbl, "y"), NA)
   expect_error(pad_int(df_dt, "y"), NA)

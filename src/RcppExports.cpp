@@ -5,18 +5,6 @@
 
 using namespace Rcpp;
 
-// round_down_core_prev
-IntegerVector round_down_core_prev(IntegerVector a, IntegerVector b);
-RcppExport SEXP _padr_round_down_core_prev(SEXP aSEXP, SEXP bSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type a(aSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type b(bSEXP);
-    rcpp_result_gen = Rcpp::wrap(round_down_core_prev(a, b));
-    return rcpp_result_gen;
-END_RCPP
-}
 // round_down_core
 IntegerVector round_down_core(IntegerVector a, IntegerVector b);
 RcppExport SEXP _padr_round_down_core(SEXP aSEXP, SEXP bSEXP) {
@@ -29,15 +17,15 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// round_up_core_prev
-IntegerVector round_up_core_prev(IntegerVector a, IntegerVector b);
-RcppExport SEXP _padr_round_up_core_prev(SEXP aSEXP, SEXP bSEXP) {
+// round_down_core_prev
+IntegerVector round_down_core_prev(IntegerVector a, IntegerVector b);
+RcppExport SEXP _padr_round_down_core_prev(SEXP aSEXP, SEXP bSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< IntegerVector >::type a(aSEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type b(bSEXP);
-    rcpp_result_gen = Rcpp::wrap(round_up_core_prev(a, b));
+    rcpp_result_gen = Rcpp::wrap(round_down_core_prev(a, b));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -50,6 +38,18 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< IntegerVector >::type a(aSEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type b(bSEXP);
     rcpp_result_gen = Rcpp::wrap(round_up_core(a, b));
+    return rcpp_result_gen;
+END_RCPP
+}
+// round_up_core_prev
+IntegerVector round_up_core_prev(IntegerVector a, IntegerVector b);
+RcppExport SEXP _padr_round_up_core_prev(SEXP aSEXP, SEXP bSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type a(aSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type b(bSEXP);
+    rcpp_result_gen = Rcpp::wrap(round_up_core_prev(a, b));
     return rcpp_result_gen;
 END_RCPP
 }

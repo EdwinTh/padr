@@ -1,10 +1,10 @@
 source("library.R")
 
-x_df <- data_frame(x = as.Date(c("2019-01-01", "2019-01-04", "2019-01-06")),
-                   y1 = c(3, 5, 6),
-                   y2 = c(11, 14, 14),
-                   y3 = rep(10, 3),
-                   y4 = c("A", "A", "B")) %>% pad()
+x_df <- tibble(x = as.Date(c("2019-01-01", "2019-01-04", "2019-01-06")),
+               y1 = c(3, 5, 6),
+               y2 = c(11, 14, 14),
+               y3 = rep(10, 3),
+               y4 = c("A", "A", "B")) %>% pad()
 
 context("Test the fill functions")
 
@@ -38,12 +38,17 @@ test_that("fill_by_function gives expected outcomes", {
   expect_equal( fill_by_function(x_df, y1, y2, fun = median)$y1 %>% median, 5)
 })
 
+unname <- function(x) {
+  names(x) <- NULL
+  x
+}
+
 test_that("fill_by_prevalent gives expected outcomes", {
-  expect_equal( fill_by_prevalent(x_df, y4)$y4[2], "A")
-  expect_equal( fill_by_prevalent(x_df, y3)$y3[2], 10)
-  expect_equal( fill_by_prevalent(x_df, y3, y4)$y4[2], "A")
-  expect_equal( fill_by_prevalent(x_df, y3, y4)$y3[2], 10)
-  expect_error( fill_by_prevalent(x_df, y1))
+  expect_equal( unname(fill_by_prevalent(x_df, y4)$y4[2]), "A")
+  expect_equal( unname(fill_by_prevalent(x_df, y3)$y3[2]), 10)
+  expect_equal( unname(fill_by_prevalent(x_df, y3, y4)$y4[2]), "A")
+  expect_equal( unname(fill_by_prevalent(x_df, y3, y4)$y3[2]), 10)
+  expect_error( unname(fill_by_prevalent(x_df, y1)))
 })
 
 test_that("get_the_inds works properly", {
@@ -56,3 +61,4 @@ test_that("get_the_inds works properly", {
   expect_equal(get_the_inds(x, a), 2)
   expect_equal(get_the_inds(x, a, b), 2:3)
 })
+
