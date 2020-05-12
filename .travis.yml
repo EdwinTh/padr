@@ -2,7 +2,7 @@
 
 language: R
 sudo: false
-cache: packages
+# cache: packages
 
 r_binary_packages:
   # install locally to avoid rev dep
