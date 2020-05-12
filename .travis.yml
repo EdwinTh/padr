@@ -2,7 +2,6 @@
 
 language: R
 sudo: false
-r_github_packages: r-lib/remotes#340
 cache: packages
 
 r_binary_packages:
