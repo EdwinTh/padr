@@ -1,3 +1,7 @@
+# padr 0.5.2
+
+Updated `padr` to make sure it will work with the upcoming v1.0.0 release of `dplyr`.
+
 # padr 0.5.1
 
 Patch release requested by CRAN maintainers, so package is up-to-date with lates version of `tibble`.
