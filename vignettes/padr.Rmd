@@ -1,6 +1,6 @@
 ---
 title: "Introduction to `padr`"
-author: "Edwn Thoen"
+author: "Edwin Thoen"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
