@@ -1,6 +1,6 @@
-# padr v0.5.2
+# padr v0.5.3
 
-This release makes sure `padr` will keep working with the upcoming release of `dplyr` v1.0.0.
+Patch release, as requested by Kurt Hornik on Aug 24, unit test pass on R devel.
 
 ## Test environments
 * OS X 10.14.6 (local install), R 4.0.0

@@ -156,7 +156,7 @@ test_that("dplyr grouping yields correct results", {
 })
 
 test_that("datetime variable in the grouping throws an error", {
-  coffee$grp <- 1:2
+  coffee$grp <- c(1, 2, 1, 2)
   expect_error(pad(coffee, group = "time_stamp"))
   expect_error(coffee %>% group_by(time_stamp) %>% pad)
   expect_error(pad(coffee, group = c("time_stamp", 'grp')))

@@ -10,3 +10,4 @@
 ^README-.*\.png$
 ^docs$
 ^_pkgdown\.yml$
+^data-raw$
