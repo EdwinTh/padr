@@ -2,6 +2,8 @@
 
 * Bug fix, `pad` did not work when `dplyr::group_by` had irregular column names (using back ticks). Bug spotted by Jason Hunter in issue #69.
 
+* Bug fix, `thicken` would return a vector instead of a data.frame when the drop argument was TRUE and the only column in the data.frame was the datetime variable. issue #76.
+
 # padr 0.5.3
 
 Patch release, adjusting the unit tests to play with R.4.* new time zone implementations.

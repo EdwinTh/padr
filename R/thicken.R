@@ -251,5 +251,5 @@ add_na_to_thicken <- function(thickened, na_ind) {
 }
 
 remove_original_var <- function(x, var_name) {
-  x[, colnames(x) != var_name]
+  x[, colnames(x) != var_name, drop = FALSE]
 }

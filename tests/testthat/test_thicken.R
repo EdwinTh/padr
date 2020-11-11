@@ -181,6 +181,15 @@ test_that("the drop argument gives the desired result", {
   expect_equal(thicken(coffee, "hour", drop = TRUE), with_drop)
 })
 
+test_that("thicken will return a data frame when drop = TRUE", {
+  x <- as.data.frame(coffee[ ,1])
+  x_ret <- data.frame(time_stamp_hour = ymd_hms(c("2016-07-07 09:00:00",
+                                                  "2016-07-07 09:00:00",
+                                                  "2016-07-09 13:00:00",
+                                                  "2016-07-10 10:00:00")))
+  expect_s3_class(thicken(x, interval = "hour", drop = TRUE), "data.frame")
+})
+
 context("ties_to_earlier argument to thicken")
 x <- data.frame(
   dt = ymd_hm("20171021 1631", "20171021 1700", "20171021 1731"))
