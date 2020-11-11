@@ -169,10 +169,10 @@ test_that("add_na_to_thicken unit tests", {
 
 context("thicken drop argument")
 test_that("the drop argument gives the desired result", {
-  hourly <- ymd_h(c("20160707 09",
-                    "20160707 09",
-                    "20160709 13",
-                    "20160710 10"), tz = "CET")
+  hourly <- ymd_h(c("20160707 08",
+                    "20160707 08",
+                    "20160709 12",
+                    "20160710 09"), tz = "CET")
   coffee_hour <- coffee %>% mutate(time_stamp_hour = hourly)
   no_drop <- coffee_hour
   with_drop <- coffee_hour %>% select(-time_stamp)

@@ -1,10 +1,18 @@
+# padr 0.6.0
+
+* Bug fix, `pad` did not work when `dplyr::group_by` had irregular column names (using back ticks). Bug spotted by Jason Hunter in issue #69.
+
+# padr 0.5.3
+
+Patch release, adjusting the unit tests to play with R.4.* new time zone implementations.
+
 # padr 0.5.2
 
 Updated `padr` to make sure it will work with the upcoming v1.0.0 release of `dplyr`.
 
 # padr 0.5.1
 
-Patch release requested by CRAN maintainers, so package is up-to-date with lates version of `tibble`.
+Patch release requested by CRAN maintainers, so package is up-to-date with latest version of `tibble`.
 
 # padr 0.5.0
 

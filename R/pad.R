@@ -378,6 +378,7 @@ get_return_rows <- function(min_max_frame, interval) {
 get_dplyr_groups <- function(x, group) {
 
   dplyr_groups <- dplyr::groups(x)
+  dplyr_groups <- lapply(dplyr_groups, function(a) gsub("`", "", a))
 
   if (length(dplyr_groups) == 0) {
     return(group)
