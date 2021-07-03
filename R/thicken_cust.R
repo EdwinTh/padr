@@ -44,6 +44,8 @@ thicken_cust <- function(x,
   dt_var      <- dt_var_info$dt_var
   dt_var_name <- dt_var_info$dt_var_name
 
+  error_on_year_2038(dt_var, "thicken_cust")
+
   is_datetime(spanned)
   if (inherits(spanned, 'POSIXt') & inherits(dt_var, 'POSIXt')) {
     spanned   <- enforce_time_zone(spanned, dt_var)

@@ -70,3 +70,9 @@ test_that("the drop argument gives the desired result", {
                                drop = TRUE)), with_drop)
 })
 
+
+context("informative error for Year 2038 problem - thicken_cust")
+x <- data.frame(dt = ymd_h("20381201 01", "20381202 01"))
+sp <- as.Date(c("2038-12-01", "2038-12-02", "2038-12-04"))
+expect_error(thicken_cust(x, sp, "day"),
+             "thicken_cust does not work on POSIX data after 2038, due to Year 2038 problem. https://en.wikipedia.org/wiki/Year_2038_problem")

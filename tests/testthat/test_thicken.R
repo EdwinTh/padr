@@ -214,3 +214,11 @@ test_that("ties_to_earlier works with rounding up ties on edges", {
                ymd_h("20171021 17", "20171021 17"))
 })
 
+
+context("informative error for Year 2038 problem")
+x <- data.frame(dt = ymd_h("20381201 01", "20381202 01"))
+expect_error(thicken(x, "hour"),
+             "thicken does not work on POSIX data after 2038, due to Year 2038 problem. https://en.wikipedia.org/wiki/Year_2038_problem")
+
+y <- data.frame(d = as.Date(c("2038-12-10", "2038-12-13")))
+expect_error(thicken(y, interval = "1 month"), NA)

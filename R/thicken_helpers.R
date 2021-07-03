@@ -87,3 +87,11 @@ posix_to_date <- function(x) {
   }
   return(x)
 }
+
+error_on_year_2038 <- function(x, func) {
+  if (inherits(x, 'POSIXt')) {
+    if (any(lubridate::year(x) > 2037) ) {
+      stop(func, " does not work on POSIX data after 2038, due to Year 2038 problem. https://en.wikipedia.org/wiki/Year_2038_problem")
+    }
+  }
+}

@@ -94,6 +94,8 @@ thicken <- function(x,
   dt_var      <- dt_var_info$dt_var
   dt_var_name <- dt_var_info$dt_var_name
 
+  error_on_year_2038(dt_var, "thicken")
+
   check_start_and_end(start_val, NULL)
 
   interval_converted <- convert_interval(interval)

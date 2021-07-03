@@ -2,7 +2,11 @@
 
 * Bug fix, `pad` did not work when `dplyr::group_by` had irregular column names (using back ticks). Bug spotted by Jason Hunter in issue #69.
 
-* Bug fix, `thicken` would return a vector instead of a data.frame when the drop argument was TRUE and the only column in the data.frame was the datetime variable. issue #76.
+* Bug fix, `thicken` used to return a vector instead of a data.frame when the drop argument was TRUE and the only column in the data.frame was the datetime variable. It will now return a data frame instead. issue #76.
+
+* Informative error thrown for Year 2038 problem when date time variable is POSIXt and the year is 2038 or greater. Problem detected by github users darneiri and Blundys.  issue #51
+
+
 
 # padr 0.5.3
 
@@ -29,8 +33,6 @@ Patch release requested by CRAN maintainers, so package is up-to-date with lates
 * `thicken` has gained a `drop` argument. Logical with `FALSE` as default value. If `TRUE` the thickened datetime value is dropped from the data frame. Idea by Adam Stone.
 
 ## Minor changes
-
-* `thicken` converts datetime values to integers to match values to the higher interval. Because of this the function suffers from the YEAR2038 problem, meaning that it will not give output if a POSIXct is higher than 2038-01-19 03:14:07 because of integer overflow. The problem needs to be addressed in the future, for now a meaningful error is raised when a POSIXt with year 2038 or higher is fed to `thicken`. Problem detected by github users darneiri and Blundys.
 
 * An informative error is now thrown in `pad`, `pad_cust`, `thicken`, `thicken_cust` when a data frame does not have any rows. Requested by Julian During.
 
