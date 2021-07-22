@@ -20,9 +20,10 @@ pad(
 
 \item{interval}{The interval of the returned datetime variable.
 Any character string that would be accepted by \code{seq.Date()} or
-\code{seq.POSIXt}. When NULL the
-the interval will be equal to the interval of the datetime variable. When
-specified it can only be lower than the interval and step size of the input data.
+\code{seq.POSIXt}. The only exceptions is "DSTday", which is not accepted.
+\code{pad} will take care of daylight savings time when regular "day" is used.
+When NULL the the interval will be equal to the interval of the datetime variable.
+When specified it can only be lower than the interval and step size of the input data.
 See Details.}
 
 \item{start_val}{An object of class \code{Date}, \code{POSIXct} or

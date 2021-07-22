@@ -48,6 +48,11 @@ get_interval_list <- function(x){
     if (is_day_week(x_char)) differ <- 'week'
   }
 
+  # we convert to Data here to avoid DST problems
+  if (differ %in% c('day', 'week') & inherits(x, "POSIXt")) {
+    x <- as.Date(x)
+  }
+
   # after assessing the differ, we check if we need only need 1 unit
   step <- get_step(x, differ)
 

@@ -272,3 +272,21 @@ in the final rows of the dataframe.")
   expect_equal(coffee_na_padded %>% filter(is.na(d)) %>% nrow, 1)
   expect_equal(coffee_na_padded$d[5] %>% as.character(), NA_character_)
 })
+
+
+context("pad deals with daylight savings time well when dt_var is POSIXt")
+test_that("pad work well with day and week", {
+  cross_dst <- data.frame(day = as.POSIXct(c('2020-03-08', '2020-03-22'),
+                                           'America/Chicago'))
+  expect_error(pad(cross_dst, interval = 'day'), NA)
+  expect_error(pad(cross_dst, interval = 'week'), NA)
+})
+
+test_that("The use of DSTday for the interval throws a meaningful error", {
+  cross_dst <- data.frame(day = as.POSIXct(c('2020-03-08', '2020-03-22'),
+                                           'America/Chicago'))
+  expect_error(pad(cross_dst, 'DSTday'),
+               "DSTday does not work for interval, please use 'day' instead", fixed = TRUE)
+  expect_error(pad(cross_dst, '2 DSTday'),
+               "DSTday does not work for interval, please use 'day' instead", fixed = TRUE)
+})

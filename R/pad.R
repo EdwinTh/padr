@@ -9,9 +9,10 @@
 #' \code{POSIXct} or \code{POSIXlt}.
 #' @param interval The interval of the returned datetime variable.
 #' Any character string that would be accepted by \code{seq.Date()} or
-#' \code{seq.POSIXt}. When NULL the
-#' the interval will be equal to the interval of the datetime variable. When
-#' specified it can only be lower than the interval and step size of the input data.
+#' \code{seq.POSIXt}. The only exceptions is "DSTday", which is not accepted.
+#' \code{pad} will take care of daylight savings time when regular "day" is used.
+#' When NULL the the interval will be equal to the interval of the datetime variable.
+#' When specified it can only be lower than the interval and step size of the input data.
 #' See Details.
 #' @param start_val An object of class \code{Date}, \code{POSIXct} or
 #' \code{POSIXlt} that specifies the start of the returned datetime variable.
@@ -153,6 +154,11 @@ pad <- function(x,
   }
 
   if (!is.null(interval)) {
+
+    if (grepl("DSTday", interval, fixed = TRUE)) {
+      stop("DSTday does not work for interval, please use 'day' instead", call. = FALSE)
+    }
+
     interval_converted <- convert_interval(interval)
     interval_converted$interval <- uniform_interval_name(interval_converted$interval)
   } else {
@@ -281,6 +287,9 @@ span_from_min_max_single <- function(start,
                                      end,
                                      interval,
                                      id_vars) {
+  if (inherits(start, "POSIXt") & interval %in% c("day", "week")) {
+    interval <- "DSTday"
+  }
   ret <- data.frame(span = seq(start, end, by = interval))
   return(as.data.frame(cbind(ret, id_vars)))
 }
