@@ -4,9 +4,16 @@
 \alias{thicken}
 \title{Add a variable of a higher interval to a data frame}
 \usage{
-thicken(x, interval, colname = NULL, rounding = c("down", "up"),
-  by = NULL, start_val = NULL, drop = FALSE,
-  ties_to_earlier = FALSE)
+thicken(
+  x,
+  interval,
+  colname = NULL,
+  rounding = c("down", "up"),
+  by = NULL,
+  start_val = NULL,
+  drop = FALSE,
+  ties_to_earlier = FALSE
+)
 }
 \arguments{
 \item{x}{A data frame containing at least one datetime variable of

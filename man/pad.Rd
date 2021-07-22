@@ -4,8 +4,15 @@
 \alias{pad}
 \title{Pad the datetime column of a data frame}
 \usage{
-pad(x, interval = NULL, start_val = NULL, end_val = NULL,
-  by = NULL, group = NULL, break_above = 1)
+pad(
+  x,
+  interval = NULL,
+  start_val = NULL,
+  end_val = NULL,
+  by = NULL,
+  group = NULL,
+  break_above = 1
+)
 }
 \arguments{
 \item{x}{A data frame containing at least one variable of class \code{Date},

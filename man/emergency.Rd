@@ -4,7 +4,8 @@
 \name{emergency}
 \alias{emergency}
 \title{Emergency Calls for Montgomery County, PA}
-\format{A data frame with 120450 rows and 6 variables:
+\format{
+A data frame with 120450 rows and 6 variables:
 \describe{
 \item{lat}{Latitude from Google maps, based on the address}
 \item{lng}{Longitude from Google maps, based on the address}
@@ -12,7 +13,8 @@
 \item{title}{Title, emergency category}
 \item{time_stamp}{YYYY-MM-DD HH:MM:SS}
 \item{twp}{Township}
-}}
+}
+}
 \source{
 \url{https://storage.googleapis.com/montco-stats/tzr.csv}
 }

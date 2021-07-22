@@ -225,7 +225,7 @@ start_val_after_min_dt <- function(start_val, dt_var) {
   } else {
     start_val <- to_posix(start_val, dt_var)$a
     dt_var    <- to_posix(start_val, dt_var)$b
-    ind <- dt_var > start_val
+    ind <- dt_var >= start_val
     return(ind)
   }
 }

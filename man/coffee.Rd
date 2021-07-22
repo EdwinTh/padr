@@ -4,11 +4,13 @@
 \name{coffee}
 \alias{coffee}
 \title{Coffee Data Set}
-\format{A data frame with 4 rows and 2 variables:
+\format{
+A data frame with 4 rows and 2 variables:
 \describe{
 \item{time_stamp}{YYYY-MM-DD HH:MM:SS}
 \item{amount}{Amount spent on coffee}
-}}
+}
+}
 \usage{
 coffee
 }
