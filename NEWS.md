@@ -6,7 +6,7 @@
 
 * Informative error thrown for Year 2038 problem when date time variable is POSIXt and the year is 2038 or greater. Problem detected by github users darneiri and Blundys.  issue #51
 
-
+* The `pad` function used to break when the dt_var was of calss POSIXt and the interval was week or day, when the period crosses a switch from or to daylight savings time. This is fixed. Also, an explicit warning is thrown when it is attempted to use "DSTday" as interval, which does not work. Bugs spotted by Tyler Grant Smith. issue #78
 
 # padr 0.5.3
 
