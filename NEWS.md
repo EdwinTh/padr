@@ -8,6 +8,8 @@
 
 * The `pad` function used to break when the dt_var was of calss POSIXt and the interval was week or day, when the period crosses a switch from or to daylight savings time. This is fixed. Also, an explicit warning is thrown when it is attempted to use "DSTday" as interval, which does not work. Bugs spotted by Tyler Grant Smith. issue #78
 
+* The `pad` function used to call the deprecated .dots argument in `dplyr::groups`, which threw a warning when `pad` was applied on a grouped tibble. This is updated. Thanks to Matt Cowgill and Kristian Gjerde for spotting this. issue #80
+
 # padr 0.5.3
 
 Patch release, adjusting the unit tests to play with R.4.* new time zone implementations.
