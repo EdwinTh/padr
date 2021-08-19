@@ -48,10 +48,10 @@ test_that("thicken only accepts data frames", {
   expect_error(suppressWarnings(thicken(df_with_one_date, interval = "quarter")), NA)
 })
 
-test_that("thicken throws error when asked interval is lower", {
-  expect_error( thicken(x_month, interval = "month"))
-  expect_error( thicken(x_month, interval = "day"))
-  expect_error( thicken(x_month, interval = "year"), NA)
+test_that("thicken throws warning when asked interval is lower", {
+  expect_warning(thicken(x_month, interval = "month"))
+  expect_warning(thicken(x_month, interval = "day"))
+  expect_error(thicken(x_month, interval = "year"), NA)
 })
 
 test_that("thicken gives informed error when start_val is wrong class", {

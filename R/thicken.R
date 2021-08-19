@@ -2,9 +2,7 @@
 #'
 #' Take the datetime variable in a data frame and map this
 #' to a variable of a higher interval. The mapping is added to the data frame
-#' in a new variable. After applying \code{thicken} the user can aggregate the
-#' other variables in the data frame to the higher interval, for instance using
-#' \code{dplyr}.
+#' in a new variable.
 #'
 #' @param x A data frame containing at least one datetime variable of
 #' class \code{Date}, \code{POSIXct} or \code{POSIXlt}.
@@ -126,8 +124,7 @@ thicken <- function(x,
   thickened <- round_thicken(dt_var, spanned, rounding, ties_to_earlier)
 
   if (all(all.equal(thickened, dt_var) == TRUE)) {
-    stop("The thickened result is equal to the original datetime variable,
-the interval specified is too low for the interval of the datetime variable", call. = FALSE)
+    warning("The thickened result is equal to the original datetime variable", call. = FALSE)
   }
 
   thickened_with_na <- add_na_to_thicken(thickened, na_ind)

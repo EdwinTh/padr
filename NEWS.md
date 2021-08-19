@@ -1,5 +1,7 @@
 # padr 0.6.0
 
+* When the specified interval is equal or lower than the interval of the datetime variable, `thicken` will no longer throw an error, but a warning. Request by Matus Goljer, issue #84.
+
 * Bug fix, `pad` did not work when `dplyr::group_by` had irregular column names (using back ticks). Bug spotted by Jason Hunter in issue #69.
 
 * Bug fix, `thicken` used to return a vector instead of a data.frame when the drop argument was TRUE and the only column in the data.frame was the datetime variable. It will now return a data frame instead. issue #76.
