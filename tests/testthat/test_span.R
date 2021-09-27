@@ -79,24 +79,24 @@ test_that("shift_end_from_start gives correct output", {
 context("assure_greater_than_max_x makes sure that end_val is greater than max_x")  #nolint
 
 test_that("assure_greater_than_max_x works properly", {
-  max_x_date <- as.Date("2016-10-21")
-  max_x_posix <- as.POSIXct("2016-10-21 12:31:43")
-  end_val_date <- as.Date("2016-08-14")
-  end_val_posix <- as.POSIXct("2016-08-14 14:39:04")
+  max_x_date <- as.Date("2016-07-21")
+  max_x_posix <- as.POSIXct("2016-07-21 12:31:43")
+  end_val_date <- as.Date("2016-07-14")
+  end_val_posix <- as.POSIXct("2016-07-14 14:39:04")
 
   expect_equal( assure_greater_than_max_x(max_x_date, end_val_date, "month"),
-                as.Date("2016-11-14"))
+                as.Date("2016-08-14"))
   expect_equal( assure_greater_than_max_x(max_x_date, end_val_posix, "month"),
-                as.POSIXct("2016-11-14 14:39:04"))
+                as.POSIXct("2016-08-14 14:39:04"))
   expect_equal( assure_greater_than_max_x(max_x_posix, end_val_posix, "month"),
-                as.POSIXct("2016-11-14 14:39:04"))
+                as.POSIXct("2016-08-14 14:39:04"))
 
   expect_equal( assure_greater_than_max_x(max_x_date, end_val_date, "day"),
-                as.Date("2016-10-22"))
+                as.Date("2016-07-22"))
   expect_equal( assure_greater_than_max_x(max_x_date, end_val_posix, "day"),
-                as.POSIXct("2016-10-21 14:39:04"))
+                as.POSIXct("2016-07-21 14:39:04"))
   expect_equal( assure_greater_than_max_x(max_x_posix, end_val_posix, "day"),
-                as.POSIXct("2016-10-21 14:39:04"))
+                as.POSIXct("2016-07-21 14:39:04"))
 })
 
 test_that("span integration tests", {
