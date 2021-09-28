@@ -169,16 +169,13 @@ test_that("add_na_to_thicken unit tests", {
 
 context("thicken drop argument")
 test_that("the drop argument gives the desired result", {
-  hourly <- ymd_h(c("20160707 08",
-                    "20160707 08",
-                    "20160709 12",
-                    "20160710 09"), tz = "CET")
-  coffee_hour <- coffee %>% mutate(time_stamp_hour = hourly)
-  no_drop <- coffee_hour
-  with_drop <- coffee_hour %>% select(-time_stamp)
-  expect_equal(thicken(coffee, "hour"), no_drop)
-  expect_equal(thicken(coffee, "hour", drop = FALSE), no_drop)
-  expect_equal(thicken(coffee, "hour", drop = TRUE), with_drop)
+  day <- as.Date(c("2016-07-07", "2016-07-07", "2016-07-09", "2016-07-10"))
+  coffee_day <- coffee %>% mutate(time_stamp_day = day)
+  no_drop <- coffee_day
+  with_drop <- coffee_day %>% select(-time_stamp)
+  expect_equal(thicken(coffee, "day"), no_drop)
+  expect_equal(thicken(coffee, "day", drop = FALSE), no_drop)
+  expect_equal(thicken(coffee, "day", drop = TRUE), with_drop)
 })
 
 test_that("thicken will return a data frame when drop = TRUE", {
