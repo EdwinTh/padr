@@ -1,16 +1,16 @@
 # R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
 
 language: R
-sudo: false
+# sudo: false
 cache: packages
 
-r_binary_packages:
+#r_binary_packages:
   # install locally to avoid rev dep
-  - covr # code coverage check
+ # - covr # code coverage check
   # - lintr # code lint
 
-after_success:
-  - Rscript -e 'covr::codecov()'
+#after_success:
+ # - Rscript -e 'covr::codecov()'
 
 notifications:
   email:
