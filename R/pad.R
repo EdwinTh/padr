@@ -89,6 +89,9 @@
 #' pad(x, group = "id")
 #' # applying pad with do, interval is determined individualle for each group
 #' x %>% group_by(id) %>% do(pad(.))
+#' @import dplyr
+#' @importFrom tidyr unnest
+#' @importFrom purrr map2
 #' @export
 pad <- function(x,
                 interval  = NULL,
@@ -283,31 +286,42 @@ check_invalid_start_and_end <- function(x) {
 # id_vars is a data frame with one row containing the single value,
 # the column names are returned in the result
 # Worker of span_all_groups function
-span_from_min_max_single <- function(start,
-                                     end,
-                                     interval,
-                                     id_vars) {
-  if (inherits(start, "POSIXt") & interval %in% c("day", "week")) {
-    interval <- "DSTday"
-  }
-  ret <- data.frame(span = seq(start, end, by = interval))
-  return(as.data.frame(cbind(ret, id_vars)))
-}
+# span_from_min_max_single <- function(start,
+#                                      end,
+#                                      interval,
+#                                      id_vars) {
+#   if (inherits(start, "POSIXt") & interval %in% c("day", "week")) {
+#     interval <- "DSTday"
+#   }
+#   ret <- data.frame(span = seq(start, end, by = interval))
+#   return(as.data.frame(cbind(ret, id_vars)))
+# }
+#
+# # x is the output of get_min_max
+# span_all_groups <- function(x, interval) {
+#   select_index <- which(!colnames(x) %in% c("mn", "mx"))
+#   id_vars <- split( dplyr::select(x, select_index), seq(nrow(x)))
+#   stop_int64(id_vars)
+#
+#   list_span <- mapply(span_from_min_max_single,
+#                       start = x$mn,
+#                       end   = x$mx,
+#                       interval = interval,
+#                       id_vars = id_vars,
+#                       SIMPLIFY = FALSE)
+#
+#   dplyr::bind_rows(list_span)
+# }
 
-# x is the output of get_min_max
-span_all_groups <- function(x, interval) {
-  select_index <- which(!colnames(x) %in% c("mn", "mx"))
-  id_vars <- split( dplyr::select(x, select_index), seq(nrow(x)))
-  stop_int64(id_vars)
+span_all_groups <- function(x, interval){
+  x <- x %>%
+    dplyr::mutate(span = purrr::map2(.x = mn,.y = mx,.f = seq,by = interval)) %>%
+    tidyr::unnest(cols = c(span)) %>%
+    dplyr::select(-mn,-mx) %>%
+    dplyr::relocate(span,.before = everything()) %>%
+    as.data.frame()
 
-  list_span <- mapply(span_from_min_max_single,
-                      start = x$mn,
-                      end   = x$mx,
-                      interval = interval,
-                      id_vars = id_vars,
-                      SIMPLIFY = FALSE)
-
-  dplyr::bind_rows(list_span)
+  x
 }
 
 # currently int64 gives so much trouble, I chose to just break for now.
