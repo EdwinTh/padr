@@ -283,37 +283,12 @@ check_invalid_start_and_end <- function(x) {
   return(x)
 }
 
-# id_vars is a data frame with one row containing the single value,
-# the column names are returned in the result
-# Worker of span_all_groups function
-# span_from_min_max_single <- function(start,
-#                                      end,
-#                                      interval,
-#                                      id_vars) {
-#   if (inherits(start, "POSIXt") & interval %in% c("day", "week")) {
-#     interval <- "DSTday"
-#   }
-#   ret <- data.frame(span = seq(start, end, by = interval))
-#   return(as.data.frame(cbind(ret, id_vars)))
-# }
-#
-# # x is the output of get_min_max
-# span_all_groups <- function(x, interval) {
-#   select_index <- which(!colnames(x) %in% c("mn", "mx"))
-#   id_vars <- split( dplyr::select(x, select_index), seq(nrow(x)))
-#   stop_int64(id_vars)
-#
-#   list_span <- mapply(span_from_min_max_single,
-#                       start = x$mn,
-#                       end   = x$mx,
-#                       interval = interval,
-#                       id_vars = id_vars,
-#                       SIMPLIFY = FALSE)
-#
-#   dplyr::bind_rows(list_span)
-# }
-
+# x is the output from get_min_max
 span_all_groups <- function(x, interval){
+  if (inherits(x$mn, "POSIXt") & interval %in% c("day","week")){
+    interval <- "DSTday"
+  }
+
   x <- x %>%
     dplyr::mutate(span = purrr::map2(.x = mn,.y = mx,.f = seq,by = interval)) %>%
     tidyr::unnest(cols = c(span)) %>%
