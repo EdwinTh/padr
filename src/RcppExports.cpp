@@ -5,6 +5,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // round_down_core
 IntegerVector round_down_core(IntegerVector a, IntegerVector b);
 RcppExport SEXP _padr_round_down_core(SEXP aSEXP, SEXP bSEXP) {

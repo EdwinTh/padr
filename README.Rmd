@@ -7,8 +7,8 @@ output: github_document
 
 [![Build Status](https://travis-ci.org/EdwinTh/padr.png?branch=master)](https://travis-ci.org/EdwinTh/padr)
 [![codecov.io](https://codecov.io/github/EdwinTh/padr/coverage.svg?branch=master)](https://codecov.io/github/EdwinTh/padr?branch=master)
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/padr)](https://cran.r-project.org/package=padr)
-[![](http://cranlogs.r-pkg.org/badges/padr)](https://cran.r-project.org/package=padr)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/padr)](https://CRAN.R-project.org/package=padr)
+[![](http://cranlogs.r-pkg.org/badges/padr)](https://CRAN.R-project.orgpackage=padr)
 
 `padr` is an R package that assists with preparing time series data. It provides two main functions that will quickly get the data in the format you want. When data is observed on too low a level, `thicken` will add a column of a higher interval to the data frame, after which the user can apply the appropriate aggregation. When there are missing records for time points where observations were absent, `pad` will automatically insert these records. A number of `fill_` functions help to subsequently fill the missing values.
 

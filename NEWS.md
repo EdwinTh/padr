@@ -1,3 +1,7 @@
+# padr 0.6.1
+
+* Patch release as requested and proposed by Martin Maechler to keep `padr` working with the upcoming R release. Appeasing an issue with `as.character.POSIXlt`.
+
 # padr 0.6.0
 
 * When the specified interval is equal or lower than the interval of the datetime variable, `thicken` will no longer throw an error, but a warning. Request by Matus Goljer, issue #84.

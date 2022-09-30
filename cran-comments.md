@@ -1,6 +1,6 @@
-# padr v0.5.3
+# padr v0.6.1
 
-Patch release, as requested by Kurt Hornik on Aug 24, unit test pass on R devel.
+Patch release, as requested and proposed by Martin Maechler on 2022-09-24, unit tests pass on R devel.
 
 ## Test environments
 * OS X 10.14.6 (local install), R 4.0.0

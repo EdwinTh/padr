@@ -178,7 +178,7 @@ get_start_and_end <- function(dt_var,
 
   if (to_date & interval_allows_for_date) {
     start_val <- as.Date(strptime(start_val, format = '%Y-%m-%d'))
-    end_val   <- as.Date(strptime(end_val, format = '%Y-%m-%d'))
+    end_val   <- as.Date(strptime(end_val,   format = '%Y-%m-%d'))
   } else {
     start_val <- as.POSIXct(start_val)
     end_val   <- as.POSIXct(end_val)
@@ -228,28 +228,29 @@ next_year <- function(x) {
 
 next_month <- function(x) {
   x$mon <- x$mon + 1
-  return(x)
+  c(x) # c() normalizes (increase year when Dec |-> Jan)
 }
 
 next_day <- function(x) {
   x$mday <- x$mday + 1
-  return(x)
+  c(x)
 }
 
 next_hour <- function(x) {
   x$hour <- x$hour + 1
-  return(x)
+  c(x)
 }
 
 next_min <- function(x) {
   x$min <- x$min + 1
-  return(x)
+  c(x)
 }
 
 next_sec <- function(x) {
   x$sec <- x$sec + 1
-  return(x)
+  c(x) # c() normalizes
 }
+
 
 month_to_1 <- function(x) {
   # note month ranges from 0 to 11
@@ -284,15 +285,15 @@ this_quarter_month <- function(x) {
 
 next_quarter_month <- function(x) {
   x$mon <- floor( x$mon   / 3) * 3 + 3
-  return(x)
+  c(x) # normalizes
 }
 
 this_week <- function(x) {
   x$mday <- x$mday - x$wday
-  return(x)
+  c(x)
 }
 
 next_week <- function(x) {
   x$mday   <- x$mday   + (7 - x$wday)
-  return(x)
+  c(x)
 }
