@@ -300,6 +300,8 @@ span_all_groups <- function(x, interval){
 }
 
 # currently int64 gives so much trouble, I chose to just break for now.
+# this is no longer used in this faster version of span_all_groups; pretty
+# sure it was not checking correctly anyway
 stop_int64 <- function(id_var_df) {
   classes_id <- unlist(sapply(id_var_df, class))
   if ("integer64" %in% classes_id) {
