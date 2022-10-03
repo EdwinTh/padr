@@ -35,4 +35,4 @@ coffee %>%
 ```
 
 # More information
-See the the general [introduction Vignette](<link href="https://CRAN.R-project.org/package=padr/vignettes/padr.html" rel="canonical">) for more examples. The [implementation details Vignette](<link href="https://CRAN.R-project.org/package=padr/vignettes/padr_implementation.html" rel="canonical">) describes how `padr` handles different time zones and daylight savings time.
+See the the general introduction Vignette for more examples. The implementation details Vignette describes how `padr` handles different time zones and daylight savings time.
