@@ -1,5 +1,9 @@
 # padr 0.6.1
 
+* Patch release for upcoming R version on Linux
+
+# padr 0.6.1
+
 * Patch release as requested and proposed by Martin Maechler to keep `padr` working with the upcoming R release. Appeasing an issue with `as.character.POSIXlt`.
 
 # padr 0.6.0
