@@ -1,3 +1,7 @@
+# padr 0.6.2
+
+* Patch release for upcoming R version on Linux
+
 # padr 0.6.1
 
 * Patch release as requested and proposed by Martin Maechler to keep `padr` working with the upcoming R release. Appeasing an issue with `as.character.POSIXlt`.
@@ -158,7 +162,7 @@ They used to require specification of all the column names that had to filled. T
 
 ## New features
 
-# pad_int
+## pad_int
 
 The new function pad_int does padding of an integer field. Its working is very similar to the general pad. The by argument must always be specified, since a data.frame would almost alway contain multiple numeric columns. Instead of the interval, one can specify the step size by which the integer increases.
 

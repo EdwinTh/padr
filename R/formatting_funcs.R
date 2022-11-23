@@ -141,9 +141,14 @@ format_interval <- function(x,
     units_to_last <- get_units_to_last(x)
   }
 
+  tz <- attr(x, "tzone")
+  if (is.null(tz)) {
+    tz <- ''
+  }
+
   end_vals   <- find_next_val(x, units_to_last) - (end_offset)
-  start_char <- strftime(x, start_format, tz = attr(x, "tzone"))
-  end_char   <- strftime(end_vals, end_format, tz = attr(x, "tzone"))
+  start_char <- strftime(x, start_format, tz = tz)
+  end_char   <- strftime(end_vals, end_format, tz = tz)
   ret <- paste(start_char, end_char, sep = sep)
   ret[original_order]
 }

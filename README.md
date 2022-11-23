@@ -7,7 +7,7 @@
 Status](https://travis-ci.org/EdwinTh/padr.png?branch=master)](https://travis-ci.org/EdwinTh/padr)
 [![codecov.io](https://codecov.io/github/EdwinTh/padr/coverage.svg?branch=master)](https://codecov.io/github/EdwinTh/padr?branch=master)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/padr)](https://CRAN.R-project.org/package=padr)
-[![](http://cranlogs.r-pkg.org/badges/padr)](https://CRAN.R-project.orgpackage=padr)
+[![](http://cranlogs.r-pkg.org/badges/padr)](https://CRAN.R-project.org/package=padr)
 
 `padr` is an R package that assists with preparing time series data. It
 provides two main functions that will quickly get the data in the format
