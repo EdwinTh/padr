@@ -145,7 +145,7 @@ set_to_original_type <- function(x,
     x <- dplyr::as_tibble(x)
     grps <- as.character(dplyr::groups(original))
     grps <- gsub("`", "", grps)
-    x <- dplyr::group_by(x, dplyr::across(grps))
+    x <- dplyr::group_by(x, dplyr::across(dplyr::all_of(grps)))
   } else if (inherits(original, "data.table")) {
     x <- data.table::as.data.table(x)
   }
