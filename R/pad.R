@@ -297,7 +297,7 @@ span_from_min_max_single <- function(start,
 # x is the output of get_min_max
 span_all_groups <- function(x, interval) {
   select_index <- which(!colnames(x) %in% c("mn", "mx"))
-  id_vars <- split( dplyr::select(x, select_index), seq(nrow(x)))
+  id_vars <- split(dplyr::select(x, dplyr::all_of(select_index)), seq(nrow(x)))
   stop_int64(id_vars)
 
   list_span <- mapply(span_from_min_max_single,
