@@ -28,6 +28,6 @@ Suggests:
 RoxygenNote: 7.1.0
 LinkingTo: Rcpp
 VignetteBuilder: knitr
-URL: https://github.com/EdwinTh/padr
+URL: https://edwinth.github.io/padr/, https://github.com/EdwinTh/padr
 BugReports: https://github.com/EdwinTh/padr/issues
 ByteCompile: true
