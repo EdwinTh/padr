@@ -14,7 +14,6 @@
 #' \item{time_stamp}{YYYY-MM-DD HH:MM:SS}
 #' \item{twp}{Township}
 #' }
-#' @source \url{https://storage.googleapis.com/montco-stats/tzr.csv}
 "emergency"
 
 
