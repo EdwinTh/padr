@@ -2,13 +2,18 @@
 
 Patch release, as requested by Kurt Hornik on 2024-11-18
 
-## Test environments
-* OS X 12.1 (local install), R 4.1.2
-* devel version for Linux using `rhub::local_check_linux` with the image argument set to "rhub/debian-clang-devel" 
-* win-builder (devel and release) R 4.2.1 
+## Test environments - using github actions via Rhub
+* macOS Ventura 13.7.1 
+* macOS Sonoma 14.7 (arm64)
+* Ubuntu 22.04.5
+* Windows Server 2022 
 
 ## R CMD check results
 
-0 errors | 0 warnings | 0 notes
+0 errors | 0 warnings | 1 notes
 
-Since this is a patch release, there was no need for informing the maintainers of the dependent packages.
+Because of the use of github actions
+Found the following hidden files and directories:
+  .github
+
+Since this is a patch release only adjusting a unit test, there was no need for informing the maintainers of the dependent packages.
