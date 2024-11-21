@@ -15,9 +15,6 @@ A data frame with 120450 rows and 6 variables:
 \item{twp}{Township}
 }
 }
-\source{
-\url{https://storage.googleapis.com/montco-stats/tzr.csv}
-}
 \usage{
 emergency
 }
