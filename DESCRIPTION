@@ -2,8 +2,10 @@ Package: padr
 Type: Package
 Title: Quickly Get Datetime Data Ready for Analysis
 Version: 0.6.3
-Author: Edwin Thoen
-Maintainer: Edwin Thoen <edwinthoen@gmail.com>
+Authors@R: person(given = "Edwin",
+                  family = "Thoen",
+                  role = c("aut", "cre"),
+                  email = "edwinthoen@gmail.com")
 Description: Transforms datetime data into a format ready for analysis.
     It offers two core functionalities; aggregating data to a higher level interval
     (thicken) and imputing records where observations were absent (pad). 

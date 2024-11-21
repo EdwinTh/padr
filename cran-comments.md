@@ -10,10 +10,6 @@ Patch release, as requested by Kurt Hornik on 2024-11-18
 
 ## R CMD check results
 
-0 errors | 0 warnings | 1 notes
-
-Because of the use of github actions
-Found the following hidden files and directories:
-  .github
+0 errors | 0 warnings | 0 notes
 
 Since this is a patch release only adjusting a unit test, there was no need for informing the maintainers of the dependent packages.
