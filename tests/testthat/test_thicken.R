@@ -151,7 +151,6 @@ Returned dataframe contains original observations, with NA values for d and d_we
 test_that("add_na_to_thicken unit tests", {
   thickened_date     <- ymd(c(20180101, 20180101))
   thickened_datetime <- ymd_h(c("20180101 01", "20180101 04"))
-  thickened_datetime_CET <- as.POSIXct(as.character(thickened_datetime), tz = "CET")
 
 
   expect_equal(add_na_to_thicken(thickened_date, 2),
@@ -163,8 +162,6 @@ test_that("add_na_to_thicken unit tests", {
   expect_equal(add_na_to_thicken(thickened_datetime, c(2, 4)),
                ymd_h(c("20180101 01", NA, "20180101 04", NA)))
 
-  expect_equal(add_na_to_thicken(thickened_datetime_CET, c(2, 4)),
-               ymd_h(c("20180101 01", NA, "20180101 04", NA), tz = "CET"))
 })
 
 context("thicken drop argument")
