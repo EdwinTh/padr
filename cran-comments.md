@@ -1,6 +1,6 @@
-# padr v0.6.2
+# padr v0.6.3
 
-Patch release, as requested by Kurt Hornik on 2022-11-11
+Patch release, as requested by Kurt Hornik on 2024-11-18
 
 ## Test environments
 * OS X 12.1 (local install), R 4.1.2
