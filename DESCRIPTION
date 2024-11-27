@@ -17,6 +17,8 @@ Depends:
 Imports:
     Rcpp,
     dplyr (>= 1.0.0),
+    tidyr,
+    purrr,
     lubridate,
     rlang
 Suggests:
@@ -25,7 +27,6 @@ Suggests:
     knitr,
     rmarkdown,
     lazyeval,
-    tidyr,
     data.table
 RoxygenNote: 7.2.1
 LinkingTo: Rcpp
