@@ -20,9 +20,9 @@
 #' @param end_val An object of class \code{Date}, \code{POSIXct} or
 #' \code{POSIXlt} that specifies the end of returned datetime variable.
 #' If NULL it will use the highest value of the input variable.
-#' @param by Only needs to be specified when \code{x} contains multiple
+#' @param by Optional character vector of length 1 specifying the column name
+#' of the variable to be used for padding. Only needs to be specified when \code{x} contains multiple
 #' variables of class \code{Date}, \code{POSIXct} or \code{POSIXlt}.
-#' Indicates which variable to use for padding.
 #' @param group Optional character vector that specifies the grouping
 #' variable(s). Padding will take place within the different groups. When
 #' interval is not specified, it will be determined applying \code{get_interval}
@@ -440,8 +440,19 @@ break_above_func <- function(n,
   }
 }
 
+check_valid_input_by <- function(by) {
+  error_invalid_by <- "Value specified for `by` should be a character of length 1"
+  if (!is.character(by)) {
+    stop(error_invalid_by)
+  }
+  if (length(by) > 1) {
+    stop(error_invalid_by)
+  }
+}
+
 get_dt_var_and_name <- function(x, by) {
   if (!is.null(by)) {
+    check_valid_input_by(by)
     dt_var <- check_data_frame(x, by = by)
     dt_var_name <- by
   } else {

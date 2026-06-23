@@ -225,6 +225,7 @@ test_that("the by arguments works, both in pad and pad_single", {
   two_var_grps <- rbind(two_var, two_var)
   two_var_grps$grp <- rep(letters[1:2], each = 3)
   check_val <- seq(ymd(20150101), length.out = 4, by = "year")
+  error_invalid_by <- "Value specified for `by` should be a character of length 1"
 
   expect_equal(pad(one_var, by = "x_year", interval = "year")$x_year, check_val)
   expect_equal(
@@ -235,6 +236,14 @@ test_that("the by arguments works, both in pad and pad_single", {
   expect_equal(
     pad(two_var_grps, "year", by = "x_year", group = "grp")$x_year,
     rep(check_val, 2)
+  )
+  expect_error(
+    pad(one_var, by = one_var$x_year),
+    error_invalid_by
+  )
+  expect_error(
+    pad(two_var, by = c("x_year", "x_year")),
+    error_invalid_by
   )
 })
 

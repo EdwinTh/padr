@@ -1,8 +1,8 @@
 # padr 0.7.0
 
-* Reintroduced the tidyverse linting, all the examples in the documentation are now also styled accordingly.
+* Reintroduced the tidyverse linting, all the examples in the documentation are now also styled accordingly. issue #70
 
-* 
+* Improved documentation of the `by` argument in for `pad` and more informative error messages. issue #83
 
 # padr 0.6.3
 
