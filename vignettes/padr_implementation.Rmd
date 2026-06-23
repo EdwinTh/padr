@@ -15,21 +15,21 @@ Regarding daylight savings time and different time zones, some explicit choices 
 The `padr` package relies heavily on the base R functions `seq.Date` and `seq.POSIXt` to span the date and datetime variables for `thicken` and `pad` In the latter, choices had to be made about ignoring daylight savings time or not. Take the following example.
 
 ```{r, message = FALSE, warning= FALSE, }
-start_val <- as.POSIXct('2016-03-25 08:15:00', tz = 'CET')
-seq(start_val, by = 'day', length.out = 4) 
-seq(start_val, by = 'DSTdays', length.out = 4)
+start_val <- as.POSIXct("2016-03-25 08:15:00", tz = "CET")
+seq(start_val, by = "day", length.out = 4)
+seq(start_val, by = "DSTdays", length.out = 4)
 ```
 
 As the help file of `seq.POSIXt` mentions: 'The difference between "day" and "DSTday" is that the former ignores changes to/from daylight savings time and the latter takes the same clock time each day.' The interval of a datetime variable in the `padr` context is determined by the lowest time unit that differs over the individual datetime observations. When the hour of the observation shifts as a result of daylight savings time this will cause the interval to change from 'day' to 'hour'. This implies that when we pad a variable that has interval 'day', the daylight savings time can't be ignored and we thus take the same clock time everyday. The only other interval that can be distorted by daylight savings time is 'week'.
 
 ```{r}
-seq(start_val, by = 'week', length.out = 2)
+seq(start_val, by = "week", length.out = 2)
 ```
 
 Spanning of variables of this interval is therefore implemented as:
 
 ```{r}
-seq(start_val, by = '7 DSTdays', length.out = 2)
+seq(start_val, by = "7 DSTdays", length.out = 2)
 ```
 
 ## Different time zones
@@ -37,9 +37,10 @@ The arguments `start_val` (in `pad` and `thicken`) and `end_val` (in `pad`) can 
 
 ```{r}
 library(padr)
-to_pad <- data.frame(dt = seq(as.POSIXct('2016-02-02 14:53:12', tz = 'CET'),
-                                         length.out = 2, by = 'day'))
-pad(to_pad, start_val = as.POSIXct('2016-02-01 14:53:12', tz = 'EST'))
+to_pad <- data.frame(dt = seq(as.POSIXct("2016-02-02 14:53:12", tz = "CET"),
+  length.out = 2, by = "day"
+))
+pad(to_pad, start_val = as.POSIXct("2016-02-01 14:53:12", tz = "EST"))
 ```
 
 This behavior was chosen over throwing an error or converting to the other time zone with adjusting the clock time, because it is assumed that the user did not use two time zones on purpose. Time zone differences are more likely due to different object sources, rather than being created intentional. For instance using `as.POSIXct` without specifying the time zone, will use the time zone from the System's locale. When creating a datetime variable with `lubridate` on the other hand, it will use *UTC* as the default time zone. 

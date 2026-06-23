@@ -40,46 +40,57 @@
 #' daylight savings time, different timezones, and the implementation of
 #' \code{thicken}.
 #' @examples
-#' x_hour <- seq(lubridate::ymd_hms('20160302 000000'), by = 'hour',
-#'               length.out = 200)
+#' x_hour <- seq(lubridate::ymd_hms("20160302 000000"),
+#'   by = "hour",
+#'   length.out = 200
+#' )
 #' some_df <- data.frame(x_hour = x_hour)
-#' thicken(some_df, 'week')
-#' thicken(some_df, 'month')
-#' thicken(some_df, 'day', start_val = lubridate::ymd_hms('20160301 120000'))
+#' thicken(some_df, "week")
+#' thicken(some_df, "month")
+#' thicken(some_df, "day", start_val = lubridate::ymd_hms("20160301 120000"))
 #'
 #' library(dplyr)
 #' x_df <- data.frame(
-#'   x = seq(lubridate::ymd(20130101), by = 'day', length.out = 1000) %>%
+#'   x = seq(lubridate::ymd(20130101), by = "day", length.out = 1000) %>%
 #'     sample(500),
-#'   y = runif(500, 10, 50) %>% round) %>%
+#'   y = runif(500, 10, 50) %>% round()
+#' ) %>%
 #'   arrange(x)
 #'
 #' # get the max per month
-#' x_df %>% thicken('month') %>% group_by(x_month) %>%
+#' x_df %>%
+#'   thicken("month") %>%
+#'   group_by(x_month) %>%
 #'   summarise(y_max = max(y))
 #'
 #' # get the average per week, but you want your week to start on Mondays
 #' # instead of Sundays
-#' x_df %>% thicken('week',
-#'                  start_val = closest_weekday(x_df$x, 2)) %>%
-#'   group_by(x_week) %>% summarise(y_avg = mean(y))
+#' x_df %>%
+#'   thicken("week",
+#'     start_val = closest_weekday(x_df$x, 2)
+#'   ) %>%
+#'   group_by(x_week) %>%
+#'   summarise(y_avg = mean(y))
 #'
 #' # rounding up instead of down
-#' x <- data.frame(dt = lubridate::ymd_hms('20171021 160000',
-#'                                         '20171021 163100'))
+#' x <- data.frame(dt = lubridate::ymd_hms(
+#'   "20171021 160000",
+#'   "20171021 163100"
+#' ))
 #' thicken(x, interval = "hour", rounding = "up")
 #' thicken(x, interval = "hour", rounding = "up", ties_to_earlier = TRUE)
 #' @export
 thicken <- function(x,
                     interval,
-                    colname  = NULL,
-                    rounding = c("down",
-                                 "up"),
-                    by        = NULL,
+                    colname = NULL,
+                    rounding = c(
+                      "down",
+                      "up"
+                    ),
+                    by = NULL,
                     start_val = NULL,
-                    drop      = FALSE,
+                    drop = FALSE,
                     ties_to_earlier = FALSE) {
-
   is_df(x)
   has_rows(x)
 
@@ -89,7 +100,7 @@ thicken <- function(x,
   x <- as.data.frame(x)
 
   dt_var_info <- get_dt_var_and_name(x, by)
-  dt_var      <- dt_var_info$dt_var
+  dt_var <- dt_var_info$dt_var
   dt_var_name <- dt_var_info$dt_var_name
 
   error_on_year_2038(dt_var, "thicken")
@@ -100,12 +111,12 @@ thicken <- function(x,
   interval_converted$interval <- uniform_interval_name(interval_converted$interval)
   rounding <- match.arg(rounding)
 
-  if (inherits(start_val, 'POSIXt') & inherits(dt_var, 'POSIXt')) {
+  if (inherits(start_val, "POSIXt") & inherits(dt_var, "POSIXt")) {
     start_val <- enforce_time_zone(start_val, dt_var)
   }
 
   ind_to_keep <- start_val_after_min_dt(start_val, dt_var)
-  x <- x[ind_to_keep, , drop = FALSE] #nolint
+  x <- x[ind_to_keep, , drop = FALSE] # nolint
   dt_var <- dt_var[ind_to_keep]
 
   if (is.null(by)) {
@@ -128,7 +139,7 @@ thicken <- function(x,
   }
 
   thickened_with_na <- add_na_to_thicken(thickened, na_ind)
-  thickened_frame   <- data.frame(thickened_with_na)
+  thickened_frame <- data.frame(thickened_with_na)
 
   return_frame <- dplyr::bind_cols(x, thickened_frame)
   colnames(return_frame)[ncol(return_frame)] <- colname
@@ -158,20 +169,25 @@ convert_interval <- function(interval) {
   start_val <- as.POSIXct("2017-01-01 00:00:00")
   x <- tryCatch(
     seq(start_val, length.out = 10, by = interval),
-    error = function(e){
+    error = function(e) {
       stop("interval is not valid", call. = FALSE)
-    })
+    }
+  )
   return(make_interval_list_from_string(interval))
 }
 
 make_interval_list_from_string <- function(interval_string) {
   interval_split <- strsplit(interval_string, " ")[[1]]
   if (length(interval_split) == 1) {
-    return(list(interval = interval_split,
-                step     = 1))
+    return(list(
+      interval = interval_split,
+      step = 1
+    ))
   } else {
-    return(list(interval = interval_split[2],
-                step     = as.numeric(interval_split[1])))
+    return(list(
+      interval = interval_split[2],
+      step = as.numeric(interval_split[1])
+    ))
   }
 }
 
@@ -179,8 +195,10 @@ make_interval_list_from_string <- function(interval_string) {
 convert_int_to_hours <- function(interval_obj) {
   # we take # month = # year / 12
   hours_in_unit <- c(8760, 2190, 730, 168, 24, 1, 1 / 60, 1 / 3600)
-  names(hours_in_unit) <- c("year", "quarter", "month", "week", "day",
-                            "hour", "min", "sec")
+  names(hours_in_unit) <- c(
+    "year", "quarter", "month", "week", "day",
+    "hour", "min", "sec"
+  )
   hours_in_unit[interval_obj$interval] * interval_obj$step
 }
 
@@ -190,7 +208,9 @@ get_colname <- function(x, x_name, colname, interval_converted) {
       colname <- paste(x_name, interval_converted$interval, sep = "_")
     } else {
       colname <- paste(x_name, interval_converted$step,
-                       interval_converted$interval, sep = "_")
+        interval_converted$interval,
+        sep = "_"
+      )
     }
   }
   return(colname)
@@ -199,11 +219,11 @@ get_colname <- function(x, x_name, colname, interval_converted) {
 uniform_interval_name <- function(interval) {
   if (interval %in% c("y", "ye", "yea", "years")) {
     interval <- "year"
-  } else if (interval %in% c("q", "qu", "qua", "quar", "quart", "quarte", "quarters")){
+  } else if (interval %in% c("q", "qu", "qua", "quar", "quart", "quarte", "quarters")) {
     interval <- "quarter"
   } else if (interval %in% c("m", "mo", "mon", "mont", "months")) {
     interval <- "month"
-  } else if (interval %in% c("w", "we", "wee", "weeks")){
+  } else if (interval %in% c("w", "we", "wee", "weeks")) {
     interval <- "week"
   } else if (interval %in% c("d", "da", "days")) {
     interval <- "day"
@@ -222,21 +242,21 @@ start_val_after_min_dt <- function(start_val, dt_var) {
     return(1:length(dt_var))
   } else {
     start_val <- to_posix(start_val, dt_var)$a
-    dt_var    <- to_posix(start_val, dt_var)$b
+    dt_var <- to_posix(start_val, dt_var)$b
     ind <- dt_var >= start_val
     return(ind)
   }
 }
 
 check_for_NA_thicken <- function(dt_var, dt_var_name, colname) {
-  if (sum(is.na(dt_var))  > 0) {
+  if (sum(is.na(dt_var)) > 0) {
     dt_var <- dt_var[!is.na(dt_var)]
 
-      warn_mess <- sprintf(
-"There are NA values in the column %s.
+    warn_mess <- sprintf(
+      "There are NA values in the column %s.
 Returned dataframe contains original observations, with NA values for %s and %s.",
-        dt_var_name, dt_var_name, colname
-      )
+      dt_var_name, dt_var_name, colname
+    )
     warning(warn_mess, call. = FALSE)
   }
   dt_var

@@ -25,7 +25,7 @@ closest_weekday <- function(x,
   direction <- match.arg(direction)
 
   x_start <- min(as.Date(x))
-  wday_lookup  <- make_weekdays_lookup()
+  wday_lookup <- make_weekdays_lookup()
   current <- wday_lookup[weekdays(x_start)]
 
   if (direction == "down") {
@@ -43,7 +43,9 @@ closest_weekday <- function(x,
 
 make_weekdays_lookup <- function() {
   lookup <- 0:6
-  names(lookup) <- weekdays( seq(as.Date("2017-05-21"), length.out = 7,
-                                 by = "day"))
+  names(lookup) <- weekdays(seq(as.Date("2017-05-21"),
+    length.out = 7,
+    by = "day"
+  ))
   lookup
 }

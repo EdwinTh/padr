@@ -35,9 +35,9 @@
 #' span_date(20110101, len_out = 4, by = "month")
 #' @export
 span_date <- function(from,
-                      to       = NULL,
-                      len_out  = NULL,
-                      by       = NULL) {
+                      to = NULL,
+                      len_out = NULL,
+                      by = NULL) {
   check_to_len_out(len_out, to)
   check_valid_input_span(from, name = "from", "date")
   from_dt <- convert_to_date(from)
@@ -98,10 +98,10 @@ span_date <- function(from,
 #'
 #' @export
 span_time <- function(from,
-                      to       = NULL,
-                      len_out  = NULL,
-                      by       = NULL,
-                      tz       = "UTC") {
+                      to = NULL,
+                      len_out = NULL,
+                      by = NULL,
+                      tz = "UTC") {
   check_to_len_out(len_out, to)
   check_valid_input_span(from, name = "from", "time")
   from_dt <- convert_to_datetime(from, tz = tz)
@@ -122,14 +122,14 @@ check_to_len_out <- function(to, len_out) {
     stop("either to or len_out must be specified", call. = FALSE)
   } else if (!is.null(to) && !is.null(len_out)) {
     warning("both to and len_out are specified, len_out is ignored",
-            call. = FALSE)
+      call. = FALSE
+    )
   }
 }
 
 check_valid_input_span <- function(x,
-                                   name         = "from",
+                                   name = "from",
                                    date_or_time = c("date", "time")) {
-
   date_or_time <- match.arg(date_or_time)
   if (is.numeric(x)) {
     valid_numeric_dt(x, name = name)
@@ -169,7 +169,7 @@ match_date_pattern <- function(x) {
     grepl("^\\d{8}$", x)
 }
 
-match_date_time_pattern  <- function(x) {
+match_date_time_pattern <- function(x) {
   grepl("^\\d{8}\\s\\d{2}$", x) |
     grepl("^\\d{8}\\s\\d{4}$", x) |
     grepl("^\\d{8}\\s\\d{6}$", x)
@@ -178,8 +178,10 @@ match_date_time_pattern  <- function(x) {
 convert_to_date <- function(x) {
   x_string <- substr(paste0(x, "0101"), 1, 8)
   date_string <- paste(substr(x_string, 1, 4),
-                       substr(x_string, 5, 6),
-                       substr(x_string, 7, 8), sep = "-")
+    substr(x_string, 5, 6),
+    substr(x_string, 7, 8),
+    sep = "-"
+  )
   as.Date(date_string)
 }
 
@@ -192,12 +194,16 @@ convert_to_datetime <- function(x,
                                 tz = "UTC") {
   date_string <- substr(paste0(x, "0101"), 1, 8)
   date_pt <- paste(substr(date_string, 1, 4),
-                   substr(date_string, 5, 6),
-                   substr(date_string, 7, 8), sep = "-")
+    substr(date_string, 5, 6),
+    substr(date_string, 7, 8),
+    sep = "-"
+  )
   time_string <- substr(paste0(x, "0000000000000000"), 10, 15)
   time_pt <- paste(substr(time_string, 1, 2),
-                   substr(time_string, 3, 4),
-                   substr(time_string, 5, 6), sep = ":")
+    substr(time_string, 3, 4),
+    substr(time_string, 5, 6),
+    sep = ":"
+  )
   as.POSIXct(paste(date_pt, time_pt), tz = tz)
 }
 

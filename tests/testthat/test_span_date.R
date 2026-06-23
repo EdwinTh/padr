@@ -3,21 +3,29 @@ sw <- suppressWarnings
 test_that("check_to_len_out give right error", {
   jos <- 40
   expect_error(sw(check_to_len_out(jos, jos)), NA)
-  expect_warning(check_to_len_out(jos, jos),
-                 "both to and len_out are specified, len_out is ignored")
+  expect_warning(
+    check_to_len_out(jos, jos),
+    "both to and len_out are specified, len_out is ignored"
+  )
   expect_error(check_to_len_out(jos, NULL), NA)
   expect_error(check_to_len_out(NULL, jos), NA)
-  expect_error(check_to_len_out(NULL, NULL),
-               "either to or len_out must be specified")
+  expect_error(
+    check_to_len_out(NULL, NULL),
+    "either to or len_out must be specified"
+  )
 })
 
 test_that("check_valid_input_span errors on wrong datatype", {
   expect_error(check_valid_input_span(2011), NA)
   expect_error(check_valid_input_span("2011"), NA)
-  expect_error(check_valid_input_span(TRUE),
-               "from is not a character or numeric")
-  expect_error(check_valid_input_span(as.Date("2011-01-01")),
-               "from is not a character or numeric")
+  expect_error(
+    check_valid_input_span(TRUE),
+    "from is not a character or numeric"
+  )
+  expect_error(
+    check_valid_input_span(as.Date("2011-01-01")),
+    "from is not a character or numeric"
+  )
 })
 
 test_that("valid_numeric_dt errors on wrong format", {
@@ -113,7 +121,9 @@ test_that("span_time gives the desired outputs", {
   hour_span <- seq.POSIXt(p("2011-01-01 00:00:00"), p("2011-01-01 23:00:00"), by = "hour")
   min_span <- seq.POSIXt(p("2011-01-01 00:00:00"), p("2011-01-01 00:25:00"), by = "min")
   sec_span <- seq.POSIXt(p("2011-01-01 00:00:00"),
-                         p("2011-01-01 00:00:25"), by = "sec")
+    p("2011-01-01 00:00:25"),
+    by = "sec"
+  )
 
   expect_equal(span_time(20110101, 20110201), day_span)
   expect_equal(span_time("20110101", "20110201"), day_span)

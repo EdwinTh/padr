@@ -26,13 +26,13 @@
 span_around <- function(x,
                         interval,
                         start_shift = NULL,
-                        end_shift   = start_shift) {
+                        end_shift = start_shift) {
   stopifnot(is_datetime(x))
   check_start_end_shift(start_shift, end_shift)
-  interval_list          <- convert_interval(interval)
+  interval_list <- convert_interval(interval)
   interval_list$interval <- uniform_interval_name(interval_list$interval)
   if (!is.null(start_shift)) x <- shift(x, start_shift, "down")
-  if (!is.null(end_shift))   x <- shift(x, end_shift, "up")
+  if (!is.null(end_shift)) x <- shift(x, end_shift, "up")
   span(x, interval_list)
 }
 
@@ -62,7 +62,7 @@ dt_c <- function(a, b) {
 period_to_time <- function(interval_list,
                            time_period = c("day", "sec")) {
   time_period <- match.arg(time_period)
-  int_hours   <- convert_int_to_hours(interval_list)
+  int_hours <- convert_int_to_hours(interval_list)
   if (time_period == "day") {
     ceiling(int_hours / 24)
   } else {
@@ -84,7 +84,7 @@ check_start_end_shift <- function(start_shift, end_shift) {
 # we specify multiples of an hour. This does not bother thicken, because
 # everyhting earlier will be abandoned anyway. However, for span_around this
 # is not a clean result, and we want to remove redundant values.
-closest_hour_to_min_x <- function(start_val, min_v, interval){
+closest_hour_to_min_x <- function(start_val, min_v, interval) {
   smaller <- seq(start_val, min_v, interval)
   as.POSIXlt(smaller[length(smaller)])
 }
@@ -93,8 +93,7 @@ closest_hour_to_min_x <- function(start_val, min_v, interval){
 # exported span_around.
 span <- function(x,
                  interval,
-                 start_val  = NULL) {
-
+                 start_val = NULL) {
   stop_not_datetime(x)
 
   # workaround for rounding is down and ties_to_earlier is TRUE
@@ -102,32 +101,29 @@ span <- function(x,
   x[1] <- x[1] - 1
   start_and_end <- get_start_and_end(x, return_interval = interval)
 
-  if ( is.null(start_val) ) {
-
+  if (is.null(start_val)) {
     start_val <- start_and_end$start_val
-    end_val   <- start_and_end$end_val
-
-  } else if ( !is.null(start_val) ){
-
+    end_val <- start_and_end$end_val
+  } else if (!is.null(start_val)) {
     end_val <- shift_end_from_start(start_and_end, start_val)
     end_val <- assure_greater_than_max_x(max(x), end_val, interval$interval)
-
   }
 
   by_val <- paste(interval$step, interval$interval)
   seq(start_val, end_val, by = by_val)
 }
 
-shift_end_from_start <- function(start_and_end, start_val){
-
+shift_end_from_start <- function(start_and_end, start_val) {
   start_when_null <- start_and_end$start_val
-  end_when_null   <- start_and_end$end_val
+  end_when_null <- start_and_end$end_val
 
-  if ( inherits(start_val, 'POSIXt') & inherits(start_when_null, 'Date') ) {
-    start_when_null <- as.POSIXct( as.character(start_when_null),
-                                   tz = attr(start_val, 'tzone'))
-    end_when_null <- as.POSIXct( as.character(end_when_null),
-                                 tz = attr(start_val, 'tzone'))
+  if (inherits(start_val, "POSIXt") & inherits(start_when_null, "Date")) {
+    start_when_null <- as.POSIXct(as.character(start_when_null),
+      tz = attr(start_val, "tzone")
+    )
+    end_when_null <- as.POSIXct(as.character(end_when_null),
+      tz = attr(start_val, "tzone")
+    )
   }
   start_offset <- start_when_null - start_val
 
@@ -139,10 +135,10 @@ shift_end_from_start <- function(start_and_end, start_val){
 assure_greater_than_max_x <- function(max_x,
                                       end_val,
                                       interval) {
-  if ( inherits(end_val, 'POSIXt') & inherits(max_x, 'Date') ) {
-    max_x <- as.POSIXct( as.character(max_x), tz = attr(end_val, 'tzone'))
-  } else if ( inherits(max_x, 'POSIXt') & inherits(end_val, 'Date') ) {
-    max_x <- as.Date( substr(max_x, 1, 10) )
+  if (inherits(end_val, "POSIXt") & inherits(max_x, "Date")) {
+    max_x <- as.POSIXct(as.character(max_x), tz = attr(end_val, "tzone"))
+  } else if (inherits(max_x, "POSIXt") & inherits(end_val, "Date")) {
+    max_x <- as.Date(substr(max_x, 1, 10))
   }
 
   while (end_val <= max_x) {
@@ -150,14 +146,13 @@ assure_greater_than_max_x <- function(max_x,
   }
 
   return(end_val)
-
 }
 
 #----------------------------------------------------------------------------#
 get_start_and_end <- function(dt_var,
                               return_interval) {
-  min_v <- as.POSIXlt( min(dt_var) ) #nolint
-  max_v <- as.POSIXlt( max(dt_var) )
+  min_v <- as.POSIXlt(min(dt_var)) # nolint
+  max_v <- as.POSIXlt(max(dt_var))
 
   interval <- flatten_interval(return_interval)
 
@@ -170,53 +165,55 @@ get_start_and_end <- function(dt_var,
   end_min_1 <- span[length(span)]
   end_val <- as.POSIXlt(seq(end_min_1, length.out = 2, by = interval)[2])
 
-  to_date <- all( c(start_val$hour, start_val$min, start_val$sec,
-                    end_val$hour, end_val$min, end_val$sec) == 0 )
+  to_date <- all(c(
+    start_val$hour, start_val$min, start_val$sec,
+    end_val$hour, end_val$min, end_val$sec
+  ) == 0)
 
   interval_allows_for_date <- !return_interval$inter %in%
     c("hour", "min", "sec")
 
   if (to_date & interval_allows_for_date) {
-    start_val <- as.Date(strptime(start_val, format = '%Y-%m-%d'))
-    end_val   <- as.Date(strptime(end_val,   format = '%Y-%m-%d'))
+    start_val <- as.Date(strptime(start_val, format = "%Y-%m-%d"))
+    end_val <- as.Date(strptime(end_val, format = "%Y-%m-%d"))
   } else {
     start_val <- as.POSIXct(start_val)
-    end_val   <- as.POSIXct(end_val)
+    end_val <- as.POSIXct(end_val)
   }
 
   return(list(start_val = start_val, end_val = end_val))
 }
 
 start_val_year <- function(min_v) {
-  sec_to_0 ( min_to_0 ( hour_to_0 ( day_to_1 ( month_to_1 ( min_v ) ) ) ) )
+  sec_to_0(min_to_0(hour_to_0(day_to_1(month_to_1(min_v)))))
 }
 
 start_val_quarter <- function(min_v) {
-  sec_to_0 ( min_to_0 ( hour_to_0 ( day_to_1 ( this_quarter_month ( min_v ) ) ) ) )
+  sec_to_0(min_to_0(hour_to_0(day_to_1(this_quarter_month(min_v)))))
 }
 
-start_val_month  <- function(min_v) {
-  sec_to_0 ( min_to_0 ( hour_to_0 ( day_to_1 ( min_v ) ) ) )
+start_val_month <- function(min_v) {
+  sec_to_0(min_to_0(hour_to_0(day_to_1(min_v))))
 }
 
 start_val_week <- function(min_v) {
-  sec_to_0 ( min_to_0 ( hour_to_0 ( this_week ( min_v ) ) ) )
+  sec_to_0(min_to_0(hour_to_0(this_week(min_v))))
 }
 
 start_val_day <- function(min_v) {
-  sec_to_0 ( min_to_0 ( hour_to_0 ( min_v ) ) )
+  sec_to_0(min_to_0(hour_to_0(min_v)))
 }
 
 start_val_hour <- function(min_v) {
-  sec_to_0 ( min_to_0 ( hour_to_0 ( min_v ) ) )
+  sec_to_0(min_to_0(hour_to_0(min_v)))
 }
 
 start_val_min <- function(min_v) {
-  sec_to_0 ( min_to_0 ( min_v ) )
+  sec_to_0(min_to_0(min_v))
 }
 
 start_val_sec <- function(min_v) {
-  sec_to_0 ( min_v )
+  sec_to_0(min_v)
 }
 
 
@@ -284,7 +281,7 @@ this_quarter_month <- function(x) {
 }
 
 next_quarter_month <- function(x) {
-  x$mon <- floor( x$mon   / 3) * 3 + 3
+  x$mon <- floor(x$mon / 3) * 3 + 3
   c(x) # normalizes
 }
 
@@ -294,6 +291,6 @@ this_week <- function(x) {
 }
 
 next_week <- function(x) {
-  x$mday   <- x$mday   + (7 - x$wday)
+  x$mday <- x$mday + (7 - x$wday)
   c(x)
 }
