@@ -19,11 +19,11 @@
 #' subset_span(time_span, list(hour = c(10, 16), mday = seq(5, 30, 5)))
 #' @export
 subset_span <- function(spanned,
-                        pattern_list){
+                        pattern_list) {
   test_datetime(spanned)
   original_type <- class(spanned)
-  spanned_lt    <- as.POSIXlt(spanned)
-  parts         <- names(pattern_list)
+  spanned_lt <- as.POSIXlt(spanned)
+  parts <- names(pattern_list)
   check_filter_on(parts)
   spanned_subsetted <- filter_subset(spanned_lt, pattern_list)
   if (original_type[1] == "POSIXct") {
@@ -48,7 +48,7 @@ filter_one_part <- function(spanned_lt,
                             pattern_list,
                             part) {
   if (part == "year") {
-    spanned_lt[(spanned_lt$year  + 1900) %in% pattern_list$year]
+    spanned_lt[(spanned_lt$year + 1900) %in% pattern_list$year]
   } else if (part == "mon") {
     spanned_lt[(spanned_lt$mon + 1) %in% pattern_list$mon]
   } else if (part == "mday") {
@@ -73,7 +73,7 @@ filter_subset <- function(spanned_lt,
 }
 
 test_datetime <- function(x) {
-  if (!(inherits(x, "POSIXt") | inherits(x, "Date"))){
+  if (!(inherits(x, "POSIXt") | inherits(x, "Date"))) {
     stop("x is not of class POSIXct, POSIXlt, or Date", call. = FALSE)
   }
 }

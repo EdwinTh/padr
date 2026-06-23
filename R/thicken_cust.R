@@ -27,13 +27,12 @@
 #' thicken_cust(accidents, spanning, "period") %>%
 #'   count(period) %>%
 #'   pad_cust(spanning)
-#'@export
+#' @export
 thicken_cust <- function(x,
                          spanned,
                          colname,
-                         by   = NULL,
+                         by = NULL,
                          drop = FALSE) {
-
   is_df(x)
   has_rows(x)
 
@@ -41,21 +40,21 @@ thicken_cust <- function(x,
   x <- as.data.frame(x)
 
   dt_var_info <- get_dt_var_and_name(x, by)
-  dt_var      <- dt_var_info$dt_var
+  dt_var <- dt_var_info$dt_var
   dt_var_name <- dt_var_info$dt_var_name
 
   error_on_year_2038(dt_var, "thicken_cust")
 
   is_datetime(spanned)
-  if (inherits(spanned, 'POSIXt') & inherits(dt_var, 'POSIXt')) {
-    spanned   <- enforce_time_zone(spanned, dt_var)
+  if (inherits(spanned, "POSIXt") & inherits(dt_var, "POSIXt")) {
+    spanned <- enforce_time_zone(spanned, dt_var)
   }
 
   warning_when_filtering(dt_var, spanned)
 
   ind_to_keep <- start_val_after_min_dt(min(spanned), dt_var)
 
-  x <- x[ind_to_keep, , drop = FALSE] #nolint
+  x <- x[ind_to_keep, , drop = FALSE] # nolint
   dt_var <- dt_var[ind_to_keep]
 
   if (is.null(by)) by <- dt_var_name
@@ -78,12 +77,13 @@ thicken_cust <- function(x,
 warning_when_filtering <- function(dt_var, spanned) {
   if (min(dt_var) < min(spanned)) {
     warning("Dropping all values in the datetime var that are smaller than smallest spanned",
-            call. = FALSE)
+      call. = FALSE
+    )
   }
 }
 
 end_val_before_max_dt <- function(end_val, dt_var) {
   end_val <- to_posix(end_val, dt_var)$a
-  dt_var  <- to_posix(end_val, dt_var)$b
+  dt_var <- to_posix(end_val, dt_var)$b
   dt_var < end_val
 }

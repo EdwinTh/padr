@@ -25,14 +25,16 @@
 #'   count(h) %>%
 #'   head(24)
 #'
-#' ggplot(plot_set, aes(h, n)) + geom_col()
+#' ggplot(plot_set, aes(h, n)) +
+#'   geom_col()
 #'
 #' plot_set %>%
 #'   mutate(h_center = center_interval(h)) %>%
-#'   ggplot(aes(h_center, n)) + geom_col()
+#'   ggplot(aes(h_center, n)) +
+#'   geom_col()
 #' @export
 center_interval <- function(x,
-                            shift    = c("up", "down"),
+                            shift = c("up", "down"),
                             interval = NULL) {
   stop_not_datetime(x)
   shift <- match.arg(shift)
@@ -55,9 +57,11 @@ center_interval <- function(x,
 # x an object of class interval
 int_to_secs <- function(x) {
   day_secs <- 3600 * 24
-  secs_string <- c(year = day_secs * 365, quarter = day_secs * 365 / 4,
-                   month = day_secs * 365 / 12, week = day_secs * 7,
-                   day = day_secs, hour = 3600, min = 60, sec = 1)
+  secs_string <- c(
+    year = day_secs * 365, quarter = day_secs * 365 / 4,
+    month = day_secs * 365 / 12, week = day_secs * 7,
+    day = day_secs, hour = 3600, min = 60, sec = 1
+  )
   ret <- secs_string[x$interval] * x$step
   unname(ret)
 }
@@ -120,17 +124,18 @@ unname <- function(x) {
 #'   count(h)
 #'
 #' # this will show the data on the full hour
-#' ggplot(plot_set, aes(h, n)) + geom_col()
+#' ggplot(plot_set, aes(h, n)) +
+#'   geom_col()
 #'
 #' # adding a character to indicate the hours of the interval.
 #' plot_set %>%
 #'   mutate(h_int = format_interval(h, "%H", sep = "-"))
-#'@export
+#' @export
 format_interval <- function(x,
-                            start_format  = "%Y-%m-%d",
-                            end_format    = start_format,
-                            sep           = " ",
-                            end_offset    = 0,
+                            start_format = "%Y-%m-%d",
+                            end_format = start_format,
+                            sep = " ",
+                            end_offset = 0,
                             units_to_last = NULL) {
   stop_not_datetime(x)
   stopifnot(length(x) == length(unique(x)))
@@ -143,12 +148,12 @@ format_interval <- function(x,
 
   tz <- attr(x, "tzone")
   if (is.null(tz)) {
-    tz <- ''
+    tz <- ""
   }
 
-  end_vals   <- find_next_val(x, units_to_last) - (end_offset)
+  end_vals <- find_next_val(x, units_to_last) - (end_offset)
   start_char <- strftime(x, start_format, tz = tz)
-  end_char   <- strftime(end_vals, end_format, tz = tz)
+  end_char <- strftime(end_vals, end_format, tz = tz)
   ret <- paste(start_char, end_char, sep = sep)
   ret[original_order]
 }
@@ -156,10 +161,10 @@ format_interval <- function(x,
 # x is a datetime variable of which we need to find the next value of each instance
 find_next_val <- function(x,
                           fin_val_units) {
-  n         <- length(x)
-  x_srt     <- sort(x)
-  ret       <- x_srt[2:n]
-  fin_val   <- ret[n - 1] + fin_val_units
+  n <- length(x)
+  x_srt <- sort(x)
+  ret <- x_srt[2:n]
+  fin_val <- ret[n - 1] + fin_val_units
   ret_compl <- c(ret, fin_val)
   # by using c() the vector is changed to the tz of the locale! change back
   attr(ret_compl, "tzone") <- attr(ret, "tzone")

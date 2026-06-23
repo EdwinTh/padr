@@ -1,3 +1,9 @@
+# padr 0.7.0
+
+* Reintroduced the tidyverse linting, all the examples in the documentation are now also styled accordingly.
+
+* 
+
 # padr 0.6.3
 
 * Patch release for upcoming R version on Linux

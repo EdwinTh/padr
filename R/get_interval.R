@@ -7,10 +7,10 @@
 #' @return A character string indicating the interval of \code{x}.
 #' @details See \code{vignette("padr")} for more information on intervals.
 #' @examples
-#' x_month <- seq(as.Date('2016-01-01'), as.Date('2016-05-01'), by = 'month')
+#' x_month <- seq(as.Date("2016-01-01"), as.Date("2016-05-01"), by = "month")
 #' get_interval(x_month)
 #'
-#' x_sec <- seq(as.POSIXct('2016-01-01 00:00:00'), length.out = 100, by = 'sec')
+#' x_sec <- seq(as.POSIXct("2016-01-01 00:00:00"), length.out = 100, by = "sec")
 #' get_interval(x_sec)
 #' get_interval(x_sec[seq(0, length(x_sec), by = 5)])
 #' @export
@@ -30,26 +30,26 @@ stop_on_NA <- function(x) {
   }
 }
 
-get_interval_list <- function(x){
+get_interval_list <- function(x) {
   stop_not_datetime(x)
 
   x_char <- datetime_char(x)
   differ <- lowest_differ(x_char)
 
-  if ( length(differ) == 0 ) {
+  if (length(differ) == 0) {
     stop("x does not vary, cannot determine the interval", call. = FALSE)
   }
 
-  if (differ == 'month') {
-    if (is_month_quarter(x_char)) differ <- 'quarter'
+  if (differ == "month") {
+    if (is_month_quarter(x_char)) differ <- "quarter"
   }
 
-  if (differ == 'day') {
-    if (is_day_week(x_char)) differ <- 'week'
+  if (differ == "day") {
+    if (is_day_week(x_char)) differ <- "week"
   }
 
   # we convert to Data here to avoid DST problems
-  if (differ %in% c('day', 'week') & inherits(x, "POSIXt")) {
+  if (differ %in% c("day", "week") & inherits(x, "POSIXt")) {
     x <- as.Date(x)
   }
 
@@ -72,14 +72,14 @@ datetime_char <- function(x) {
 # check what levels of the datetime variable differ, x is the output of datetime_char
 lowest_differ <- function(x_char) {
   differ <- which(c(
-    year   = ! length( unique ( substr(x_char, 1, 4) ) ) == 1,
-    month  = ! length( unique ( substr(x_char, 6, 7) ) ) == 1,
-    day    = ! length( unique ( substr(x_char, 9, 10) ) ) == 1,
-    hour   = ! length( unique ( substr(x_char, 12, 13) ) ) == 1,
-    min    = ! length( unique ( substr(x_char, 15, 16) ) ) == 1,
-    sec    = ! length( unique ( substr(x_char, 18, 19) ) ) == 1
+    year   = !length(unique(substr(x_char, 1, 4))) == 1,
+    month  = !length(unique(substr(x_char, 6, 7))) == 1,
+    day    = !length(unique(substr(x_char, 9, 10))) == 1,
+    hour   = !length(unique(substr(x_char, 12, 13))) == 1,
+    min    = !length(unique(substr(x_char, 15, 16))) == 1,
+    sec    = !length(unique(substr(x_char, 18, 19))) == 1
   ))
-  return( names( differ[length(differ)] ) )
+  return(names(differ[length(differ)]))
 }
 
 # using the lowest_differ we cannot detect quarter and week
@@ -90,11 +90,12 @@ is_month_quarter <- function(x_char) {
 }
 
 # if the interval is day we we will look for week
-is_day_week <- function(x_char){
-  all_weeks <- seq( as.POSIXlt(min(x_char), tz = 'UTC'),
-                    as.POSIXlt(max(x_char), tz = 'UTC'),
-                    by = '7 DSTdays')
-  x_posix <- as.POSIXlt(x_char, tz = 'UTC')
+is_day_week <- function(x_char) {
+  all_weeks <- seq(as.POSIXlt(min(x_char), tz = "UTC"),
+    as.POSIXlt(max(x_char), tz = "UTC"),
+    by = "7 DSTdays"
+  )
+  x_posix <- as.POSIXlt(x_char, tz = "UTC")
   all(as.numeric(x_posix) %in% as.numeric(all_weeks))
 }
 
@@ -102,33 +103,49 @@ is_day_week <- function(x_char){
 ####################################################################################
 # after finding the "whole" time unit, see if we need a higher level within the unit
 get_step <- function(x, d) {
-  if (d == "year") return(step_of_year(x))
-  if (d == "quarter") return(step_of_quarter(x))
-  if (d == "month") return(step_of_month(x))
-  if (d == "week") return(step_with_difftime(x, "week"))
-  if (d == "day") return(step_with_difftime(x, "day"))
-  if (d == "hour") return(step_with_difftime(x, "hour"))
-  if (d == "min") return(step_with_difftime(x, "min"))
-  if (d == "sec") return(step_with_difftime(x, "sec"))
+  if (d == "year") {
+    return(step_of_year(x))
+  }
+  if (d == "quarter") {
+    return(step_of_quarter(x))
+  }
+  if (d == "month") {
+    return(step_of_month(x))
+  }
+  if (d == "week") {
+    return(step_with_difftime(x, "week"))
+  }
+  if (d == "day") {
+    return(step_with_difftime(x, "day"))
+  }
+  if (d == "hour") {
+    return(step_with_difftime(x, "hour"))
+  }
+  if (d == "min") {
+    return(step_with_difftime(x, "min"))
+  }
+  if (d == "sec") {
+    return(step_with_difftime(x, "sec"))
+  }
 }
 
 step_of_year <- function(x) {
-  years <- sort( as.numeric(substr(x, 1, 4)) )
+  years <- sort(as.numeric(substr(x, 1, 4)))
   max_val <- smallest_nonzero(years)
-  return( get_max_modulo_zero( get_difs(years), max_t = max_val ) )
+  return(get_max_modulo_zero(get_difs(years), max_t = max_val))
 }
 
 step_of_quarter <- function(x) {
-  months <- sort( convert_month_to_number(x) )
+  months <- sort(convert_month_to_number(x))
   quarters <- months / 3
   max_val <- smallest_nonzero(quarters)
-  return( get_max_modulo_zero( get_difs(quarters), max_t = max_val ) )
+  return(get_max_modulo_zero(get_difs(quarters), max_t = max_val))
 }
 
 step_of_month <- function(x) {
-  months <- sort( convert_month_to_number(x) )
+  months <- sort(convert_month_to_number(x))
   max_val <- smallest_nonzero(months)
-  return( get_max_modulo_zero( get_difs(months), max_t = max_val) )
+  return(get_max_modulo_zero(get_difs(months), max_t = max_val))
 }
 
 step_with_difftime <- function(x, unit) {
@@ -137,7 +154,7 @@ step_with_difftime <- function(x, unit) {
   } else if (inherits(x, "POSIXt")) {
     time_dif <- numeric_dif_posix(x, unit = unit)
   }
-  return(get_max_modulo_zero( time_dif, max_t = smallest_nonzero(time_dif)) )
+  return(get_max_modulo_zero(time_dif, max_t = smallest_nonzero(time_dif)))
 }
 
 # count each month as a number from the first
@@ -186,7 +203,7 @@ get_interval_try <- function(x) {
 ## everything of a week and lower.
 numeric_dif_date <- function(x, unit) {
   x_num <- sort(unique(as.numeric(x)))
-  difs  <- get_difs(x_num)
+  difs <- get_difs(x_num)
   if (unit == "week") {
     difs / 7
   } else if (unit == "day") {
@@ -196,7 +213,7 @@ numeric_dif_date <- function(x, unit) {
 
 numeric_dif_posix <- function(x, unit) {
   x_num <- sort(unique(as.numeric(x)))
-  difs  <- get_difs(x_num)
+  difs <- get_difs(x_num)
   if (unit == "sec") {
     difs
   } else if (unit == "min") {

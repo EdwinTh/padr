@@ -1,4 +1,3 @@
-
 #' Emergency Calls for Montgomery County, PA
 #'
 #' The emergency calls coming in at Montgomery County, PA since 2015-12-10.

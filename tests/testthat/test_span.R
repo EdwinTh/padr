@@ -13,14 +13,14 @@ generate_interval <- function(unit, int) {
 context("span fails on wrong input")
 
 test_that("span fails on non-datetime vectors", {
-  expect_error(as.integer(day_vec) %>% span)
-  expect_error(as.numeric(day_vec) %>% span)
-  expect_error(as.character(day_vec) %>% span)
-  expect_error(as.factor(day_vec) %>% span)
+  expect_error(as.integer(day_vec) %>% span())
+  expect_error(as.numeric(day_vec) %>% span())
+  expect_error(as.character(day_vec) %>% span())
+  expect_error(as.factor(day_vec) %>% span())
 })
 
 test_that("span fails on data.frames", {
-  expect_error(mtcars %>% span)
+  expect_error(mtcars %>% span())
 })
 
 test_that("span does not fail on Date, POSIXct and POSIXlt", {
@@ -66,17 +66,25 @@ context("end_val when start_val is specified")
 test_that("shift_end_from_start gives correct output", {
   gsae_year <- get_start_and_end(posix_ct, convert_interval("year"))
   gsae_week <- get_start_and_end(posix_ct, convert_interval("week"))
-  expect_equal(shift_end_from_start(gsae_year, as.Date("2016-02-01")),
-               as.Date("2017-02-01"))
-  expect_equal(shift_end_from_start(gsae_year, as.POSIXct("2016-02-01 00:04:01")), #nolint
-               as.POSIXct("2017-02-01 00:04:01"))
-  expect_equal(shift_end_from_start(gsae_week, as.Date("2015-12-25")),
-               as.Date("2016-03-04"))
-  expect_equal(shift_end_from_start(gsae_week, as.POSIXct("2015-12-25 00:04:01")), #nolint
-               as.POSIXct("2016-03-04 00:04:01"))
+  expect_equal(
+    shift_end_from_start(gsae_year, as.Date("2016-02-01")),
+    as.Date("2017-02-01")
+  )
+  expect_equal(
+    shift_end_from_start(gsae_year, as.POSIXct("2016-02-01 00:04:01")), # nolint
+    as.POSIXct("2017-02-01 00:04:01")
+  )
+  expect_equal(
+    shift_end_from_start(gsae_week, as.Date("2015-12-25")),
+    as.Date("2016-03-04")
+  )
+  expect_equal(
+    shift_end_from_start(gsae_week, as.POSIXct("2015-12-25 00:04:01")), # nolint
+    as.POSIXct("2016-03-04 00:04:01")
+  )
 })
 
-context("assure_greater_than_max_x makes sure that end_val is greater than max_x")  #nolint
+context("assure_greater_than_max_x makes sure that end_val is greater than max_x") # nolint
 
 test_that("assure_greater_than_max_x works properly", {
   max_x_date <- as.Date("2016-07-21")
@@ -84,19 +92,31 @@ test_that("assure_greater_than_max_x works properly", {
   end_val_date <- as.Date("2016-07-14")
   end_val_posix <- as.POSIXct("2016-07-14 14:39:04")
 
-  expect_equal( assure_greater_than_max_x(max_x_date, end_val_date, "month"),
-                as.Date("2016-08-14"))
-  expect_equal( assure_greater_than_max_x(max_x_date, end_val_posix, "month"),
-                as.POSIXct("2016-08-14 14:39:04"))
-  expect_equal( assure_greater_than_max_x(max_x_posix, end_val_posix, "month"),
-                as.POSIXct("2016-08-14 14:39:04"))
+  expect_equal(
+    assure_greater_than_max_x(max_x_date, end_val_date, "month"),
+    as.Date("2016-08-14")
+  )
+  expect_equal(
+    assure_greater_than_max_x(max_x_date, end_val_posix, "month"),
+    as.POSIXct("2016-08-14 14:39:04")
+  )
+  expect_equal(
+    assure_greater_than_max_x(max_x_posix, end_val_posix, "month"),
+    as.POSIXct("2016-08-14 14:39:04")
+  )
 
-  expect_equal( assure_greater_than_max_x(max_x_date, end_val_date, "day"),
-                as.Date("2016-07-22"))
-  expect_equal( assure_greater_than_max_x(max_x_date, end_val_posix, "day"),
-                as.POSIXct("2016-07-21 14:39:04"))
-  expect_equal( assure_greater_than_max_x(max_x_posix, end_val_posix, "day"),
-                as.POSIXct("2016-07-21 14:39:04"))
+  expect_equal(
+    assure_greater_than_max_x(max_x_date, end_val_date, "day"),
+    as.Date("2016-07-22")
+  )
+  expect_equal(
+    assure_greater_than_max_x(max_x_date, end_val_posix, "day"),
+    as.POSIXct("2016-07-21 14:39:04")
+  )
+  expect_equal(
+    assure_greater_than_max_x(max_x_posix, end_val_posix, "day"),
+    as.POSIXct("2016-07-21 14:39:04")
+  )
 })
 
 test_that("span integration tests", {
@@ -129,17 +149,29 @@ test_that("span_around integration tests", {
   expect_error(span_around(x, "day"), NA)
   expect_error(span_around(x, "2 days"), NA)
   expect_equal(span_around(x, "day"), span_date(20160709, 20160711))
-  expect_equal(span_around(x, "hour"),
-               span_time("20160709 13", "20160710 11", tz = "CET"))
-  expect_equal(span_around(x, "min"),
-               span_time("20160709 13", "20160710 1046", tz = "CET"))
-  expect_equal(start_shift_one_hour[1],
-               as.POSIXct("2016-07-09 12:00:00", tz = "CET"))
-  expect_equal(start_shift_one_hour[length(start_shift_one_hour)],
-               as.POSIXct("2016-07-10 12:00:00", tz = "CET"))
-  expect_equal(end_shift_one_hour[1],
-               as.POSIXct("2016-07-09 13:00:00", tz = "CET"))
-  expect_equal(end_shift_one_hour[length(end_shift_one_hour)],
-               as.POSIXct("2016-07-10 12:00:00", tz = "CET"))
+  expect_equal(
+    span_around(x, "hour"),
+    span_time("20160709 13", "20160710 11", tz = "CET")
+  )
+  expect_equal(
+    span_around(x, "min"),
+    span_time("20160709 13", "20160710 1046", tz = "CET")
+  )
+  expect_equal(
+    start_shift_one_hour[1],
+    as.POSIXct("2016-07-09 12:00:00", tz = "CET")
+  )
+  expect_equal(
+    start_shift_one_hour[length(start_shift_one_hour)],
+    as.POSIXct("2016-07-10 12:00:00", tz = "CET")
+  )
+  expect_equal(
+    end_shift_one_hour[1],
+    as.POSIXct("2016-07-09 13:00:00", tz = "CET")
+  )
+  expect_equal(
+    end_shift_one_hour[length(end_shift_one_hour)],
+    as.POSIXct("2016-07-10 12:00:00", tz = "CET")
+  )
   expect_equal(span_around(x, "day", start_shift = "1 day")[1], as.Date("2016-07-08"))
 })

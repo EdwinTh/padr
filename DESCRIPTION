@@ -1,7 +1,7 @@
 Package: padr
 Type: Package
 Title: Quickly Get Datetime Data Ready for Analysis
-Version: 0.6.3
+Version: 0.7.0
 Authors@R: person(given = "Edwin",
                   family = "Thoen",
                   role = c("aut", "cre"),
