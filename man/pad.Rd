@@ -41,7 +41,8 @@ variables of class \code{Date}, \code{POSIXct} or \code{POSIXlt}.}
 \item{group}{Optional character vector that specifies the grouping
 variable(s). Padding will take place within the different groups. When
 interval is not specified, it will be determined applying \code{get_interval}
-on the datetime variable as a whole, ignoring groups (see last example).}
+on the datetime variable as a whole, ignoring groups (see last example). 
+When \code{x} is a grouped \code{tibble} this will be used for grouping.}
 
 \item{break_above}{Numeric value that indicates the number of rows in millions
 above which the function will break. Safety net for situations where the
@@ -114,6 +115,9 @@ x_df_grp <- data.frame(
 
 # pad by one grouping var
 x_df_grp |> pad(group = "grp1")
+
+# alternatively you `dplyr::group_by` can be used
+x_df_grp |> dplyr::group_by(grp1) |> pad()
 
 # pad by two groups vars
 x_df_grp |> pad(group = c("grp1", "grp2"), interval = "month")
