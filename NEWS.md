@@ -6,7 +6,9 @@
 
 * Replaced the magrittr pipe operator by the base R pipe operator in all examples. issue #97
 
-* Removed package loading in the examples, using direct invocation from the namespace instead. 
+* Removed package loading in the examples, using direct invocation from the namespace instead.
+
+* Updating tidyselect code so we don't use deprecated functionality. issue #90 raised by github user tanho63
 
 # padr 0.6.3
 
