@@ -27,7 +27,7 @@ Suggests:
     lazyeval,
     tidyr,
     data.table
-RoxygenNote: 7.2.1
+RoxygenNote: 7.3.3
 LinkingTo: Rcpp
 VignetteBuilder: knitr
 URL: https://edwinth.github.io/padr/, https://github.com/EdwinTh/padr

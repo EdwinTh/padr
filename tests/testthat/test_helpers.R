@@ -14,7 +14,7 @@ two_dt_var <- data.frame(
 )
 
 test_that("get_date_variable only works on the right data types", {
-  expect_error(get_date_variables(one_day_var %>% as.matrix()))
+  expect_error(get_date_variables(one_day_var |> as.matrix()))
   expect_error(get_date_variables(one_day_var$x))
 })
 

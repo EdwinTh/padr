@@ -34,9 +34,9 @@ If NULL it will use the lowest value of the input variable.}
 \code{POSIXlt} that specifies the end of returned datetime variable.
 If NULL it will use the highest value of the input variable.}
 
-\item{by}{Only needs to be specified when \code{x} contains multiple
-variables of class \code{Date}, \code{POSIXct} or \code{POSIXlt}.
-Indicates which variable to use for padding.}
+\item{by}{Optional character vector of length 1 specifying the column name
+of the variable to be used for padding. Only needs to be specified when \code{x} contains multiple
+variables of class \code{Date}, \code{POSIXct} or \code{POSIXlt}.}
 
 \item{group}{Optional character vector that specifies the grouping
 variable(s). Padding will take place within the different groups. When
@@ -78,42 +78,58 @@ Rows with missing values in the datetime variables will be retained.
 However, they will be moved to the end of the returned data frame.
 }
 \examples{
-simple_df <- data.frame(day = as.Date(c('2016-04-01', '2016-04-03')),
-                        some_value = c(3,4))
+simple_df <- data.frame(
+  day = as.Date(c("2016-04-01", "2016-04-03")),
+  some_value = c(3, 4)
+)
 pad(simple_df)
 pad(simple_df, interval = "day")
 
-library(dplyr) # for the pipe operator
-month <- seq(as.Date('2016-04-01'), as.Date('2017-04-01'),
-              by = 'month')[c(1, 4, 5, 7, 9, 10, 13)]
-month_df <- data.frame(month = month,
-                       y = runif(length(month), 10, 20) \%>\% round)
+month <- seq(as.Date("2016-04-01"), as.Date("2017-04-01"),
+  by = "month"
+)[c(1, 4, 5, 7, 9, 10, 13)]
+month_df <- data.frame(
+  month = month,
+  y = runif(length(month), 10, 20) |> round()
+)
 # forward fill the padded values with tidyr's fill
-month_df \%>\% pad \%>\% tidyr::fill(y)
+month_df |>
+  pad() |>
+  tidyr::fill(y)
 
 # or fill all y with 0
-month_df \%>\% pad \%>\% fill_by_value(y)
+month_df |>
+  pad() |>
+  fill_by_value(y)
 
 # padding a data.frame on group level
-day_var <- seq(as.Date('2016-01-01'), length.out = 12, by = 'month')
-x_df_grp <- data.frame(grp1 = rep(LETTERS[1:3], each =4),
-                       grp2 = letters[1:2],
-                       y    = runif(12, 10, 20) \%>\% round(0),
-                       date = sample(day_var, 12, TRUE)) \%>\%
- arrange(grp1, grp2, date)
+day_var <- seq(as.Date("2016-01-01"), length.out = 12, by = "month")
+x_df_grp <- data.frame(
+  grp1 = rep(LETTERS[1:3], each = 4),
+  grp2 = letters[1:2],
+  y = runif(12, 10, 20) |> round(0),
+  date = sample(day_var, 12, TRUE)
+) |>
+  dplyr::arrange(grp1, grp2, date)
 
 # pad by one grouping var
-x_df_grp \%>\% pad(group = 'grp1')
+x_df_grp |> pad(group = "grp1")
 
 # pad by two groups vars
-x_df_grp \%>\% pad(group = c('grp1', 'grp2'), interval = "month")
+x_df_grp |> pad(group = c("grp1", "grp2"), interval = "month")
 
 # Using group argument the interval is determined over all the observations,
 # ignoring the groups.
-x <- data.frame(dt_var = as.Date(c("2017-01-01", "2017-03-01", "2017-05-01",
-"2017-01-01", "2017-02-01", "2017-04-01")),
-id = rep(1:2, each = 3), val = round(rnorm(6)))
+x <- data.frame(
+  dt_var = as.Date(c(
+    "2017-01-01", "2017-03-01", "2017-05-01",
+    "2017-01-01", "2017-02-01", "2017-04-01"
+  )),
+  id = rep(1:2, each = 3), val = round(rnorm(6))
+)
 pad(x, group = "id")
-# applying pad with do, interval is determined individualle for each group
-x \%>\% group_by(id) \%>\% do(pad(.))
+# applying pad with do, interval is determined individual for each group
+x |>
+  dplyr::group_by(id) |>
+  dplyr::do(pad(.))
 }

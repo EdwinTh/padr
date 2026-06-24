@@ -37,7 +37,7 @@ df_with_one_date <- data.frame(
   dt_var1 = date_seq("month"),
   y = 1:6
 )
-df_with_one_date_sorted <- df_with_one_date %>% arrange(dt_var1)
+df_with_one_date_sorted <- df_with_one_date |> arrange(dt_var1)
 df_with_two_dates <- data.frame(
   dt_var1 = date_seq("month"),
   dt_var2 = date_seq("month"),
@@ -50,8 +50,8 @@ sw <- suppressWarnings
 context("thicken function errors and warnings")
 
 test_that("thicken only accepts data frames", {
-  expect_error(thicken(x_month %>% as.character()))
-  expect_error(thicken(x_month %>% as.numeric()))
+  expect_error(thicken(x_month |> as.character()))
+  expect_error(thicken(x_month |> as.numeric()))
   expect_error(suppressWarnings(thicken(df_with_one_date, interval = "quarter")), NA)
 })
 
@@ -73,7 +73,7 @@ test_that("thicken removes when start_val is larger than min(dt)", {
     dt = as.Date(c("2016-01-01", "2016-01-03", "2016-01-04")),
     y = 1:3
   )
-  expect_equal(thicken(x, start_val = as.Date("2016-01-02"), interval = "year") %>%
+  expect_equal(thicken(x, start_val = as.Date("2016-01-02"), interval = "year") |>
     nrow(), 2)
 })
 
@@ -82,36 +82,36 @@ context("thicken integration tests")
 test_that("thicken gives correct interval", {
   x_df <- data.frame(x_sec = x_sec)
   expect_equal(
-    sw(thicken(x_df, interval = "year"))$x_sec_year %>% get_interval(),
+    sw(thicken(x_df, interval = "year"))$x_sec_year |> get_interval(),
     "year"
   )
   expect_equal(
-    sw(thicken(x_df, interval = "month"))$x_sec_month %>% get_interval(),
+    sw(thicken(x_df, interval = "month"))$x_sec_month |> get_interval(),
     "month"
   )
   expect_equal(
-    sw(thicken(x_df, interval = "day"))$x_sec_day %>% get_interval(),
+    sw(thicken(x_df, interval = "day"))$x_sec_day |> get_interval(),
     "day"
   )
   expect_equal(
-    sw(thicken(x_df, interval = "hour"))$x_sec_hour %>% get_interval(),
+    sw(thicken(x_df, interval = "hour"))$x_sec_hour |> get_interval(),
     "hour"
   )
   expect_equal(
-    sw(thicken(x_df, interval = "min"))$x_sec_min %>% get_interval(),
+    sw(thicken(x_df, interval = "min"))$x_sec_min |> get_interval(),
     "min"
   )
 })
 
 test_that("thicken gives correct output when x is a vector", {
   day_sorted <- sort(x_day)
-  day_to_year <- thicken(day_sorted %>% as.data.frame(), colname = "x", interval = "year")$x
-  day_to_year2 <- thicken(day_sorted %>% as.data.frame(), "x",
+  day_to_year <- thicken(day_sorted |> as.data.frame(), colname = "x", interval = "year")$x
+  day_to_year2 <- thicken(day_sorted |> as.data.frame(), "x",
     interval = "year",
     rounding = "up"
   )$x
 
-  expect_equal(day_to_year %>% length(), 100)
+  expect_equal(day_to_year |> length(), 100)
   expect_equal(lubridate::year(day_to_year[1]), 2015)
   expect_equal(lubridate::year(day_to_year[100]), 2016)
   expect_equal(lubridate::year(day_to_year2[1]), 2016)
@@ -124,8 +124,8 @@ test_that("thicken gives correct ouput when x is a df", {
     value = runif(366, 50, 100)
   )
 
-  expect_equal(thicken(X, interval = "month") %>% nrow(), 366)
-  expect_equal(lubridate::month(thicken(X, interval = "month")$day_var_month) %>% max(), 12) # nolint
+  expect_equal(thicken(X, interval = "month") |> nrow(), 366)
+  expect_equal(lubridate::month(thicken(X, interval = "month")$day_var_month) |> max(), 12) # nolint
   expect_error((thicken(dplyr::as_tibble(X), interval = "month")), NA)
   expect_error(thicken(data.table::as.data.table(X), interval = "month"), NA)
 })
@@ -142,11 +142,11 @@ context("test set_to_original_type")
 
 test_that("set_to_original_type returns tbl or data.table", {
   expect_equal(
-    sw(dplyr::as_tibble(df_with_one_date) %>% thicken("2 mon") %>% class()),
+    sw(dplyr::as_tibble(df_with_one_date) |> thicken("2 mon") |> class()),
     c("tbl_df", "tbl", "data.frame")
   )
   expect_equal(
-    sw(data.table::as.data.table(df_with_one_date) %>% thicken("2 mon") %>%
+    sw(data.table::as.data.table(df_with_one_date) |> thicken("2 mon") |>
       class()),
     c("data.table", "data.frame")
   )
@@ -156,28 +156,28 @@ test_that("set_to_original_type returns tbl or data.table", {
 context("thicken with missing values")
 
 test_that("thicken works properly on NA values", {
-  coffee_na <- coffee %>%
-    thicken("day", "d") %>%
-    count(d) %>%
-    pad() %>%
+  coffee_na <- coffee |>
+    thicken("day", "d") |>
+    count(d) |>
+    pad() |>
     fill_by_value()
   coffee_na[3, 1] <- NA
-  coffee_na_thickened <- sw(coffee_na %>% thicken("week"))
-  expect_error(sw(coffee_na %>% thicken("week")), NA)
+  coffee_na_thickened <- sw(coffee_na |> thicken("week"))
+  expect_error(sw(coffee_na |> thicken("week")), NA)
   expect_warning(
-    coffee_na %>% thicken("week"),
+    coffee_na |> thicken("week"),
     "There are NA values in the column d.
 Returned dataframe contains original observations, with NA values for d and d_week."
   )
-  expect_equal(coffee_na_thickened %>% nrow(), 4)
-  expect_equal(coffee_na_thickened %>% filter(is.na(d)) %>% nrow(), 1)
-  expect_equal(coffee_na_thickened %>% filter(is.na(d_week)) %>% nrow(), 1)
-  expect_equal(coffee_na_thickened$d[3] %>% as.character(), NA_character_)
+  expect_equal(coffee_na_thickened |> nrow(), 4)
+  expect_equal(coffee_na_thickened |> filter(is.na(d)) |> nrow(), 1)
+  expect_equal(coffee_na_thickened |> filter(is.na(d_week)) |> nrow(), 1)
+  expect_equal(coffee_na_thickened$d[3] |> as.character(), NA_character_)
 
-  coffee_two_nas <- coffee %>%
-    thicken("day", "d") %>%
-    count(d) %>%
-    pad() %>%
+  coffee_two_nas <- coffee |>
+    thicken("day", "d") |>
+    count(d) |>
+    pad() |>
     fill_by_value()
   coffee_two_nas[c(2, 3), 1] <- NA
 
@@ -213,9 +213,9 @@ test_that("add_na_to_thicken unit tests", {
 context("thicken drop argument")
 test_that("the drop argument gives the desired result", {
   day <- as.Date(c("2016-07-07", "2016-07-07", "2016-07-09", "2016-07-10"))
-  coffee_day <- coffee %>% mutate(time_stamp_day = day)
+  coffee_day <- coffee |> mutate(time_stamp_day = day)
   no_drop <- coffee_day
-  with_drop <- coffee_day %>% select(-time_stamp)
+  with_drop <- coffee_day |> select(-time_stamp)
   expect_equal(thicken(coffee, "day"), no_drop)
   expect_equal(thicken(coffee, "day", drop = FALSE), no_drop)
   expect_equal(thicken(coffee, "day", drop = TRUE), with_drop)

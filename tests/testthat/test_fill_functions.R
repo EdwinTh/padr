@@ -6,20 +6,20 @@ x_df <- tibble(
   y2 = c(11, 14, 14),
   y3 = rep(10, 3),
   y4 = c("A", "A", "B")
-) %>% pad()
+) |> pad()
 
 context("Test the fill functions")
 
 test_that("fill_ functions break with wrong input", {
-  expect_error(x_df %>% as.list() %>% fill_by_value(y1))
-  expect_error(x_df %>% as.list() %>% fill_by_function(y1))
-  expect_error(x_df %>% as.list() %>% fill_by_prevalent(y1))
-  expect_error(x_df$y1 %>% as.list() %>% fill_by_value(y1))
-  expect_error(x_df$y1 %>% as.list() %>% fill_by_function(y1))
-  expect_error(x_df$y1 %>% as.list() %>% fill_by_prevalent(y1))
-  expect_error(x_df %>% fill_by_value(y1), NA)
-  expect_error(x_df %>% fill_by_function(y1), NA)
-  expect_error(x_df %>% fill_by_prevalent(y4), NA)
+  expect_error(x_df |> as.list() |> fill_by_value(y1))
+  expect_error(x_df |> as.list() |> fill_by_function(y1))
+  expect_error(x_df |> as.list() |> fill_by_prevalent(y1))
+  expect_error(x_df$y1 |> as.list() |> fill_by_value(y1))
+  expect_error(x_df$y1 |> as.list() |> fill_by_function(y1))
+  expect_error(x_df$y1 |> as.list() |> fill_by_prevalent(y1))
+  expect_error(x_df |> fill_by_value(y1), NA)
+  expect_error(x_df |> fill_by_function(y1), NA)
+  expect_error(x_df |> fill_by_prevalent(y4), NA)
 })
 
 test_that("fill_by_value gives expected outcomes", {
@@ -33,11 +33,11 @@ test_that("fill_by_value gives expected outcomes", {
 
 test_that("fill_by_function gives expected outcomes", {
   expect_error(fill_by_function(x_df, y1, fun = y2))
-  expect_equal(fill_by_function(x_df, y1)$y1 %>% median(), 4 + 2 / 3)
-  expect_equal(fill_by_function(x_df, y1, y2)$y1 %>% median(), 4 + 2 / 3)
-  expect_equal(fill_by_function(x_df, y1, y2)$y2 %>% median(), 13)
-  expect_equal(fill_by_function(x_df, y1, fun = median)$y1 %>% median(), 5)
-  expect_equal(fill_by_function(x_df, y1, y2, fun = median)$y1 %>% median(), 5)
+  expect_equal(fill_by_function(x_df, y1)$y1 |> median(), 4 + 2 / 3)
+  expect_equal(fill_by_function(x_df, y1, y2)$y1 |> median(), 4 + 2 / 3)
+  expect_equal(fill_by_function(x_df, y1, y2)$y2 |> median(), 13)
+  expect_equal(fill_by_function(x_df, y1, fun = median)$y1 |> median(), 5)
+  expect_equal(fill_by_function(x_df, y1, y2, fun = median)$y1 |> median(), 5)
 })
 
 unname <- function(x) {
@@ -54,8 +54,8 @@ test_that("fill_by_prevalent gives expected outcomes", {
 })
 
 test_that("get_the_inds works properly", {
-  x <- suppressWarnings(coffee %>% thicken("day") %>% group_by(time_stamp_day) %>%
-    summarise(a = sum(amount)) %>% pad())
+  x <- suppressWarnings(coffee |> thicken("day") |> group_by(time_stamp_day) |>
+    summarise(a = sum(amount)) |> pad())
   x$b <- NA
   no_cols <- 2:3
   names(no_cols) <- c("a", "b")
