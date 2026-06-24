@@ -18,20 +18,18 @@
 #' length of the interval. The translated units divided by two
 #' will be added by or subtracted from each value of \code{x}.
 #' @examples
-#' library(dplyr)
-#' library(ggplot2)
-#' plot_set <- emergency %>%
-#'   thicken("hour", "h") %>%
-#'   count(h) %>%
+#' plot_set <- emergency |>
+#'   thicken("hour", "h") |>
+#'   dplyr::count(h) |>
 #'   head(24)
 #'
-#' ggplot(plot_set, aes(h, n)) +
-#'   geom_col()
+#' ggplot2::ggplot(plot_set, ggplot2::aes(h, n)) +
+#'   ggplot2::geom_col()
 #'
-#' plot_set %>%
-#'   mutate(h_center = center_interval(h)) %>%
-#'   ggplot(aes(h_center, n)) +
-#'   geom_col()
+#' plot_set |>
+#'   dplyr::mutate(h_center = center_interval(h)) |>
+#'   ggplot2::ggplot(ggplot2::aes(h_center, n)) +
+#'   ggplot2::geom_col()
 #' @export
 center_interval <- function(x,
                             shift = c("up", "down"),
@@ -116,20 +114,18 @@ unname <- function(x) {
 #' interval is desired, \code{thicken} and / or \code{pad} should first be
 #' applied to create an equally spaced datetime variable.
 #' @examples
-#' library(dplyr)
-#' library(ggplot2)
-#' plot_set <- emergency %>%
-#'   head(500) %>%
-#'   thicken("hour", "h") %>%
-#'   count(h)
+#' plot_set <- emergency |>
+#'   head(500) |>
+#'   thicken("hour", "h") |>
+#'   dplyr::count(h)
 #'
 #' # this will show the data on the full hour
-#' ggplot(plot_set, aes(h, n)) +
-#'   geom_col()
+#' ggplot2::ggplot(plot_set, ggplot2::aes(h, n)) +
+#'   ggplot2::geom_col()
 #'
 #' # adding a character to indicate the hours of the interval.
-#' plot_set %>%
-#'   mutate(h_int = format_interval(h, "%H", sep = "-"))
+#' plot_set |>
+#'   dplyr::mutate(h_int = format_interval(h, "%H", sep = "-"))
 #' @export
 format_interval <- function(x,
                             start_format = "%Y-%m-%d",

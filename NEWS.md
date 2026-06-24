@@ -153,8 +153,8 @@ When applying pad to groups the interval is determined differently. It used to d
 
 Besides its own argument for grouping, `pad` does now also accepts the grouping from `dplyr`. Making the following two results equal:
 
-x %>% dplyr::group_by(z) %>% pad
-x %>% pad(group = 'z')
+x |> dplyr::group_by(z) |> pad
+x |> pad(group = 'z')
 
 Moreover, both `pad` and `thicken` now maintain the grouping of the input data_frame. The return from both functions will have the exact same grouping.
 

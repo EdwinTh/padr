@@ -33,16 +33,16 @@ length of the interval. The translated units divided by two
 will be added by or subtracted from each value of \code{x}.
 }
 \examples{
-library(dplyr)
-library(ggplot2)
-plot_set <- emergency \%>\%
-  thicken("hour", "h") \%>\%
-  count(h) \%>\%
+plot_set <- emergency |>
+  thicken("hour", "h") |>
+  dplyr::count(h) |>
   head(24)
 
-ggplot(plot_set, aes(h, n)) + geom_col()
+ggplot2::ggplot(plot_set, ggplot2::aes(h, n)) +
+  ggplot2::geom_col()
 
-plot_set \%>\%
-  mutate(h_center = center_interval(h)) \%>\%
-  ggplot(aes(h_center, n)) + geom_col()
+plot_set |>
+  dplyr::mutate(h_center = center_interval(h)) |>
+  ggplot2::ggplot(ggplot2::aes(h_center, n)) +
+  ggplot2::geom_col()
 }

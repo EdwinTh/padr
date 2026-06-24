@@ -25,11 +25,11 @@ coffee <- data.frame(
   amount = c(3.14, 2.98, 4.11, 3.14)
 )
 
-coffee %>%
-  thicken("day") %>%
-  dplyr::group_by(time_stamp_day) %>%
-  dplyr::summarise(day_amount = sum(amount)) %>%
-  pad() %>%
+coffee |>
+  thicken("day") |>
+  dplyr::group_by(time_stamp_day) |>
+  dplyr::summarise(day_amount = sum(amount)) |>
+  pad() |>
   fill_by_value(day_amount, value = 0)
 ```
 

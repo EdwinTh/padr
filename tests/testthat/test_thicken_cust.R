@@ -60,9 +60,9 @@ test_that("the drop argument gives the desired result", {
     "20160709 11",
     "20160710 08"
   ), tz = "UTC")
-  coffee_hour <- coffee %>% mutate(time_stamp_hour = hourly)
+  coffee_hour <- coffee |> mutate(time_stamp_hour = hourly)
   no_drop <- coffee_hour
-  with_drop <- coffee_hour %>% select(-time_stamp)
+  with_drop <- coffee_hour |> select(-time_stamp)
 
   expect_equal(sw(thicken_cust(coffee,
     spanned = hourly,

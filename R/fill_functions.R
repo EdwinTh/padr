@@ -7,20 +7,19 @@
 #' @return \code{x} with the altered columns.
 #'
 #' @examples
-#' library(dplyr) # for the pipe operator
 #' x <- seq(as.Date("2016-01-01"), by = "day", length.out = 366)
-#' x <- x[sample(1:366, 200)] %>% sort()
-#' x_df <- data_frame(
+#' x <- x[sample(1:366, 200)] |> sort()
+#' x_df <- data.frame(
 #'   x = x,
-#'   y1 = runif(200, 10, 20) %>% round(),
-#'   y2 = runif(200, 1, 50) %>% round(),
-#'   y3 = runif(200, 20, 40) %>% round(),
+#'   y1 = runif(200, 10, 20) |> round(),
+#'   y2 = runif(200, 1, 50) |> round(),
+#'   y3 = runif(200, 20, 40) |> round(),
 #'   y4 = sample(letters[1:5], 200, replace = TRUE)
 #' )
-#' x_padded <- x_df %>% pad()
-#' x_padded %>% fill_by_value(y1)
-#' x_df %>%
-#'   pad() %>%
+#' x_padded <- x_df |> pad()
+#' x_padded |> fill_by_value(y1)
+#' x_df |>
+#'   pad() |>
 #'   fill_by_value(y1, y2, value = 42)
 #' @export
 fill_by_value <- function(x,
@@ -47,19 +46,18 @@ fill_by_value <- function(x,
 #' @param fun The function to apply on the nonmissing values.
 #' @return \code{x} with the altered columns.
 #' @examples
-#' library(dplyr) # for the pipe operator
 #' x <- seq(as.Date("2016-01-01"), by = "day", length.out = 366)
-#' x <- x[sample(1:366, 200)] %>% sort()
-#' x_df <- data_frame(
+#' x <- x[sample(1:366, 200)] |> sort()
+#' x_df <- data.frame(
 #'   x = x,
-#'   y1 = runif(200, 10, 20) %>% round(),
-#'   y2 = runif(200, 1, 50) %>% round()
+#'   y1 = runif(200, 10, 20) |> round(),
+#'   y2 = runif(200, 1, 50) |> round()
 #' )
-#' x_df %>%
-#'   pad() %>%
+#' x_df |>
+#'   pad() |>
 #'   fill_by_function(y1, y2)
-#' x_df %>%
-#'   pad() %>%
+#' x_df |>
+#'   pad() |>
 #'   fill_by_function(y1, y2, fun = median)
 #' @export
 fill_by_function <- function(x,
@@ -99,16 +97,15 @@ fill_by_function <- function(x,
 #' @param ... The unquoted column names of the variables that should be filled.
 #' @return \code{x} with the altered columns.
 #' @examples
-#' library(dplyr) # for the pipe operator
 #' x <- seq(as.Date("2016-01-01"), by = "day", length.out = 366)
-#' x <- x[sample(1:366, 200)] %>% sort()
-#' x_df <- data_frame(
+#' x <- x[sample(1:366, 200)] |> sort()
+#' x_df <- data.frame(
 #'   x = x,
-#'   y1 = rep(letters[1:3], c(80, 70, 50)) %>% sample(),
-#'   y2 = rep(letters[2:5], c(60, 80, 40, 20)) %>% sample()
+#'   y1 = rep(letters[1:3], c(80, 70, 50)) |> sample(),
+#'   y2 = rep(letters[2:5], c(60, 80, 40, 20)) |> sample()
 #' )
-#' x_df %>%
-#'   pad() %>%
+#' x_df |>
+#'   pad() |>
 #'   fill_by_prevalent(y1, y2)
 #' @export
 fill_by_prevalent <- function(x,

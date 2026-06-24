@@ -19,7 +19,7 @@ Lets have a look at all the vehicle incidents in the `emergency` dataset. Say yo
 library(padr)
 library(dplyr)
 library(ggplot2)
-veh_acc <- emergency %>%
+veh_acc <- emergency |>
   filter(
     title == "Traffic: VEHICLE ACCIDENT -",
     lubridate::month(time_stamp) %in% 4:6
@@ -27,22 +27,22 @@ veh_acc <- emergency %>%
 
 veh_acc_line_plot <- function(padded_df,
                               units_to_last = NULL) {
-  padded_df %>%
-    fill_by_value() %>%
-    thicken("day", "day") %>%
+  padded_df |>
+    fill_by_value() |>
+    thicken("day", "day") |>
     mutate(interval = format_interval(day_hour, "%H",
       sep = "-",
       units_to_last = units_to_last
-    )) %>%
+    )) |>
     ggplot(aes(day, n)) +
     facet_wrap(~interval) +
     geom_line()
 }
 
-veh_acc %>%
-  thicken("3 hour", "day_hour") %>%
-  count(day_hour) %>%
-  pad() %>%
+veh_acc |>
+  thicken("3 hour", "day_hour") |>
+  count(day_hour) |>
+  pad() |>
   veh_acc_line_plot()
 ```
 
@@ -54,7 +54,7 @@ Accidents are more common around rush hours. During nightly hours there are hard
 
 ```{r}
 veh_acc_span <-
-  span_around(veh_acc$time_stamp, interval = "hour", start_shift = "7 hour") %>%
+  span_around(veh_acc$time_stamp, interval = "hour", start_shift = "7 hour") |>
   subset_span(list(hour = c(7, 10, 16, 19)))
 ```
 
@@ -65,9 +65,9 @@ Note that the argument `start_shift` is used. This will add an extra time period
 The `thicken_cust` and `pad_cust` functions both take the spanned object as an argument. `thicken_cust` will assign each observation to the closest value in the spanned object. Note that `thicken_cust` only does round down, whereas in the regular `thicken` there is also the option to round up. This seems the mostly chooses option in the regular `thicken`, the argument was omitted from `thicken_cust` for simplicity. `pad_cust` also needs the spanned object, because it can no longer infer which observations are lacking from the datetime variable. By default, `pad_cust` drops the last value in the spanned object. If the original spanning was around the datetime variable, leaving the last value in would create an empty record after all the observations.
 
 ```{r}
-veh_acc_cust <- veh_acc %>%
-  thicken_cust(spanned = veh_acc_span, colname = "day_hour") %>%
-  count(day_hour) %>%
+veh_acc_cust <- veh_acc |>
+  thicken_cust(spanned = veh_acc_span, colname = "day_hour") |>
+  count(day_hour) |>
   pad_cust(veh_acc_span)
 ```
 

@@ -53,17 +53,16 @@ interval is desired, \code{thicken} and / or \code{pad} should first be
 applied to create an equally spaced datetime variable.
 }
 \examples{
-library(dplyr)
-library(ggplot2)
-plot_set <- emergency \%>\%
-  head(500) \%>\%
-  thicken("hour", "h") \%>\%
-  count(h)
+plot_set <- emergency |>
+  head(500) |>
+  thicken("hour", "h") |>
+  dplyr::count(h)
 
 # this will show the data on the full hour
-ggplot(plot_set, aes(h, n)) + geom_col()
+ggplot2::ggplot(plot_set, ggplot2::aes(h, n)) +
+  ggplot2::geom_col()
 
 # adding a character to indicate the hours of the interval.
-plot_set \%>\%
-  mutate(h_int = format_interval(h, "\%H", sep = "-"))
+plot_set |>
+  dplyr::mutate(h_int = format_interval(h, "\%H", sep = "-"))
 }

@@ -13,20 +13,20 @@ generate_interval <- function(unit, int) {
 context("span fails on wrong input")
 
 test_that("span fails on non-datetime vectors", {
-  expect_error(as.integer(day_vec) %>% span())
-  expect_error(as.numeric(day_vec) %>% span())
-  expect_error(as.character(day_vec) %>% span())
-  expect_error(as.factor(day_vec) %>% span())
+  expect_error(as.integer(day_vec) |> span())
+  expect_error(as.numeric(day_vec) |> span())
+  expect_error(as.character(day_vec) |> span())
+  expect_error(as.factor(day_vec) |> span())
 })
 
 test_that("span fails on data.frames", {
-  expect_error(mtcars %>% span())
+  expect_error(mtcars |> span())
 })
 
 test_that("span does not fail on Date, POSIXct and POSIXlt", {
-  expect_error(day_vec %>% span(generate_interval(1, "day")), NA)
-  expect_error(posix_ct %>% span(generate_interval(1, "sec")), NA)
-  expect_error(posix_lt %>% span(generate_interval(1, "sec")), NA)
+  expect_error(day_vec |> span(generate_interval(1, "day")), NA)
+  expect_error(posix_ct |> span(generate_interval(1, "sec")), NA)
+  expect_error(posix_lt |> span(generate_interval(1, "sec")), NA)
 })
 
 
