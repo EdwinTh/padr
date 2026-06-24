@@ -4,6 +4,10 @@
 
 * Improved documentation of the `by` argument in for `pad` and more informative error messages. issue #83
 
+* Replaced the magrittr pipe operator by the base R pipe operator in all examples. issue #97
+
+* Removed package loading in the examples, using direct invocation from the namespace instead. 
+
 # padr 0.6.3
 
 * Patch release for upcoming R version on Linux
