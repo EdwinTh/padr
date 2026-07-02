@@ -275,3 +275,38 @@ expect_error(
 
 y <- data.frame(d = as.Date(c("2038-12-10", "2038-12-13")))
 expect_error(thicken(y, interval = "1 month"), NA)
+
+context("bug fixes")
+
+test_that("thicken on day level when start and end in different dst periods", {
+  # Bug ISSUE 95
+  start_winter <- as.POSIXct(c(
+    "2025-02-02 00:00:00", "2025-02-02 01:00:00", "2025-02-02 02:00:00",
+    "2025-02-02 03:00:00", "2025-08-02 04:00:00"
+  ), tz = "America/New_York")
+
+  start_winter_expected_result <- data.frame(
+    start_winter = start_winter,
+    start_winter_day = as.Date(c("2025-02-02", "2025-02-02", "2025-02-02", "2025-02-02", "2025-08-02"))
+  )
+
+  expect_equal(thicken(data.frame(start_winter), interval = "day"), start_winter_expected_result)
+
+  start_winter_expected_result_week <- data.frame(
+    start_winter = start_winter,
+    start_winter_week = as.Date(c("2025-02-02", "2025-02-02", "2025-02-02", "2025-02-02", "2025-07-02"))
+  )
+
+  expect_equal(thicken(data.frame(start_winter), interval = "week"), start_winter_expected_result_week)
+
+  start_summer <- as.POSIXct(c(
+    "2024-08-02 04:00:00", "2025-02-02 00:00:00", "2025-02-02 01:00:00", "2025-02-02 02:00:00",
+    "2025-02-02 03:00:00"
+  ), tz = "America/New_York")
+  start_summer_expected_result <- data.frame(
+    start_summer = start_summer,
+    start_summer_day = as.Date(c("2024-08-02", "2025-02-02", "2025-02-02", "2025-02-02", "2025-02-02"))
+  )
+
+  expect_equal(thicken(data.frame(start_summer), interval = "day"), start_summer_expected_result)
+})
