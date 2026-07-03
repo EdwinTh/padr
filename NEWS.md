@@ -10,6 +10,8 @@
 
 * Updating tidyselect code so we don't use deprecated functionality. issue #90 raised by github user tanho63
 
+* Bug fix for `thicken` where start and end values are not in the same time (normal or DST) and interval is day or week. issue #95 raised by github user monica-water
+
 # padr 0.6.3
 
 * Patch release for upcoming R version on Linux
