@@ -294,7 +294,7 @@ test_that("thicken on day level when start and end in different dst periods", {
 
   start_winter_expected_result_week <- data.frame(
     start_winter = start_winter,
-    start_winter_week = as.Date(c("2025-02-02", "2025-02-02", "2025-02-02", "2025-02-02", "2025-07-02"))
+    start_winter_week = as.Date(c("2025-02-02", "2025-02-02", "2025-02-02", "2025-02-02", "2025-07-27"))
   )
 
   expect_equal(thicken(data.frame(start_winter), interval = "week"), start_winter_expected_result_week)
