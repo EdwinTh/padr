@@ -439,7 +439,8 @@ break_above_func <- function(n,
                              threshold) {
   if (n > (threshold * 10^6)) {
     stop(sprintf(
-      "Estimated %s returned rows, larger than %s million in break_above",
+      "Estimated %s returned rows, larger than %s million threshold set in break_above.
+You can change this threshold by increasing the value in the break_above argument.", # nolint
       n, threshold
     ), call. = FALSE)
   }
