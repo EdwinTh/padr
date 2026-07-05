@@ -12,6 +12,8 @@
 
 * Bug fix for `thicken` where start and end values are not in the same time (normal or DST) and interval is day or week. issue #95 raised by github user monica-water
 
+* A more informative error is thrown for the break_above argument, it is clear the threshold can be adjusted by the user.
+
 # padr 0.6.3
 
 * Patch release for upcoming R version on Linux
