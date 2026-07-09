@@ -169,7 +169,7 @@ convert_interval <- function(interval) {
   x <- tryCatch(
     seq(start_val, length.out = 10, by = interval),
     error = function(e) {
-      stop("interval is not valid", call. = FALSE)
+      stop("interval is not valid. It should be accepted by `seq.Date` or `seq.POSIXlt`", call. = FALSE)
     }
   )
   return(make_interval_list_from_string(interval))

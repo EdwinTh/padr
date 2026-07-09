@@ -14,6 +14,8 @@
 
 * A more informative error is thrown for the break_above argument, it is clear the threshold can be adjusted by the user.
 
+* A more informative error is thrown when an invalid argument is used for `interval` in `thicken`.
+
 # padr 0.6.3
 
 * Patch release for upcoming R version on Linux
