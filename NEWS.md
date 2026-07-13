@@ -16,6 +16,8 @@
 
 * A more informative error is thrown when an invalid argument is used for `interval` in `thicken`.
 
+* The Year2038 bug is resolved for `thicken` and `thicken_cust`, they now work for timpepoints after January 19 2038. issue #96
+
 # padr 0.6.3
 
 * Patch release for upcoming R version on Linux
