@@ -2,12 +2,12 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-IntegerVector round_up_core(IntegerVector a, IntegerVector b){
+NumericVector round_up_core(NumericVector a, NumericVector b){
 
   int n = a.size();
-  IntegerVector ret(n);
-  int current_b = b[0];
-  int current_b_index = 0;
+  NumericVector ret(n);
+  double current_b = b[0];
+  double current_b_index = 0;
 
   for (int i = 0; i < n; ++i) {
     if (current_b > a[i]) {

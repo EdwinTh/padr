@@ -2,14 +2,14 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-IntegerVector round_down_core(IntegerVector a, IntegerVector b){
+NumericVector round_down_core(NumericVector a, NumericVector b){
 
   int n = a.size();
-  IntegerVector ret(n);
-  int current_b = b[0];
-  int next_b    = b[1];
+  NumericVector ret(n);
+  double current_b = b[0];
+  double next_b    = b[1];
   int current_b_index = 0;
-  int last_b    = max(b);
+  double last_b    = max(b);
 
   for (int i = 0; i < n; ++i) {
     if (next_b > a[i] or current_b == last_b) {

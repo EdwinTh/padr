@@ -310,3 +310,26 @@ test_that("thicken on day level when start and end in different dst periods", {
 
   expect_equal(thicken(data.frame(start_summer), interval = "day"), start_summer_expected_result)
 })
+
+test_that("Year 2038 bug is no problem for thicken and thicken_cust", {
+  # year 2038 bug is at 03:14:07 UTC on 19 January 2038.
+  t <- as.POSIXct(c("2038-01-01 00:00:01", "2038-02-01 04:01:01"))
+  t_day <- as.Date(c("2038-01-01", "2038-02-01"))
+  t_hour <- as.POSIXct(c("2038-01-01 00:00:00", "2038-02-01 04:00:00"))
+
+  expect_equal(
+    thicken(data.frame(t), interval = "day"),
+    data.frame(t, t_day)
+  )
+
+  expect_equal(
+    thicken(data.frame(t), interval = "hour"),
+    data.frame(t, t_hour)
+  )
+
+  spanned <- as.POSIXct(c("2038-01-01 00:00:00", "2038-01-15 00:00:02"))
+  expect_equal(
+    thicken_cust(data.frame(t), spanned = spanned, colname = "new_t"),
+    data.frame(t, new_t = spanned)
+  )
+})
