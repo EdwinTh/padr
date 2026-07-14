@@ -1,6 +1,6 @@
-# padr v0.6.3
+# padr v0.7.0
 
-Patch release, as requested by Kurt Hornik on 2024-11-18
+Maintenance release with bug fixes and improved error handling.
 
 ## Test environments - using github actions via Rhub
 * macOS Ventura 13.7.1 
