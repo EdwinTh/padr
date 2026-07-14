@@ -4,3 +4,4 @@
 .Ruserdata
 inst/doc
 .lintr_cache
+.vscode
