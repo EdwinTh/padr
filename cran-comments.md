@@ -3,13 +3,13 @@
 Maintenance release with bug fixes and improved error handling.
 
 ## Test environments - using github actions via Rhub
-* macOS Ventura 13.7.1 
-* macOS Sonoma 14.7 (arm64)
-* Ubuntu 22.04.5
-* Windows Server 2022 
+* macos-15-intel
+* macos-latest
+* ubuntu-latest
+* macos-latest
 
 ## R CMD check results
 
 0 errors | 0 warnings | 0 notes
 
-Since this is a patch release only adjusting a unit test, there was no need for informing the maintainers of the dependent packages.
+All reverse dependencies have been checked and showed no problems.
